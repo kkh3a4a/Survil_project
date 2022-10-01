@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <None Include="..\..\Project.uproject" />
     <Filter Include="Source">
@@ -23,6 +23,12 @@
     <None Include="..\..\Config\DefaultGame.ini">
       <Filter>Config</Filter>
     </None>
+    <Filter Include="Config\HoloLens">
+      <UniqueIdentifier>{4C8DD267-CDE7-336F-8602-F5F485D22BAB}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\HoloLens\HoloLensEngine.ini">
+      <Filter>Config\HoloLens</Filter>
+    </None>
     <Filter Include="Source\Project">
       <UniqueIdentifier>{5460B403-47FB-3162-AE19-8CC3185A66FA}</UniqueIdentifier>
     </Filter>
@@ -39,6 +45,12 @@
       <Filter>Source\Project</Filter>
     </ClCompile>
     <ClInclude Include="..\..\Source\Project\ProjectGameModeBase.h">
+      <Filter>Source\Project</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\Project\Sunlight.cpp">
+      <Filter>Source\Project</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Project\Sunlight.h">
       <Filter>Source\Project</Filter>
     </ClInclude>
   </ItemGroup>
