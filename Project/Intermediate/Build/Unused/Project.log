@@ -1,25 +1,15 @@
 ﻿  Using bundled DotNet SDK
-  Log file: C:\Users\kkh3a\AppData\Local\UnrealBuildTool\Log.txt
-  Using 'git status' to determine working set for adaptive non-unity build (C:\Users\kkh3a\Desktop\Univ_Project).
-  Creating makefile for ProjectEditor (no existing makefile)
-  Building ProjectEditor...
-  Using Visual Studio 2019 14.29.30146 toolchain (C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133) and Windows 10.0.20348.0 SDK (C:\Program Files (x86)\Windows Kits\10).
-  [Adaptive Build] Excluded from Project unity file: Sunlight.cpp
+  Log file: C:\Users\YTP\AppData\Local\UnrealBuildTool\Log.txt
+  Using 'git status' to determine working set for adaptive non-unity build (C:\Users\YTP\Desktop\Univ_Project).
+  Building Project...
+  Using Visual Studio 2022 14.33.31630 toolchain (C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.33.31629) and Windows 10.0.18362.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+  [Adaptive Build] Excluded from Project unity file: Sunlight.cpp, Sun_Detect.cpp
   Determining max actions to execute in parallel (6 physical cores, 12 logical cores)
     Executing up to 6 processes, one per physical core
-  Building 11 actions with 6 processes...
-  [1/11] Resource Default.rc2
-  [2/11] Compile SharedPCH.Engine.ShadowErrors.cpp
-  [3/11] Compile Project.init.gen.cpp
-  [4/11] Compile Project.cpp
-  [5/11] Compile Sunlight.cpp
-  [6/11] Compile Sunlight.gen.cpp
-  [7/11] Compile ProjectGameModeBase.gen.cpp
-  [8/11] Compile ProjectGameModeBase.cpp
-  [9/11] Link UnrealEditor-Project.lib
-     C:\Users\kkh3a\Desktop\Univ_Project\Project\Intermediate\Build\Win64\UnrealEditor\Development\Project\UnrealEditor-Project.lib 라이브러리 및 C:\Users\kkh3a\Desktop\Univ_Project\Project\Intermediate\Build\Win64\UnrealEditor\Development\Project\UnrealEditor-Project.exp 개체를 생성하고 있습니다.
-  [10/11] Link UnrealEditor-Project.dll
-     C:\Users\kkh3a\Desktop\Univ_Project\Project\Intermediate\Build\Win64\UnrealEditor\Development\Project\UnrealEditor-Project.suppressed.lib 라이브러리 및 C:\Users\kkh3a\Desktop\Univ_Project\Project\Intermediate\Build\Win64\UnrealEditor\Development\Project\UnrealEditor-Project.suppressed.exp 개체를 생성하고 있습니다.
-  [11/11] WriteMetadata ProjectEditor.target
-  Total time in Parallel executor: 26.56 seconds
-  Total execution time: 28.17 seconds
+  Building 3 actions with 3 processes...
+  [1/3] Compile Sun_Detect.cpp
+  [2/3] Link Project.exe
+     C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\Project.lib 라이브러리 및 C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\Project.exp 개체를 생성하고 있습니다.
+Sun_Detect.cpp.obj : error LNK2001: 확인할 수 없는 외부 기호 "double SunAngle" (?SunAngle@@3NA)
+C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\Project.exe : fatal error LNK1120: 1개의 확인할 수 없는 외부 참조입니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.MakeFile.Targets(44,5): error MSB3073: ""C:\Program Files (x86)\UE5\UE_5.0\Engine\Build\BatchFiles\Build.bat" Project Win64 Development -Project="C:\Users\YTP\Desktop\Univ_Project\Project\Project.uproject" -WaitMutex -FromMsBuild" 명령이 종료되었습니다(코드: 6).

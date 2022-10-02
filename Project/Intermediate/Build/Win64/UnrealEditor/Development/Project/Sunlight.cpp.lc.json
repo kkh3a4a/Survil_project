@@ -1,13 +1,13 @@
 {
-    "Version": "1.1",
+    "Version": "1.2",
     "Data": {
-        "Source": "c:\\users\\kkh3a\\desktop\\univ_project\\project\\source\\project\\sunlight.cpp",
+        "Source": "c:\\users\\ytp\\desktop\\univ_project\\project\\source\\project\\private\\sunlight.cpp",
         "ProvidedModule": "",
-        "PCH": "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\projecteditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "PCH": "c:\\users\\ytp\\desktop\\univ_project\\project\\intermediate\\build\\win64\\projecteditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
         "Includes": [
-            "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\development\\project\\definitions.project.h",
-            "c:\\users\\kkh3a\\desktop\\univ_project\\project\\source\\project\\sunlight.h",
-            "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\inc\\project\\sunlight.generated.h"
+            "c:\\users\\ytp\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\development\\project\\definitions.project.h",
+            "c:\\users\\ytp\\desktop\\univ_project\\project\\source\\project\\public\\sunlight.h",
+            "c:\\users\\ytp\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\inc\\project\\sunlight.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

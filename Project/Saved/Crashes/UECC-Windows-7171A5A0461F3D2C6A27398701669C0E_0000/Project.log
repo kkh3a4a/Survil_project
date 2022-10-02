@@ -1,0 +1,1391 @@
+﻿Log file open, 10/02/22 06:43:36
+LogWindows: Failed to load 'aqProf.dll' (GetLastError=126)
+LogWindows: File 'aqProf.dll' does not exist
+LogProfilingDebugging: Loading WinPixEventRuntime.dll for PIX profiling (from ../../../Engine/Binaries/ThirdParty/Windows/WinPixEventRuntime/x64).
+LogWindows: Failed to load 'VtuneApi.dll' (GetLastError=126)
+LogWindows: File 'VtuneApi.dll' does not exist
+LogWindows: Failed to load 'VtuneApi32e.dll' (GetLastError=126)
+LogWindows: File 'VtuneApi32e.dll' does not exist
+LogWindows: Started CrashReportClient (pid=10672)
+LogConsoleResponse: Display: Failed to find resolution value strings in scalability ini. Falling back to default.
+LogConsoleResponse: Display: Failed to find resolution value strings in scalability ini. Falling back to default.
+LogInit: Display: Running engine for game: Project
+LogCore: UnrealTraceServer: Trace store launch successful
+LogCsvProfiler: Display: Metadata set : platform="Windows"
+LogCsvProfiler: Display: Metadata set : config="Development"
+LogCsvProfiler: Display: Metadata set : buildversion="++UE5+Release-5.0-CL-20979098"
+LogCsvProfiler: Display: Metadata set : engineversion="5.0.3-20979098+++UE5+Release-5.0"
+LogCsvProfiler: Display: Metadata set : commandline="" C:\Users\YTP\Desktop\Univ_Project\Project\Project.uproject""
+LogCsvProfiler: Display: Metadata set : os="Windows 11 (21H2) [10.0.22000.978] "
+LogCsvProfiler: Display: Metadata set : cpu="GenuineIntel|Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz"
+LogCsvProfiler: Display: Metadata set : pgoenabled="0"
+LogCsvProfiler: Display: Metadata set : loginid="c64ad6144a3839c2308b60808593bb40"
+LogCsvProfiler: Display: Metadata set : llm="0"
+LogPlatformFile: Not using cached read wrapper
+LogStats: Stats thread started at 0.254461
+LogICUInternationalization: ICU TimeZone Detection - Raw Offset: +9:00, Platform Override: ''
+LogInit: Session CrashGUID >====================================================
+         Session CrashGUID >   UECC-Windows-7171A5A0461F3D2C6A27398701669C0E
+         Session CrashGUID >====================================================
+LogConfig: Display: Loading Mac ini files took 0.02 seconds
+LogConfig: Display: Loading IOS ini files took 0.03 seconds
+LogConfig: Display: Loading HoloLens ini files took 0.03 seconds
+LogConfig: Display: Loading Android ini files took 0.03 seconds
+LogConfig: Display: Loading Unix ini files took 0.03 seconds
+LogConfig: Display: Loading TVOS ini files took 0.03 seconds
+LogConfig: Display: Loading LinuxArm64 ini files took 0.04 seconds
+LogConfig: Display: Loading Linux ini files took 0.04 seconds
+LogPluginManager: Mounting Engine plugin Bridge
+LogConfig: Display: Loading VulkanPC ini files took 0.02 seconds
+LogPluginManager: Mounting Engine plugin FastBuildController
+LogPluginManager: Mounting Engine plugin MeshPainting
+LogPluginManager: Mounting Engine plugin XGEController
+LogPluginManager: Mounting Engine plugin AISupport
+LogPluginManager: Mounting Engine plugin EnvironmentQueryEditor
+LogConfig: Display: Loading Windows ini files took 0.02 seconds
+LogPluginManager: Mounting Engine plugin AnimationSharing
+LogPluginManager: Mounting Engine plugin Paper2D
+LogPluginManager: Mounting Engine plugin CLionSourceCodeAccess
+LogPluginManager: Mounting Engine plugin CodeLiteSourceCodeAccess
+LogPluginManager: Mounting Engine plugin GitSourceControl
+LogPluginManager: Mounting Engine plugin KDevelopSourceCodeAccess
+LogPluginManager: Mounting Engine plugin NullSourceCodeAccess
+LogPluginManager: Mounting Engine plugin PerforceSourceControl
+LogPluginManager: Mounting Engine plugin PixWinPlugin
+LogPluginManager: Mounting Engine plugin PluginUtils
+LogPluginManager: Mounting Engine plugin OodleNetwork
+LogPluginManager: Mounting Engine plugin PropertyAccessNode
+LogPluginManager: Mounting Engine plugin RiderSourceCodeAccess
+LogPluginManager: Mounting Engine plugin TraceDataFilters
+LogPluginManager: Mounting Engine plugin SubversionSourceControl
+LogPluginManager: Mounting Engine plugin UObjectPlugin
+LogPluginManager: Mounting Engine plugin VisualStudioCodeSourceCodeAccess
+LogPluginManager: Mounting Engine plugin VisualStudioSourceCodeAccess
+LogPluginManager: Mounting Engine plugin CameraShakePreviewer
+LogPluginManager: Mounting Engine plugin XCodeSourceCodeAccess
+LogPluginManager: Mounting Engine plugin GameplayCameras
+LogPluginManager: Mounting Engine plugin AnimationModifierLibrary
+LogPluginManager: Mounting Engine plugin BlendSpaceMotionAnalysis
+LogPluginManager: Mounting Engine plugin ControlRig
+LogPluginManager: Mounting Engine plugin ControlRigSpline
+LogPluginManager: Mounting Engine plugin IKRig
+LogPluginManager: Mounting Engine plugin AssetManagerEditor
+LogPluginManager: Mounting Engine plugin PlasticSourceControl
+LogPluginManager: Mounting Engine plugin TextureFormatOodle
+LogPluginManager: Mounting Engine plugin CryptoKeys
+LogPluginManager: Mounting Engine plugin CurveEditorTools
+LogPluginManager: Mounting Engine plugin DataValidation
+LogPluginManager: Mounting Engine plugin EditorDebugTools
+LogPluginManager: Mounting Engine plugin FacialAnimation
+LogPluginManager: Mounting Engine plugin GameplayTagsEditor
+LogPluginManager: Mounting Engine plugin EditorScriptingUtilities
+LogPluginManager: Mounting Engine plugin GeometryMode
+LogPluginManager: Mounting Engine plugin MacGraphicsSwitching
+LogPluginManager: Mounting Engine plugin MaterialAnalyzer
+LogPluginManager: Mounting Engine plugin MobileLauncherProfileWizard
+LogPluginManager: Mounting Engine plugin ModelingToolsEditorMode
+LogPluginManager: Mounting Engine plugin PluginBrowser
+LogPluginManager: Mounting Engine plugin SequencerAnimTools
+LogPluginManager: Mounting Engine plugin SpeedTreeImporter
+LogPluginManager: Mounting Engine plugin StylusInput
+LogPluginManager: Mounting Engine plugin WorldPartitionHLODUtilities
+LogPluginManager: Mounting Engine plugin AutomationUtils
+LogPluginManager: Mounting Engine plugin BackChannel
+LogPluginManager: Mounting Engine plugin ChaosCloth
+LogPluginManager: Mounting Engine plugin ChaosClothEditor
+LogPluginManager: Mounting Engine plugin CharacterAI
+LogPluginManager: Mounting Engine plugin ChaosNiagara
+LogPluginManager: Mounting Engine plugin ChaosEditor
+LogPluginManager: Mounting Engine plugin ChaosSolverPlugin
+LogPluginManager: Mounting Engine plugin Niagara
+LogPluginManager: Mounting Engine plugin DatasmithContent
+LogPluginManager: Mounting Engine plugin AlembicImporter
+LogPluginManager: Mounting Engine plugin VariantManagerContent
+LogPluginManager: Mounting Engine plugin GeometryCollectionPlugin
+LogPluginManager: Mounting Engine plugin GeometryFlow
+LogPluginManager: Mounting Engine plugin FullBodyIK
+LogPluginManager: Mounting Engine plugin MeshModelingToolsetExp
+LogPluginManager: Mounting Engine plugin MeshLODToolset
+LogPluginManager: Mounting Engine plugin OpenImageDenoise
+LogPluginManager: Mounting Engine plugin AndroidMedia
+LogPluginManager: Mounting Engine plugin AvfMedia
+LogPluginManager: Mounting Engine plugin PlanarCut
+LogPluginManager: Mounting Engine plugin PlatformCrypto
+LogPluginManager: Mounting Engine plugin ImgMedia
+LogPluginManager: Mounting Engine plugin MediaCompositing
+LogPluginManager: Mounting Engine plugin ProxyLODPlugin
+LogPluginManager: Mounting Engine plugin MediaPlayerEditor
+LogPluginManager: Mounting Engine plugin WebMMedia
+LogPluginManager: Mounting Engine plugin PythonScriptPlugin
+LogPluginManager: Mounting Engine plugin SkeletalReduction
+LogPluginManager: Mounting Engine plugin WmfMedia
+LogPluginManager: Mounting Engine plugin TcpMessaging
+LogPluginManager: Mounting Engine plugin UdpMessaging
+LogPluginManager: Mounting Engine plugin LauncherChunkInstaller
+LogPluginManager: Mounting Engine plugin ActorSequence
+LogPluginManager: Mounting Engine plugin LevelSequenceEditor
+LogPluginManager: Mounting Engine plugin TemplateSequence
+LogPluginManager: Mounting Engine plugin MatineeToLevelSequence
+LogPluginManager: Mounting Engine plugin SequencerScripting
+LogPluginManager: Mounting Engine plugin ActorLayerUtilities
+LogPluginManager: Mounting Engine plugin AndroidFileServer
+LogPluginManager: Mounting Engine plugin AndroidMoviePlayer
+LogPluginManager: Mounting Engine plugin AndroidDeviceProfileSelector
+LogPluginManager: Mounting Engine plugin AndroidPermission
+LogPluginManager: Mounting Engine plugin AppleImageUtils
+LogPluginManager: Mounting Engine plugin AppleMoviePlayer
+LogPluginManager: Mounting Engine plugin AssetTags
+LogPluginManager: Mounting Engine plugin AudioCapture
+LogPluginManager: Mounting Engine plugin AudioSynesthesia
+LogPluginManager: Mounting Engine plugin ArchVisCharacter
+LogPluginManager: Mounting Engine plugin CableComponent
+LogPluginManager: Mounting Engine plugin CustomMeshComponent
+LogPluginManager: Mounting Engine plugin ExampleDeviceProfileSelector
+LogPluginManager: Mounting Engine plugin ChunkDownloader
+LogPluginManager: Mounting Engine plugin OnlineBase
+LogPluginManager: Mounting Engine plugin OnlineSubsystem
+LogPluginManager: Mounting Engine plugin OnlineSubsystemNull
+LogPluginManager: Mounting Engine plugin OnlineSubsystemUtils
+LogPluginManager: Mounting Engine plugin GeometryCache
+LogPluginManager: Mounting Engine plugin GeometryProcessing
+LogPluginManager: Mounting Engine plugin GoogleCloudMessaging
+LogPluginManager: Mounting Engine plugin HairStrands
+LogPluginManager: Mounting Engine plugin GooglePAD
+LogPluginManager: Mounting Engine plugin IOSDeviceProfileSelector
+LogPluginManager: Mounting Engine plugin LinuxDeviceProfileSelector
+LogPluginManager: Mounting Engine plugin LocationServicesBPLibrary
+LogPluginManager: Mounting Engine plugin MeshModelingToolset
+LogPluginManager: Mounting Engine plugin MobilePatchingUtils
+LogPluginManager: Mounting Engine plugin ProceduralMeshComponent
+LogPluginManager: Mounting Engine plugin ResonanceAudio
+LogPluginManager: Mounting Engine plugin PropertyAccessEditor
+LogPluginManager: Mounting Engine plugin RuntimePhysXCooking
+LogPluginManager: Mounting Engine plugin SignificanceManager
+LogPluginManager: Mounting Engine plugin SoundFields
+LogPluginManager: Mounting Engine plugin Synthesis
+LogPluginManager: Mounting Engine plugin WebMMoviePlayer
+LogPluginManager: Mounting Engine plugin WindowsMoviePlayer
+LogPluginManager: Mounting Engine plugin WindowsDeviceProfileSelector
+LogPluginManager: Mounting Engine plugin ContentBrowserAssetDataSource
+LogPluginManager: Mounting Engine plugin ContentBrowserClassDataSource
+LogPluginManager: Mounting Engine plugin ContentBrowserFileDataSource
+LogPluginManager: Mounting Engine plugin InterchangeEditor
+LogPluginManager: Mounting Engine plugin Interchange
+LogPluginManager: Mounting Engine plugin OnlineSubsystemIOS
+LogPluginManager: Mounting Engine plugin OnlineSubsystemGooglePlay
+LogPluginManager: Mounting Engine plugin OnlineServices
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Bridge/Content/' mounted to '/Bridge/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Developer/AnimationSharing/Content/' mounted to '/AnimationSharing/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/2D/Paper2D/Content/' mounted to '/Paper2D/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Animation/ControlRig/Content/' mounted to '/ControlRig/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Animation/ControlRigSpline/Content/' mounted to '/ControlRigSpline/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Animation/IKRig/Content/' mounted to '/IKRig/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Editor/GeometryMode/Content/' mounted to '/GeometryMode/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Editor/ModelingToolsEditorMode/Content/' mounted to '/ModelingToolsEditorMode/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Editor/SpeedTreeImporter/Content/' mounted to '/SpeedTreeImporter/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Experimental/ChaosClothEditor/Content/' mounted to '/ChaosClothEditor/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Experimental/ChaosNiagara/Content/' mounted to '/ChaosNiagara/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Experimental/ChaosSolverPlugin/Content/' mounted to '/ChaosSolverPlugin/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/FX/Niagara/Content/' mounted to '/Niagara/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Enterprise/DatasmithContent/Content/' mounted to '/DatasmithContent/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Experimental/GeometryCollectionPlugin/Content/' mounted to '/GeometryCollectionPlugin/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Experimental/GeometryFlow/Content/' mounted to '/GeometryFlow/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Experimental/FullBodyIK/Content/' mounted to '/FullBodyIK/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Experimental/MeshModelingToolsetExp/Content/' mounted to '/MeshModelingToolsetExp/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Experimental/MeshLODToolset/Content/' mounted to '/MeshLODToolset/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Media/MediaCompositing/Content/' mounted to '/MediaCompositing/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Experimental/PythonScriptPlugin/Content/' mounted to '/PythonScriptPlugin/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/MovieScene/SequencerScripting/Content/' mounted to '/SequencerScripting/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Runtime/AudioSynesthesia/Content/' mounted to '/AudioSynesthesia/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Runtime/GeometryProcessing/Content/' mounted to '/GeometryProcessing/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Runtime/HairStrands/Content/' mounted to '/HairStrands/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Runtime/MeshModelingToolset/Content/' mounted to '/MeshModelingToolset/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Runtime/ResonanceAudio/Content/' mounted to '/ResonanceAudio/'
+LogPackageName: Display: FPackageName: Mount point added: '../../Plugins/Runtime/Synthesis/Content/' mounted to '/Synthesis/'
+SourceControl: Source control is disabled
+SourceControl: Source control is disabled
+PixWinPlugin: PIX capture plugin failed to initialize! Check that the process is launched from PIX.
+LogInit: Using libcurl 7.55.1-DEV
+LogInit:  - built for x86_64-pc-win32
+LogInit:  - supports SSL with OpenSSL/1.1.1
+LogInit:  - supports HTTP deflate (compression) using libz 1.2.8
+LogInit:  - other features:
+LogInit:      CURL_VERSION_SSL
+LogInit:      CURL_VERSION_LIBZ
+LogInit:      CURL_VERSION_IPV6
+LogInit:      CURL_VERSION_ASYNCHDNS
+LogInit:      CURL_VERSION_LARGEFILE
+LogInit:      CURL_VERSION_IDN
+LogInit:  CurlRequestOptions (configurable via config and command line):
+LogInit:  - bVerifyPeer = true  - Libcurl will verify peer certificate
+LogInit:  - bUseHttpProxy = false  - Libcurl will NOT use HTTP proxy
+LogInit:  - bDontReuseConnections = false  - Libcurl will reuse connections
+LogInit:  - MaxHostConnections = 16  - Libcurl will limit the number of connections to a host
+LogInit:  - LocalHostAddr = Default
+LogInit:  - BufferSize = 65536
+LogInit: WinSock: version 1.1 (2.2), MaxSocks=32767, MaxUdp=65467
+LogOnline: OSS: Created online subsystem instance for: NULL
+LogOnline: OSS: TryLoadSubsystemAndSetDefault: Loaded subsystem for module [NULL]
+LogInit: Build: ++UE5+Release-5.0-CL-20979098
+LogInit: Engine Version: 5.0.3-20979098+++UE5+Release-5.0
+LogInit: Compatible Engine Version: 5.0.0-19505902+++UE5+Release-5.0
+LogInit: Net CL: 19505902
+LogInit: OS: Windows 11 (21H2) [10.0.22000.978] (), CPU: Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz, GPU: NVIDIA GeForce RTX 2060
+LogInit: Compiled (64-bit): Jul  7 2022 02:16:06
+LogInit: Compiled with Visual C++: 19.29.30138.00
+LogInit: Build Configuration: Development
+LogInit: Branch Name: ++UE5+Release-5.0
+LogInit: Command Line: 
+LogInit: Base Directory: C:/Program Files (x86)/UE5/UE_5.0/Engine/Binaries/Win64/
+LogInit: Allocator: Mimalloc
+LogInit: Installed Engine Build: 1
+LogDevObjectVersion: Number of dev versions registered: 34
+LogDevObjectVersion:   Dev-Blueprints (B0D832E4-1F89-4F0D-ACCF-7EB736FD4AA2): 10
+LogDevObjectVersion:   Dev-Build (E1C64328-A22C-4D53-A36C-8E866417BD8C): 0
+LogDevObjectVersion:   Dev-Core (375EC13C-06E4-48FB-B500-84F0262A717E): 4
+LogDevObjectVersion:   Dev-Editor (E4B068ED-F494-42E9-A231-DA0B2E46BB41): 40
+LogDevObjectVersion:   Dev-Framework (CFFC743F-43B0-4480-9391-14DF171D2073): 37
+LogDevObjectVersion:   Dev-Mobile (B02B49B5-BB20-44E9-A304-32B752E40360): 3
+LogDevObjectVersion:   Dev-Networking (A4E4105C-59A1-49B5-A7C5-40C4547EDFEE): 0
+LogDevObjectVersion:   Dev-Online (39C831C9-5AE6-47DC-9A44-9C173E1C8E7C): 0
+LogDevObjectVersion:   Dev-Physics (78F01B33-EBEA-4F98-B9B4-84EACCB95AA2): 20
+LogDevObjectVersion:   Dev-Platform (6631380F-2D4D-43E0-8009-CF276956A95A): 0
+LogDevObjectVersion:   Dev-Rendering (12F88B9F-8875-4AFC-A67C-D90C383ABD29): 45
+LogDevObjectVersion:   Dev-Sequencer (7B5AE74C-D270-4C10-A958-57980B212A5A): 13
+LogDevObjectVersion:   Dev-VR (D7296918-1DD6-4BDD-9DE2-64A83CC13884): 3
+LogDevObjectVersion:   Dev-LoadTimes (C2A15278-BFE7-4AFE-6C17-90FF531DF755): 1
+LogDevObjectVersion:   Private-Geometry (6EACA3D4-40EC-4CC1-B786-8BED09428FC5): 3
+LogDevObjectVersion:   Dev-AnimPhys (29E575DD-E0A3-4627-9D10-D276232CDCEA): 17
+LogDevObjectVersion:   Dev-Anim (AF43A65D-7FD3-4947-9873-3E8ED9C1BB05): 15
+LogDevObjectVersion:   Dev-ReflectionCapture (6B266CEC-1EC7-4B8F-A30B-E4D90942FC07): 1
+LogDevObjectVersion:   Dev-Automation (0DF73D61-A23F-47EA-B727-89E90C41499A): 1
+LogDevObjectVersion:   FortniteMain (601D1886-AC64-4F84-AA16-D3DE0DEAC7D6): 59
+LogDevObjectVersion:   FortniteRelease (E7086368-6B23-4C58-8439-1B7016265E91): 3
+LogDevObjectVersion:   Dev-Enterprise (9DFFBCD6-494F-0158-E221-12823C92A888): 10
+LogDevObjectVersion:   Dev-Niagara (F2AED0AC-9AFE-416F-8664-AA7FFA26D6FC): 1
+LogDevObjectVersion:   Dev-Destruction (174F1F0B-B4C6-45A5-B13F-2EE8D0FB917D): 10
+LogDevObjectVersion:   Dev-Physics-Ext (35F94A83-E258-406C-A318-09F59610247C): 41
+LogDevObjectVersion:   Dev-PhysicsMaterial-Chaos (B68FC16E-8B1B-42E2-B453-215C058844FE): 1
+LogDevObjectVersion:   Dev-CineCamera (B2E18506-4273-CFC2-A54E-F4BB758BBA07): 1
+LogDevObjectVersion:   Dev-VirtualProduction (64F58936-FD1B-42BA-BA96-7289D5D0FA4E): 1
+LogDevObjectVersion:   UE5-Main (697DD581-E64F-41AB-AA4A-51ECBEB7B628): 59
+LogDevObjectVersion:   UE5-Release (D89B5E42-24BD-4D46-8412-ACA8DF641779): 36
+LogDevObjectVersion:   UE5-PrivateFrosty (59DA5D52-1232-4948-B878-597870B8E98B): 8
+LogDevObjectVersion:   UE5-Dev-Cooker (26075A32-730F-4708-88E9-8C32F1599D05): 0
+LogDevObjectVersion:   Dev-MediaFramework (6F0ED827-A609-4895-9C91-998D90180EA4): 2
+LogDevObjectVersion:   UE5-Dev-LWCRendering (30D58BE3-95EA-4282-A6E3-B159D8EBB06A): 1
+LogInit: Presizing for max 25165824 objects, including 0 objects not considered by GC, pre-allocating 0 bytes for permanent pool.
+LogInit: Object subsystem initialized
+LogConfig: CVar [[con.DebugLateDefault:1]] deferred - dummy variable created
+LogConfig: CVar [[con.DebugLateCheat:1]] deferred - dummy variable created
+LogConfig: CVar [[r.DetectAndWarnOfBadDrivers:0]] deferred - dummy variable created
+LogConfig: CVar [[LogNamedEventFilters:Frame *]] deferred - dummy variable created
+LogConfig: CVar [[framepro.ScopeMinTimeMicroseconds:10]] deferred - dummy variable created
+LogConfig: CVar [[QualityLevelMapping:high]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: Applying CVar settings from Section [/Script/Engine.RendererSettings] File [Engine]
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[VisualizeCalibrationColorMaterialPath:/Engine/EngineMaterials/PPM_DefaultCalibrationColor.PPM_DefaultCalibrationColor]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[VisualizeCalibrationGrayscaleMaterialPath:/Engine/EngineMaterials/PPM_DefaultCalibrationGrayscale.PPM_DefaultCalibrationGrayscale]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[MaxSkinBones:(Default=65536,PerPlatform=(("Mobile", 256)))]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: Applying CVar settings from Section [/Script/Engine.RendererOverrideSettings] File [Engine]
+[2022.10.01-21.43.36:772][  0]LogConfig: Applying CVar settings from Section [/Script/Engine.StreamingSettings] File [Engine]
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[s.MaxPackageSummarySize:16384]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[FixedBootOrder:/Script/Engine/Default__SoundBase]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[FixedBootOrder:/Script/Engine/Default__MaterialInterface]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[FixedBootOrder:/Script/Engine/Default__DeviceProfileManager]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: Applying CVar settings from Section [/Script/Engine.GarbageCollectionSettings] File [Engine]
+[2022.10.01-21.43.36:772][  0]LogConfig: Applying CVar settings from Section [/Script/Engine.NetworkSettings] File [Engine]
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[NetworkEmulationProfiles:(ProfileName="Average",ToolTip="Simulates average internet conditions")]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[NetworkEmulationProfiles:(ProfileName="Bad",ToolTip="Simulates laggy internet conditions")]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: Applying CVar settings from Section [/Script/UnrealEd.CookerSettings] File [Engine]
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[DefaultPVRTCQuality:1]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[DefaultASTCQualityBySpeed:1]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[DefaultASTCQualityBySize:3]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:WidgetBlueprint]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:GroupActor]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:MetaData]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:ObjectRedirector]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:NavMeshRenderingComponent]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:ReflectionCaptureComponent]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:TextRenderComponent]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:Font]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:InterpCurveEdSetup]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:MaterialExpression]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:MatineeActorCameraAnim]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:NiagaraEmitter]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:NiagaraScript]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:ParticleEmitter]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:ParticleLODLevel]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:ParticleModule]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:SubUVAnimation]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:SoundNode]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedServer:GameplayEffectUIData]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedClient:WidgetBlueprint]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedClient:GroupActor]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedClient:MetaData]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedClient:ObjectRedirector]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedClient:InterpCurveEdSetup]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[ClassesExcludedOnDedicatedClient:MatineeActorCameraAnim]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[VersionedIntRValues:r.AllowStaticLighting]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[VersionedIntRValues:r.GBuffer]] deferred - dummy variable created
+[2022.10.01-21.43.36:772][  0]LogConfig: CVar [[VersionedIntRValues:r.VelocityOutputPass]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.SelectiveBasePassOutputs]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.DBuffer]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.Shaders.Symbols]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.Shaders.GenerateSymbols]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.Shaders.WriteSymbols]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.Shaders.AllowUniqueSymbols]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.Shaders.ExtraData]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.Shaders.Optimize]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.CompileShadersForDevelopment]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.MobileHDR]] deferred - dummy variable created
+[2022.10.01-21.43.36:773][  0]LogConfig: CVar [[VersionedIntRValues:r.UsePreExposure]] deferred - dummy variable created
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [ViewDistanceQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [AntiAliasingQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [ShadowQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [GlobalIlluminationQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [ReflectionQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [PostProcessQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [TextureQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [EffectsQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [FoliageQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: Applying CVar settings from Section [ShadingQuality@3] File [Scalability]
+[2022.10.01-21.43.36:774][  0]LogConfig: CVar [[r.HairStrands.Interpolation.UseSingleGuide:0]] deferred - dummy variable created
+[2022.10.01-21.43.36:789][  0]LogD3D12RHI: Aftermath initialized
+[2022.10.01-21.43.36:789][  0]LogD3D12RHI: Loading WinPixEventRuntime.dll for PIX profiling (from ../../../Engine/Binaries/ThirdParty/Windows/WinPixEventRuntime/x64).
+[2022.10.01-21.43.36:921][  0]LogD3D12RHI: Found D3D12 adapter 0: NVIDIA GeForce RTX 2060 (Max supported Feature Level 12_1, shader model 6.6)
+[2022.10.01-21.43.36:921][  0]LogD3D12RHI: Adapter has 5980MB of dedicated video memory, 0MB of dedicated system memory, and 12241MB of shared system memory, 1 output[s]
+[2022.10.01-21.43.36:928][  0]LogD3D12RHI: Found D3D12 adapter 1: Microsoft Basic Render Driver (Max supported Feature Level 12_1, shader model 6.2)
+[2022.10.01-21.43.36:929][  0]LogD3D12RHI: Adapter has 0MB of dedicated video memory, 0MB of dedicated system memory, and 12241MB of shared system memory, 0 output[s]
+[2022.10.01-21.43.36:929][  0]LogD3D12RHI: Chosen D3D12 Adapter Id = 0
+[2022.10.01-21.43.36:929][  0]LogInit: Selected Device Profile: [WindowsEditor]
+[2022.10.01-21.43.36:929][  0]LogDeviceProfileManager: Applying CVar settings loaded from the selected device profile: [WindowsEditor]
+[2022.10.01-21.43.36:929][  0]LogHAL: Display: Platform has ~ 24 GB [25673121792 / 34359738368 / 24], which maps to Larger [LargestMinGB=32, LargerMinGB=12, DefaultMinGB=8, SmallerMinGB=6, SmallestMinGB=0)
+[2022.10.01-21.43.36:929][  0]LogDeviceProfileManager: Going up to parent DeviceProfile [Windows]
+[2022.10.01-21.43.36:929][  0]LogDeviceProfileManager: Going up to parent DeviceProfile []
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [ViewDistanceQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [AntiAliasingQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [ShadowQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [GlobalIlluminationQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [ReflectionQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [PostProcessQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [TextureQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [EffectsQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [FoliageQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [ShadingQuality@1] File [Scalability]
+[2022.10.01-21.43.36:929][  0]LogConfig: CVar [[r.HairStrands.Interpolation.UseSingleGuide:1]] deferred - dummy variable created
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [Startup] File [../../../Engine/Config/ConsoleVariables.ini]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [ConsoleVariables] File [Engine]
+[2022.10.01-21.43.36:929][  0]LogConfig: Applying CVar settings from Section [ConsoleVariables] File [C:/Users/YTP/Desktop/Univ_Project/Project/Saved/Config/WindowsEditor/Editor.ini]
+[2022.10.01-21.43.36:929][  0]LogInit: Computer: NEWYTPDEV
+[2022.10.01-21.43.36:929][  0]LogInit: User: YTP
+[2022.10.01-21.43.36:929][  0]LogInit: CPU Page size=4096, Cores=6
+[2022.10.01-21.43.36:929][  0]LogInit: High frequency timer resolution =10.000000 MHz
+[2022.10.01-21.43.36:930][  0]LogMemory: Memory total: Physical=23.9GB (24GB approx)
+[2022.10.01-21.43.36:930][  0]LogMemory: Platform Memory Stats for WindowsEditor
+[2022.10.01-21.43.36:930][  0]LogMemory: Process Physical Memory: 269.53 MB used, 279.77 MB peak
+[2022.10.01-21.43.36:930][  0]LogMemory: Process Virtual Memory: 234.34 MB used, 234.34 MB peak
+[2022.10.01-21.43.36:930][  0]LogMemory: Physical Memory: 9916.61 MB used,  14567.19 MB free, 24483.80 MB total
+[2022.10.01-21.43.36:930][  0]LogMemory: Virtual Memory: 17031.76 MB used,  13596.04 MB free, 30627.80 MB total
+[2022.10.01-21.43.36:930][  0]LogCsvProfiler: Display: Metadata set : extradevelopmentmemorymb="0"
+[2022.10.01-21.43.36:935][  0]LogWindows: WindowsPlatformFeatures enabled
+[2022.10.01-21.43.36:949][  0]LogInit: Physics initialised using underlying interface: Chaos
+[2022.10.01-21.43.36:950][  0]LogInit: Using OS detected language (ko-KR).
+[2022.10.01-21.43.36:950][  0]LogInit: Using OS detected locale (ko-KR).
+[2022.10.01-21.43.36:954][  0]LogTextLocalizationManager: No specific localization for 'ko-KR' exists, so 'ko' will be used for the language.
+[2022.10.01-21.43.37:053][  0]LogInit: Setting process to per monitor DPI aware
+[2022.10.01-21.43.37:077][  0]LogWindowsTextInputMethodSystem: Available input methods:
+[2022.10.01-21.43.37:077][  0]LogWindowsTextInputMethodSystem:   - 한국어(대한민국) - Microsoft 입력기 (TSF IME).
+[2022.10.01-21.43.37:078][  0]LogWindowsTextInputMethodSystem: Activated input method: 한국어(대한민국) - Microsoft 입력기 (TSF IME).
+[2022.10.01-21.43.37:087][  0]LogSlate: New Slate User Created.  User Index 0, Is Virtual User: 0
+[2022.10.01-21.43.37:087][  0]LogSlate: Slate User Registered.  User Index 0, Is Virtual User: 0
+[2022.10.01-21.43.37:184][  0]LogD3D12RHI: InitD3DDevice: -D3DDebug = off -D3D12GPUValidation = off
+[2022.10.01-21.43.37:187][  0]LogD3D12RHI: [Aftermath] Aftermath crash dumping enabled
+[2022.10.01-21.43.37:187][  0]LogD3D12RHI: Emitting draw events for PIX profiling.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: [Aftermath] Aftermath enabled and primed
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: [Aftermath] Aftermath resource tracking enabled
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: ID3D12Device1 is supported.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: ID3D12Device2 is supported.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: ID3D12Device3 is supported.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: ID3D12Device4 is supported.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: ID3D12Device5 is supported.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: ID3D12Device6 is supported.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: ID3D12Device7 is supported.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: D3D12 ray tracing tier 1.0 is supported.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: D3D12 ray tracing tier 1.1 is supported.
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: Mesh shader tier 1.0 is supported
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: AtomicInt64OnTypedResource is supported
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: AtomicInt64OnGroupShared is supported
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: AtomicInt64OnDescriptorHeapResource is supported
+[2022.10.01-21.43.37:242][  0]LogD3D12RHI: Shader Model 6.6 atomic64 is supported
+[2022.10.01-21.43.37:286][  0]LogD3D12RHI: [GPUBreadCrumb] Successfully setup breadcrumb resource for 3D Queue 0
+[2022.10.01-21.43.37:292][  0]LogD3D12RHI: [GPUBreadCrumb] Successfully setup breadcrumb resource for Copy Queue 0
+[2022.10.01-21.43.37:306][  0]LogD3D12RHI: [GPUBreadCrumb] Successfully setup breadcrumb resource for Compute Queue 0
+[2022.10.01-21.43.37:320][  0]LogD3D12RHI: Display: Not using pipeline state disk cache per r.D3D12.PSO.DiskCache=0
+[2022.10.01-21.43.37:320][  0]LogD3D12RHI: Display: Not using driver-optimized pipeline state disk cache per r.D3D12.PSO.DriverOptimizedDiskCache=0
+[2022.10.01-21.43.37:355][  0]LogD3D12RHI:     GPU DeviceId: 0x1f15 (for the marketing name, search the web for "GPU Device Id")
+[2022.10.01-21.43.37:355][  0]LogWindows: Attached monitors:
+[2022.10.01-21.43.37:355][  0]LogWindows:     resolution: 1920x1080, work area: (0, 0) -> (1920, 1032), device: '\\.\DISPLAY1' [PRIMARY]
+[2022.10.01-21.43.37:355][  0]LogWindows: Found 1 attached monitors.
+[2022.10.01-21.43.37:355][  0]LogWindows: EnumDisplayDevices:
+[2022.10.01-21.43.37:355][  0]LogWindows:    0. 'NVIDIA GeForce RTX 2060' (P:1 D:1), name: '\\.\DISPLAY1'
+[2022.10.01-21.43.37:355][  0]LogWindows:    1. 'NVIDIA GeForce RTX 2060' (P:0 D:0), name: '\\.\DISPLAY2'
+[2022.10.01-21.43.37:355][  0]LogWindows:    2. 'NVIDIA GeForce RTX 2060' (P:0 D:0), name: '\\.\DISPLAY3'
+[2022.10.01-21.43.37:355][  0]LogWindows:    3. 'NVIDIA GeForce RTX 2060' (P:0 D:0), name: '\\.\DISPLAY4'
+[2022.10.01-21.43.37:355][  0]LogWindows: DebugString: FoundDriverCount:4 
+[2022.10.01-21.43.37:355][  0]LogD3D12RHI:     Adapter Name: NVIDIA GeForce RTX 2060
+[2022.10.01-21.43.37:355][  0]LogD3D12RHI:   Driver Version: 516.94 (internal:31.0.15.1694, unified:516.94)
+[2022.10.01-21.43.37:355][  0]LogD3D12RHI:      Driver Date: 7-21-2022
+[2022.10.01-21.43.37:355][  0]LogRHI: Texture pool is 3283 MB (70% of 4690 MB)
+[2022.10.01-21.43.37:355][  0]LogD3D12RHI: Async texture creation enabled
+[2022.10.01-21.43.37:356][  0]LogD3D12RHI: RHI has support for 64 bit atomics
+[2022.10.01-21.43.37:365][  0]LogRHI: GeForceNow SDK initialized: 0
+[2022.10.01-21.43.37:371][  0]LogTurnkeySupport: Running Turnkey SDK detection: ' -ScriptsForProject="C:/Users/YTP/Desktop/Univ_Project/Project/Project.uproject" Turnkey -utf8output -WaitForUATMutex -command=VerifySdk -ReportFilename="C:/Users/YTP/Desktop/Univ_Project/Project/Intermediate/TurnkeyReport_0.log" -log="C:/Users/YTP/Desktop/Univ_Project/Project/Intermediate/TurnkeyLog_0.log" -project="C:/Users/YTP/Desktop/Univ_Project/Project/Project.uproject"  -platform=all'
+[2022.10.01-21.43.37:372][  0]LogMonitoredProcess: Running Serialized UAT: [ cmd.exe /c ""C:/Program Files (x86)/UE5/UE_5.0/Engine/Build/BatchFiles/RunUAT.bat"  -ScriptsForProject="C:/Users/YTP/Desktop/Univ_Project/Project/Project.uproject" Turnkey -utf8output -WaitForUATMutex -command=VerifySdk -ReportFilename="C:/Users/YTP/Desktop/Univ_Project/Project/Intermediate/TurnkeyReport_0.log" -log="C:/Users/YTP/Desktop/Univ_Project/Project/Intermediate/TurnkeyLog_0.log" -project="C:/Users/YTP/Desktop/Univ_Project/Project/Project.uproject"  -platform=all" ]
+[2022.10.01-21.43.37:394][  0]LogTextureFormatETC2: Display: ETC2 Texture loading DLL: TextureConverter.dll
+[2022.10.01-21.43.37:404][  0]LogTextureFormatOodle: Display: Oodle Texture TFO init; latest sdk version = 2.9.5
+[2022.10.01-21.43.37:404][  0]LogTextureFormatOodle: Display: Oodle Texture loading DLL: oo2tex_win64_2.9.5.dll
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android'
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_ASTC'
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_DXT'
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_ETC2'
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'AndroidClient'
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_ASTCClient'
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_DXTClient'
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_ETC2Client'
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_Multi'
+[2022.10.01-21.43.37:413][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Android_MultiClient'
+[2022.10.01-21.43.37:437][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'HoloLens'
+[2022.10.01-21.43.37:437][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'HoloLensClient'
+[2022.10.01-21.43.37:441][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'IOS'
+[2022.10.01-21.43.37:441][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'IOSClient'
+[2022.10.01-21.43.37:444][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Linux'
+[2022.10.01-21.43.37:444][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxEditor'
+[2022.10.01-21.43.37:444][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxServer'
+[2022.10.01-21.43.37:444][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxClient'
+[2022.10.01-21.43.37:447][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64'
+[2022.10.01-21.43.37:447][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64Server'
+[2022.10.01-21.43.37:447][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'LinuxArm64Client'
+[2022.10.01-21.43.37:451][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'TVOS'
+[2022.10.01-21.43.37:451][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'TVOSClient'
+[2022.10.01-21.43.37:457][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'Windows'
+[2022.10.01-21.43.37:457][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'WindowsEditor'
+[2022.10.01-21.43.37:457][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'WindowsServer'
+[2022.10.01-21.43.37:457][  0]LogTargetPlatformManager: Display: Loaded TargetPlatform 'WindowsClient'
+[2022.10.01-21.43.37:457][  0]LogTargetPlatformManager: Display: Building Assets For WindowsEditor
+[2022.10.01-21.43.37:465][  0]LogAudioDebug: Display: Lib vorbis DLL was dynamically loaded.
+[2022.10.01-21.43.37:467][  0]LogTargetPlatformManager: Unable to find audio format BINKA from hinted modules, loading all potential format modules to find it
+[2022.10.01-21.43.37:468][  0]LogTargetPlatformManager: Loaded format module AudioFormatADPCM
+[2022.10.01-21.43.37:468][  0]LogTargetPlatformManager:   ADPCM
+[2022.10.01-21.43.37:468][  0]LogTargetPlatformManager:   PCM
+[2022.10.01-21.43.37:471][  0]LogTargetPlatformManager: Loaded format module AudioFormatBink
+[2022.10.01-21.43.37:471][  0]LogTargetPlatformManager:   BINKA
+[2022.10.01-21.43.37:471][  0]LogTargetPlatformManager: Loaded format module AudioFormatOgg
+[2022.10.01-21.43.37:471][  0]LogTargetPlatformManager:   OGG
+[2022.10.01-21.43.37:471][  0]LogTargetPlatformManager: Loaded format module AudioFormatOpus
+[2022.10.01-21.43.37:471][  0]LogTargetPlatformManager:   OPUS
+[2022.10.01-21.43.37:510][  0]LogTargetPlatformManager: Unable to find shader format SF_METAL from hinted modules, loading all potential format modules to find it
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager: Loaded format module MetalShaderFormat
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   SF_METAL
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   SF_METAL_MRT
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   SF_METAL_TVOS
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   SF_METAL_MRT_TVOS
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   SF_METAL_SM5
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   SF_METAL_MACES3_1
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   SF_METAL_MRT_MAC
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager: Loaded format module ShaderFormatD3D
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   PCD3D_SM6
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   PCD3D_SM5
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   PCD3D_ES31
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   D3D_ES3_1_HOLOLENS
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager: Loaded format module ShaderFormatOpenGL
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   GLSL_150_ES31
+[2022.10.01-21.43.37:516][  0]LogTargetPlatformManager:   GLSL_ES3_1_ANDROID
+[2022.10.01-21.43.37:519][  0]LogTargetPlatformManager: Loaded format module ShaderFormatVectorVM
+[2022.10.01-21.43.37:519][  0]LogTargetPlatformManager:   VVM_1_0
+[2022.10.01-21.43.37:519][  0]LogTargetPlatformManager: Loaded format module VulkanShaderFormat
+[2022.10.01-21.43.37:519][  0]LogTargetPlatformManager:   SF_VULKAN_SM5
+[2022.10.01-21.43.37:519][  0]LogTargetPlatformManager:   SF_VULKAN_ES31_ANDROID
+[2022.10.01-21.43.37:519][  0]LogTargetPlatformManager:   SF_VULKAN_ES31
+[2022.10.01-21.43.37:519][  0]LogTargetPlatformManager:   SF_VULKAN_SM5_ANDROID
+[2022.10.01-21.43.37:520][  0]LogRendererCore: Ray tracing is disabled. Reason: r.RayTracing=0.
+[2022.10.01-21.43.37:520][  0]LogShaderCompilers: Display: Compiling shader autogen file: ../../../../../../Users/YTP/Desktop/Univ_Project/Project/Intermediate/ShaderAutogen/PCD3D_SM5/AutogenShaderHeaders.ush
+[2022.10.01-21.43.37:520][  0]LogShaderCompilers: Display: Autogen file is unchanged, skipping write.
+[2022.10.01-21.43.37:520][  0]LogShaderCompilers: Display: Compiling shader autogen file: ../../../../../../Users/YTP/Desktop/Univ_Project/Project/Intermediate/ShaderAutogen/PCD3D_ES31/AutogenShaderHeaders.ush
+[2022.10.01-21.43.37:520][  0]LogShaderCompilers: Display: Autogen file is unchanged, skipping write.
+[2022.10.01-21.43.37:522][  0]LogDerivedDataCache: FDerivedDataBackendGraph:  Pak pak cache file ../../../../../../Users/YTP/Desktop/Univ_Project/Project/DerivedDataCache/DDC.ddp not found, will not use a pak cache.
+[2022.10.01-21.43.37:522][  0]LogDerivedDataCache: Unable to find inner node Pak for hierarchy Hierarchy.
+[2022.10.01-21.43.37:522][  0]LogDerivedDataCache: FDerivedDataBackendGraph:  CompressedPak pak cache file ../../../../../../Users/YTP/Desktop/Univ_Project/Project/DerivedDataCache/Compressed.ddp not found, will not use a pak cache.
+[2022.10.01-21.43.37:522][  0]LogDerivedDataCache: Unable to find inner node CompressedPak for hierarchy Hierarchy.
+[2022.10.01-21.43.37:541][  0]LogDerivedDataCache: Display: ../../../Engine/DerivedDataCache/Compressed.ddp: Opened pak cache for reading. (1230 MiB)
+[2022.10.01-21.43.37:541][  0]LogDerivedDataCache: FDerivedDataBackendGraph:  EnterprisePak pak cache file ../../../Enterprise/DerivedDataCache/Compressed.ddp not found, will not use a pak cache.
+[2022.10.01-21.43.37:541][  0]LogDerivedDataCache: Unable to find inner node EnterprisePak for hierarchy Hierarchy.
+[2022.10.01-21.43.37:549][  0]LogDerivedDataCache: Speed tests for C:/Users/YTP/AppData/Local/UnrealEngine/Common/DerivedDataCache took 0.01 seconds
+[2022.10.01-21.43.37:549][  0]LogDerivedDataCache: Display: Performance to C:/Users/YTP/AppData/Local/UnrealEngine/Common/DerivedDataCache: Latency=0.02ms. RandomReadSpeed=295.10MBs, RandomWriteSpeed=237.55MBs. Assigned SpeedClass 'Local'
+[2022.10.01-21.43.37:550][  0]LogDerivedDataCache: Using Local data cache path C:/Users/YTP/AppData/Local/UnrealEngine/Common/DerivedDataCache: Writable
+[2022.10.01-21.43.37:550][  0]LogDerivedDataCache: Shared data cache path not found in *engine.ini, will not use an Shared cache.
+[2022.10.01-21.43.37:550][  0]LogDerivedDataCache: Unable to find inner node Shared for hierarchy Hierarchy.
+[2022.10.01-21.43.37:555][  0]LogVirtualization: VirtualizationSystem name found in ini file: None
+[2022.10.01-21.43.37:555][  0]LogVirtualization: FNullVirtualizationSystem mounted, virtualization will be disabled
+[2022.10.01-21.43.37:555][  0]LogShaderCompilers: Guid format shader working directory is -13 characters bigger than the processId version (../../../../../../Users/YTP/Desktop/Univ_Project/Project/Intermediate/Shaders/WorkingDirectory/24096/).
+[2022.10.01-21.43.37:555][  0]LogShaderCompilers: Cleaned the shader compiler working directory 'C:/Users/YTP/AppData/Local/Temp/UnrealShaderWorkingDir/68F0015145ABA513A038A095DA4469FD/'.
+[2022.10.01-21.43.37:555][  0]LogXGEController: Cannot use XGE Controller as Incredibuild is not installed on this machine.
+[2022.10.01-21.43.37:555][  0]LogShaderCompilers: Display: Using Local Shader Compiler with 9 workers.
+[2022.10.01-21.43.38:883][  0]LogTurnkeySupport: Completed SDK detection: ExitCode = 0
+[2022.10.01-21.43.38:883][  0]LogSlate: Using FreeType 2.10.0
+[2022.10.01-21.43.38:883][  0]LogSlate: SlateFontServices - WITH_FREETYPE: 1, WITH_HARFBUZZ: 1
+[2022.10.01-21.43.38:918][  0]LogAssetRegistry: FAssetRegistry took 0.0108 seconds to start up
+[2022.10.01-21.43.38:922][  0]LogEditorDomain: Display: EditorDomain is Disabled
+[2022.10.01-21.43.39:092][  0]LogSerialization: UsePackageTrailer: 'false'
+[2022.10.01-21.43.39:092][  0]LogTexture: Display: Texture Encode Speed: FinalIfAvailable (editor).
+[2022.10.01-21.43.39:332][  0]LogInit: Selected Device Profile: [WindowsEditor]
+[2022.10.01-21.43.39:332][  0]LogDeviceProfileManager: Active device profile: [00000847B7022680][00000847AE9E2800 50] WindowsEditor
+[2022.10.01-21.43.39:332][  0]LogDeviceProfileManager: Profiles: [00000847B7022140][0000084797A7C800 50] Windows, [00000847B7022680][00000847AE9E2800 50] WindowsEditor, [00000847B7021F80][00000847AE9AA000 50] WindowsServer, [00000847B7022BC0][00000847B67B0000 50] WindowsClient, [00000847B7021DC0][00000847B67B5000 50] IOS, [00000847B7022F40][00000847B67B7800 50] iPadAir2, [00000847B7025400][00000847B67BC800 50] IPadPro, [00000847B7025780][00000847B67BA000 50] iPadAir3, [00000847B7024B40][00000847ABEE2800 50] iPadAir4, [00000847B7025240][00000847B7040000 50] iPadMini4, [00000847B7020700][00000847B7045000 50] iPadMini5, [00000847B7025080][00000847B7047800 50] iPadMini6, [00000847B7027A80][00000847B67B2800 50] iPhone6S, [00000847B70278C0][00000847B704C800 50] iPhone7, [00000847B7027540][00000847B704A000 50] iPodTouch7, [00000847B7021500][00000847B7050000 50] iPhone6SPlus, [00000847B7024280][00000847B7055000 50] iPhone7Plus, [00000847B7020E00][00000847B7057800 50] iPhoneSE, [00000847B7022840][00000847B705A000 50] iPhone8, [00000847B7023B80][00000847B705C800 50] iPhone8Plus, [00000847B70208C0][00000847B7042800 50] iPhoneX, [00000847B7020C40][00000847B7060000 50] iPhoneXS, [00000847B7023100][00000847B7065000 50] iPhoneXSMax, [00000847B70224C0][00000847B7067800 50] iPhoneXR, [00000847B7027700][00000847B706A000 50] iPhone11, [00000847B7022D80][00000847B706C800 50] iPhone11Pro, [00000847B7023D40][00000847B7052800 50] iPhone11ProMax, [00000847B7023480][00000847B7070000 50] iPhoneSE2, [00000847B70240C0][00000847B7075000 50] iPhone12Mini, [00000847B7021C00][00000847B7077800 50] iPhone12, [00000847B7024440][00000847B707A000 50] iPhone12Pro, [00000847B7021A40][00000847B707C800 50] iPhone12ProMax, [00000847B7025B00][00000847B7062800 50] iPhone13Mini, [00000847B7020000][00000847B7080000 50] iPhone13, [00000847B7021880][00000847B7085000 50] iPhone13Pro, [00000847B7024600][00000847B7087800 50] iPhone13ProMax, [00000847B7024980][00000847B708A000 50] iPadPro105, [00000847B70232C0][00000847B708C800 50] iPadPro129, [00000847B70271C0][00000847B7072800 50] iPadPro97, [00000847B7024EC0][00000847B7090000 50] iPadPro2_129, [00000847B7026AC0][00000847B7095000 50] iPad5, [00000847B7027000][00000847B7097800 50] iPad6, [00000847B70263C0][00000847B709A000 50] iPad7, [00000847B70216C0][00000847B709C800 50] iPad8, [00000847B7020FC0][00000847B7082800 50] iPad9, [00000847B7021180][00000847B70A0000 50] iPadPro11, [00000847B7026580][00000847B70A5000 50] iPadPro2_11, [00000847B7023800][00000847B70A7800 50] iPadPro3_11, [00000847B7026740][00000847B70AA000 50] iPadPro3_129, [00000847B7026900][00000847B70AC800 50] iPadPro4_129, [00000847B7026200][00000847B7092800 50] iPadPro5_129, [00000847B70201C0][00000847B7010000 50] AppleTV, [00000847B7020540][00000847B7015000 50] AppleTV4K, [00000847B7022A00][00000847B7017800 50] TVOS, [00000847B702A2C0][00000847B701C800 50] Mac, [00000847B702A640][00000847B701A000 50] MacEditor, [00000847B7029840][00000847B70A2800 50] MacClient, [00000847B7027FC0][00000847B70B0000 50] MacServer, [00000847B702A800][00000847B70B7800 50] Linux, [00000847B702A100][00000847B70B5000 50] LinuxEditor, [00000847B7020380][00000847B70BA000 50] LinuxArm64Editor, [00000847B7029BC0][00000847B70BC800 50] LinuxArm64, [00000847B7023640][00000847B7012800 50] LinuxClient, [00000847B7029300][00000847B67F0000 50] LinuxArm64Client, [00000847B7020A80][00000847B67F5000 50] LinuxServer, [00000847B7028880][00000847B67F7800 50] LinuxArm64Server, [00000847B7029F40][00000847B67FA000 50] Android, [00000847B702A480][00000847B67FC800 50] Android_Preview_OpenGL, [00000847B7028C00][00000847B70B2800 50] Android_Preview_Vulkan, [00000847B7027380][00000847B70D0000 50] Android_Low, [00000847B7028180][00000847B70D5000 50] Android_Mid, [00000847B702AB80][00000847B70D7800 50] Android_High, [00000847B7028DC0][00000847B70DA000 50] Android_Default, [00000847B7029D80][00000847B70DC800 50] Android_Adreno4xx, [00000847B70239C0][00000847B67F2800 50] Android_Adreno5xx_Low, [00000847B7023F00][00000847B70C0000 50] Android_Adreno5xx, [00000847B70294C0][00000847B70C5000 50] Android_Adreno6xx, [00000847B7028500][00000847B70C7800 50] Android_Adreno6xx_Vulkan, [00000847B7028340][00000847B70CA000 50] Android_Adreno7xx, [00000847B7025E80][00000847B70CC800 50] Android_Adreno7xx_Vulkan, [00000847B702A9C0][00000847B70D2800 50] Android_Mali_T6xx, [00000847B702B440][00000847B7100000 50] Android_Mali_T7xx, [00000847B702B600][00000847B7105000 50] Android_Mali_T8xx, [00000847B702AF00][00000847B7107800 50] Android_Mali_G71, [00000847B7026E40][00000847B710A000 50] Android_Mali_G72, [00000847B70255C0][00000847B710C800 50] Android_Mali_G72_Vulkan, [00000847B702B280][00000847B70C2800 50] Android_Mali_G76, [00000847B702B980][00000847B7110000 50] Android_Mali_G76_Vulkan, [00000847B7028A40][00000847B7115000 50] Android_Mali_G77, [00000847B7024D00][00000847B7117800 50] Android_Mali_G77_Vulkan, [00000847B702C400][00000847B711A000 50] Android_Mali_G78, [00000847B702C5C0][00000847B711C800 50] Android_Mali_G78_Vulkan, [00000847B702BEC0][00000847B7102800 50] Android_Mali_G710, [00000847B7029680][00000847B7120000 50] Android_Mali_G710_Vulkan, [00000847B7025CC0][00000847B7125000 50] Android_Xclipse_920, [00000847B702C240][00000847B7127800 50] Android_Xclipse_920_Vulkan, [00000847B702C940][00000847B712A000 50] Android_Vulkan_SM5, [00000847B702CB00][00000847B712C800 50] Android_PowerVR_G6xxx, [00000847B702BD00][00000847B7112800 50] Android_PowerVR_GT7xxx, [00000847B7027C40][00000847B7130000 50] Android_PowerVR_GE8xxx, [00000847B702C080][00000847B7135000 50] Android_PowerVR_GM9xxx, [00000847B7028F80][00000847B7137800 50] Android_PowerVR_GM9xxx_Vulkan, [00000847B702B0C0][00000847B713A000 50] Android_TegraK1, [00000847B702DAC0][00000847B713C800 50] Android_Unknown_Vulkan, [00000847B7021340][00000847B7122800 50] Oculus_Quest, [00000847B702BB40][00000847B7140000 50] Oculus_Quest2, [00000847B702C780][00000847B7145000 50] HoloLens, 
+[2022.10.01-21.43.39:332][  0]LogCsvProfiler: Display: Metadata set : deviceprofile="WindowsEditor"
+[2022.10.01-21.43.39:334][  0]LogTurnkeySupport: Turnkey Platform: Android: (Status=Invalid, Installed=, AutoSDK=, MinAllowed=r21a, MaxAllowed=r23a, Flags="Platform_InvalidHostPrerequisites", Error="Android Studio is not installed correctly.|Android SDK directory is not set correctly.")
+[2022.10.01-21.43.39:334][  0]LogTurnkeySupport: Turnkey Platform: IOS: (Status=Valid, Installed=1369.122.1.1, AutoSDK=, MinAllowed=1100.0.0.0, MaxAllowed=1399.0, Flags="InstalledSdk_ValidVersionExists")
+[2022.10.01-21.43.39:334][  0]LogTurnkeySupport: Turnkey Platform: Linux: (Status=Invalid, Installed=, AutoSDK=, MinAllowed=v20_clang-13.0.1-centos7, MaxAllowed=v20_clang-13.0.1-centos7, Flags="Platform_ValidHostPrerequisites")
+[2022.10.01-21.43.39:334][  0]LogTurnkeySupport: Turnkey Platform: LinuxArm64: (Status=Invalid, Installed=, AutoSDK=, MinAllowed=v20_clang-13.0.1-centos7, MaxAllowed=v20_clang-13.0.1-centos7, Flags="Platform_ValidHostPrerequisites")
+[2022.10.01-21.43.39:334][  0]LogTurnkeySupport: Turnkey Platform: Win64: (Status=Valid, Installed=10.0.18362.0, AutoSDK=, MinAllowed=10.0.00000.0, MaxAllowed=10.9.99999.0, Flags="InstalledSdk_ValidVersionExists")
+[2022.10.01-21.43.39:353][  0]LogTexture: Display: Oodle Texture Encode Speed settings: Fast: RDO Off Lambda=0, Effort=Normal Final: RDO Off Lambda=0, Effort=Normal
+[2022.10.01-21.43.39:541][  0]LogMeshReduction: Using QuadricMeshReduction for automatic static mesh reduction
+[2022.10.01-21.43.39:541][  0]LogMeshReduction: Using SimplygonMeshReduction for automatic skeletal mesh reduction
+[2022.10.01-21.43.39:541][  0]LogMeshReduction: Using ProxyLODMeshReduction for automatic mesh merging
+[2022.10.01-21.43.39:541][  0]LogMeshReduction: No distributed automatic mesh merging module available
+[2022.10.01-21.43.39:541][  0]LogMeshMerging: No distributed automatic mesh merging module available
+[2022.10.01-21.43.39:553][  0]LogNetVersion: Project 1.0.0, NetCL: 19505902, EngineNetVer: 23, GameNetVer: 0 (Checksum: 574098181)
+[2022.10.01-21.43.39:664][  0]LogSlate: Border
+[2022.10.01-21.43.39:664][  0]LogSlate: BreadcrumbButton
+[2022.10.01-21.43.39:664][  0]LogSlate: Default
+[2022.10.01-21.43.39:664][  0]LogSlate: Icons.Save
+[2022.10.01-21.43.39:664][  0]LogSlate: Icons.Toolbar.Settings
+[2022.10.01-21.43.39:664][  0]LogSlate: ListView
+[2022.10.01-21.43.39:664][  0]LogSlate: SoftwareCursor_CardinalCross
+[2022.10.01-21.43.39:664][  0]LogSlate: SoftwareCursor_Grab
+[2022.10.01-21.43.39:664][  0]LogSlate: TableView.DarkRow
+[2022.10.01-21.43.39:664][  0]LogSlate: TableView.Row
+[2022.10.01-21.43.39:664][  0]LogSlate: TreeView
+[2022.10.01-21.43.39:814][  0]SourceControl: 소스 컨트롤이 꺼졌습니다.
+[2022.10.01-21.43.39:838][  0]SourceControl: 소스 컨트롤이 꺼졌습니다.
+[2022.10.01-21.43.39:838][  0]SourceControl: 소스 컨트롤이 꺼졌습니다.
+[2022.10.01-21.43.39:941][  0]LogUObjectArray: 20557 objects as part of root set at end of initial load.
+[2022.10.01-21.43.39:941][  0]LogUObjectAllocator: 5584256 out of 0 bytes used by permanent object pool.
+[2022.10.01-21.43.39:941][  0]LogUObjectArray: CloseDisregardForGC: 0/0 objects in disregard for GC pool
+[2022.10.01-21.43.40:269][  0]LogNiagaraDebuggerClient: Niagara Debugger Client Initialized | Session: 629B5AC54A26D3C1791288A6CB0F527A | Instance: 36B20F99416F3A87FD4BF996930EAD46 (NEWYTPDEV-24096).
+[2022.10.01-21.43.40:307][  0]LogPython: Using Python 3.9.7
+[2022.10.01-21.43.41:047][  0]LogTcpMessaging: Initializing TcpMessaging bridge
+[2022.10.01-21.43.41:052][  0]LogUdpMessaging: Initializing bridge on interface 0.0.0.0:0 to multicast group 230.0.0.1:6666.
+[2022.10.01-21.43.41:126][  0]SourceControl: 소스 컨트롤이 꺼졌습니다.
+[2022.10.01-21.43.41:142][  0]SourceControl: 소스 컨트롤이 꺼졌습니다.
+[2022.10.01-21.43.41:148][  0]LogUProjectInfo: Found projects:
+[2022.10.01-21.43.41:169][  0]SourceControl: 소스 컨트롤이 꺼졌습니다.
+[2022.10.01-21.43.41:448][  0]LogOpenImageDenoise: OIDN starting up
+[2022.10.01-21.43.41:496][  0]LogAndroidPermission: UAndroidPermissionCallbackProxy::GetInstance
+[2022.10.01-21.43.41:513][  0]LogAudioCaptureCore: Display: No Audio Capture implementations found. Audio input will be silent.
+[2022.10.01-21.43.41:513][  0]LogAudioCaptureCore: Display: No Audio Capture implementations found. Audio input will be silent.
+[2022.10.01-21.43.41:616][  0]LogCollectionManager: Loaded 0 collections in 0.001523 seconds
+[2022.10.01-21.43.41:693][  0]LogFileCache: Scanning file cache for directory 'C:/Users/YTP/Desktop/Univ_Project/Project/Saved/Collections/' took 0.00s
+[2022.10.01-21.43.41:693][  0]LogFileCache: Scanning file cache for directory 'C:/Users/YTP/Desktop/Univ_Project/Project/Content/Developers/YTP/Collections/' took 0.00s
+[2022.10.01-21.43.41:693][  0]LogFileCache: Scanning file cache for directory 'C:/Users/YTP/Desktop/Univ_Project/Project/Content/Collections/' took 0.00s
+[2022.10.01-21.43.41:985][  0]LogEngine: Initializing Engine...
+[2022.10.01-21.43.41:999][  0]LogStylusInput: Initializing StylusInput subsystem.
+[2022.10.01-21.43.42:000][  0]LogStats: UGameplayTagsManager::InitializeManager -  0.000 s
+[2022.10.01-21.43.42:249][  0]LogInit: Initializing FReadOnlyCVARCache
+[2022.10.01-21.43.42:250][  0]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.43.42:261][  0]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.43.42:294][  0]LogAIModule: Creating AISystem for world Untitled
+[2022.10.01-21.43.42:295][  0]LogAudio: Display: Initializing Audio Device Manager...
+[2022.10.01-21.43.42:320][  0]LogAudio: Display: Loading Default Audio Settings Objects...
+[2022.10.01-21.43.42:320][  0]LogAudio: Display: No default SoundConcurrencyObject specified (or failed to load).
+[2022.10.01-21.43.42:320][  0]LogAudio: Display: Registering Engine Module Parameter Interfaces...
+[2022.10.01-21.43.42:321][  0]LogAudio: Display: Audio Device Manager Initialized
+[2022.10.01-21.43.42:321][  0]LogAudio: Display: Creating Audio Device:                 Id: 1, Scope: Shared, Realtime: True
+[2022.10.01-21.43.42:321][  0]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.43.42:321][  0]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.43.42:321][  0]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.43.42:321][  0]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.43.42:321][  0]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.43.42:321][  0]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.43.42:321][  0]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.43.42:321][  0]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.43.42:321][  0]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.43.42:321][  0]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.43.42:321][  0]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.43.42:327][  0]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.43.42:561][  0]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.43.42:561][  0]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.43.42:563][  0]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.43.42:563][  0]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.43.42:563][  0]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=1
+[2022.10.01-21.43.42:563][  0]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=1
+[2022.10.01-21.43.42:565][  0]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=1
+[2022.10.01-21.43.42:565][  0]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=1
+[2022.10.01-21.43.42:565][  0]LogInit: FAudioDevice initialized.
+[2022.10.01-21.43.42:565][  0]LogAudio: Display: Audio Device (ID: 1) registered with world 'Untitled'.
+[2022.10.01-21.43.42:565][  0]LogNetVersion: Set ProjectVersion to 1.0.0.0. Version Checksum will be recalculated on next use.
+[2022.10.01-21.43.42:565][  0]LogInit: Texture streaming: Enabled
+[2022.10.01-21.43.42:602][  0]LogAnalytics: Display: [UEEditor.Rocket.Release] APIServer = https://datarouter.ol.epicgames.com/. AppVersion = 5.0.3-20979098+++UE5+Release-5.0
+[2022.10.01-21.43.42:612][  0]LogEngineSessionManager: EngineSessionManager initialized
+[2022.10.01-21.43.42:612][  0]LogEngineSessionManager: EngineSessionManager sent abnormal shutdown report. Type=AbnormalShutdown, SessionId={68813C06-459B-6531-FBAC-9E99BDAACF54}
+[2022.10.01-21.43.42:634][  0]LogCsvProfiler: Display: Metadata set : largeworldcoordinates="1"
+[2022.10.01-21.43.42:642][  0]LogLiveCoding: Display: Starting LiveCoding
+[2022.10.01-21.43.42:642][  0]LogLiveCoding: Display: LiveCodingConsole Arguments: ProjectEditor Win64 Development
+[2022.10.01-21.43.43:667][  0]LogLiveCoding: Display: First instance in process group "UE_Project_0x829891b4", spawning console
+[2022.10.01-21.43.43:667][  0]LogLiveCoding: Display: Waiting for server
+[2022.10.01-21.43.43:667][  0]LogLiveCoding: Display: Successfully initialized, removing startup thread
+[2022.10.01-21.43.43:697][  0]LogInit: Transaction tracking system initialized
+[2022.10.01-21.43.43:776][  0]BlueprintLog: New page: 에디터 로드
+[2022.10.01-21.43.43:986][  0]LocalizationService: 현지화 서비스가 비활성화되었습니다.
+[2022.10.01-21.43.44:037][  0]TimingProfiler: Initialize
+[2022.10.01-21.43.44:037][  0]TimingProfiler: OnSessionChanged
+[2022.10.01-21.43.44:037][  0]LoadingProfiler: Initialize
+[2022.10.01-21.43.44:037][  0]LoadingProfiler: OnSessionChanged
+[2022.10.01-21.43.44:037][  0]NetworkingProfiler: Initialize
+[2022.10.01-21.43.44:037][  0]NetworkingProfiler: OnSessionChanged
+[2022.10.01-21.43.44:037][  0]MemoryProfiler: Initialize
+[2022.10.01-21.43.44:037][  0]MemoryProfiler: OnSessionChanged
+[2022.10.01-21.43.44:716][  0]LogFileCache: Scanning file cache for directory 'C:/Users/YTP/Desktop/Univ_Project/Project/Content/' took 0.00s
+[2022.10.01-21.43.44:716][  0]LogLevelSequenceEditor: LevelSequenceEditor subsystem initialized.
+[2022.10.01-21.43.44:801][  0]LogInit: Display: Engine is initialized. Leaving FEngineLoop::Init()
+[2022.10.01-21.43.44:803][  0]SourceControl: 소스 컨트롤이 꺼졌습니다.
+[2022.10.01-21.43.44:803][  0]LogUnrealEdMisc: Loading editor; pre map load, took 9.009
+[2022.10.01-21.43.44:803][  0]Cmd: MAP LOAD FILE="../../../../../../Users/YTP/Desktop/Univ_Project/Project/Content/Maps/NewMap.umap" TEMPLATE=0 SHOWPROGRESS=1 FEATURELEVEL=3
+[2022.10.01-21.43.44:804][  0]LightingResults: New page: 라이팅 빌드
+[2022.10.01-21.43.44:811][  0]LogWorld: UWorld::CleanupWorld for Untitled, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.43.44:811][  0]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.43.44:811][  0]MapCheck: New page: 맵 체크
+[2022.10.01-21.43.44:811][  0]LightingResults: New page: 라이팅 빌드
+[2022.10.01-21.43.44:817][  0]LogAudio: Display: Audio Device unregistered from world 'None'.
+[2022.10.01-21.43.44:819][  0]LogUObjectHash: Compacting FUObjectHashTables data took   0.51ms
+[2022.10.01-21.43.45:086][  0]LogAudio: Display: Audio Device (ID: 1) registered with world 'NewMap'.
+[2022.10.01-21.43.45:087][  0]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.43.45:087][  0]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.43.45:087][  0]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.43.45:116][  0]LogEditorServer: Finished looking for orphan Actors (0.000 secs)
+[2022.10.01-21.43.45:123][  0]LogUObjectHash: Compacting FUObjectHashTables data took   0.39ms
+[2022.10.01-21.43.45:124][  0]Cmd: MAP CHECKDEP NOCLEARLOG
+[2022.10.01-21.43.45:124][  0]MapCheck: 맵 체크 완료: 오류 0 회, 경고 0 회, 소요 시간 0.156ms.
+[2022.10.01-21.43.45:124][  0]LogFileHelpers: Loading map 'NewMap' took 0.320
+[2022.10.01-21.43.45:136][  0]LogUnrealEdMisc: Total Editor Startup Time, took 9.341
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: ================================================
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: === FShaderJobCache stats ===
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: Total job queries 0, among them cache hits 0 (0.00%)
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: Tracking 0 distinct input hashes that result in 0 distinct outputs (0.00%)
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: RAM used: 0.00 MB (0.00 GB) of 1228.80 MB (1.20 GB) budget. Usage: 0.00%
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: === Shader Compilation stats ===
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: Shaders Compiled: 0
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: Jobs assigned 0, completed 0 (0.00%)
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: Time at least one job was in flight (either pending or executed): 0.00 s
+[2022.10.01-21.43.45:136][  0]LogShaderCompilers: Display: ================================================
+[2022.10.01-21.43.45:222][  0]LogSlate: The tab "TopLeftModeTab" attempted to spawn in layout 'LevelEditor_Layout_v1.8' but failed for some reason. It will not be displayed.
+[2022.10.01-21.43.45:222][  0]LogSlate: The tab "TopLeftModeTab" attempted to spawn in layout 'LevelEditor_Layout_v1.8' but failed for some reason. It will not be displayed.
+[2022.10.01-21.43.45:222][  0]LogSlate: The tab "TopLeftModeTab" attempted to spawn in layout 'LevelEditor_Layout_v1.8' but failed for some reason. It will not be displayed.
+[2022.10.01-21.43.45:222][  0]LogSlate: The tab "TopLeftModeTab" attempted to spawn in layout 'LevelEditor_Layout_v1.8' but failed for some reason. It will not be displayed.
+[2022.10.01-21.43.45:222][  0]LogSlate: The tab "TopLeftModeTab" attempted to spawn in layout 'LevelEditor_Layout_v1.8' but failed for some reason. It will not be displayed.
+[2022.10.01-21.43.45:222][  0]LogSlate: The tab "TopLeftModeTab" attempted to spawn in layout 'LevelEditor_Layout_v1.8' but failed for some reason. It will not be displayed.
+[2022.10.01-21.43.45:222][  0]LogSlate: The tab "TopLeftModeTab" attempted to spawn in layout 'LevelEditor_Layout_v1.8' but failed for some reason. It will not be displayed.
+[2022.10.01-21.43.45:222][  0]LogSlate: The tab "TopLeftModeTab" attempted to spawn in layout 'LevelEditor_Layout_v1.8' but failed for some reason. It will not be displayed.
+[2022.10.01-21.43.45:229][  0]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.43.45:233][  0]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.43.45:238][  0]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.43.45:243][  0]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.43.45:257][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/StarterContent.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:257][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:257][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_FirstPerson.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:257][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:257][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_FirstPersonBP.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:257][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:259][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_HandheldARBP.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:259][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:259][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_ThirdPerson.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:260][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:260][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_ThirdPersonBP.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:260][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:260][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_TopDown.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:260][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:261][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_TopDownBP.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:261][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:261][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_VehicleAdvBP.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:261][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:262][  0]LogPakFile: Display: Mounted Pak file 'C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_VirtualRealityBP.upack', mount point: 'root:/'
+[2022.10.01-21.43.45:262][  0]LogPakFile: Display: Mount point: 'root:/' is not mounted to a valid Root Path yet, assets in this pak file may not be accessible until a corresponding UFS Mount Point is added through FPackageName::RegisterMountPoint.
+[2022.10.01-21.43.45:262][  0]LogFeaturePack: Error: Error in Feature pack C:/Program Files (x86)/UE5/UE_5.0/FeaturePacks/TP_VirtualRealityBP.upack. Failed to parse manifest: Invalid Json Token. Line: 43 Ch: 4
+[2022.10.01-21.43.45:405][  0]LogSlate: Took 0.000186 seconds to synchronously load lazily loaded font '../../../Engine/Content/Slate/Fonts/Roboto-Regular.ttf' (155K)
+[2022.10.01-21.43.45:407][  0]LogSlate: Took 0.001562 seconds to synchronously load lazily loaded font '../../../Engine/Content/Editor/Slate/Fonts/NanumGothic.ttf' (4243K)
+[2022.10.01-21.43.45:410][  0]LogSlate: Took 0.001456 seconds to synchronously load lazily loaded font '../../../Engine/Content/Editor/Slate/Fonts/NanumGothicBold.ttf' (4188K)
+[2022.10.01-21.43.45:410][  0]LogSlate: Took 0.000111 seconds to synchronously load lazily loaded font '../../../Engine/Content/Slate/Fonts/Roboto-Bold.ttf' (160K)
+[2022.10.01-21.43.45:411][  0]LogSlate: Took 0.000113 seconds to synchronously load lazily loaded font '../../../Engine/Content/Editor/Slate/Fonts/FontAwesome.ttf' (139K)
+[2022.10.01-21.43.45:412][  0]LogSlate: Took 0.000136 seconds to synchronously load lazily loaded font '../../../Engine/Content/Slate/Fonts/Roboto-Italic.ttf' (157K)
+[2022.10.01-21.43.45:412][  0]LogSlate: Took 0.000088 seconds to synchronously load lazily loaded font '../../../Engine/Content/Slate/Fonts/DroidSansMono.ttf' (77K)
+[2022.10.01-21.43.45:414][  0]LogSlate: Took 0.001619 seconds to synchronously load lazily loaded font '../../../Engine/Content/Editor/Slate/Fonts/NanumGothicExtraBold.ttf' (4074K)
+[2022.10.01-21.43.45:433][  0]LogViewport: Scene viewport resized to 1338x588, mode Windowed.
+[2022.10.01-21.43.45:456][  0]LogSlate: Took 0.000142 seconds to synchronously load lazily loaded font '../../../Engine/Content/Slate/Fonts/Roboto-Light.ttf' (167K)
+[2022.10.01-21.43.45:756][  0]LogStall: Startup...
+[2022.10.01-21.43.45:757][  0]LogStall: Startup complete.
+[2022.10.01-21.43.45:780][  0]LogLoad: (Engine Initialization) Total time: 9.99 seconds
+[2022.10.01-21.43.45:780][  0]LogLoad: (Engine Initialization) Total Blueprint compile time: 0.00 seconds
+[2022.10.01-21.43.45:852][  0]LogAssetRegistry: Asset discovery search completed in 6.9360 seconds
+[2022.10.01-21.43.45:861][  0]LogCollectionManager: Fixed up redirectors for 0 collections in 0.000002 seconds (updated 0 objects)
+[2022.10.01-21.43.45:883][  0]LogContentStreaming: Texture pool size now 600 MB
+[2022.10.01-21.43.59:543][119]Cmd: DELETE
+[2022.10.01-21.43.59:543][119]Cmd: ACTOR DELETE
+[2022.10.01-21.43.59:555][119]LogEditorActor: Deleted Actor: Sun_Detect
+[2022.10.01-21.43.59:561][119]LogUObjectHash: Compacting FUObjectHashTables data took   0.41ms
+[2022.10.01-21.43.59:561][119]LogEditorActor: Deleted 1 Actors (0.012 secs)
+[2022.10.01-21.44.01:455][233]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.44.01:461][233]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.44.01:461][233]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:44:01)
+[2022.10.01-21.44.01:464][233]LogOnline: OSS: Created online subsystem instance for: NULL
+[2022.10.01-21.44.01:464][233]LogOnline: OSS: TryLoadSubsystemAndSetDefault: Loaded subsystem for module [NULL]
+[2022.10.01-21.44.01:464][233]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.44.01:483][233]LogPlayLevel: PIE: StaticDuplicateObject took: (0.018576s)
+[2022.10.01-21.44.01:483][233]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.018660s)
+[2022.10.01-21.44.01:483][233]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.44.01:483][233]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.44.01:483][233]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.44.01:484][233]LogPlayLevel: PIE: World Init took: (0.000970s)
+[2022.10.01-21.44.01:490][233]LogUObjectHash: Compacting FUObjectHashTables data took   0.78ms
+[2022.10.01-21.44.01:491][233]LogAudio: Display: Creating Audio Device:                 Id: 2, Scope: Unique, Realtime: True
+[2022.10.01-21.44.01:491][233]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.44.01:491][233]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.44.01:491][233]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.44.01:491][233]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.44.01:491][233]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.44.01:491][233]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.44.01:491][233]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.44.01:491][233]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.44.01:492][233]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.44.01:492][233]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.44.01:492][233]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.44.01:494][233]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.44.01:511][233]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.44.01:511][233]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.44.01:511][233]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.44.01:511][233]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.44.01:512][233]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=2
+[2022.10.01-21.44.01:512][233]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=2
+[2022.10.01-21.44.01:513][233]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=2
+[2022.10.01-21.44.01:513][233]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=2
+[2022.10.01-21.44.01:513][233]LogInit: FAudioDevice initialized.
+[2022.10.01-21.44.01:513][233]LogAudio: Display: Audio Device (ID: 2) registered with world 'NewMap'.
+[2022.10.01-21.44.01:528][233]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.44.01:530][233]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.44.01
+[2022.10.01-21.44.01:530][233]LogWorld: Bringing up level for play took: 0.002503
+[2022.10.01-21.44.01:532][233]LogOnline: OSS: Created online subsystem instance for: :Context_1
+[2022.10.01-21.44.01:545][233]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.44.01:546][233]PIE: 에디터에서 플레이 총 시작 시간 0.085초입니다.
+[2022.10.01-21.44.24:298][584]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.44.24:298][584]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.44.24:299][584]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.44.24:299][584]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.44.24:309][584]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.44.24:310][584]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.44.24:316][584]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.44.24:316][584]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=2
+[2022.10.01-21.44.24:317][584]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=2
+[2022.10.01-21.44.24:322][584]LogUObjectHash: Compacting FUObjectHashTables data took   0.48ms
+[2022.10.01-21.44.24:373][587]LogPlayLevel: Display: Destroying online subsystem :Context_1
+[2022.10.01-21.44.47:320][455]LogLiveCoding: Display: Starting Live Coding compile.
+[2022.10.01-21.44.52:805][784]LogLiveCoding: Display:    C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_0.lib 라이브러리 및 C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_0.exp 개체를 생성하고 있습니다.
+[2022.10.01-21.44.52:903][786]LogClass: /Script/Project Reload.
+[2022.10.01-21.44.52:903][786]LogClass: Sun_Detect Reload.
+[2022.10.01-21.44.52:903][786]LogClass: Sunlight Reload.
+[2022.10.01-21.44.52:903][786]LogClass: Could not find existing class Sun_Detect in package /Script/Project for reload, assuming new or modified class
+[2022.10.01-21.44.52:903][786]LogClass: Could not find existing class Sunlight in package /Script/Project for reload, assuming new or modified class
+[2022.10.01-21.44.52:906][786]Re-instancing Sun_Detect after reload.
+[2022.10.01-21.44.52:912][786]Re-instancing Sunlight after reload.
+[2022.10.01-21.44.52:950][786]LogUObjectHash: Compacting FUObjectHashTables data took   0.42ms
+[2022.10.01-21.44.52:981][787]Display: Reload/Re-instancing Complete: 1 package changed, 2 classes changed
+[2022.10.01-21.44.52:981][787]LogLiveCoding: Warning: Live coding succeeded, data type changes may cause packaging to fail if assets reference the new or updated data types
+[2022.10.01-21.44.55:524][924]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.44.55:531][924]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.44.55:531][924]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:44:55)
+[2022.10.01-21.44.55:531][924]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.44.55:542][924]LogPlayLevel: PIE: StaticDuplicateObject took: (0.011738s)
+[2022.10.01-21.44.55:542][924]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.011808s)
+[2022.10.01-21.44.55:542][924]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.44.55:542][924]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.44.55:543][924]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.44.55:543][924]LogPlayLevel: PIE: World Init took: (0.000635s)
+[2022.10.01-21.44.55:549][924]LogUObjectHash: Compacting FUObjectHashTables data took   0.39ms
+[2022.10.01-21.44.55:550][924]LogAudio: Display: Creating Audio Device:                 Id: 3, Scope: Unique, Realtime: True
+[2022.10.01-21.44.55:550][924]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.44.55:550][924]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.44.55:550][924]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.44.55:550][924]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.44.55:550][924]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.44.55:550][924]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.44.55:550][924]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.44.55:550][924]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.44.55:550][924]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.44.55:550][924]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.44.55:550][924]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.44.55:552][924]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.44.55:569][924]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.44.55:569][924]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.44.55:569][924]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.44.55:569][924]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.44.55:570][924]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=3
+[2022.10.01-21.44.55:570][924]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=3
+[2022.10.01-21.44.55:571][924]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=3
+[2022.10.01-21.44.55:571][924]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=3
+[2022.10.01-21.44.55:571][924]LogInit: FAudioDevice initialized.
+[2022.10.01-21.44.55:571][924]LogAudio: Display: Audio Device (ID: 3) registered with world 'NewMap'.
+[2022.10.01-21.44.55:580][924]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.44.55:582][924]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.44.55
+[2022.10.01-21.44.55:582][924]LogWorld: Bringing up level for play took: 0.002226
+[2022.10.01-21.44.55:583][924]LogOnline: OSS: Created online subsystem instance for: :Context_2
+[2022.10.01-21.44.55:584][924]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.44.55:585][924]PIE: 에디터에서 플레이 총 시작 시간 0.054초입니다.
+[2022.10.01-21.45.11:018][845]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.45.11:018][845]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.45.11:019][845]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.45.11:019][845]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.45.11:032][845]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.45.11:033][845]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.45.11:039][845]LogAudio: Display: Audio Device unregistered from world 'None'.
+[2022.10.01-21.45.11:039][845]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=3
+[2022.10.01-21.45.11:041][845]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=3
+[2022.10.01-21.45.11:043][845]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.45.11:045][845]LogUObjectHash: Compacting FUObjectHashTables data took   0.45ms
+[2022.10.01-21.45.11:096][848]LogPlayLevel: Display: Destroying online subsystem :Context_2
+[2022.10.01-21.45.12:613][939]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.45.12:619][939]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.45.12:619][939]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:45:12)
+[2022.10.01-21.45.12:619][939]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.45.12:633][939]LogPlayLevel: PIE: StaticDuplicateObject took: (0.014265s)
+[2022.10.01-21.45.12:633][939]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.014424s)
+[2022.10.01-21.45.12:634][939]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.45.12:634][939]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.45.12:634][939]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.45.12:634][939]LogPlayLevel: PIE: World Init took: (0.000645s)
+[2022.10.01-21.45.12:640][939]LogUObjectHash: Compacting FUObjectHashTables data took   0.44ms
+[2022.10.01-21.45.12:641][939]LogAudio: Display: Creating Audio Device:                 Id: 4, Scope: Unique, Realtime: True
+[2022.10.01-21.45.12:641][939]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.45.12:641][939]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.45.12:641][939]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.45.12:641][939]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.45.12:641][939]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.45.12:641][939]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.45.12:641][939]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.45.12:641][939]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.45.12:642][939]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.45.12:642][939]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.45.12:642][939]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.45.12:643][939]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.45.12:660][939]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.45.12:660][939]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.45.12:660][939]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.45.12:660][939]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.45.12:661][939]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=4
+[2022.10.01-21.45.12:661][939]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=4
+[2022.10.01-21.45.12:662][939]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=4
+[2022.10.01-21.45.12:662][939]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=4
+[2022.10.01-21.45.12:662][939]LogInit: FAudioDevice initialized.
+[2022.10.01-21.45.12:662][939]LogAudio: Display: Audio Device (ID: 4) registered with world 'NewMap'.
+[2022.10.01-21.45.12:671][939]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.45.12:673][939]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.45.12
+[2022.10.01-21.45.12:673][939]LogWorld: Bringing up level for play took: 0.002162
+[2022.10.01-21.45.12:675][939]LogOnline: OSS: Created online subsystem instance for: :Context_3
+[2022.10.01-21.45.12:676][939]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.45.12:676][939]PIE: 에디터에서 플레이 총 시작 시간 0.057초입니다.
+[2022.10.01-21.45.17:548][226]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.45.17:548][226]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.45.17:548][226]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.45.17:548][226]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.45.17:561][226]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.45.17:563][226]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.45.17:569][226]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.45.17:569][226]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=4
+[2022.10.01-21.45.17:570][226]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=4
+[2022.10.01-21.45.17:575][226]LogUObjectHash: Compacting FUObjectHashTables data took   0.41ms
+[2022.10.01-21.45.17:626][229]LogPlayLevel: Display: Destroying online subsystem :Context_3
+[2022.10.01-21.45.41:813][799]LogDerivedDataCache: C:/Users/YTP/AppData/Local/UnrealEngine/Common/DerivedDataCache: Maintenance finished in +00:00:04.134 and deleted 0 file(s) with total size 0 MiB.
+[2022.10.01-21.49.14:675][475]LogLiveCoding: Display: Starting Live Coding compile.
+[2022.10.01-21.49.15:891][548]Display: Reload/Re-instancing Complete: No object changes detected
+[2022.10.01-21.49.15:891][548]LogLiveCoding: Error: Live coding failed, please see Live console for more information
+[2022.10.01-21.50.34:410][193]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.50.34:416][193]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.50.34:416][193]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:50:34)
+[2022.10.01-21.50.34:416][193]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.50.34:429][193]LogPlayLevel: PIE: StaticDuplicateObject took: (0.012847s)
+[2022.10.01-21.50.34:429][193]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.012929s)
+[2022.10.01-21.50.34:429][193]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.50.34:429][193]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.50.34:430][193]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.50.34:430][193]LogPlayLevel: PIE: World Init took: (0.000752s)
+[2022.10.01-21.50.34:436][193]LogUObjectHash: Compacting FUObjectHashTables data took   0.41ms
+[2022.10.01-21.50.34:437][193]LogAudio: Display: Creating Audio Device:                 Id: 5, Scope: Unique, Realtime: True
+[2022.10.01-21.50.34:437][193]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.50.34:437][193]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.50.34:437][193]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.50.34:437][193]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.50.34:437][193]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.50.34:437][193]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.50.34:437][193]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.50.34:437][193]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.50.34:438][193]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.50.34:438][193]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.50.34:438][193]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.50.34:439][193]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.50.34:458][193]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.50.34:458][193]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.50.34:458][193]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.50.34:458][193]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.50.34:458][193]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=5
+[2022.10.01-21.50.34:458][193]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=5
+[2022.10.01-21.50.34:460][193]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=5
+[2022.10.01-21.50.34:460][193]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=5
+[2022.10.01-21.50.34:460][193]LogInit: FAudioDevice initialized.
+[2022.10.01-21.50.34:460][193]LogAudio: Display: Audio Device (ID: 5) registered with world 'NewMap'.
+[2022.10.01-21.50.34:475][193]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.50.34:478][193]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.50.34
+[2022.10.01-21.50.34:478][193]LogWorld: Bringing up level for play took: 0.002696
+[2022.10.01-21.50.34:479][193]LogOnline: OSS: Created online subsystem instance for: :Context_4
+[2022.10.01-21.50.34:481][193]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.50.34:481][193]PIE: 에디터에서 플레이 총 시작 시간 0.065초입니다.
+[2022.10.01-21.50.35:527][251]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.50.35:527][251]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.50.35:528][251]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.50.35:528][251]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.50.35:537][251]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.50.35:538][251]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.50.35:544][251]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.50.35:545][251]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=5
+[2022.10.01-21.50.35:546][251]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=5
+[2022.10.01-21.50.35:551][251]LogUObjectHash: Compacting FUObjectHashTables data took   0.52ms
+[2022.10.01-21.50.35:605][254]LogPlayLevel: Display: Destroying online subsystem :Context_4
+[2022.10.01-21.50.36:766][319]LogLiveCoding: Display: Starting Live Coding compile.
+[2022.10.01-21.50.39:267][469]LogLiveCoding: Display:    C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_1.lib 라이브러리 및 C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_1.exp 개체를 생성하고 있습니다.
+[2022.10.01-21.50.39:438][471]LogUObjectHash: Compacting FUObjectHashTables data took   0.54ms
+[2022.10.01-21.50.39:455][472]Display: Reload/Re-instancing Complete: 1 class unchanged
+[2022.10.01-21.50.39:455][472]LogLiveCoding: Display: Live coding succeeded
+[2022.10.01-21.50.40:680][532]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.50.40:686][532]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.50.40:686][532]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:50:40)
+[2022.10.01-21.50.40:686][532]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.50.40:699][532]LogPlayLevel: PIE: StaticDuplicateObject took: (0.012097s)
+[2022.10.01-21.50.40:699][532]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.012172s)
+[2022.10.01-21.50.40:699][532]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.50.40:699][532]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.50.40:699][532]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.50.40:699][532]LogPlayLevel: PIE: World Init took: (0.000617s)
+[2022.10.01-21.50.40:706][532]LogUObjectHash: Compacting FUObjectHashTables data took   0.43ms
+[2022.10.01-21.50.40:706][532]LogAudio: Display: Creating Audio Device:                 Id: 6, Scope: Unique, Realtime: True
+[2022.10.01-21.50.40:706][532]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.50.40:706][532]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.50.40:706][532]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.50.40:706][532]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.50.40:706][532]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.50.40:706][532]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.50.40:706][532]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.50.40:706][532]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.50.40:707][532]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.50.40:707][532]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.50.40:707][532]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.50.40:708][532]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.50.40:725][532]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.50.40:726][532]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.50.40:726][532]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.50.40:726][532]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.50.40:726][532]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=6
+[2022.10.01-21.50.40:726][532]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=6
+[2022.10.01-21.50.40:727][532]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=6
+[2022.10.01-21.50.40:727][532]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=6
+[2022.10.01-21.50.40:727][532]LogInit: FAudioDevice initialized.
+[2022.10.01-21.50.40:727][532]LogAudio: Display: Audio Device (ID: 6) registered with world 'NewMap'.
+[2022.10.01-21.50.40:742][532]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.50.40:744][532]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.50.40
+[2022.10.01-21.50.40:744][532]LogWorld: Bringing up level for play took: 0.002155
+[2022.10.01-21.50.40:746][532]LogOnline: OSS: Created online subsystem instance for: :Context_5
+[2022.10.01-21.50.40:746][532]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.50.40:747][532]PIE: 에디터에서 플레이 총 시작 시간 0.062초입니다.
+[2022.10.01-21.51.15:437][608]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.51.15:437][608]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.51.15:437][608]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.51.15:437][608]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.51.15:447][608]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.51.15:448][608]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.51.15:454][608]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.51.15:454][608]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=6
+[2022.10.01-21.51.15:455][608]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=6
+[2022.10.01-21.51.15:461][608]LogUObjectHash: Compacting FUObjectHashTables data took   0.41ms
+[2022.10.01-21.51.15:512][611]LogPlayLevel: Display: Destroying online subsystem :Context_5
+[2022.10.01-21.51.18:298][778]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.51.18:302][778]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.51.18:302][778]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:51:18)
+[2022.10.01-21.51.18:302][778]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.51.18:315][778]LogPlayLevel: PIE: StaticDuplicateObject took: (0.012542s)
+[2022.10.01-21.51.18:315][778]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.012617s)
+[2022.10.01-21.51.18:315][778]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.51.18:315][778]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.51.18:316][778]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.51.18:316][778]LogPlayLevel: PIE: World Init took: (0.000752s)
+[2022.10.01-21.51.18:322][778]LogUObjectHash: Compacting FUObjectHashTables data took   0.42ms
+[2022.10.01-21.51.18:323][778]LogAudio: Display: Creating Audio Device:                 Id: 7, Scope: Unique, Realtime: True
+[2022.10.01-21.51.18:323][778]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.51.18:323][778]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.51.18:323][778]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.51.18:323][778]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.51.18:323][778]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.51.18:323][778]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.51.18:323][778]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.51.18:323][778]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.51.18:324][778]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.51.18:324][778]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.51.18:324][778]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.51.18:325][778]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.51.18:343][778]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.51.18:343][778]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.51.18:343][778]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.51.18:343][778]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.51.18:344][778]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=7
+[2022.10.01-21.51.18:344][778]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=7
+[2022.10.01-21.51.18:345][778]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=7
+[2022.10.01-21.51.18:345][778]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=7
+[2022.10.01-21.51.18:345][778]LogInit: FAudioDevice initialized.
+[2022.10.01-21.51.18:345][778]LogAudio: Display: Audio Device (ID: 7) registered with world 'NewMap'.
+[2022.10.01-21.51.18:355][778]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.51.18:357][778]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.51.18
+[2022.10.01-21.51.18:357][778]LogWorld: Bringing up level for play took: 0.002533
+[2022.10.01-21.51.18:359][778]LogOnline: OSS: Created online subsystem instance for: :Context_6
+[2022.10.01-21.51.18:360][778]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.51.18:361][778]PIE: 에디터에서 플레이 총 시작 시간 0.059초입니다.
+[2022.10.01-21.52.05:877][622]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.52.05:877][622]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.52.05:877][622]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.52.05:878][622]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.52.05:887][622]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.52.05:889][622]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.52.05:894][622]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.52.05:895][622]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=7
+[2022.10.01-21.52.05:896][622]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=7
+[2022.10.01-21.52.05:902][622]LogUObjectHash: Compacting FUObjectHashTables data took   0.44ms
+[2022.10.01-21.52.05:953][625]LogPlayLevel: Display: Destroying online subsystem :Context_6
+[2022.10.01-21.52.13:769][799]LogLiveCoding: Display: Starting Live Coding compile.
+[2022.10.01-21.52.16:238][947]LogLiveCoding: Display:    C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_2.lib 라이브러리 및 C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_2.exp 개체를 생성하고 있습니다.
+[2022.10.01-21.52.16:372][949]LogUObjectHash: Compacting FUObjectHashTables data took   0.41ms
+[2022.10.01-21.52.16:387][950]Display: Reload/Re-instancing Complete: No object changes detected
+[2022.10.01-21.52.16:387][950]LogLiveCoding: Display: Live coding succeeded
+[2022.10.01-21.52.21:898][267]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.52.21:905][267]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.52.21:905][267]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:52:21)
+[2022.10.01-21.52.21:905][267]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.52.21:917][267]LogPlayLevel: PIE: StaticDuplicateObject took: (0.011854s)
+[2022.10.01-21.52.21:917][267]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.011932s)
+[2022.10.01-21.52.21:917][267]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.52.21:917][267]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.52.21:917][267]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.52.21:917][267]LogPlayLevel: PIE: World Init took: (0.000621s)
+[2022.10.01-21.52.21:924][267]LogUObjectHash: Compacting FUObjectHashTables data took   0.53ms
+[2022.10.01-21.52.21:924][267]LogAudio: Display: Creating Audio Device:                 Id: 8, Scope: Unique, Realtime: True
+[2022.10.01-21.52.21:924][267]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.52.21:924][267]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.52.21:924][267]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.52.21:924][267]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.52.21:924][267]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.52.21:924][267]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.52.21:924][267]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.52.21:924][267]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.52.21:925][267]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.52.21:925][267]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.52.21:925][267]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.52.21:926][267]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.52.21:943][267]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.52.21:944][267]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.52.21:944][267]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.52.21:944][267]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.52.21:945][267]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=8
+[2022.10.01-21.52.21:945][267]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=8
+[2022.10.01-21.52.21:946][267]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=8
+[2022.10.01-21.52.21:946][267]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=8
+[2022.10.01-21.52.21:946][267]LogInit: FAudioDevice initialized.
+[2022.10.01-21.52.21:946][267]LogAudio: Display: Audio Device (ID: 8) registered with world 'NewMap'.
+[2022.10.01-21.52.21:957][267]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.52.21:959][267]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.52.21
+[2022.10.01-21.52.21:960][267]LogWorld: Bringing up level for play took: 0.002241
+[2022.10.01-21.52.21:961][267]LogOnline: OSS: Created online subsystem instance for: :Context_7
+[2022.10.01-21.52.21:962][267]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.52.21:963][267]PIE: 에디터에서 플레이 총 시작 시간 0.058초입니다.
+[2022.10.01-21.52.34:787][ 30]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.52.34:787][ 30]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.52.34:787][ 30]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.52.34:788][ 30]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.52.34:799][ 30]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.52.34:801][ 30]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.52.34:807][ 30]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.52.34:807][ 30]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=8
+[2022.10.01-21.52.34:809][ 30]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=8
+[2022.10.01-21.52.34:814][ 30]LogUObjectHash: Compacting FUObjectHashTables data took   0.47ms
+[2022.10.01-21.52.34:868][ 33]LogPlayLevel: Display: Destroying online subsystem :Context_7
+[2022.10.01-21.52.41:526][276]LogLiveCoding: Display: Starting Live Coding compile.
+[2022.10.01-21.52.43:927][420]LogLiveCoding: Display:    C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_3.lib 라이브러리 및 C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_3.exp 개체를 생성하고 있습니다.
+[2022.10.01-21.52.44:059][422]LogUObjectHash: Compacting FUObjectHashTables data took   0.45ms
+[2022.10.01-21.52.44:071][423]Display: Reload/Re-instancing Complete: No object changes detected
+[2022.10.01-21.52.44:071][423]LogLiveCoding: Display: Live coding succeeded
+[2022.10.01-21.52.47:576][620]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.52.47:582][620]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.52.47:582][620]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:52:47)
+[2022.10.01-21.52.47:582][620]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.52.47:595][620]LogPlayLevel: PIE: StaticDuplicateObject took: (0.012773s)
+[2022.10.01-21.52.47:595][620]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.012860s)
+[2022.10.01-21.52.47:595][620]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.52.47:595][620]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.52.47:596][620]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.52.47:596][620]LogPlayLevel: PIE: World Init took: (0.000683s)
+[2022.10.01-21.52.47:602][620]LogUObjectHash: Compacting FUObjectHashTables data took   0.49ms
+[2022.10.01-21.52.47:603][620]LogAudio: Display: Creating Audio Device:                 Id: 9, Scope: Unique, Realtime: True
+[2022.10.01-21.52.47:603][620]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.52.47:603][620]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.52.47:603][620]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.52.47:603][620]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.52.47:603][620]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.52.47:603][620]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.52.47:603][620]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.52.47:603][620]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.52.47:603][620]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.52.47:603][620]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.52.47:603][620]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.52.47:605][620]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.52.47:623][620]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.52.47:623][620]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.52.47:623][620]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.52.47:623][620]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.52.47:624][620]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=9
+[2022.10.01-21.52.47:624][620]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=9
+[2022.10.01-21.52.47:626][620]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=9
+[2022.10.01-21.52.47:626][620]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=9
+[2022.10.01-21.52.47:626][620]LogInit: FAudioDevice initialized.
+[2022.10.01-21.52.47:626][620]LogAudio: Display: Audio Device (ID: 9) registered with world 'NewMap'.
+[2022.10.01-21.52.47:637][620]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.52.47:640][620]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.52.47
+[2022.10.01-21.52.47:640][620]LogWorld: Bringing up level for play took: 0.002257
+[2022.10.01-21.52.47:641][620]LogOnline: OSS: Created online subsystem instance for: :Context_8
+[2022.10.01-21.52.47:642][620]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.52.47:643][620]PIE: 에디터에서 플레이 총 시작 시간 0.061초입니다.
+[2022.10.01-21.53.12:837][126]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.53.12:837][126]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.53.12:838][126]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.53.12:838][126]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.53.12:850][126]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.53.12:852][126]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.53.12:858][126]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.53.12:858][126]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=9
+[2022.10.01-21.53.12:859][126]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=9
+[2022.10.01-21.53.12:864][126]LogUObjectHash: Compacting FUObjectHashTables data took   0.41ms
+[2022.10.01-21.53.12:933][129]LogPlayLevel: Display: Destroying online subsystem :Context_8
+[2022.10.01-21.53.22:608][709]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.53.22:614][709]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.53.22:614][709]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:53:22)
+[2022.10.01-21.53.22:614][709]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.53.22:627][709]LogPlayLevel: PIE: StaticDuplicateObject took: (0.012568s)
+[2022.10.01-21.53.22:627][709]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.012649s)
+[2022.10.01-21.53.22:627][709]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.53.22:627][709]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.53.22:627][709]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.53.22:628][709]LogPlayLevel: PIE: World Init took: (0.000658s)
+[2022.10.01-21.53.22:634][709]LogUObjectHash: Compacting FUObjectHashTables data took   0.39ms
+[2022.10.01-21.53.22:635][709]LogAudio: Display: Creating Audio Device:                 Id: 10, Scope: Unique, Realtime: True
+[2022.10.01-21.53.22:635][709]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.53.22:635][709]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.53.22:635][709]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.53.22:635][709]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.53.22:635][709]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.53.22:635][709]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.53.22:635][709]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.53.22:635][709]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.53.22:635][709]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.53.22:635][709]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.53.22:635][709]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.53.22:637][709]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.53.22:654][709]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.53.22:654][709]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.53.22:654][709]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.53.22:654][709]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.53.22:655][709]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=10
+[2022.10.01-21.53.22:655][709]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=10
+[2022.10.01-21.53.22:656][709]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=10
+[2022.10.01-21.53.22:656][709]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=10
+[2022.10.01-21.53.22:656][709]LogInit: FAudioDevice initialized.
+[2022.10.01-21.53.22:656][709]LogAudio: Display: Audio Device (ID: 10) registered with world 'NewMap'.
+[2022.10.01-21.53.22:671][709]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.53.22:673][709]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.53.22
+[2022.10.01-21.53.22:673][709]LogWorld: Bringing up level for play took: 0.002356
+[2022.10.01-21.53.22:675][709]LogOnline: OSS: Created online subsystem instance for: :Context_9
+[2022.10.01-21.53.22:676][709]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.53.22:677][709]PIE: 에디터에서 플레이 총 시작 시간 0.063초입니다.
+[2022.10.01-21.53.41:337][824]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.53.41:337][824]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.53.41:337][824]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.53.41:337][824]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.53.41:353][824]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.53.41:355][824]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.53.41:362][824]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.53.41:362][824]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=10
+[2022.10.01-21.53.41:364][824]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=10
+[2022.10.01-21.53.41:369][824]LogUObjectHash: Compacting FUObjectHashTables data took   0.58ms
+[2022.10.01-21.53.41:414][826]LogPlayLevel: Display: Destroying online subsystem :Context_9
+[2022.10.01-21.53.53:412][538]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.53.53:418][538]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.53.53:418][538]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:53:53)
+[2022.10.01-21.53.53:418][538]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.53.53:431][538]LogPlayLevel: PIE: StaticDuplicateObject took: (0.012287s)
+[2022.10.01-21.53.53:431][538]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.012365s)
+[2022.10.01-21.53.53:431][538]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.53.53:431][538]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.53.53:431][538]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.53.53:431][538]LogPlayLevel: PIE: World Init took: (0.000731s)
+[2022.10.01-21.53.53:438][538]LogUObjectHash: Compacting FUObjectHashTables data took   0.39ms
+[2022.10.01-21.53.53:439][538]LogAudio: Display: Creating Audio Device:                 Id: 11, Scope: Unique, Realtime: True
+[2022.10.01-21.53.53:439][538]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.53.53:439][538]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.53.53:439][538]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.53.53:439][538]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.53.53:439][538]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.53.53:439][538]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.53.53:439][538]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.53.53:439][538]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.53.53:440][538]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.53.53:440][538]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.53.53:440][538]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.53.53:441][538]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.53.53:459][538]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.53.53:459][538]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.53.53:459][538]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.53.53:459][538]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.53.53:459][538]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=11
+[2022.10.01-21.53.53:459][538]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=11
+[2022.10.01-21.53.53:461][538]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=11
+[2022.10.01-21.53.53:461][538]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=11
+[2022.10.01-21.53.53:461][538]LogInit: FAudioDevice initialized.
+[2022.10.01-21.53.53:461][538]LogAudio: Display: Audio Device (ID: 11) registered with world 'NewMap'.
+[2022.10.01-21.53.53:469][538]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.53.53:471][538]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.53.53
+[2022.10.01-21.53.53:472][538]LogWorld: Bringing up level for play took: 0.002365
+[2022.10.01-21.53.53:473][538]LogOnline: OSS: Created online subsystem instance for: :Context_12
+[2022.10.01-21.53.53:474][538]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.53.53:475][538]PIE: 에디터에서 플레이 총 시작 시간 0.056초입니다.
+[2022.10.01-21.53.55:377][647]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.53.55:377][647]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.53.55:377][647]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.53.55:377][647]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.53.55:392][647]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.53.55:394][647]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.53.55:399][647]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.53.55:400][647]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=11
+[2022.10.01-21.53.55:401][647]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=11
+[2022.10.01-21.53.55:407][647]LogUObjectHash: Compacting FUObjectHashTables data took   0.61ms
+[2022.10.01-21.53.55:463][649]LogPlayLevel: Display: Destroying online subsystem :Context_12
+[2022.10.01-21.53.58:202][813]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-21.53.58:209][813]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-21.53.58:209][813]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 3:53:58)
+[2022.10.01-21.53.58:209][813]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.53.58:221][813]LogPlayLevel: PIE: StaticDuplicateObject took: (0.011788s)
+[2022.10.01-21.53.58:221][813]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.011889s)
+[2022.10.01-21.53.58:221][813]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-21.53.58:221][813]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-21.53.58:221][813]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-21.53.58:222][813]LogPlayLevel: PIE: World Init took: (0.000713s)
+[2022.10.01-21.53.58:229][813]LogUObjectHash: Compacting FUObjectHashTables data took   0.48ms
+[2022.10.01-21.53.58:229][813]LogAudio: Display: Creating Audio Device:                 Id: 12, Scope: Unique, Realtime: True
+[2022.10.01-21.53.58:230][813]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-21.53.58:230][813]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-21.53.58:230][813]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-21.53.58:230][813]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-21.53.58:230][813]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-21.53.58:230][813]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-21.53.58:230][813]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-21.53.58:230][813]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-21.53.58:230][813]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-21.53.58:230][813]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-21.53.58:230][813]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-21.53.58:232][813]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-21.53.58:250][813]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-21.53.58:250][813]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-21.53.58:250][813]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-21.53.58:250][813]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-21.53.58:250][813]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=12
+[2022.10.01-21.53.58:250][813]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=12
+[2022.10.01-21.53.58:252][813]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=12
+[2022.10.01-21.53.58:252][813]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=12
+[2022.10.01-21.53.58:252][813]LogInit: FAudioDevice initialized.
+[2022.10.01-21.53.58:252][813]LogAudio: Display: Audio Device (ID: 12) registered with world 'NewMap'.
+[2022.10.01-21.53.58:263][813]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-21.53.58:265][813]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-06.53.58
+[2022.10.01-21.53.58:265][813]LogWorld: Bringing up level for play took: 0.002333
+[2022.10.01-21.53.58:267][813]LogOnline: OSS: Created online subsystem instance for: :Context_13
+[2022.10.01-21.53.58:268][813]PIE: 서버가 로그인했습니다.
+[2022.10.01-21.53.58:269][813]PIE: 에디터에서 플레이 총 시작 시간 0.06초입니다.
+[2022.10.01-21.54.13:317][708]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.54.13:317][708]LogWorld: BeginTearingDown for /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-21.54.13:317][708]LogWorld: UWorld::CleanupWorld for NewMap, bSessionEnded=true, bCleanupResources=true
+[2022.10.01-21.54.13:317][708]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.54.13:331][708]LogPlayLevel: Display: Shutting down PIE online subsystems
+[2022.10.01-21.54.13:333][708]LogSlate: InvalidateAllWidgets triggered.  All widgets were invalidated
+[2022.10.01-21.54.13:339][708]LogSlate: Updating window title bar state: overlay mode, drag disabled, window buttons hidden, title bar hidden
+[2022.10.01-21.54.13:340][708]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=12
+[2022.10.01-21.54.13:341][708]LogAudioMixer: FMixerPlatformXAudio2::StopAudioStream() called. InstanceID=12
+[2022.10.01-21.54.13:347][708]LogUObjectHash: Compacting FUObjectHashTables data took   0.59ms
+[2022.10.01-21.54.13:386][710]LogPlayLevel: Display: Destroying online subsystem :Context_13
+[2022.10.01-21.54.20:678][143]Cmd: OBJ SAVEPACKAGE PACKAGE="/Game/Maps/NewMap" FILE="../../../../../../Users/YTP/Desktop/Univ_Project/Project/Content/Maps/NewMap.umap" SILENT=true AUTOSAVING=false KEEPDIRTY=false
+[2022.10.01-21.54.20:684][143]LogUObjectHash: Compacting FUObjectHashTables data took   0.43ms
+[2022.10.01-21.54.20:689][143]LogPackageLocalizationCache: Processed 30 localized package path(s) for 1 prioritized culture(s) in 0.003822 seconds
+[2022.10.01-21.54.20:740][143]LogSavePackage: Moving output files for package: /Game/Maps/NewMap
+[2022.10.01-21.54.20:741][143]LogSavePackage: Moving '../../../../../../Users/YTP/Desktop/Univ_Project/Project/Saved/NewMap0C452F494E6D0F45C83D04B545300256.tmp' to '../../../../../../Users/YTP/Desktop/Univ_Project/Project/Content/Maps/NewMap.umap'
+[2022.10.01-21.54.20:759][143]AssetCheck: New page: 에셋 저장:  NewMap
+[2022.10.01-21.54.20:759][143]LogContentValidation: Display: World /Game/Maps/NewMap.NewMap 유효성 검사 중
+[2022.10.01-21.54.31:643][407]LogLiveCoding: Display: Starting Live Coding compile.
+[2022.10.01-21.54.34:135][518]LogLiveCoding: Display:    C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_4.lib 라이브러리 및 C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_4.exp 개체를 생성하고 있습니다.
+[2022.10.01-21.54.34:229][518]LogUObjectHash: Compacting FUObjectHashTables data took   0.48ms
+[2022.10.01-21.54.34:470][519]Display: Reload/Re-instancing Complete: No object changes detected
+[2022.10.01-21.54.34:470][519]LogLiveCoding: Display: Live coding succeeded
+[2022.10.01-22.26.43:395][368]LogLiveCoding: Display: Starting Live Coding compile.
+[2022.10.01-22.26.48:134][652]Display: Reload/Re-instancing Complete: No object changes detected
+[2022.10.01-22.26.48:134][652]LogLiveCoding: Error: Live coding failed, please see Live console for more information
+[2022.10.01-22.27.52:604][454]LogLiveCoding: Display: Starting Live Coding compile.
+[2022.10.01-22.27.58:125][785]LogLiveCoding: Display:    C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_5.lib 라이브러리 및 C:\Users\YTP\Desktop\Univ_Project\Project\Binaries\Win64\UnrealEditor-Project.patch_5.exp 개체를 생성하고 있습니다.
+[2022.10.01-22.27.58:221][787]LogClass: Sun_Detect Reload.
+[2022.10.01-22.27.58:221][787]LogClass: Could not find existing class Sun_Detect in package /Script/Project for reload, assuming new or modified class
+[2022.10.01-22.27.58:224][787]Re-instancing Sun_Detect after reload.
+[2022.10.01-22.27.58:279][787]LogUObjectHash: Compacting FUObjectHashTables data took   0.48ms
+[2022.10.01-22.27.58:295][788]Display: Reload/Re-instancing Complete: 1 class changed, 1 class unchanged
+[2022.10.01-22.27.58:295][788]LogLiveCoding: Warning: Live coding succeeded, data type changes may cause packaging to fail if assets reference the new or updated data types
+[2022.10.01-22.28.05:693][218]LogEditor: Attempting to add actor of class 'Sun_Detect' to level at -2740.00,2030.00,100.00
+[2022.10.01-22.28.06:313][255]LogEditor: Attempting to add actor of class 'Sun_Detect' to level at 380.00,740.00,100.00
+[2022.10.01-22.28.08:415][381]LogDebuggerCommands: Repeating last play command: 선택된 뷰포트
+[2022.10.01-22.28.08:422][381]LogPlayLevel: PlayLevel: No blueprints needed recompiling
+[2022.10.01-22.28.08:422][381]PIE: New page: PIE 세션: NewMap (2022. 10. 2. 오후 4:28:08)
+[2022.10.01-22.28.08:422][381]LogPlayLevel: Creating play world package: /Game/Maps/UEDPIE_0_NewMap
+[2022.10.01-22.28.08:434][381]LogPlayLevel: PIE: StaticDuplicateObject took: (0.012266s)
+[2022.10.01-22.28.08:434][381]LogPlayLevel: PIE: Created PIE world by copying editor world from /Game/Maps/NewMap.NewMap to /Game/Maps/UEDPIE_0_NewMap.NewMap (0.012341s)
+[2022.10.01-22.28.08:434][381]LogSubsystemCollection: Failed to initialize subsystem dependency (WorldPartitionSubsystem)
+[2022.10.01-22.28.08:434][381]LogChaos: FPhysicsSolverBase::AsyncDt:-1.000000
+[2022.10.01-22.28.08:435][381]LogAIModule: Creating AISystem for world NewMap
+[2022.10.01-22.28.08:435][381]LogPlayLevel: PIE: World Init took: (0.000880s)
+[2022.10.01-22.28.08:441][381]LogUObjectHash: Compacting FUObjectHashTables data took   0.44ms
+[2022.10.01-22.28.08:442][381]LogAudio: Display: Creating Audio Device:                 Id: 13, Scope: Unique, Realtime: True
+[2022.10.01-22.28.08:442][381]LogAudioMixer: Display: Audio Mixer Platform Settings:
+[2022.10.01-22.28.08:442][381]LogAudioMixer: Display: 	Sample Rate:						  48000
+[2022.10.01-22.28.08:442][381]LogAudioMixer: Display: 	Callback Buffer Frame Size Requested: 1024
+[2022.10.01-22.28.08:442][381]LogAudioMixer: Display: 	Callback Buffer Frame Size To Use:	  1024
+[2022.10.01-22.28.08:442][381]LogAudioMixer: Display: 	Number of buffers to queue:			  2
+[2022.10.01-22.28.08:442][381]LogAudioMixer: Display: 	Max Channels (voices):				  0
+[2022.10.01-22.28.08:442][381]LogAudioMixer: Display: 	Number of Async Source Workers:		  0
+[2022.10.01-22.28.08:442][381]LogAudio: Display: AudioDevice MaxSources: 32
+[2022.10.01-22.28.08:443][381]LogAudio: Display: Audio Spatialization Plugin: None (built-in).
+[2022.10.01-22.28.08:443][381]LogAudio: Display: Audio Reverb Plugin: None (built-in).
+[2022.10.01-22.28.08:443][381]LogAudio: Display: Audio Occlusion Plugin: None (built-in).
+[2022.10.01-22.28.08:444][381]LogAudioMixer: Display: Initializing audio mixer using platform API: 'XAudio2'
+[2022.10.01-22.28.08:461][381]LogAudioMixer: Display: Using Audio Hardware Device 스피커(Realtek(R) Audio)
+[2022.10.01-22.28.08:462][381]LogAudioMixer: Display: Initializing Sound Submixes...
+[2022.10.01-22.28.08:462][381]LogAudioMixer: Display: Creating Master Submix 'MasterSubmixDefault'
+[2022.10.01-22.28.08:462][381]LogAudioMixer: Display: Creating Master Submix 'MasterReverbSubmixDefault'
+[2022.10.01-22.28.08:463][381]LogAudioMixer: FMixerPlatformXAudio2::StartAudioStream() called. InstanceID=13
+[2022.10.01-22.28.08:463][381]LogAudioMixer: Display: Output buffers initialized: Frames=1024, Channels=2, Samples=2048, InstanceID=13
+[2022.10.01-22.28.08:464][381]LogAudioMixer: Display: Starting AudioMixerPlatformInterface::RunInternal(), InstanceID=13
+[2022.10.01-22.28.08:464][381]LogAudioMixer: Display: FMixerPlatformXAudio2::SubmitBuffer() called for the first time. InstanceID=13
+[2022.10.01-22.28.08:464][381]LogInit: FAudioDevice initialized.
+[2022.10.01-22.28.08:464][381]LogAudio: Display: Audio Device (ID: 13) registered with world 'NewMap'.
+[2022.10.01-22.28.08:471][381]LogLoad: Game class is 'GameModeBase'
+[2022.10.01-22.28.08:474][381]LogWorld: Bringing World /Game/Maps/UEDPIE_0_NewMap.NewMap up for play (max tick rate 60) at 2022.10.02-07.28.08
+[2022.10.01-22.28.08:474][381]LogWorld: Bringing up level for play took: 0.002334
+[2022.10.01-22.28.08:475][381]LogOnline: OSS: Created online subsystem instance for: :Context_14
