@@ -108,7 +108,6 @@ ingame에서 getometry 편집을 할 수 있을지 모르겠음.
 
 
 
-
-
-
+기획서 수정중:
+https://docs.google.com/presentation/d/1FchpIadTJxtuOZUm9QAFtYQZ0KmarfQbwC1OrYaZ_Hs/edit#slide=id.g15cb00905c9_0_125
 
