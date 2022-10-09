@@ -1,0 +1,21 @@
+{
+    "Version": "1.1",
+    "Data": {
+        "Source": "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\inc\\project\\mainchar.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\projecteditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\development\\project\\definitions.project.h",
+            "c:\\users\\kkh3a\\desktop\\univ_project\\project\\source\\project\\public\\mainchar.h",
+            "c:\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\gameframework\\character.h",
+            "c:\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\gameframework\\charactermovementreplication.h",
+            "c:\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\charactermovementreplication.generated.h",
+            "c:\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\gameframework\\rootmotionsource.h",
+            "c:\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\rootmotionsource.generated.h",
+            "c:\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\character.generated.h",
+            "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\inc\\project\\mainchar.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
