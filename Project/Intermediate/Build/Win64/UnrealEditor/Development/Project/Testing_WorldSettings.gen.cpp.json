@@ -1,0 +1,15 @@
+{
+    "Version": "1.1",
+    "Data": {
+        "Source": "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\inc\\project\\testing_worldsettings.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\projecteditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\development\\project\\definitions.project.h",
+            "c:\\users\\kkh3a\\desktop\\univ_project\\project\\source\\project\\public\\testing_worldsettings.h",
+            "c:\\users\\kkh3a\\desktop\\univ_project\\project\\intermediate\\build\\win64\\unrealeditor\\inc\\project\\testing_worldsettings.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

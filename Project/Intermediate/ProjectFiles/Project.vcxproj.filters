@@ -60,6 +60,9 @@
     <ClCompile Include="..\..\Source\Project\Private\Sun_Detect.cpp">
       <Filter>Source\Project\Private</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Project\Private\Testing_GameModeBase.cpp">
+      <Filter>Source\Project\Private</Filter>
+    </ClCompile>
     <Filter Include="Source\Project\Public">
       <UniqueIdentifier>{CDD736D7-18BB-32F0-A71F-446CC79E4791}</UniqueIdentifier>
     </Filter>
@@ -67,6 +70,9 @@
       <Filter>Source\Project\Public</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Project\Public\Sun_Detect.h">
+      <Filter>Source\Project\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Project\Public\Testing_GameModeBase.h">
       <Filter>Source\Project\Public</Filter>
     </ClInclude>
   </ItemGroup>
