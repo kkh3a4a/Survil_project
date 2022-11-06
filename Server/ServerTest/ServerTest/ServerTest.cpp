@@ -1,10 +1,12 @@
 #include "..\..\Common.h"
+#include <iostream>
 #include <fstream>
 #include<vector>
 #include<mutex>
 #include<string>
 #define SERVERPORT 9000
 #define BUFSIZE    4096
+using namespace std;
 int len = 0;
 char buffer[BUFSIZE]; // 가변 길이 데이터
 std::mutex mylock;
@@ -98,6 +100,8 @@ int main(int argc, char* argv[])
 		// 접속한 클라이언트 정보 출력
 		char addr[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
+
+		cout << addr << endl;
 
 
 		// 스레드 생성
