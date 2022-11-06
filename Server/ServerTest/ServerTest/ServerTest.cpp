@@ -42,8 +42,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 		retval = send(client_sock, (char*)&sun_angle, (int)sizeof(SunAngle), 0);
 		sun_angle.y += 0.2f;
-		if (sun_angle.y >= 360.0f)
-			sun_angle.y = 0.0f;
+		if (sun_angle.y >= 180.f)
+			sun_angle.y = -180.f;
 		if (retval == SOCKET_ERROR) {
 			err_display("send()");
 			break;

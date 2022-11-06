@@ -1,1 +1,4 @@
-﻿  ServerTest.vcxproj -> D:\Projects\Univ_Project\Server\ServerTest\ServerTest\x64\Debug\ServerTest.exe
+﻿  ServerTest.cpp
+D:\Projects\Univ_Project\Server\ServerTest\ServerTest\ServerTest.cpp(27,7): warning C4101: 'buf' :참조되지 않은 지역 변수입니다.
+D:\Projects\Univ_Project\Server\ServerTest\ServerTest\ServerTest.cpp(29,8): warning C4101: 'fp' :참조되지 않은 지역 변수입니다.
+  ServerTest.vcxproj -> D:\Projects\Univ_Project\Server\ServerTest\ServerTest\x64\Debug\ServerTest.exe

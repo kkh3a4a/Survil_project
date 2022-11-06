@@ -23,11 +23,11 @@ struct FSunAngle {
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float x = 0;
+	float x;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float y = 0;
+	float y;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float z = 0;
+	float z;
 };
 
 UCLASS()
@@ -37,7 +37,6 @@ class PROJECT_API AServer_testing : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AServer_testing();
-	
 
 protected:
 	// Called when the game starts or when spawned
