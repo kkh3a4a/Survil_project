@@ -54,7 +54,7 @@ public:
 	SOCKET s_socket;
 	HANDLE hThread;
 
-	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSunAngle sunangle;
 
 	
