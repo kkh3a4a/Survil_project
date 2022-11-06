@@ -26,42 +26,31 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	SunAngle sun_angle;
 	FILE* fp;
 
-	int local_host_num;
-
-	mylock.lock();
-	local_host_num = hostnum++;
-	mylock.unlock();
-
+	sun_angle.x = 10;
+	sun_angle.y = 20;
+	sun_angle.z = 30;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
+	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",
+		addr, ntohs(clientaddr.sin_port));
 
-	
-		while (1) {
-			if (local_host_num == 0) 
-			{
-				retval = recv(client_sock, (char*)&sun_angle, (int)sizeof(SunAngle), MSG_WAITALL);
-				if (retval == SOCKET_ERROR) {
-					err_display("recv()");
-					break;
-				}
-			}
-			else
-			{
-				retval = send(client_sock,(char*)&sun_angle, (int)sizeof(SunAngle), 0);
-				if (retval == SOCKET_ERROR) {
-					err_display("send()");
-					break;
-				}
-			}
+	while (1) {
+
+		retval = send(client_sock, (char*)&sun_angle, (int)sizeof(SunAngle), 0);
+		if (retval == SOCKET_ERROR) {
+			err_display("send()");
+			break;
 		}
 
+	}
 
+	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
+		addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
 	closesocket(client_sock);
-	/*printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
-		addr, ntohs(clientaddr.sin_port));*/
+
 	return 0;
 }
 

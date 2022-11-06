@@ -1,0 +1,8 @@
+﻿  ServerTest.cpp
+C:\Users\kkh3a\Desktop\Univ_Project\Server\ServerTest\ServerTest\ServerTest.cpp(25,7): warning C4101: 'buf' :참조되지 않은 지역 변수입니다.
+C:\Users\kkh3a\Desktop\Univ_Project\Server\ServerTest\ServerTest\ServerTest.cpp(27,8): warning C4101: 'fp' :참조되지 않은 지역 변수입니다.
+  코드를 생성하고 있습니다.
+  Previous IPDB not found, fall back to full compilation.
+  All 15 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  코드를 생성했습니다.
+  ServerTest.vcxproj -> C:\Users\kkh3a\Desktop\Univ_Project\Server\Release\ServerTest.exe

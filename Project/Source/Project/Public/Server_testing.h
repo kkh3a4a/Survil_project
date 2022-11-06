@@ -1,14 +1,28 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "Windows/AllowWindowsPlatformTypes.h"
+
+// include header with included Windows.h
+
+
 #include<WS2tcpip.h>
 #include<iostream>
+
+#include "Windows/HideWindowsPlatformTypes.h"
+
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Server_testing.generated.h"
 
 using namespace std;
 
+struct SunAngle {
+	float x = 0;
+	float y = 0;
+	float z = 0;
+};
 UCLASS()
 class PROJECT_API AServer_testing : public AActor
 {
@@ -17,6 +31,7 @@ class PROJECT_API AServer_testing : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AServer_testing();
+	
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,5 +46,10 @@ public:
 	int ret = 0;
 	WSADATA WSAData;
 	SOCKET s_socket;
+	SunAngle sunangle;
+	HANDLE hThread;
 
+	/*
+	DWORD WINAPI Angle_Receiver(LPVOID arg);*/
 };
+
