@@ -38,7 +38,7 @@ void AServer_testing::Tick(float DeltaTime)
 	{
 		return;
 	}
-	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(SunAngle), 0);
+	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(FSunAngle), 0);
 	UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), sunangle.x , sunangle.y, sunangle.z);
 	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(" %d, %d, %d", sunangle.x, sunangle.y, sunangle.z));
 

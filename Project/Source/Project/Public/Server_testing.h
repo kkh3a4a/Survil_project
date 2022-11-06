@@ -18,16 +18,22 @@
 
 using namespace std;
 
-struct SunAngle {
+USTRUCT(Atomic, BlueprintType)
+struct FSunAngle {
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float x = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float y = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float z = 0;
 };
+
 UCLASS()
 class PROJECT_API AServer_testing : public AActor
 {
 	GENERATED_BODY()
-	
 public:	
 	// Sets default values for this actor's properties
 	AServer_testing();
@@ -46,8 +52,13 @@ public:
 	int ret = 0;
 	WSADATA WSAData;
 	SOCKET s_socket;
-	SunAngle sunangle;
 	HANDLE hThread;
+
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere)
+	FSunAngle sunangle;
+
+	
+
 
 	/*
 	DWORD WINAPI Angle_Receiver(LPVOID arg);*/
