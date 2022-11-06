@@ -13,9 +13,9 @@ std::mutex mylock;
 //들어온 순서
 int hostnum;
 struct SunAngle {
-	float x = 0;
-	float y = 0;
-	float z = 0;
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
 };
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
@@ -28,9 +28,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	SunAngle sun_angle;
 	FILE* fp;
 
-	sun_angle.x = 10;
-	sun_angle.y = 20;
-	sun_angle.z = 30;
+	sun_angle.x = 10.0f;
+	sun_angle.y = 20.0f;
+	sun_angle.z = 30.0f;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
@@ -41,6 +41,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	while (1) {
 
 		retval = send(client_sock, (char*)&sun_angle, (int)sizeof(SunAngle), 0);
+		sun_angle.y += 0.2f;
+		if (sun_angle.y >= 360.0f)
+			sun_angle.y = 0.0f;
 		if (retval == SOCKET_ERROR) {
 			err_display("send()");
 			break;
