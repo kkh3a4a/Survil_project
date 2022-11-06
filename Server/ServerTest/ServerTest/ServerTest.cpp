@@ -28,9 +28,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	SunAngle sun_angle;
 	FILE* fp;
 
-	sun_angle.x = 10.0f;
-	sun_angle.y = 20.0f;
-	sun_angle.z = 30.0f;
+	sun_angle.x = 0.0f;
+	sun_angle.y = 0.0f;
+	sun_angle.z = 0.0f;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
