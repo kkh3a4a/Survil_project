@@ -1,9 +1,0 @@
-﻿  ServerTest.cpp
-C:\Users\kkh3a\Desktop\Univ_Project\Server\ServerTest\ServerTest\ServerTest.cpp(27,7): warning C4101: 'buf' :참조되지 않은 지역 변수입니다.
-C:\Users\kkh3a\Desktop\Univ_Project\Server\ServerTest\ServerTest\ServerTest.cpp(29,8): warning C4101: 'fp' :참조되지 않은 지역 변수입니다.
-  코드를 생성하고 있습니다.
-  11 of 25 functions (44.0%) were compiled, the rest were copied from previous compilation.
-    10 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
-  코드를 생성했습니다.
-  ServerTest.vcxproj -> C:\Users\kkh3a\Desktop\Univ_Project\Server\Release\ServerTest.exe

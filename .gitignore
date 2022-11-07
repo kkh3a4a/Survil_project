@@ -1,6 +1,7 @@
 ### UnrealEngine ###
 # Visual Studio 2015 user specific files
 .vs/
+x64/
 
 # Compiled Object files
 *.slo
