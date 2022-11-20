@@ -4,12 +4,19 @@
 #include<vector>
 #include<mutex>
 #include<string>
+#include<map>
 #define SERVERPORT 9000
 #define BUFSIZE    4096
 using namespace std;
 int len = 0;
 char buffer[BUFSIZE]; // 가변 길이 데이터
 std::mutex mylock;
+
+
+//함수정의 
+DWORD WINAPI ProcessClient(LPVOID arg);
+DWORD WINAPI ingame_Client(LPVOID arg);
+
 //들어온 순서
 int hostnum;
 struct SunAngle {
@@ -17,6 +24,11 @@ struct SunAngle {
 	float y = 0.0f;
 	float z = 0.0f;
 };
+SunAngle sun_angle;
+vector<SOCKET> player_list;
+
+int player_num;
+
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
 	int retval;
@@ -25,7 +37,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
 	char buf[BUFSIZE + 1];
-	SunAngle sun_angle;
+	
 	FILE* fp;
 
 	sun_angle.x = 0.0f;
@@ -58,7 +70,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	return 0;
 }
-
 
 
 int main(int argc, char* argv[])
@@ -106,7 +117,7 @@ int main(int argc, char* argv[])
 
 		cout << addr << endl;
 
-
+		player_list.emplace_back(client_sock);
 		// 스레드 생성
 		hThread = CreateThread(NULL, 0, ProcessClient,
 			(LPVOID)client_sock, 0, NULL);
