@@ -5,9 +5,12 @@
 #include<mutex>
 #include<string>
 #include<map>
+#include <chrono>
 #define SERVERPORT 9000
 #define BUFSIZE    4096
 using namespace std;
+using namespace chrono;
+
 int len = 0;
 char buffer[BUFSIZE]; // 가변 길이 데이터
 std::mutex mylock;
@@ -15,10 +18,14 @@ std::mutex mylock;
 
 //함수정의 
 DWORD WINAPI ProcessClient(LPVOID arg);
-DWORD WINAPI ingame_Client(LPVOID arg);
-
+DWORD WINAPI ingame_thread(LPVOID arg);
+ 
 //들어온 순서
 int hostnum;
+
+//
+bool game_start = false;
+
 struct SunAngle {
 	float x = 0.0f;
 	float y = 0.0f;
@@ -40,26 +47,29 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	
 	FILE* fp;
 
-	sun_angle.x = 0.0f;
-	sun_angle.y = 0.0f;
-	sun_angle.z = 0.0f;
+	game_start = true;
+	cout << "2" << endl;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",
 		addr, ntohs(clientaddr.sin_port));
-
+	auto start_t = high_resolution_clock::now();
 	while (1) {
 
-		retval = send(client_sock, (char*)&sun_angle, (int)sizeof(SunAngle), 0);
-		sun_angle.y += 0.2f;
-		if (sun_angle.y >= 180.f)
-			sun_angle.y = -180.f;
-		if (retval == SOCKET_ERROR) {
-			err_display("send()");
-			break;
+		auto end_t = high_resolution_clock::now();
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
+		{
+			start_t = high_resolution_clock::now();
+			retval = send(client_sock, (char*)&sun_angle, (int)sizeof(SunAngle), 0);
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+				break;
+			}
+			cout << sun_angle.y << endl;
 		}
+
 
 	}
 
@@ -70,7 +80,29 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	return 0;
 }
+DWORD WINAPI ingame_thread(LPVOID arg)
+{
+	sun_angle.x = 0.0f;
+	sun_angle.y = 0.0f;
+	sun_angle.z = 0.0f;
+	auto start_t = high_resolution_clock::now();
+	while (1)
+	{
+		
+		auto end_t = high_resolution_clock::now();
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
+		{
+			start_t = high_resolution_clock::now();
+			sun_angle.y += 0.2f;
+			if (sun_angle.y >= 180.f)
+				sun_angle.y = -180.f;
+			
+		}
 
+	}
+
+	return 0;
+}
 
 int main(int argc, char* argv[])
 {
@@ -102,6 +134,9 @@ int main(int argc, char* argv[])
 	struct sockaddr_in clientaddr;
 	int addrlen;
 	HANDLE hThread;
+	hThread = CreateThread(NULL, 0, ingame_thread,
+		0, 0, NULL);
+
 	while (1) {
 		// accept()
 		addrlen = sizeof(clientaddr);
