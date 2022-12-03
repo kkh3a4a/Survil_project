@@ -6,43 +6,35 @@
 #include<string>
 #include<map>
 #include <chrono>
+
 #define SERVERPORT 9000
 #define BUFSIZE    4096
 using namespace std;
 using namespace chrono;
 
-int len = 0;
-char buffer[BUFSIZE]; // 가변 길이 데이터
-std::mutex mylock;
-
-
 //함수정의 
 DWORD WINAPI ProcessClient(LPVOID arg);
 DWORD WINAPI ingame_thread(LPVOID arg);
- 
-//들어온 순서
-int hostnum;
 
-//
-bool game_start = false;
-
-struct SunAngle {
+typedef struct three_float {
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;
-};
+}TF;
 
-struct Actor_location_rotation {
-public:
-	float location_x, location_y, location_z;
-	float rotate_x, rotate_y, rotate_z;
+typedef struct transform {
+	TF location;
+	TF rotation;
+}T;
 
-};
-SunAngle sun_angle;
+map<int, T*> players_list; //port, player_info
+bool game_start = false;
+int len = 0;
+
+std::mutex mylock;
+TF sun_angle;
+T testActor;
 vector<SOCKET> player_list;
-Actor_location_rotation testActor;
-
-int player_num;
 
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
@@ -53,38 +45,37 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int addrlen;
 	char buf[BUFSIZE + 1];
 	
-	FILE* fp;
-
 	game_start = true;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
-	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",
-		addr, ntohs(clientaddr.sin_port));
+	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
 	auto start_t = high_resolution_clock::now();
+	
+	T player_info;
+	//해당 클라이언트의 port번호 map에 저장
+	int port = ntohs(clientaddr.sin_port);
+	players_list[port] = &player_info;
+	
 	while (1) {
-
 		auto end_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
-		{
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 50){
 			start_t = high_resolution_clock::now();
-			retval = send(client_sock, (char*)&sun_angle, (int)sizeof(SunAngle), 0);
+			retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
 			}
-			retval = send(client_sock, (char*)&testActor, (int)sizeof(Actor_location_rotation), 0);
+			retval = send(client_sock, (char*)&testActor, (int)sizeof(T), 0);
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
 			}
 			//cout << sun_angle.y << endl;
 		}
-
-
 	}
-
+	
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 		addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
@@ -94,53 +85,46 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 }
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
-	sun_angle.x = 0.0f;
+	/*sun_angle.x = 0.0f;
 	sun_angle.y = 0.0f;
 	sun_angle.z = 0.0f;
-	/*testActor.location_x = 0.0f;
-	testActor.location_y = 0.0f;
-	testActor.location_z = 0.0f;*/
-	testActor.location_x = 0.0f;
-	testActor.location_y = 0.0f;
-	testActor.location_z = 500.0f;
-	testActor.rotate_x = 0.0f;
-	testActor.rotate_y = 0.0f;
-	testActor.rotate_z = 0.0f;
-	auto start_t = high_resolution_clock::now();
-	auto actor_move_start= high_resolution_clock::now();
-	while (1)
-	{
+	testActor.location.x = 0.0f;
+	testActor.location.y = 0.0f;
+	testActor.location.z = 500.0f;
+	testActor.rotation.x = 0.0f;
+	testActor.rotation.y = 0.0f;
+	testActor.rotation.z = 0.0f;*/
+	
+	auto sunangle_start_t = high_resolution_clock::now();
+	auto actor_move_start_t = high_resolution_clock::now();
+	
+	while (1){
+		auto sunangle_end_t = high_resolution_clock::now();
+		auto actor_move_end_t = high_resolution_clock::now();
 		
-		auto end_t = high_resolution_clock::now();
-		auto actor_move_end = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
-		{
-			start_t = high_resolution_clock::now();
+		if (duration_cast<milliseconds>(sunangle_end_t - sunangle_start_t).count() > 50){
+			sunangle_start_t = high_resolution_clock::now();
 			sun_angle.y += 0.2f;
-			if (sun_angle.y >= 180.f)
+			if (sun_angle.y >= 180.f) {
 				sun_angle.y = -180.f;
-			testActor.location_x += testActor.rotate_x * 0.5;
-			testActor.location_y += testActor.rotate_y * 0.5;
-			cout << testActor.location_x << ", " << testActor.location_y << endl;
-		}
-		if (duration_cast<milliseconds>(actor_move_end - actor_move_start).count() > 5000)
-		{
-			actor_move_start = high_resolution_clock::now();
-			testActor.rotate_x = rand() % 100;
-			testActor.rotate_y = rand() % 100;
-			if (rand() % 2 == 1)
-			{
-				testActor.rotate_x *= -1;
 			}
-			if (rand() % 2 == 1)
-			{
-				testActor.rotate_y *= -1;
-			}
-
+			
+			testActor.location.x += testActor.rotation.x * 0.5;
+			testActor.location.y += testActor.rotation.y * 0.5;
+			//cout << testActor.location_x << ", " << testActor.location_y << endl;
 		}
-
+		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 5000){
+			actor_move_start_t = high_resolution_clock::now();
+			testActor.rotation.x = rand() % 100;
+			testActor.rotation.y = rand() % 100;
+			if (rand() % 2 == 1) {
+				testActor.rotation.x *= -1;
+			}
+			if (rand() % 2 == 1) {
+				testActor.rotation.y *= -1;
+			}
+		}
 	}
-
 	return 0;
 }
 

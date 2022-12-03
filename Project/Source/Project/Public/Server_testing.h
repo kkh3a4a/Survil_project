@@ -4,14 +4,9 @@
 #include "Windows/AllowWindowsPlatformTypes.h"
 
 // include header with included Windows.h
-
-
 #include<WS2tcpip.h>
 #include<iostream>
-
 #include "Windows/HideWindowsPlatformTypes.h"
-
-
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Server_testing.generated.h"
@@ -19,7 +14,7 @@
 using namespace std;
 
 USTRUCT(Atomic, BlueprintType)
-struct FSunAngle {
+struct Fthree_float{
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -29,24 +24,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float z;
 };
+
 USTRUCT(Atomic, BlueprintType)
 struct FActor_location_rotation{
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float location_x;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float location_y;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float location_z;
+	Fthree_float location;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float rotate_x;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float rotate_y;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float rotate_z;
-
+	Fthree_float rotation;
 };
 
 UCLASS()
@@ -68,17 +55,16 @@ public:
 	const short SERVER_PORT = 9000;
 	const int BUFSIZE = 256;
 	int ret = 0;
+	
 	WSADATA WSAData;
 	SOCKET s_socket;
 	HANDLE hThread;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FSunAngle sunangle;
+	Fthree_float sunangle;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FActor_location_rotation test_Actor;
 	
-
-
 	/*
 	DWORD WINAPI Angle_Receiver(LPVOID arg);*/
 };

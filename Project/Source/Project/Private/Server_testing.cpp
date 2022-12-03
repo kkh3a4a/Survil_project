@@ -8,7 +8,6 @@ AServer_testing::AServer_testing()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -33,7 +32,7 @@ void AServer_testing::BeginPlay()
 void AServer_testing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(FSunAngle), 0);
+	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
 	if (SOCKET_ERROR == ret)
 	{
 		return;
@@ -44,7 +43,8 @@ void AServer_testing::Tick(float DeltaTime)
 		return;
 	}
 	
-	UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location_x , test_Actor.location_y, test_Actor.location_z);
+	
+	UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location.x , test_Actor.location.y, test_Actor.location.z);
 	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(" %d, %d, %d", sunangle.x, sunangle.y, sunangle.z));
 
 }
