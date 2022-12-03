@@ -31,8 +31,16 @@ struct SunAngle {
 	float y = 0.0f;
 	float z = 0.0f;
 };
+
+struct Actor_location_rotation {
+public:
+	float location_x, location_y, location_z;
+	float rotate_x, rotate_y, rotate_z;
+
+};
 SunAngle sun_angle;
 vector<SOCKET> player_list;
+Actor_location_rotation testActor;
 
 int player_num;
 
@@ -48,7 +56,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	FILE* fp;
 
 	game_start = true;
-	cout << "2" << endl;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
@@ -67,7 +74,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				err_display("send()");
 				break;
 			}
-			cout << sun_angle.y << endl;
+			retval = send(client_sock, (char*)&testActor, (int)sizeof(Actor_location_rotation), 0);
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+				break;
+			}
+			//cout << sun_angle.y << endl;
 		}
 
 
@@ -85,18 +97,46 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	sun_angle.x = 0.0f;
 	sun_angle.y = 0.0f;
 	sun_angle.z = 0.0f;
+	/*testActor.location_x = 0.0f;
+	testActor.location_y = 0.0f;
+	testActor.location_z = 0.0f;*/
+	testActor.location_x = 0.0f;
+	testActor.location_y = 0.0f;
+	testActor.location_z = 500.0f;
+	testActor.rotate_x = 0.0f;
+	testActor.rotate_y = 0.0f;
+	testActor.rotate_z = 0.0f;
 	auto start_t = high_resolution_clock::now();
+	auto actor_move_start= high_resolution_clock::now();
 	while (1)
 	{
 		
 		auto end_t = high_resolution_clock::now();
+		auto actor_move_end = high_resolution_clock::now();
 		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
 		{
 			start_t = high_resolution_clock::now();
 			sun_angle.y += 0.2f;
 			if (sun_angle.y >= 180.f)
 				sun_angle.y = -180.f;
-			
+			testActor.location_x += testActor.rotate_x * 0.5;
+			testActor.location_y += testActor.rotate_y * 0.5;
+			cout << testActor.location_x << ", " << testActor.location_y << endl;
+		}
+		if (duration_cast<milliseconds>(actor_move_end - actor_move_start).count() > 5000)
+		{
+			actor_move_start = high_resolution_clock::now();
+			testActor.rotate_x = rand() % 100;
+			testActor.rotate_y = rand() % 100;
+			if (rand() % 2 == 1)
+			{
+				testActor.rotate_x *= -1;
+			}
+			if (rand() % 2 == 1)
+			{
+				testActor.rotate_y *= -1;
+			}
+
 		}
 
 	}

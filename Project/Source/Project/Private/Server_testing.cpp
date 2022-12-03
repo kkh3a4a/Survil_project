@@ -33,13 +33,18 @@ void AServer_testing::BeginPlay()
 void AServer_testing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(FSunAngle), 0);
 	if (SOCKET_ERROR == ret)
 	{
 		return;
 	}
-	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(FSunAngle), 0);
-	UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), sunangle.x , sunangle.y, sunangle.z);
+	ret = recv(s_socket, (char*)&test_Actor, (int)sizeof(FActor_location_rotation), 0);
+	if (SOCKET_ERROR == ret)
+	{
+		return;
+	}
+	
+	UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location_x , test_Actor.location_y, test_Actor.location_z);
 	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(" %d, %d, %d", sunangle.x, sunangle.y, sunangle.z));
 
 }

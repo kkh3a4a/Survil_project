@@ -29,6 +29,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float z;
 };
+USTRUCT(Atomic, BlueprintType)
+struct FActor_location_rotation{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float location_x;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float location_y;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float location_z;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float rotate_x;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float rotate_y;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float rotate_z;
+
+};
 
 UCLASS()
 class PROJECT_API AServer_testing : public AActor
@@ -55,7 +74,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FSunAngle sunangle;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FActor_location_rotation test_Actor;
 	
 
 
