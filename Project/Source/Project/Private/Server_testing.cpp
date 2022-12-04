@@ -26,6 +26,7 @@ void AServer_testing::BeginPlay()
 
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
+	UE_LOG(LogTemp, Log, TEXT("connected to server"))
 }
 
 // Called every frame
@@ -44,7 +45,7 @@ void AServer_testing::Tick(float DeltaTime)
 	}
 	
 	
-	UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location.x , test_Actor.location.y, test_Actor.location.z);
+	//UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location.x , test_Actor.location.y, test_Actor.location.z);
 	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(" %d, %d, %d", sunangle.x, sunangle.y, sunangle.z));
 
 }
