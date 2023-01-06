@@ -1030,6 +1030,7 @@
 #include <random>
 #include <windows.h>
 #include <time.h>
+#include <fstream>
 #include <cuda_runtime.h>
 #include <curand.h>
 #include <curand_kernel.h>
@@ -1037,7 +1038,7 @@
 #include "device_launch_parameters.h"
 using namespace std;
 
-const unsigned int one_side_number = 40000;
+const unsigned int one_side_number = 39936;	//39936
 const int max_height = 9;
 const int base_floor = 1;
 
@@ -1126,34 +1127,31 @@ void show_array(char* terrain_array_host[])
 //}
 
 __global__
-void make_hills_cuda(char** terrain_array_device)
+void make_hills_cuda(char** terrain_array_device, int num_of_hills)
 {
 	int id = threadIdx.x + blockIdx.x * blockDim.x;
+	
+	int my_hill = threadIdx.x;
+	int my_y = blockIdx.x;
 
-	int hill_location_x = hill_location_device[id].x;
-	int hill_location_y = hill_location_device[id].y;
-	int radius = hill_location_device[id].radius;
-	int height = hill_location_device[id].height;
+	int hill_location_x = hill_location_device[my_hill].x;
+	int hill_location_y = hill_location_device[my_hill].y;
+	int radius = hill_location_device[my_hill].radius;
+	int height = hill_location_device[my_hill].height;
 	int distance{};
 
-	printf("START thread: %3d seed: %3d x: %3d y: %3d radius: %3d height: %3d\n", threadIdx.x + blockIdx.x * blockDim.x, id, hill_location_x, hill_location_y, radius, height);
-
-	for (int x = hill_location_x - radius; x <= hill_location_x + radius; x++) {
-		for (int y = hill_location_y - radius; y <= hill_location_y + radius; y++) {
-			distance = sqrt(pow(x - hill_location_x, 2) + pow(y - hill_location_y, 2));
-			
-			if (distance <= radius) {
-				//printf("%d %d\n", x, y);
-
-				terrain_array_device[x][y] += (height - 1) * (radius - distance) / radius + 1;
-				//printf("%d\n",(height - 1) * (radius - distance) / radius + 1);
-				if (terrain_array_device[x][y] > max_height) {
-					terrain_array_device[x][y] = max_height;
-				}
+	for (int x = hill_location_x - radius; x <= hill_location_x + radius; ++x) {
+		distance = sqrt(((pow(x - hill_location_x, 2)) + (pow(my_y - hill_location_y, 2))));
+		if (distance <= radius) {
+			terrain_array_device[x][my_y] += (height - 1) * (radius - distance) / radius + 1;
+			if (terrain_array_device[x][my_y] > max_height) {
+				terrain_array_device[x][my_y] = max_height;
+			}
+			else if (terrain_array_device[x][my_y] < 0) {
+				terrain_array_device[x][my_y] = 0;
 			}
 		}
 	}
-	
 }
 
 int make_hill_location()
@@ -1221,62 +1219,11 @@ int make_hill_location()
 	return num_of_hills;
 }
 
-//__global__ void solver(int** matd, int n, int m) {
-//	for (int i = 0; i < n; i++) {
-//		for (int j = 0; j < n; j++) {
-//			matd[i][j] = 5;
-//			printf("%d ", matd[i][j]);
-//		}
-//		printf("\n");
-//	}
-//	printf("=======================================\n");
-//
-//}
-
 int main()
 {
-	//const int n = 10;
-	//int ** ad;
-	//
-	//int* temph[n];
-	//
-	//int** a = new int* [n];
-	//for (int i = 0; i < n; i++) {
-	//	a[i] = new int[n];
-	//}
-	//
-	//for (int i = 0; i < n; i++) {
-	//	for (int j = 0; j < n; j++) {
-	//		a[i][j] = 0;
-	//	}
-	//}
-	//
-	//// Allocate 2D array in Device
-	//cudaMalloc((void**)&ad, n * sizeof(int*));
-	//for (int i = 0; i < n; i++) {
-	//	cudaMalloc(&temph[i], n * sizeof(int));
-	//}
-	//cudaMemcpy(ad, temph, n * sizeof(int*), cudaMemcpyHostToDevice);
+	//get_device_info();
 
-	//for (int i = 0; i < n; i++) {
-	//	cudaMemcpy(temph[i], a[i], n * sizeof(int), cudaMemcpyHostToDevice);
-	//}
 
-	//solver << <1, 1 >> > (ad, n, n);
-	//
-	//for (int i = 0; i < n; i++) {
-	//	cudaMemcpy(a[i], temph[i], n * sizeof(int), cudaMemcpyHostToHost);
-	//}
-	//
-	//for (int x = 0; x < n; x++) {
-	//	for (int y = 0; y < n; y++) {
-	//		printf("%d ", a[x][y]);
-	//	}
-	//	printf("\n");
-	//}
-	//=============================================================================
-	 
-	 
 	char** terrain_array_host = new char* [one_side_number];	// 2D array for host
 	for (int i = 0; i < one_side_number; i++) {
 		terrain_array_host[i] = new char[one_side_number];
@@ -1300,24 +1247,18 @@ int main()
 		cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
 	}
 
-
-	//get_device_info();
-
 	int num_of_hills = make_hill_location();
 	printf("Random Hill Info Complete\n");
-
-
+	
 	clock_t terrain_generate_start_time = clock();
 	
-	make_hills_cuda << <num_of_hills/2, 2 >> > (terrain_array_device);
+	make_hills_cuda << <one_side_number, num_of_hills >> > (terrain_array_device, num_of_hills);
 	//add_floor << <1, 1 >> > ();
-
+	
 	for (int i = 0; i < one_side_number; i++) {
 		cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 	}
-	
 	printf("Terrain Generation Complete\n");
-
 	clock_t  terrain_generate_end_time = clock();
 
 	//show_array(terrain_array_host);
@@ -1325,4 +1266,14 @@ int main()
 	cout << "Terrain size : " << one_side_number << " * " << one_side_number << endl;
 	cout << "Terrain Array Size : " << one_side_number * one_side_number * sizeof(char) << " Bytes" << endl;
 	cout << "Terrain Generate Time : " << (double)(terrain_generate_end_time - terrain_generate_start_time) / CLOCKS_PER_SEC << " Seconds" << endl;
+
+	/*ofstream out{"terrain.txt"};
+
+	for (int i = 0; i < one_side_number; i++) {
+		for (int j = 0; j < one_side_number; j++) {
+			out << terrain_array_host[i][j] << " ";
+		}
+		out << endl;
+	}
+	cout << "File Write Complete" << endl;*/
 }
