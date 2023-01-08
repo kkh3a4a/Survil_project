@@ -1,6 +1,5 @@
 ﻿#include <iostream>
 #include <stdio.h>
-#include <vector>
 #include <random>
 #include <windows.h>
 #include <time.h>
@@ -12,8 +11,8 @@
 #include "device_launch_parameters.h"
 using namespace std;
 
-const unsigned int one_side_number = 1000;	//39936
-const int player_sight_size = 50;	//1024 넘으면 안됨
+const unsigned int one_side_number = 40000;	//39936
+const int player_sight_size = 1024;	//1024 넘으면 안됨
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -91,36 +90,6 @@ void show_array(char** terrain_array_host, int size)
 	}
 }
 
-__global__
-void make_hills_cuda(char** terrain_array_device, HI* hill_location_device)
-{
-	//int id = threadIdx.x + blockIdx.x * blockDim.x;
-	int my_hill = threadIdx.x;
-	int my_y = blockIdx.x;
-
-	int hill_location_x = hill_location_device[my_hill].x;
-	int hill_location_y = hill_location_device[my_hill].y;
-	int radius = hill_location_device[my_hill].radius;
-	int height = hill_location_device[my_hill].height;
-	int distance{};
-
-	//printf("threadId.x: %d, blockIdx.x: %d, blockDim.x: %d, id: %d\n", threadIdx.x, blockIdx.x, blockDim.x, id);
-	//printf("Hill %d : (%d, %d) / %d / %d\n", my_hill, hill_location_x, hill_location_y, radius, height);
-
-	for (int x = hill_location_x - radius; x <= hill_location_x + radius; ++x) {
-		distance = sqrt(((pow(x - hill_location_x, 2)) + (pow(my_y - hill_location_y, 2))));
-		if (distance <= radius) {
-			terrain_array_device[x][my_y] += (height - 1) * (radius - distance) / radius + 1;
-			if (terrain_array_device[x][my_y] > max_height) {
-				terrain_array_device[x][my_y] = max_height;
-			}
-			else if (terrain_array_device[x][my_y] < 0) {
-				terrain_array_device[x][my_y] = 0;
-			}
-		}
-	}
-}
-
 int make_hill_location(HI* hill_location_host)
 {
 	int num_of_hills = number_of_hills_uid(dre);
@@ -183,16 +152,42 @@ int make_hill_location(HI* hill_location_host)
 	return num_of_hills;
 }
 
-__global__
-void player_terrain_update_cuda(char** terrain_array_device, char** terrain_player_sight_device, TI player_location, int player_sight_size)
+void move_terrain(HI* hill_location_host, int num_of_hills)
 {
-	//int id = threadIdx.x + blockIdx.x * blockDim.x;
+	int move_direction = 20;
+	for (int i = 0; i < num_of_hills; i++) {
+		//hill_location_host[i].x += move_direction;
+		//hill_location_host[i].y += move_direction;
+	}
+}
+
+__global__
+void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_location_device, int num_of_hills, TI player_location)
+{
 	int x = threadIdx.x;
 	int y = blockIdx.x;
-	//printf("threadId.x: %d, blockIdx.x: %d, blockDim.x: %d\n", threadIdx.x, blockIdx.x, blockDim.x);
+	int terrain_x = player_location.x + x;
+	int terrain_y = player_location.y + y;
+	
+	if (terrain_x >= 0 && terrain_x <= one_side_number && terrain_y >= 0 && terrain_y <= one_side_number) {
+		terrain_player_sight_device[x][y] = base_floor;
+		for (int i = 0; i < num_of_hills; i++) {
+			int hill_location_x = hill_location_device[i].x;
+			int hill_location_y = hill_location_device[i].y;
+			int radius = hill_location_device[i].radius;
+			int height = hill_location_device[i].height;
+			int distance = sqrt(((pow(terrain_y - hill_location_x, 2)) + (pow(terrain_x - hill_location_y, 2))));
 
-	if (x + player_location.x > 0 && x + player_location.x < one_side_number && y + player_location.y > 0 && y + player_location.y < one_side_number) {
-		terrain_player_sight_device[x][y] = terrain_array_device[x + player_location.x][y + player_location.y];
+			if (distance <= radius) {
+				terrain_player_sight_device[x][y] += (height - 1) * (radius - distance) / radius + 1;
+				if (terrain_player_sight_device[x][y] > max_height) {
+					terrain_player_sight_device[x][y] = max_height;
+				}
+				else if (terrain_player_sight_device[x][y] < 0) {
+					terrain_player_sight_device[x][y] = 0;
+				}
+			}
+		}
 	}
 	else {
 		terrain_player_sight_device[x][y] = 0;
@@ -201,6 +196,9 @@ void player_terrain_update_cuda(char** terrain_array_device, char** terrain_play
 
 int main()
 {
+	//get_device_info();
+
+	
 	//ToDo
 	//마을 위치 랜덤 생성, 마을 위치는 높이 0인데 주변 언덕이 점차적인 높이로함, 언덕 움직이기
 	// 언덕을 움직이는데 효울적인 방법: 플레이어가 보는 시야만 업데이트를 하게끔 해야함 
@@ -208,59 +206,20 @@ int main()
 	// 플레이어가 보는 시점을 1000*1000이라 가정하고, 그 부분의 terrain_array를 업데이트 해야함
 	// 플레이어 수에 맞게 플레이어 시점 2차원 배열 terrain_array_for_player를 동적할당하여 생성해야함
 	// 
+	// 플레이어에게 맵 정보를 보내줘야 할 시기: 게임 시작, 지형이 변경될 때, 카메라가 움직일 때
+	// 문제: 지형이 움직일때 terrain_array전체를 수정하고, 플레이어에게 terrain_array에 복사만 해서 일부분을 보여줄지,
+	// hill_location을 수정하고, 플레이어에게 보여줄때, terrain_array를 아예 그릴지. ====이게 나을듯...40000*40000 만드는건 뻘짓이였다..
+	// 
 	//
 	
-	//get_device_info();
 
 	//Make Random Hills Information===================================================
-	clock_t random_hills_info_start_time = clock();
-	HI* hill_location_host = new HI[10000];
+	HI* hill_location_host = new HI[4000];
 	HI* hill_location_device;
-	cudaMalloc((void**)&hill_location_device, 10000 * sizeof(HI));
+	cudaMalloc((void**)&hill_location_device, 4000 * sizeof(HI));
 	int num_of_hills = make_hill_location(hill_location_host);
 	cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
 	printf("Random Hill Info Complete\n");
-	
-		
-	//Terrain Memory Assignement===================================================
-	clock_t memory_assign_start_time = clock();
-	char** terrain_array_host = new char* [one_side_number];	// 2D array for host
-	for (int i = 0; i < one_side_number; i++) {
-		terrain_array_host[i] = new char[one_side_number];
-	}
-	for (int i = 0; i < one_side_number; i++) {
-		for (int j = 0; j < one_side_number; j++) {
-			terrain_array_host[i][j] = 1;
-		}
-	}
-	char** terrain_array_device;					// 2D array for device
-	char* terrain_array_temp[one_side_number];		// 1D array temp
-	cudaMalloc((void**)&terrain_array_device, one_side_number * sizeof(char*));
-	for (int i = 0; i < one_side_number; i++) {
-		cudaMalloc((void**)&terrain_array_temp[i], one_side_number * sizeof(char));
-	}
-	cudaMemcpy(terrain_array_device, terrain_array_temp, one_side_number* sizeof(char*), cudaMemcpyHostToDevice);
-	for (int i = 0; i < one_side_number; i++) {
-		cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
-	}
-	
-	
-	//Make Hills===================================================
-	clock_t terrain_generate_start_time = clock();
-	make_hills_cuda << <one_side_number, num_of_hills >> > (terrain_array_device, hill_location_device);
-	for (int i = 0; i < one_side_number; i++) {	
-		cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-	}
-	printf("Terrain Generation Complete\n");
-	clock_t  terrain_generate_end_time = clock();
-
-	//show_array(terrain_array_host, one_side_number);
-	cout << "Terrain size : " << one_side_number << " * " << one_side_number << endl;
-	cout << "Terrain Array Size : " << one_side_number * one_side_number * sizeof(char) << " Bytes" << endl;
-	cout << "Random Hills Info Time : " << (double)(memory_assign_start_time - random_hills_info_start_time) / CLOCKS_PER_SEC << " sec" << endl;
-	cout << "Memory Assign Time : " << (double)(terrain_generate_start_time - memory_assign_start_time) / CLOCKS_PER_SEC << " sec" << endl;
-	cout << "Terrain Generate Time : " << (double)(terrain_generate_end_time - terrain_generate_start_time) / CLOCKS_PER_SEC << " Seconds" << endl;
-	cout << "Total Time : " << (double)(terrain_generate_end_time - random_hills_info_start_time) / CLOCKS_PER_SEC << " Seconds" << endl;
 
 	
 	//Terrain Memory Assignment For Player's Sight===================================================
@@ -285,21 +244,25 @@ int main()
 	}
 
 	
-	//Player Sight Update===================================================
-	TI player_location = { 1,500 };
-
+	//Terrain move & Player Sight Update===================================================
+	TI player_location = { one_side_number / 2,one_side_number/2 };
 	for (int i = 0; i < 10; i++) {
+		//Terrain Move
+		move_terrain(hill_location_host, num_of_hills);
+		cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
+
+		//Player Sight Update
 		clock_t player_sight_update_start_time = clock();
-		player_location.x += 50;
-		player_location.y += 50;
-		//thread 1024 넘으면 문제 안생기나?
-		player_terrain_update_cuda << <player_sight_size, player_sight_size >> > (terrain_array_device, terrain_player_sight_device, player_location, player_sight_size);
+		//player_location.x += 100;
+		player_location.y += 20;
+		//thread must be 1024 for efficiency
+		player_terrain_update_cuda << <player_sight_size, player_sight_size >> > (terrain_player_sight_device, hill_location_device, num_of_hills, player_location);
 		for (int i = 0; i < player_sight_size; i++) {
 			cudaMemcpy(terrain_player_sight_host[i], terrain_player_sight_temp[i], player_sight_size * sizeof(char), cudaMemcpyDeviceToHost);
 		}
 		clock_t player_sight_update_end_time = clock();
 		cout << "Player Sight Update Time : " << (double)(player_sight_update_end_time - player_sight_update_start_time) / CLOCKS_PER_SEC << " Seconds" << endl;
-		show_array(terrain_player_sight_host, player_sight_size);
+		//show_array(terrain_player_sight_host, player_sight_size);
 		cout << "==============================" << endl;
 	}
 	
@@ -317,15 +280,13 @@ int main()
 	
 
 	//Free Memory===================================================
-	delete hill_location_host;
+	delete[] hill_location_host;
 	cudaFree(hill_location_device);
-	
-	for (int i = 0; i < one_side_number; i++) {
-		delete[] terrain_array_host[i];
+	for (int i = 0; i < player_sight_size; i++) {
+		delete[] terrain_player_sight_host[i];
+		cudaFree(terrain_player_sight_temp[i]);
 	}
-	delete[] terrain_array_host;
-	cudaFree(terrain_array_device);
-	for (int i = 0; i < one_side_number; i++) {
-		cudaFree(terrain_array_temp[i]);
-	}
+	delete[] terrain_player_sight_host;
+	cudaFree(terrain_player_sight_device);
+	cudaFree(terrain_player_sight_temp);
 }
