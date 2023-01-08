@@ -55,7 +55,9 @@ public:
 	const short SERVER_PORT = 9000;
 	const int BUFSIZE = 256;
 	int ret = 0;
-	
+	TMap<AActor*, int> My_Citizen;
+	int My_Citizen_Num = 0;
+
 	WSADATA WSAData;
 	SOCKET s_socket;
 	HANDLE hThread;

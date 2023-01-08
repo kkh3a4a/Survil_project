@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Server_testing.h"
-
+#include "Kismet/GameplayStatics.h"
+#include "citizen.h"
 // Sets default values
 AServer_testing::AServer_testing()
 {
@@ -14,7 +14,7 @@ AServer_testing::AServer_testing()
 void AServer_testing::BeginPlay()
 {
 	Super::BeginPlay();
-
+	TArray<AActor*> CitizensToFind;
 	wcout.imbue(locale("korean"));
 	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
 	s_socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, 0);
@@ -26,6 +26,25 @@ void AServer_testing::BeginPlay()
 
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
+	if (UWorld* World = GetWorld())
+	{
+		UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), Acitizen::StaticClass(), FName("Citizen"), CitizensToFind);
+		
+		for (AActor* MY_CIT : CitizensToFind)
+
+		{
+
+			Acitizen* CitizenCast = Cast<Acitizen>(MY_CIT);
+
+			if (CitizenCast)
+			{
+				My_Citizen.Add(MY_CIT, My_Citizen_Num++);
+				UE_LOG(LogTemp, Log, TEXT("%lf %lf"), MY_CIT->GetActorLocation().X, MY_CIT->GetActorLocation().Y);
+
+			}
+
+		}
+	}
 	UE_LOG(LogTemp, Log, TEXT("connected to server"))
 }
 
