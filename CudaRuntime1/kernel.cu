@@ -3,16 +3,18 @@
 #include <random>
 #include <windows.h>
 #include <time.h>
+#include <math.h>
 #include <fstream>
 #include <cuda_runtime.h>
 #include <curand.h>
 #include <curand_kernel.h>
 #include <cooperative_groups.h>
 #include "device_launch_parameters.h"
+#define PI 3.1415926
 using namespace std;
 
-const unsigned int one_side_number = 40000;	//39936
-const int player_sight_size = 1024;	//1024 넘으면 안됨
+const unsigned int one_side_number = 500;	//39936
+const int player_sight_size = 500;	//1024 넘으면 안됨
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -82,8 +84,8 @@ void get_device_info()
 
 void show_array(char** terrain_array_host, int size)
 {
-	for (int x = 0; x < size; x++) {
-		for (int y = 0; y < size; y++) {
+	for (int y = 0; y < size; y++) {
+		for (int x = 0; x < size; x++) {
 			printf("%d ", terrain_array_host[x][y]);
 		}
 		printf("\n");
@@ -152,17 +154,17 @@ int make_hill_location(HI* hill_location_host)
 	return num_of_hills;
 }
 
-void move_terrain(HI* hill_location_host, int num_of_hills)
+void move_terrain(HI* hill_location_host, int num_of_hills, int wind_direction, int wind_speed)
 {
-	int move_direction = 20;
+	if(wind_direction)
 	for (int i = 0; i < num_of_hills; i++) {
-		//hill_location_host[i].x += move_direction;
-		//hill_location_host[i].y += move_direction;
+		hill_location_host[i].x += wind_speed * cos(wind_direction * PI / 180);
+		hill_location_host[i].y += wind_speed * sin(wind_direction * PI / 180);
 	}
 }
 
 __global__
-void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_location_device, int num_of_hills, TI player_location)
+void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_location_device, int num_of_hills, TI player_location, int wind_direction)
 {
 	int x = threadIdx.x;
 	int y = blockIdx.x;
@@ -172,24 +174,36 @@ void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_loc
 	if (terrain_x >= 0 && terrain_x <= one_side_number && terrain_y >= 0 && terrain_y <= one_side_number) {
 		terrain_player_sight_device[x][y] = base_floor;
 		for (int i = 0; i < num_of_hills; i++) {
+			
+			//원래 언덕 채우기
 			int hill_location_x = hill_location_device[i].x;
 			int hill_location_y = hill_location_device[i].y;
 			int radius = hill_location_device[i].radius;
 			int height = hill_location_device[i].height;
-			int distance = sqrt(((pow(terrain_y - hill_location_x, 2)) + (pow(terrain_x - hill_location_y, 2))));
+			int distance = sqrt(pow(terrain_y - hill_location_y, 2) + pow(terrain_x - hill_location_x, 2));
 
 			if (distance <= radius) {
-				terrain_player_sight_device[x][y] += (height - 1) * (radius - distance) / radius + 1;
-				if (terrain_player_sight_device[x][y] > max_height) {
-					terrain_player_sight_device[x][y] = max_height;
-				}
-				else if (terrain_player_sight_device[x][y] < 0) {
-					terrain_player_sight_device[x][y] = 0;
+				terrain_player_sight_device[x][y] += (height) * (radius - distance) / radius;
+
+				//언덕 깎기
+				hill_location_x = hill_location_device[i].x - distance * cosf(wind_direction * PI / 180);
+				hill_location_y = hill_location_device[i].y - distance * sinf(wind_direction * PI / 180);
+				distance = sqrt(pow(terrain_y - hill_location_y, 2) + pow(terrain_x - hill_location_x, 2));
+
+				if (distance <= radius) {
+					terrain_player_sight_device[x][y] -= height * (radius - distance) / radius;
+					if (terrain_player_sight_device[x][y] > max_height) {
+						terrain_player_sight_device[x][y] = max_height;
+					}
+					else if (terrain_player_sight_device[x][y] < base_floor) {
+						terrain_player_sight_device[x][y] = base_floor;
+					}
 				}
 			}
 		}
 	}
 	else {
+		//맵 밖의 경우 0
 		terrain_player_sight_device[x][y] = 0;
 	}
 }
@@ -262,26 +276,29 @@ int main()
 
 	
 	//Terrain move & Player Sight Update===================================================
-	TI player_location = { one_side_number / 2,one_side_number/2 };
+	TI player_location = {0, 0};
 	for (int i = 0; i < 10; i++) {
+		clock_t t_1 = clock();
 		//Terrain Move
-		move_terrain(hill_location_host, num_of_hills);
+		int wind_direction = 70;	//각도
+		int wind_speed = 100;
+		move_terrain(hill_location_host, num_of_hills, wind_direction, wind_speed);
 		cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
 
 		//Player Sight Update
-		clock_t player_sight_update_start_time = clock();
-		//player_location.x += 100;
-		player_location.y += 20;
+		//player_location.x += 20;
+		//player_location.y += 20;
 		//thread must be 1024 for efficiency
-		player_terrain_update_cuda << <player_sight_size, player_sight_size >> > (terrain_player_sight_device, hill_location_device, num_of_hills, player_location);
+		player_terrain_update_cuda <<<player_sight_size, player_sight_size >>> (terrain_player_sight_device, hill_location_device, num_of_hills, player_location, wind_direction);
 		for (int i = 0; i < player_sight_size; i++) {
 			cudaMemcpy(terrain_player_sight_host[i], terrain_player_sight_temp[i], player_sight_size * sizeof(char), cudaMemcpyDeviceToHost);
 		}
-		clock_t player_sight_update_end_time = clock();
-		cout << "Player Sight Update Time : " << (double)(player_sight_update_end_time - player_sight_update_start_time) / CLOCKS_PER_SEC << " Seconds" << endl;
-		//show_array(terrain_player_sight_host, player_sight_size);
+		clock_t t_2 = clock();
+		cout << "Player Sight Update Time : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " Seconds" << endl;
+		show_array(terrain_player_sight_host, player_sight_size);
 		cout << "==============================" << endl;
 	}
+	
 	
 	
 	//File Save===================================================
