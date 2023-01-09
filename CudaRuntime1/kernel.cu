@@ -13,8 +13,8 @@
 #define PI 3.1415926
 using namespace std;
 
-const unsigned int one_side_number = 500;	//39936
-const int player_sight_size = 500;	//1024 넘으면 안됨
+const unsigned int one_side_number = 1024;	//39936
+const int player_sight_size = 1024;	//1024 넘으면 안됨
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -164,7 +164,7 @@ void move_terrain(HI* hill_location_host, int num_of_hills, int wind_direction, 
 }
 
 __global__
-void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_location_device, int num_of_hills, TI player_location, int wind_direction)
+void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_location_device, int num_of_hills, TI player_location, int wind_direction, int wind_speed)
 {
 	int x = threadIdx.x;
 	int y = blockIdx.x;
@@ -186,12 +186,13 @@ void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_loc
 				terrain_player_sight_device[x][y] += (height) * (radius - distance) / radius;
 
 				//언덕 깎기
-				hill_location_x = hill_location_device[i].x - distance * cosf(wind_direction * PI / 180);
-				hill_location_y = hill_location_device[i].y - distance * sinf(wind_direction * PI / 180);
+				//printf("%d %d %d\n", hill_location_x, int(hill_location_device[i].x - radius * cosf(wind_direction * PI / 180) * (100 - wind_speed) / 50), radius);
+				hill_location_x = hill_location_device[i].x - radius * cosf(wind_direction * PI / 180) * (100 - wind_speed) / 50;
+				hill_location_y = hill_location_device[i].y - radius * sinf(wind_direction * PI / 180) * (100 - wind_speed) / 50;
 				distance = sqrt(pow(terrain_y - hill_location_y, 2) + pow(terrain_x - hill_location_x, 2));
 
 				if (distance <= radius) {
-					terrain_player_sight_device[x][y] -= height * (radius - distance) / radius;
+					terrain_player_sight_device[x][y] -= height * (radius - distance) / radius + base_floor;
 					if (terrain_player_sight_device[x][y] > max_height) {
 						terrain_player_sight_device[x][y] = max_height;
 					}
@@ -280,8 +281,8 @@ int main()
 	for (int i = 0; i < 10; i++) {
 		clock_t t_1 = clock();
 		//Terrain Move
-		int wind_direction = 70;	//각도
-		int wind_speed = 100;
+		int wind_direction = 100;	//각도
+		int wind_speed = 50;		//최대 풍속 50
 		move_terrain(hill_location_host, num_of_hills, wind_direction, wind_speed);
 		cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
 
@@ -289,7 +290,7 @@ int main()
 		//player_location.x += 20;
 		//player_location.y += 20;
 		//thread must be 1024 for efficiency
-		player_terrain_update_cuda <<<player_sight_size, player_sight_size >>> (terrain_player_sight_device, hill_location_device, num_of_hills, player_location, wind_direction);
+		player_terrain_update_cuda <<<player_sight_size, player_sight_size >>> (terrain_player_sight_device, hill_location_device, num_of_hills, player_location, wind_direction , wind_speed);
 		for (int i = 0; i < player_sight_size; i++) {
 			cudaMemcpy(terrain_player_sight_host[i], terrain_player_sight_temp[i], player_sight_size * sizeof(char), cudaMemcpyDeviceToHost);
 		}
