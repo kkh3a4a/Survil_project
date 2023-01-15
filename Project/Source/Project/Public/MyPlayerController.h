@@ -1,13 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
 #pragma once
-#include "Server_testing.h"
+#include "global.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "MyPlayerController.generated.h"
+
 /**
- * 
+ *
  */
+
 
 
 UCLASS()
@@ -19,9 +22,11 @@ public:
 	AMyPlayerController();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector DestLocation;
+		FVector DestLocation;
 	AActor* hitActor;
-	AServer_testing* server_testing;
+
+	AActor* server;
+
 protected:
 	bool bRightClickMouse;
 
@@ -44,4 +49,5 @@ protected:
 	virtual void SetupInputComponent() override;
 
 	virtual void PlayerTick(float DeltaTime) override;
+
 };

@@ -1,4 +1,5 @@
 #include "..\..\Common.h"
+#include"global.h"
 #include <iostream>
 #include <fstream>
 #include<vector>
@@ -16,66 +17,104 @@ using namespace chrono;
 DWORD WINAPI ProcessClient(LPVOID arg);
 DWORD WINAPI ingame_thread(LPVOID arg);
 
-typedef struct three_float {
-	float x = 0.0f;
-	float y = 0.0f;
-	float z = 0.0f;
-}TF;
 
-typedef struct transform {
-	TF location;
-	TF rotation;
-}T;
-
-map<int, T*> players_list; //port, player_info
+map<int, FActor*> players_list; //port, player_info
 bool game_start = false;
 int len = 0;
 
 std::mutex mylock;
 TF sun_angle;
-T testActor;
+FActor testActor;
 vector<SOCKET> player_list;
+map <FActor*, location_rotation>my_citizen;
 
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
-	int retval;
+	int retval = 0;
 	SOCKET client_sock = (SOCKET)arg;
 	struct sockaddr_in clientaddr;
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
-	char buf[BUFSIZE + 1];
-	
+
 	game_start = true;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
-	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
+	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n", addr, ntohs(clientaddr.sin_port));
 	auto start_t = high_resolution_clock::now();
-	
-	T player_info;
+
+	FActor player_info;
 	//해당 클라이언트의 port번호 map에 저장
 	int port = ntohs(clientaddr.sin_port);
 	players_list[port] = &player_info;
-	
+
+	int cnt = 0;
+	retval = recv(client_sock, (char*)&cnt, sizeof(int), 0);
+
+	if (retval == SOCKET_ERROR) {
+		err_display("send()");
+		return 0;
+	}
+	for (int i = 0; i < cnt; ++i)
+	{
+
+		retval = recv(client_sock, (char*)&testActor, sizeof(testActor), 0);
+		FActor* tempActor = new FActor();
+		wcscpy(tempActor->name, testActor.name);
+		if (retval == SOCKET_ERROR) {
+			err_display("send()");
+			return 0;
+		}
+		FActor_TF_define(my_citizen[tempActor].location, testActor.location);
+		FActor_TF_define(tempActor->location, testActor.location);
+		FActor_TF_define(my_citizen[tempActor].rotation, testActor.rotation);
+		FActor_TF_define(tempActor->rotation, testActor.rotation);
+	}
+
 	while (1) {
 		auto end_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 50){
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 50) {
 			start_t = high_resolution_clock::now();
+
+			retval = recv(client_sock, (char*)&testActor, (int)sizeof(testActor), 0);
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+				break;
+			}
+			cout << testActor.location.x << endl;
+			if (wcscmp(testActor.name, L"temp") != 0)
+			{
+				for (auto& a : my_citizen)
+				{
+					if (wcscmp(a.first->name, testActor.name) == 0)
+					{
+						FActor_TF_define(a.second.location, testActor.location);
+						wcout << a.first->name;
+						cout << " : " << a.second.location.x << ", " << a.second.location.y << endl;
+					}
+				}
+			}
 			retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
 			}
-			retval = send(client_sock, (char*)&testActor, (int)sizeof(T), 0);
-			if (retval == SOCKET_ERROR) {
-				err_display("send()");
-				break;
+			int cnt = 0;
+			for (auto& a : my_citizen)
+			{
+				cnt++;
+				retval = send(client_sock, (char*)&(*a.first), (int)sizeof(testActor), 0);
+				if (retval == SOCKET_ERROR) {
+					err_display("send()");
+					break;
+				}
 			}
+			cout << cnt << endl;
 			//cout << sun_angle.y << endl;
 		}
 	}
-	
+
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 		addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
@@ -94,35 +133,29 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	testActor.rotation.x = 0.0f;
 	testActor.rotation.y = 0.0f;
 	testActor.rotation.z = 0.0f;*/
-	
+
 	auto sunangle_start_t = high_resolution_clock::now();
 	auto actor_move_start_t = high_resolution_clock::now();
-	
-	while (1){
+
+	while (1) {
 		auto sunangle_end_t = high_resolution_clock::now();
 		auto actor_move_end_t = high_resolution_clock::now();
-		
-		if (duration_cast<milliseconds>(sunangle_end_t - sunangle_start_t).count() > 50){
+
+		if (duration_cast<milliseconds>(sunangle_end_t - sunangle_start_t).count() > 50) {
 			sunangle_start_t = high_resolution_clock::now();
 			sun_angle.y += 0.2f;
 			if (sun_angle.y >= 180.f) {
 				sun_angle.y = -180.f;
 			}
-			
-			testActor.location.x += testActor.rotation.x * 0.5;
-			testActor.location.y += testActor.rotation.y * 0.5;
-			//cout << testActor.location_x << ", " << testActor.location_y << endl;
-		}
-		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 5000){
-			actor_move_start_t = high_resolution_clock::now();
-			testActor.rotation.x = rand() % 100;
-			testActor.rotation.y = rand() % 100;
-			if (rand() % 2 == 1) {
-				testActor.rotation.x *= -1;
+			for (auto& a : my_citizen)
+			{
+				float distance = 0.0f;
+				if (location_distance(a.first->location, a.second.location) > 10)
+				{
+					Move_Civil(a.first->location, a.second.location);
+				}
 			}
-			if (rand() % 2 == 1) {
-				testActor.rotation.y *= -1;
-			}
+
 		}
 	}
 	return 0;
