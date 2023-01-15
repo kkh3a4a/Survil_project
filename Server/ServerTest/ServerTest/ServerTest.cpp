@@ -24,7 +24,7 @@ int len = 0;
 
 std::mutex mylock;
 TF sun_angle;
-FActor testActor;
+
 vector<SOCKET> player_list;
 map <FActor*, location_rotation>my_citizen;
 
@@ -35,7 +35,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	struct sockaddr_in clientaddr;
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
-
+	FActor testActor;
 	game_start = true;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
@@ -58,31 +58,41 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	}
 	for (int i = 0; i < cnt; ++i)
 	{
-
+		bool overlap = false;
 		retval = recv(client_sock, (char*)&testActor, sizeof(testActor), 0);
-		FActor* tempActor = new FActor();
-		wcscpy(tempActor->name, testActor.name);
-		if (retval == SOCKET_ERROR) {
-			err_display("send()");
-			return 0;
+		for (auto& a : my_citizen)
+		{
+			if (wcscmp(a.first->name, testActor.name) == 0)
+			{
+				overlap = true;
+			}
 		}
-		FActor_TF_define(my_citizen[tempActor].location, testActor.location);
-		FActor_TF_define(tempActor->location, testActor.location);
-		FActor_TF_define(my_citizen[tempActor].rotation, testActor.rotation);
-		FActor_TF_define(tempActor->rotation, testActor.rotation);
+		if(!overlap)
+		{
+			FActor* tempActor = new FActor();
+			wcscpy(tempActor->name, testActor.name);
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+				return 0;
+			}
+			FActor_TF_define(my_citizen[tempActor].location, testActor.location);
+			FActor_TF_define(tempActor->location, testActor.location);
+			FActor_TF_define(my_citizen[tempActor].rotation, testActor.rotation);
+			FActor_TF_define(tempActor->rotation, testActor.rotation);
+		}
+		/*wcout << testActor.name;
+		cout << " : " << testActor.location.x << ", " << testActor.location.y << endl;*/
 	}
 
 	while (1) {
 		auto end_t = high_resolution_clock::now();
 		if (duration_cast<milliseconds>(end_t - start_t).count() > 50) {
 			start_t = high_resolution_clock::now();
-
 			retval = recv(client_sock, (char*)&testActor, (int)sizeof(testActor), 0);
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
 			}
-			cout << testActor.location.x << endl;
 			if (wcscmp(testActor.name, L"temp") != 0)
 			{
 				for (auto& a : my_citizen)
@@ -90,8 +100,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 					if (wcscmp(a.first->name, testActor.name) == 0)
 					{
 						FActor_TF_define(a.second.location, testActor.location);
-						//wcout << a.first->name;
-						//cout << " : " << a.second.location.x << ", " << a.second.location.y << endl;
+						
 					}
 				}
 			}
@@ -100,17 +109,16 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				err_display("send()");
 				break;
 			}
-			int cnt = 0;
 			for (auto& a : my_citizen)
 			{
-				cnt++;
 				retval = send(client_sock, (char*)&(*a.first), (int)sizeof(testActor), 0);
 				if (retval == SOCKET_ERROR) {
 					err_display("send()");
 					break;
 				}
+				wcout << a.first->name;
+				cout << " : " << a.second.location.x << ", " << a.second.location.y << endl;
 			}
-			cout << cnt << endl;
 			//cout << sun_angle.y << endl;
 		}
 	}
