@@ -320,9 +320,11 @@ void wind_decide(int& wind_speed, int& wind_angle)
 {
 	//wind speed 0-50
 	//wind angle 0-360
-	wind_speed = wind_speed_uid(dre);
-	wind_angle = wind_angle_uid(dre);
+	wind_speed = 50;// wind_speed_uid(dre);
+	//wind_angle = 90; // wind_angle_uid(dre);
+	wind_angle += 10;
 	cout << wind_speed << " " << wind_angle << endl;
+	//풍향을 언제마다 한번 업데이트 할 것인지, 풍속은 언제마다 한번 업데이트 할 것인지 회의를 통해 결정하자
 	
 	
 }
