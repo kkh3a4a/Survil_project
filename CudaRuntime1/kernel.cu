@@ -13,8 +13,8 @@
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 512;	//39936
-const int player_sight_size = 512;	//1024 넘으면 안됨
+const int one_side_number = 40000;	//39936
+const int player_sight_size = 1000;	//1024 넘으면 안됨
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -414,7 +414,7 @@ int main()
 	TI player_location = {0, 0};		//이거 나중에 중심 기준으로 바꿔야함
 	int wind_angle = 270;		//각도
 	int wind_speed = 50;		//최대 풍속 50
-	for (int i = 0; i < 1000; i++) {
+	for (int i = 0; i < 10; i++) {
 		clock_t t_1 = clock();
 
 		//Terrain Move
@@ -445,7 +445,7 @@ int main()
 		}
 		clock_t t_2 = clock();
 		cout << "Player Sight Update Time : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " Seconds" << endl;
-		show_array(terrain_player_sight_host, player_sight_size);
+		//show_array(terrain_player_sight_host, player_sight_size);
 		cout << "==============================" << endl;
 	}
 	
