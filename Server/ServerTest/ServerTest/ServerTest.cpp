@@ -90,8 +90,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 					if (wcscmp(a.first->name, testActor.name) == 0)
 					{
 						FActor_TF_define(a.second.location, testActor.location);
-						wcout << a.first->name;
-						cout << " : " << a.second.location.x << ", " << a.second.location.y << endl;
+						//wcout << a.first->name;
+						//cout << " : " << a.second.location.x << ", " << a.second.location.y << endl;
 					}
 				}
 			}
