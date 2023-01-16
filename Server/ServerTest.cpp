@@ -1,4 +1,4 @@
-#include "..\Common.h"
+#include "Common.h"
 #include"global.h"
 #include <iostream>
 #include <fstream>
