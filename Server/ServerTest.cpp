@@ -7,6 +7,7 @@
 #include<string>
 #include<map>
 #include <chrono>
+#include "map.cu"
 
 #define SERVERPORT 9000
 #define BUFSIZE    4096
@@ -60,15 +61,13 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	{
 		bool overlap = false;
 		retval = recv(client_sock, (char*)&testActor, sizeof(testActor), 0);
-		for (auto& a : my_citizen)
-		{
+		for (auto& a : my_citizen){
 			if (wcscmp(a.first->name, testActor.name) == 0)
 			{
 				overlap = true;
 			}
 		}
-		if(!overlap)
-		{
+		if(!overlap){
 			FActor* tempActor = new FActor();
 			wcscpy(tempActor->name, testActor.name);
 			if (retval == SOCKET_ERROR) {
@@ -93,14 +92,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				err_display("send()");
 				break;
 			}
-			if (wcscmp(testActor.name, L"temp") != 0)
-			{
-				for (auto& a : my_citizen)
-				{
-					if (wcscmp(a.first->name, testActor.name) == 0)
-					{
-						FActor_TF_define(a.second.location, testActor.location);
-						
+			if (wcscmp(testActor.name, L"temp") != 0){
+				for (auto& a : my_citizen){{
+						FActor_TF_define(a.second.location, testActor.location);	
 					}
 				}
 			}
@@ -109,8 +103,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				err_display("send()");
 				break;
 			}
-			for (auto& a : my_citizen)
-			{
+			for (auto& a : my_citizen){
 				retval = send(client_sock, (char*)&(*a.first), (int)sizeof(testActor), 0);
 				if (retval == SOCKET_ERROR) {
 					err_display("send()");
@@ -130,6 +123,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	return 0;
 }
+
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
 	/*sun_angle.x = 0.0f;
@@ -155,15 +149,12 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			if (sun_angle.y >= 180.f) {
 				sun_angle.y = -180.f;
 			}
-			for (auto& a : my_citizen)
-			{
+			for (auto& a : my_citizen){
 				float distance = 0.0f;
-				if (location_distance(a.first->location, a.second.location) > 10)
-				{
+				if (location_distance(a.first->location, a.second.location) > 10){
 					Move_Civil(a.first->location, a.second.location);
 				}
 			}
-
 		}
 	}
 	return 0;
@@ -171,6 +162,77 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
+	//Make Random Hills Information===================================================
+	HI* hill_location_host = new HI[4000];
+	HI* hill_location_device;
+	cudaMalloc((void**)&hill_location_device, 4000 * sizeof(HI));
+	int num_of_hills = make_hill_location(hill_location_host);
+	int origin_num_of_hills = num_of_hills;
+	cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
+	printf("Random Hill Info Complete\n");
+
+	//Terrain Memory Assignment For Player's Sight===================================================
+	char** terrain_player_sight_host = new char* [player_sight_size];	// 2D array for host
+	for (int i = 0; i < player_sight_size; i++) {
+		terrain_player_sight_host[i] = new char[player_sight_size];
+	}
+	for (int i = 0; i < player_sight_size; i++) {
+		for (int j = 0; j < player_sight_size; j++) {
+			terrain_player_sight_host[i][j] = 0;
+		}
+	}
+	char** terrain_player_sight_device;						// 2D array for device
+	char* terrain_player_sight_temp[player_sight_size];		// 1D array temp
+	cudaMalloc((void**)&terrain_player_sight_device, player_sight_size * sizeof(char*));
+	for (int i = 0; i < player_sight_size; i++) {
+		cudaMalloc((void**)&terrain_player_sight_temp[i], player_sight_size * sizeof(char));
+	}
+	cudaMemcpy(terrain_player_sight_device, terrain_player_sight_temp, player_sight_size * sizeof(char*), cudaMemcpyHostToDevice);
+	for (int i = 0; i < player_sight_size; i++) {
+		cudaMemcpy(terrain_player_sight_temp[i], terrain_player_sight_host[i], player_sight_size * sizeof(char), cudaMemcpyHostToDevice);
+	}
+
+
+	//Terrain move & Player Sight Update===================================================
+	II player_location = { 0, 0 };		//이거 나중에 중심 기준으로 바꿔야함
+	int wind_angle = 270;		//각도
+	int wind_speed = 50;		//최대 풍속 50
+	for (int i = 0; i < 1; i++) {
+		clock_t t_1 = clock();
+
+		//Terrain Move
+		wind_decide(wind_speed, wind_angle);
+
+		FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
+		if (abs(wind_direction.x) < FLT_EPSILON) {
+			wind_direction.x = 0;
+		}
+		if (abs(wind_direction.y) < FLT_EPSILON) {
+			wind_direction.y = 0;
+		}
+
+		move_terrain(hill_location_host, num_of_hills, wind_direction, wind_speed);
+		if (num_of_hills < origin_num_of_hills) {
+			make_new_hills(hill_location_host, num_of_hills, origin_num_of_hills, wind_direction, wind_speed);
+		}
+
+		cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
+
+		//Player Sight Update
+		//player_location.x += 20;
+		//player_location.y += 20;
+		//thread must be 1024 for efficiency
+		player_terrain_update_cuda << <player_sight_size, player_sight_size >> > (terrain_player_sight_device, hill_location_device, num_of_hills, player_location, wind_direction, wind_speed);
+		for (int i = 0; i < player_sight_size; i++) {
+			cudaMemcpy(terrain_player_sight_host[i], terrain_player_sight_temp[i], player_sight_size * sizeof(char), cudaMemcpyDeviceToHost);
+		}
+		clock_t t_2 = clock();
+		cout << "Player Sight Update Time : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " Seconds" << endl;
+		//show_array(terrain_player_sight_host, player_sight_size);
+		cout << "==============================" << endl;
+	}
+	//=========================================================================================
+	
 	int retval;
 	// 윈속 초기화
 	WSADATA wsa;
