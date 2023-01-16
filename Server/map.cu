@@ -102,6 +102,37 @@ void show_array(char** terrain_array_host, int size)
 }
 
 __global__
+void make_hills_cuda(char** terrain_array_device, HI* hill_location_device)
+{
+	//int id = threadIdx.x + blockIdx.x * blockDim.x;
+	int my_hill = threadIdx.x;
+	int my_y = blockIdx.x;
+
+	int hill_location_x = hill_location_device[my_hill].x;
+	int hill_location_y = hill_location_device[my_hill].y;
+	int radius = hill_location_device[my_hill].radius;
+	int height = hill_location_device[my_hill].height;
+	int distance{};
+
+	//printf("threadId.x: %d, blockIdx.x: %d, blockDim.x: %d, id: %d\n", threadIdx.x, blockIdx.x, blockDim.x);
+	//printf("Hill %d : (%d, %d) / %d / %d / %d\n", my_hill, hill_location_x, hill_location_y, radius, height, id);
+
+	for (int x = hill_location_x - radius; x <= hill_location_x + radius; x++) {
+		if (x < 0 || x >= one_side_number) 
+			continue;
+		distance = sqrt(pow(x - hill_location_x, 2) + pow(my_y - hill_location_y, 2));
+		if (distance <= radius) {
+			//printf("%d %d\n", x, my_y);
+			terrain_array_device[x][my_y] += (height - 1) * (radius - distance) / radius + 1;
+			//printf("%d\n",(height - 1) * (radius - distance) / radius + 1);
+			if (terrain_array_device[x][my_y] > max_height) {
+				terrain_array_device[x][my_y] = max_height;
+			}
+		}
+	}
+}
+
+__global__
 void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_location_device, int num_of_hills, II player_location, FF wind_direction, int wind_speed)
 {
 	int x = threadIdx.x;
