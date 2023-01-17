@@ -162,50 +162,11 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
-	
-
 	Map map;
-	map.get_device_info();
+	char** map_host = map.get_map();
+	map.show_array(map_host, one_side_number);
 
-	//Terrain move & Player Sight Update===================================================
-	//II player_location = { 0, 0 };		//이거 나중에 중심 기준으로 바꿔야함
-	//int wind_angle = 270;		//각도
-	//int wind_speed = 50;		//최대 풍속 50
-	//for (int i = 0; i < 1; i++) {
-	//	clock_t t_1 = clock();
-
-	//	//Terrain Move
-	//	wind_decide(wind_speed, wind_angle);
-
-	//	FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
-	//	if (abs(wind_direction.x) < FLT_EPSILON) {
-	//		wind_direction.x = 0;
-	//	}
-	//	if (abs(wind_direction.y) < FLT_EPSILON) {
-	//		wind_direction.y = 0;
-	//	}
-
-	//	move_terrain(hill_location_host, num_of_hills, wind_direction, wind_speed);
-	//	if (num_of_hills < origin_num_of_hills) {
-	//		make_new_hills(hill_location_host, num_of_hills, origin_num_of_hills, wind_direction, wind_speed);
-	//	}
-
-	//	cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
-
-	//	//Player Sight Update
-	//	//player_location.x += 20;
-	//	//player_location.y += 20;
-	//	//thread must be 1024 for efficiency
-	//	player_terrain_update_cuda << <player_sight_size, player_sight_size >> > (terrain_player_sight_device, hill_location_device, num_of_hills, player_location, wind_direction, wind_speed);
-	//	for (int i = 0; i < player_sight_size; i++) {
-	//		cudaMemcpy(terrain_player_sight_host[i], terrain_player_sight_temp[i], player_sight_size * sizeof(char), cudaMemcpyDeviceToHost);
-	//	}
-	//	clock_t t_2 = clock();
-	//	cout << "Player Sight Update Time : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " Seconds" << endl;
-	//	//show_array(terrain_player_sight_host, player_sight_size);
-	//	cout << "==============================" << endl;
-	//}
-	//=========================================================================================
+	
 	
 	int retval;
 	// 윈속 초기화
