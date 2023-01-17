@@ -162,89 +162,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
-	//Make Random Hills Information===================================================
-	clock_t t_0 = clock();
-
-	HI* hill_location_host = new HI[4000];
-	HI* hill_location_device;
-	cudaMalloc((void**)&hill_location_device, 4000 * sizeof(HI));
-	int num_of_hills = make_hill_location(hill_location_host);
-	int origin_num_of_hills = num_of_hills;
-	cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
-	printf("Random Hill Info Complete\n");
-	for (int i = 0; i < num_of_hills; i++) {
-		cout << hill_location_host[i].x << ", " << hill_location_host[i].y << ", " << hill_location_host[i].height << ", " << hill_location_host[i].radius << endl;
-	}
-
-	//Terrain Memory Assignement===================================================
-	clock_t t_1 = clock();
-	
-	char** terrain_array_host = new char* [one_side_number];	// 2D array for host
-	for (int i = 0; i < one_side_number; i++) {
-		terrain_array_host[i] = new char[one_side_number];
-	}
-	for (int i = 0; i < one_side_number; i++) {
-		for (int j = 0; j < one_side_number; j++) {
-			terrain_array_host[i][j] = 0;
-		}
-	}
-	char** terrain_array_device;					// 2D array for device
-	char* terrain_array_temp[one_side_number];		// 1D array temp
-	cudaMalloc((void**)&terrain_array_device, one_side_number * sizeof(char*));
-	for (int i = 0; i < one_side_number; i++) {
-		cudaMalloc((void**)&terrain_array_temp[i], one_side_number * sizeof(char));
-	}
-	cudaMemcpy(terrain_array_device, terrain_array_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
-	for (int i = 0; i < one_side_number; i++) {
-		cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
-	}
-
-
-	//Terrain Memory Assignment For Player's Sight===================================================
-	clock_t t_2 = clock();
-
-	char** terrain_player_sight_host = new char* [player_sight_size];	// 2D array for host
-	for (int i = 0; i < player_sight_size; i++) {
-		terrain_player_sight_host[i] = new char[player_sight_size];
-	}
-	for (int i = 0; i < player_sight_size; i++) {
-		for (int j = 0; j < player_sight_size; j++) {
-			terrain_player_sight_host[i][j] = 0;
-		}
-	}
-	char** terrain_player_sight_device;						// 2D array for device
-	char* terrain_player_sight_temp[player_sight_size];		// 1D array temp
-	cudaMalloc((void**)&terrain_player_sight_device, player_sight_size * sizeof(char*));
-	for (int i = 0; i < player_sight_size; i++) {
-		cudaMalloc((void**)&terrain_player_sight_temp[i], player_sight_size * sizeof(char));
-	}
-	cudaMemcpy(terrain_player_sight_device, terrain_player_sight_temp, player_sight_size * sizeof(char*), cudaMemcpyHostToDevice);
-	for (int i = 0; i < player_sight_size; i++) {
-		cudaMemcpy(terrain_player_sight_temp[i], terrain_player_sight_host[i], player_sight_size * sizeof(char), cudaMemcpyHostToDevice);
-	}
-
 	
 
-
-	//Make Hills===================================================
-	clock_t t_3 = clock();
-	
-	make_hills_cuda << <one_side_number, num_of_hills >> > (terrain_array_device, hill_location_device);
-	for (int i = 0; i < one_side_number; i++) {
-		cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-	}
-	printf("Terrain Generation Complete\n");
-
-	clock_t  t_4 = clock();
-
-	//show_array(terrain_array_host, one_side_number);
-	cout << "Terrain size : " << one_side_number << " * " << one_side_number << endl;
-	cout << "Terrain Array Size : " << one_side_number * one_side_number * sizeof(char) << " Bytes" << endl;
-	cout << "Make Random Hills Information : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
-	cout << "Terrain Memory Assignement : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
-	cout << "Terrain Memory Assignment For Player's Sight : " << (double)(t_3 - t_2) / CLOCKS_PER_SEC << " sec" << endl;
-	cout << "Make Hills : " << (double)(t_4 - t_3) / CLOCKS_PER_SEC << " sec" << endl;
-
+	Map map;
+	map.get_device_info();
 
 	//Terrain move & Player Sight Update===================================================
 	//II player_location = { 0, 0 };		//이거 나중에 중심 기준으로 바꿔야함

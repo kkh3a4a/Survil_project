@@ -46,51 +46,6 @@ uniform_int_distribution <int>height_uid(5, max_height);
 uniform_int_distribution <int>wind_speed_uid(0, 50);
 uniform_int_distribution <int>wind_angle_uid(0, 360);
 
-
-void get_device_info()
-{
-	cudaDeviceProp  prop;
-
-	int count;
-	cudaGetDeviceCount(&count);
-
-	for (int i = 0; i < count; i++) {
-		cudaGetDeviceProperties(&prop, i);
-		printf("   --- General Information for device %d ---\n", i);
-		printf("Name:  %s\n", prop.name);
-		printf("Compute capability:  %d.%d\n", prop.major, prop.minor);
-		printf("Clock rate:  %d\n", prop.clockRate);
-		printf("Device copy overlap:  ");
-		if (prop.deviceOverlap)
-			printf("Enabled\n");
-		else
-			printf("Disabled\n");
-		printf("Kernel execution timeout :  ");
-		if (prop.kernelExecTimeoutEnabled)
-			printf("Enabled\n");
-		else
-			printf("Disabled\n");
-		printf("\n");
-
-		printf("   --- Memory Information for device %d ---\n", i);
-		printf("Total global mem:  %ld\n", prop.totalGlobalMem);
-		printf("Total constant Mem:  %ld\n", prop.totalConstMem);
-		printf("Max mem pitch:  %ld\n", prop.memPitch);
-		printf("Texture Alignment:  %ld\n", prop.textureAlignment);
-		printf("\n");
-
-		printf("   --- MP Information for device %d ---\n", i);
-		printf("Multiprocessor count:  %d\n", prop.multiProcessorCount);
-		printf("Shared mem per mp:  %ld\n", prop.sharedMemPerBlock);
-		printf("Registers per mp:  %d\n", prop.regsPerBlock);
-		printf("Threads in warp:  %d\n", prop.warpSize);
-		printf("Max threads per block:  %d\n", prop.maxThreadsPerBlock);
-		printf("Max thread dimensions:  (%d, %d, %d)\n", prop.maxThreadsDim[0], prop.maxThreadsDim[1], prop.maxThreadsDim[2]);
-		printf("Max grid dimensions:  (%d, %d, %d)\n", prop.maxGridSize[0], prop.maxGridSize[1], prop.maxGridSize[2]);
-		printf("\n");
-	}
-}
-
 void show_array(char** terrain_array_host, int size)
 {
 	for (int y = 0; y < size; y++) {
@@ -118,13 +73,11 @@ void make_hills_cuda(char** terrain_array_device, HI* hill_location_device)
 	//printf("Hill %d : (%d, %d) / %d / %d / %d\n", my_hill, hill_location_x, hill_location_y, radius, height, id);
 
 	for (int x = hill_location_x - radius; x <= hill_location_x + radius; x++) {
-		if (x < 0 || x >= one_side_number) 
+		if (x < 0 || x >= one_side_number)
 			continue;
 		distance = sqrt(pow(x - hill_location_x, 2) + pow(my_y - hill_location_y, 2));
 		if (distance <= radius) {
-			//printf("%d %d\n", x, my_y);
 			terrain_array_device[x][my_y] += (height - 1) * (radius - distance) / radius + 1;
-			//printf("%d\n",(height - 1) * (radius - distance) / radius + 1);
 			if (terrain_array_device[x][my_y] > max_height) {
 				terrain_array_device[x][my_y] = max_height;
 			}
@@ -177,188 +130,347 @@ void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_loc
 	}
 }
 
-template <typename T>
-int delete_array(T* array, int i, int size)
+class Map
 {
-	for (int j = i; j < size; j++) {
-		array[j] = array[j + 1];
-	}
-	size -= 1;
-	return size;
-}
+private:
+	char** terrain_array_host = new char* [one_side_number];
+	char** terrain_array_device;
+	char* terrain_array_temp[one_side_number];
+	char** terrain_player_sight_host = new char* [player_sight_size];
+	char** terrain_player_sight_device;
+	char* terrain_player_sight_temp[player_sight_size];
+	HI* hill_location_host;
+	HI* hill_location_device;
+	
+	II player_location;
+	FF wind_direction;
+	int wind_speed;
+	int num_of_hills;
+	
+public:
+	Map()
+	{
+		//Make Random Hills Information===================================================
+		clock_t t_0 = clock();
 
-int make_hill_location(HI* hill_location_host)
-{
-	int num_of_hills = number_of_hills_uid(dre);
-	cout << "expected num of hills: " << num_of_hills << endl;
-
-	for (int i = 0; i < num_of_hills; i++) {
-		hill_location_host[i].x = hills_location(dre);
-		hill_location_host[i].y = hills_location(dre);
-		hill_location_host[i].radius = hill_size_uid(dre);
-		hill_location_host[i].height = height_uid(dre);
-	}
-	//sort(&hill_location_host[0], &hill_location_host[num_of_hills], [](const HI& a, const HI& b) { return a.y < b.y; });
-	for (int a = 0; a < num_of_hills; a++) {
-		for (int b = 0; b < num_of_hills; b++) {
-			if (a != b) {
-				if (pow(hill_location_host[a].x - hill_location_host[b].x, 2) - pow(hill_location_host[a].radius + hill_location_host[b].radius, 2) < 0) {
-					if (pow(hill_location_host[a].y - hill_location_host[b].y, 2) - pow(hill_location_host[a].radius + hill_location_host[b].radius, 2) < 0) {
-						num_of_hills = delete_array(hill_location_host, b, num_of_hills);
-						b--;
-					}
-				}
-			}
-		}
-	}
-	//for (int i = 0; i < num_of_hills; i++) {
-	//	if (hill_location_host[i].x - hill_location_host[i].radius < 0) {
-	//		num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-	//		--i;
-	//		continue;
-	//	}
-	//	else if (hill_location_host[i].x + hill_location_host[i].radius >= one_side_number) {
-	//		num_of_hills = delete_array (hill_location_host, i, num_of_hills);
-	//		--i;
-	//		continue;
-	//	}
-	//	else if (hill_location_host[i].y - hill_location_host[i].radius < 0) {
-	//		num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-	//		--i;
-	//		continue;
-	//	}
-	//	else if (hill_location_host[i].y + hill_location_host[i].radius >= one_side_number) {
-	//		num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-	//		--i;
-	//		continue;
-	//	}
-	//}
-	cout << "real num of hills: " << num_of_hills << endl;
-	return num_of_hills;
-}
-
-void make_new_hills(HI* hill_location_host, int& num_of_hills, int origin_num_of_hills, FF wind_direction, int wind_speed)
-{
-	cout << "Wind info: " << wind_direction.x << " " << wind_direction.y << endl;
-	if (wind_speed) {
-		hill_location_host[num_of_hills].radius = hill_size_uid(dre);
-		hill_location_host[num_of_hills].height = height_uid(dre);
-
-		hill_location_host[num_of_hills].x = hills_location(dre);
-		hill_location_host[num_of_hills].y = hills_location(dre);
-
-		while (1) {
-			hill_location_host[num_of_hills].x -= wind_direction.x * wind_speed;
-			hill_location_host[num_of_hills].y -= wind_direction.y * wind_speed;
-			if (hill_location_host[num_of_hills].x - hill_location_host[num_of_hills].radius > one_side_number) {
-				break;
-			}
-			if (hill_location_host[num_of_hills].x + hill_location_host[num_of_hills].radius < 0) {
-				break;
-			}
-			if (hill_location_host[num_of_hills].y - hill_location_host[num_of_hills].radius > one_side_number) {
-				break;
-			}
-			if (hill_location_host[num_of_hills].y + hill_location_host[num_of_hills].radius < 0) {
-				break;
-			}
-		}
-
-		int collide_iter{};
-		for (int a = 0; a < num_of_hills; a++) {
-			if (collide_iter > 10) {	//무한루프 빠질 가능성으로 인해 횟수 제한
-				return;
-			}
-			//cout << "대상: "<<a << " " << hill_location_host[a].x << " " << hill_location_host[a].y << " " << hill_location_host[a].radius << " " << hill_location_host[a].height << endl;
-			//cout << " 나: "<< num_of_hills<< " " << hill_location_host[num_of_hills].x << " " << hill_location_host[num_of_hills ].y << " " << hill_location_host[num_of_hills ].radius << " " << hill_location_host[num_of_hills].height << endl << endl;
-
-			if (pow(hill_location_host[a].x - hill_location_host[num_of_hills].x, 2) - pow(hill_location_host[a].radius + hill_location_host[num_of_hills].radius, 2) <= 0) {
-				if (pow(hill_location_host[a].y - hill_location_host[num_of_hills].y, 2) - pow(hill_location_host[a].radius + hill_location_host[num_of_hills].radius, 2) <= 0) {
-
-					hill_location_host[num_of_hills].radius = hill_size_uid(dre);
-					hill_location_host[num_of_hills].height = height_uid(dre);
-
-					hill_location_host[num_of_hills].x = hills_location(dre);
-					hill_location_host[num_of_hills].y = hills_location(dre);
-
-					while (1) {
-						hill_location_host[num_of_hills].x -= wind_direction.x * wind_speed;
-						hill_location_host[num_of_hills].y -= wind_direction.y * wind_speed;
-						if (hill_location_host[num_of_hills].x - hill_location_host[num_of_hills].radius > one_side_number) {
-							break;
-						}
-						if (hill_location_host[num_of_hills].x + hill_location_host[num_of_hills].radius < 0) {
-							break;
-						}
-						if (hill_location_host[num_of_hills].y - hill_location_host[num_of_hills].radius > one_side_number) {
-							break;
-						}
-						if (hill_location_host[num_of_hills].y + hill_location_host[num_of_hills].radius < 0) {
-							break;
-						}
-					}
-					cout << "충돌로 인해 바꿈" << endl;
-					a = -1;
-					collide_iter++;
-				}
-			}
-
-		}
-		cout << " 최종: " << num_of_hills << " " << hill_location_host[num_of_hills].x << " " << hill_location_host[num_of_hills].y << " " << hill_location_host[num_of_hills].radius << " " << hill_location_host[num_of_hills].height << endl << endl;
-		num_of_hills++;
-	}
-}
-
-void move_terrain(HI* hill_location_host, int& num_of_hills, FF wind_direction, int wind_speed)
-{
-	if (wind_speed) {
-		int wind_move_x = wind_speed * wind_direction.x;
-		int wind_move_y = wind_speed * wind_direction.y;
-		cout << "Wind == " << "X: " << wind_move_x << " " << "Y: " << wind_move_y << endl;
+		hill_location_host = new HI[4000];
+		hill_location_device;
+		cudaMalloc((void**)&hill_location_device, 4000 * sizeof(HI));
+		int num_of_hills = make_hill_location(hill_location_host);
+		int origin_num_of_hills = num_of_hills;
+		cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
+		printf("Random Hill Info Complete\n");
 		for (int i = 0; i < num_of_hills; i++) {
-			hill_location_host[i].x += wind_move_x;
-			hill_location_host[i].y += wind_move_y;
+			cout << hill_location_host[i].x << ", " << hill_location_host[i].y << ", " << hill_location_host[i].height << ", " << hill_location_host[i].radius << endl;
+		}
+		
+		
+		//Terrain Memory Assignement===================================================
+		clock_t t_1 = clock();
+		
+		for (int i = 0; i < one_side_number; i++) {
+			terrain_array_host[i] = new char[one_side_number];
+		}
+		for (int i = 0; i < one_side_number; i++) {
+			for (int j = 0; j < one_side_number; j++) {
+				terrain_array_host[i][j] = 0;
+			}
+		}
+		cudaMalloc((void**)&terrain_array_device, one_side_number * sizeof(char*));
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMalloc((void**)&terrain_array_temp[i], one_side_number * sizeof(char));
+		}
+		cudaMemcpy(terrain_array_device, terrain_array_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
+		}
 
-			if (hill_location_host[i].x - hill_location_host[i].radius > one_side_number) {
-				num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-				--i;
-				continue;
-			}
-			if (hill_location_host[i].x + hill_location_host[i].radius < 0) {
-				num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-				--i;
-				continue;
-			}
-			if (hill_location_host[i].y - hill_location_host[i].radius > one_side_number) {
-				num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-				--i;
-				continue;
-			}
-			if (hill_location_host[i].y + hill_location_host[i].radius < 0) {
-				num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-				--i;
-				continue;
+
+		//Terrain Memory Assignment For Player's Sight===================================================
+		clock_t t_2 = clock();
+		
+		for (int i = 0; i < player_sight_size; i++) {
+			terrain_player_sight_host[i] = new char[player_sight_size];
+		}
+		for (int i = 0; i < player_sight_size; i++) {
+			for (int j = 0; j < player_sight_size; j++) {
+				terrain_player_sight_host[i][j] = 0;
 			}
 		}
-		/*for (int i = 0; i < num_of_hills; i++) {
-			cout << hill_location_host[i].x << " " << hill_location_host[i].y << endl;
+		cudaMalloc((void**)&terrain_player_sight_device, player_sight_size * sizeof(char*));
+		for (int i = 0; i < player_sight_size; i++) {
+			cudaMalloc((void**)&terrain_player_sight_temp[i], player_sight_size * sizeof(char));
 		}
-		cout << endl;*/
+		cudaMemcpy(terrain_player_sight_device, terrain_player_sight_temp, player_sight_size * sizeof(char*), cudaMemcpyHostToDevice);
+		for (int i = 0; i < player_sight_size; i++) {
+			cudaMemcpy(terrain_player_sight_temp[i], terrain_player_sight_host[i], player_sight_size * sizeof(char), cudaMemcpyHostToDevice);
+		}
+
+
+		//Make Hills===================================================
+		clock_t t_3 = clock();
+
+		make_hills_cuda << <one_side_number, num_of_hills >> > (terrain_array_device, hill_location_device);
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+		}
+		printf("Terrain Generation Complete\n");
+
+		clock_t  t_4 = clock();
+
+		//show_array(terrain_array_host, one_side_number);
+		cout << "Terrain size : " << one_side_number << " * " << one_side_number << endl;
+		cout << "Terrain Array Size : " << one_side_number * one_side_number * sizeof(char) << " Bytes" << endl;
+		cout << "Make Random Hills Information : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		cout << "Terrain Memory Assignement : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
+		cout << "Terrain Memory Assignment For Player's Sight : " << (double)(t_3 - t_2) / CLOCKS_PER_SEC << " sec" << endl;
+		cout << "Make Hills : " << (double)(t_4 - t_3) / CLOCKS_PER_SEC << " sec" << endl;
 	}
-}
 
-void wind_decide(int& wind_speed, int& wind_angle)
-{
-	//wind speed 0-50
-	//wind angle 0-360
-	wind_speed = 50;// wind_speed_uid(dre);
-	//wind_angle = 90; // wind_angle_uid(dre);
-	wind_angle += 10;
-	cout << wind_speed << " " << wind_angle << endl;
-	//풍향을 언제마다 한번 업데이트 할 것인지, 풍속은 언제마다 한번 업데이트 할 것인지 회의를 통해 결정하자
+	~Map()
+	{
+		for (int i = 0; i < one_side_number; i++) {
+			delete[] terrain_array_host[i];
+		}
+		for (int i = 0; i < player_sight_size; i++) {
+			delete[] terrain_player_sight_host[i];
+		}
+		delete[] terrain_array_host;
+		delete[] terrain_player_sight_host;
+		delete[] hill_location_host;
+		cudaFree(terrain_array_device);
+		cudaFree(terrain_player_sight_device);
+		cudaFree(hill_location_device);
+	}
+	
+	void get_device_info()
+	{
+		cudaDeviceProp  prop;
+
+		int count;
+		cudaGetDeviceCount(&count);
+
+		for (int i = 0; i < count; i++) {
+			cudaGetDeviceProperties(&prop, i);
+			printf("   --- General Information for device %d ---\n", i);
+			printf("Name:  %s\n", prop.name);
+			printf("Compute capability:  %d.%d\n", prop.major, prop.minor);
+			printf("Clock rate:  %d\n", prop.clockRate);
+			printf("Device copy overlap:  ");
+			if (prop.deviceOverlap)
+				printf("Enabled\n");
+			else
+				printf("Disabled\n");
+			printf("Kernel execution timeout :  ");
+			if (prop.kernelExecTimeoutEnabled)
+				printf("Enabled\n");
+			else
+				printf("Disabled\n");
+			printf("\n");
+
+			printf("   --- Memory Information for device %d ---\n", i);
+			printf("Total global mem:  %ld\n", prop.totalGlobalMem);
+			printf("Total constant Mem:  %ld\n", prop.totalConstMem);
+			printf("Max mem pitch:  %ld\n", prop.memPitch);
+			printf("Texture Alignment:  %ld\n", prop.textureAlignment);
+			printf("\n");
+
+			printf("   --- MP Information for device %d ---\n", i);
+			printf("Multiprocessor count:  %d\n", prop.multiProcessorCount);
+			printf("Shared mem per mp:  %ld\n", prop.sharedMemPerBlock);
+			printf("Registers per mp:  %d\n", prop.regsPerBlock);
+			printf("Threads in warp:  %d\n", prop.warpSize);
+			printf("Max threads per block:  %d\n", prop.maxThreadsPerBlock);
+			printf("Max thread dimensions:  (%d, %d, %d)\n", prop.maxThreadsDim[0], prop.maxThreadsDim[1], prop.maxThreadsDim[2]);
+			printf("Max grid dimensions:  (%d, %d, %d)\n", prop.maxGridSize[0], prop.maxGridSize[1], prop.maxGridSize[2]);
+			printf("\n");
+		}
+	}
+	
+	template <typename T>
+	int delete_array(T* array, int i, int size)
+	{
+		for (int j = i; j < size; j++) {
+			array[j] = array[j + 1];
+		}
+		size -= 1;
+		return size;
+	}
+
+	int make_hill_location(HI* hill_location_host)
+	{
+		num_of_hills = number_of_hills_uid(dre);
+		cout << "expected num of hills: " << num_of_hills << endl;
+
+		for (int i = 0; i < num_of_hills; i++) {
+			hill_location_host[i].x = hills_location(dre);
+			hill_location_host[i].y = hills_location(dre);
+			hill_location_host[i].radius = hill_size_uid(dre);
+			hill_location_host[i].height = height_uid(dre);
+		}
+		//sort(&hill_location_host[0], &hill_location_host[num_of_hills], [](const HI& a, const HI& b) { return a.y < b.y; });
+		for (int a = 0; a < num_of_hills; a++) {
+			for (int b = 0; b < num_of_hills; b++) {
+				if (a != b) {
+					if (pow(hill_location_host[a].x - hill_location_host[b].x, 2) - pow(hill_location_host[a].radius + hill_location_host[b].radius, 2) < 0) {
+						if (pow(hill_location_host[a].y - hill_location_host[b].y, 2) - pow(hill_location_host[a].radius + hill_location_host[b].radius, 2) < 0) {
+							num_of_hills = delete_array(hill_location_host, b, num_of_hills);
+							b--;
+						}
+					}
+				}
+			}
+		}
+		//for (int i = 0; i < num_of_hills; i++) {
+		//	if (hill_location_host[i].x - hill_location_host[i].radius < 0) {
+		//		num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+		//		--i;
+		//		continue;
+		//	}
+		//	else if (hill_location_host[i].x + hill_location_host[i].radius >= one_side_number) {
+		//		num_of_hills = delete_array (hill_location_host, i, num_of_hills);
+		//		--i;
+		//		continue;
+		//	}
+		//	else if (hill_location_host[i].y - hill_location_host[i].radius < 0) {
+		//		num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+		//		--i;
+		//		continue;
+		//	}
+		//	else if (hill_location_host[i].y + hill_location_host[i].radius >= one_side_number) {
+		//		num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+		//		--i;
+		//		continue;
+		//	}
+		//}
+		cout << "real num of hills: " << num_of_hills << endl;
+		return num_of_hills;
+	}
+
+	void make_new_hills(HI* hill_location_host, int& num_of_hills, int origin_num_of_hills, FF wind_direction, int wind_speed)
+	{
+		cout << "Wind info: " << wind_direction.x << " " << wind_direction.y << endl;
+		if (wind_speed) {
+			hill_location_host[num_of_hills].radius = hill_size_uid(dre);
+			hill_location_host[num_of_hills].height = height_uid(dre);
+
+			hill_location_host[num_of_hills].x = hills_location(dre);
+			hill_location_host[num_of_hills].y = hills_location(dre);
+
+			while (1) {
+				hill_location_host[num_of_hills].x -= wind_direction.x * wind_speed;
+				hill_location_host[num_of_hills].y -= wind_direction.y * wind_speed;
+				if (hill_location_host[num_of_hills].x - hill_location_host[num_of_hills].radius > one_side_number) {
+					break;
+				}
+				if (hill_location_host[num_of_hills].x + hill_location_host[num_of_hills].radius < 0) {
+					break;
+				}
+				if (hill_location_host[num_of_hills].y - hill_location_host[num_of_hills].radius > one_side_number) {
+					break;
+				}
+				if (hill_location_host[num_of_hills].y + hill_location_host[num_of_hills].radius < 0) {
+					break;
+				}
+			}
+
+			int collide_iter{};
+			for (int a = 0; a < num_of_hills; a++) {
+				if (collide_iter > 10) {	//무한루프 빠질 가능성으로 인해 횟수 제한
+					return;
+				}
+				//cout << "대상: "<<a << " " << hill_location_host[a].x << " " << hill_location_host[a].y << " " << hill_location_host[a].radius << " " << hill_location_host[a].height << endl;
+				//cout << " 나: "<< num_of_hills<< " " << hill_location_host[num_of_hills].x << " " << hill_location_host[num_of_hills ].y << " " << hill_location_host[num_of_hills ].radius << " " << hill_location_host[num_of_hills].height << endl << endl;
+
+				if (pow(hill_location_host[a].x - hill_location_host[num_of_hills].x, 2) - pow(hill_location_host[a].radius + hill_location_host[num_of_hills].radius, 2) <= 0) {
+					if (pow(hill_location_host[a].y - hill_location_host[num_of_hills].y, 2) - pow(hill_location_host[a].radius + hill_location_host[num_of_hills].radius, 2) <= 0) {
+
+						hill_location_host[num_of_hills].radius = hill_size_uid(dre);
+						hill_location_host[num_of_hills].height = height_uid(dre);
+
+						hill_location_host[num_of_hills].x = hills_location(dre);
+						hill_location_host[num_of_hills].y = hills_location(dre);
+
+						while (1) {
+							hill_location_host[num_of_hills].x -= wind_direction.x * wind_speed;
+							hill_location_host[num_of_hills].y -= wind_direction.y * wind_speed;
+							if (hill_location_host[num_of_hills].x - hill_location_host[num_of_hills].radius > one_side_number) {
+								break;
+							}
+							if (hill_location_host[num_of_hills].x + hill_location_host[num_of_hills].radius < 0) {
+								break;
+							}
+							if (hill_location_host[num_of_hills].y - hill_location_host[num_of_hills].radius > one_side_number) {
+								break;
+							}
+							if (hill_location_host[num_of_hills].y + hill_location_host[num_of_hills].radius < 0) {
+								break;
+							}
+						}
+						cout << "충돌로 인해 바꿈" << endl;
+						a = -1;
+						collide_iter++;
+					}
+				}
+
+			}
+			cout << " 최종: " << num_of_hills << " " << hill_location_host[num_of_hills].x << " " << hill_location_host[num_of_hills].y << " " << hill_location_host[num_of_hills].radius << " " << hill_location_host[num_of_hills].height << endl << endl;
+			num_of_hills++;
+		}
+	}
+
+	void move_terrain(HI* hill_location_host, int& num_of_hills, FF wind_direction, int wind_speed)
+	{
+		if (wind_speed) {
+			int wind_move_x = wind_speed * wind_direction.x;
+			int wind_move_y = wind_speed * wind_direction.y;
+			cout << "Wind == " << "X: " << wind_move_x << " " << "Y: " << wind_move_y << endl;
+			for (int i = 0; i < num_of_hills; i++) {
+				hill_location_host[i].x += wind_move_x;
+				hill_location_host[i].y += wind_move_y;
+
+				if (hill_location_host[i].x - hill_location_host[i].radius > one_side_number) {
+					num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+					--i;
+					continue;
+				}
+				if (hill_location_host[i].x + hill_location_host[i].radius < 0) {
+					num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+					--i;
+					continue;
+				}
+				if (hill_location_host[i].y - hill_location_host[i].radius > one_side_number) {
+					num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+					--i;
+					continue;
+				}
+				if (hill_location_host[i].y + hill_location_host[i].radius < 0) {
+					num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+					--i;
+					continue;
+				}
+			}
+			/*for (int i = 0; i < num_of_hills; i++) {
+				cout << hill_location_host[i].x << " " << hill_location_host[i].y << endl;
+			}
+			cout << endl;*/
+		}
+	}
+
+	void wind_decide(int& wind_speed, int& wind_angle)
+	{
+		//wind speed 0-50
+		//wind angle 0-360
+		wind_speed = 50;// wind_speed_uid(dre);
+		//wind_angle = 90; // wind_angle_uid(dre);
+		wind_angle += 10;
+		cout << wind_speed << " " << wind_angle << endl;
+		//풍향을 언제마다 한번 업데이트 할 것인지, 풍속은 언제마다 한번 업데이트 할 것인지 회의를 통해 결정하자
 
 
-}
+	}
+};
+
 //
 //int main()
 //{
