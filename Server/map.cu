@@ -176,14 +176,14 @@ void make_terrain_flat(char** terrain_array_device, int height)
 	int iter = 0;
 	for (int i = 0; i < block_num; i++) {
 		if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
-			if (1 == iter) {	//랜덤으로 선택된 블럭으로 이동
+			if (thread_seed == iter) {	//랜덤으로 선택된 블럭으로 이동
 				terrain_array_device[terrain[0].x][terrain[0].y]--;
 				return;
 			}
 			iter++;
 		}
 		else if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {	//가장 낮은 높이가 여러개면 랜덤으로 하나 선택
-			if (1 == iter) {	//랜덤으로 선택된 블럭으로 이동
+			if (thread_seed == iter) {	//랜덤으로 선택된 블럭으로 이동
 				terrain_array_device[terrain[i].x][terrain[i].y]++;
 				terrain_array_device[terrain[0].x][terrain[0].y]--;
 				return;

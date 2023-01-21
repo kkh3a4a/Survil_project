@@ -163,9 +163,25 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 int main(int argc, char* argv[])
 {
 	Map map;
+	//map.get_device_info();
 	char** map_host = map.get_map();
+	char** player_sight = map.get_player_sight_map();
 	map.show_array(map_host, one_side_number);
 
+	for (int i = 0; i < 50; i++) {
+		//map.terrain_flatten();
+		map.wind_blow(0, 50);
+		map.show_array(map_host, one_side_number);
+	}
+	
+	
+	//II player_location{ one_side_number/2, one_side_number / 2 };
+	//map.copy_for_player_map(player_location);
+	//map.show_array(player_sight, player_sight_size);
+
+
+
+	
 	
 	
 	int retval;
