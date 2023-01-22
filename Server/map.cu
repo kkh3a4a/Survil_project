@@ -106,7 +106,7 @@ void make_hills_cuda(char** terrain_array_device, HI* hill_location_device, int 
 }
 
 __global__
-void make_terrain_flat(char** terrain_array_device, int height)
+void terrain_change_cuda(char** terrain_array_device, int height)
 {
 	//바람이 불면 그쪽으로 이동하게끔 수정해야 함
 	//아니면 바람으로 인한 함수 따로 만들어서 중복으로 했을 때 어떤지 확인
@@ -196,21 +196,87 @@ void make_terrain_flat(char** terrain_array_device, int height)
 __global__
 void wind_blow_cuda(char** terrain_array_device, FF wind_direction, int wind_speed)
 {
-	const int block_num = 9;
+	//wind_direction은 x, y중 하나는 무조건 0이여야 함
+	const int block_num = 4;
 	II terrain[block_num];
 	terrain[0].x = blockIdx.x * blockDim.x + threadIdx.x;	//middle
 	terrain[0].y = blockIdx.y * blockDim.y + threadIdx.y;
-	terrain[1] = { terrain[0].x, terrain[0].y - 1 };	//up
-	terrain[2] = { terrain[0].x, terrain[0].y + 1 };	//down
-	terrain[3] = { terrain[0].x - 1, terrain[0].y };	//left
-	terrain[4] = { terrain[0].x + 1, terrain[0].y };	//right
-	terrain[5] = { terrain[0].x - 1, terrain[0].y - 1 };	//up left
-	terrain[6] = { terrain[0].x - 1, terrain[0].y + 1 };	//down left
-	terrain[7] = { terrain[0].x + 1, terrain[0].y - 1 };	//up right
-	terrain[8] = { terrain[0].x + 1, terrain[0].y + 1 };	//down right
+	terrain[1] = { terrain[0].x, terrain[0].y };
+	
+	terrain[1].x += wind_direction.x;	//이동방향의 전방 블럭
+	terrain[1].y += wind_direction.y;
+	terrain[2] = terrain[1];	//이동방향의 왼쪽 대각선 블럭
+	terrain[3] = terrain[1];	//이동방향의 오른쪽 대각선 블럭
 
 	
+	if ((int)wind_direction.x == 0) {
+		terrain[2].x -= 1;
+		terrain[3].x += 1;
+	}
+	else if ((int)wind_direction.y == 0) {
+		terrain[2].y -= 1;
+		terrain[3].y += 1;
+	}
+	//printf("%d %d,,, %d %d, %d %d, %d %d\n", terrain[0].x, terrain[0].y, terrain[2].x, terrain[2].y, terrain[1].x, terrain[1].y, terrain[3].x, terrain[3].y);
+
+	if (terrain[1].x < 0 || terrain[1].x >= one_side_number || terrain[1].y < 0 || terrain[1].y >= one_side_number) {	//next가 맵 외부일때
+		return;
+	}
+	if (terrain[2].x < 0 || terrain[2].x >= one_side_number || terrain[2].y < 0 || terrain[2].y >= one_side_number) {	//next가 맵 외부일때
+		return;
+	}
+	if (terrain[3].x < 0 || terrain[3].x >= one_side_number || terrain[3].y < 0 || terrain[3].y >= one_side_number) {	//next가 맵 외부일때
+		return;
+	}
+	if (terrain_array_device[terrain[0].x][terrain[0].y] <= base_floor) {	//base floor 보다 작으면 더이상 낮추면 안됨
+		return;
+	}
+
+	int height_difference = -10000;
+	for (int i = 1; i < block_num; i++) {
+		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y]  > height_difference) {
+			height_difference = terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y];	//i블럭와 0블럭의 높이 차이
+		}
+	}
+	//낮으면 내려가고, 높을때 1칸 차이면 올라감
+	int num_of_lowest{};
+	for (int i = 1; i < block_num; i++) {
+		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {
+			num_of_lowest++;
+		}
+	}
+	if (num_of_lowest == 1) {	//최저높이가 하나일 경우 그리로 감
+		for (int i = 1; i < block_num; i++) {
+			if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {
+				terrain_array_device[terrain[i].x][terrain[i].y]++;
+				terrain_array_device[terrain[0].x][terrain[0].y]--;
+				return;
+			}
+		}
+	}
+	if (num_of_lowest == 3) {	//좌,전방,우의 높이가 최저높이로 같을 때, 전방 우선 이동
+		terrain_array_device[terrain[1].x][terrain[1].y]++;
+		terrain_array_device[terrain[0].x][terrain[0].y]--;
+	}
+	//여러개일 경우 랜덤으로 함
+	//쓰레드 많아서 중복처리 될수있으니까 바람 방향에서 one side num 만큼 for문으로 돌려서 cuda실행해야함
+	//바람으로 넘어가는 거에 우선순위: 높이가 같을때 앞으로, 높이가 다르다면 낮은쪽으로
 	
+	/*if (terrain_array_device[terrain[1].x][terrain[1].y] - terrain_array_device[terrain[0].x][terrain[0].y] < 2) {
+		terrain_array_device[terrain[0].x][terrain[0].y]--;
+		terrain_array_device[terrain[1].x][terrain[1].y]++;
+	}
+	else if (terrain_array_device[terrain[2].x][terrain[2].y] - terrain_array_device[terrain[0].x][terrain[0].y] < 2) {
+		terrain_array_device[terrain[0].x][terrain[0].y]--;
+		terrain_array_device[terrain[2].x][terrain[2].y]++;
+	}
+	else if (terrain_array_device[terrain[3].x][terrain[3].y] - terrain_array_device[terrain[0].x][terrain[0].y] < 2) {
+		terrain_array_device[terrain[0].x][terrain[0].y]--;
+		terrain_array_device[terrain[3].x][terrain[3].y]++;
+	}
+	if (terrain_array_device[terrain[0].x][terrain[0].y] < 1) {
+		terrain_array_device[terrain[0].x][terrain[0].y] = 1;
+	}*/
 }
 
 __global__
@@ -267,9 +333,6 @@ private:
 
 	char** terrain_player_sight_host = new char* [player_sight_size];
 
-	HI* hill_location_host;
-	HI* hill_location_device;
-
 	int num_of_hills;
 	int origin_num_of_hills;
 
@@ -278,6 +341,9 @@ public:
 	{
 		//Make Random Hills Information===================================================
 		clock_t t_0 = clock();
+
+		HI* hill_location_host;
+		HI* hill_location_device;
 		hill_location_host = new HI[4000];
 		hill_location_device;
 		cudaMalloc((void**)&hill_location_device, 4000 * sizeof(HI));
@@ -342,8 +408,6 @@ public:
 		cout << "Make Hills : " << (double)(t_4 - t_3) / CLOCKS_PER_SEC << " sec" << endl;
 		cout << endl;
 
-		delete[] hill_location_host;
-		cudaFree(hill_location_device);
 	}
 
 	~Map()
@@ -381,7 +445,7 @@ public:
 		return value;
 	}
 
-	void terrain_flatten()
+	void terrain_change()
 	{
 		clock_t t_0 = clock();
 		CC hi_low = get_highest_lowest();
@@ -390,8 +454,7 @@ public:
 		dim3 block(32, 32, 1);
 		for (int height = hi_low.x; height > hi_low.y; height--) {
 			for (int j = 0; j < 1; j++) {
-
-				make_terrain_flat << <grid, block >> > (terrain_array_device, height);
+				terrain_change_cuda << <grid, block >> > (terrain_array_device, height);
 			}
 		}
 		
@@ -406,7 +469,10 @@ public:
 	void wind_blow(int wind_angle, int wind_speed)
 	{
 		clock_t t_0 = clock();
-
+		//1m 이동이면 블럭 4칸이니, 풍향을 90도 단위로 주되, 여러 방향을 여러번 적용시켜서 원하는 풍향에 맞춘다.
+		//만약 3번 왼쪽으로 주고 1번 위로 주면, 이동거리는 1m이고, 풍향은 25도가 된다.
+		//2차원 배열이라, 정확하진 않지만 근삿값은 됨.
+		
 		FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
 		if (abs(wind_direction.x) < FLT_EPSILON) {
 			wind_direction.x = 0;
@@ -424,7 +490,22 @@ public:
 		clock_t t_1 = clock();
 		cout << "Wind Blow : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
+	
+	void add_all()
+	{
+		clock_t t_0 = clock();
+		unsigned int all = 0;
+		for (int i = 0; i < one_side_number; i++) {
+			for (int j = 0; j < one_side_number; j++) {
+				all += terrain_array_host[i][j];
+			}
+		}
 
+		clock_t t_1 = clock();
+		cout << all << endl;
+		cout << "Terrain Add All : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+	}
+	
 	void show_array(char** terrain_array_host, int size)
 	{
 		for (int y = 0; y < size; y++) {
@@ -451,44 +532,44 @@ public:
 		cout << "copy_for_player_map : " << double(end_t - start_t) / CLOCKS_PER_SEC << endl;
 	}
 	
-	//void update_player_sight()
-	//{
-	//	//Terrain move & Player Sight Update===================================================
-	//	for (int i = 0; i < 1; i++) {
-	//		clock_t t_1 = clock();
+	void update_player_sight()
+	{
+		//Terrain move & Player Sight Update===================================================
+		//for (int i = 0; i < 1; i++) {
+		//	clock_t t_1 = clock();
 
-	//		//Terrain Move
-	//		wind_decide(wind_speed, wind_angle);
+		//	//Terrain Move
+		//	wind_decide(wind_speed, wind_angle);
 
-	//		FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
-	//		if (abs(wind_direction.x) < FLT_EPSILON) {
-	//			wind_direction.x = 0;
-	//		}
-	//		if (abs(wind_direction.y) < FLT_EPSILON) {
-	//			wind_direction.y = 0;
-	//		}
+		//	FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
+		//	if (abs(wind_direction.x) < FLT_EPSILON) {
+		//		wind_direction.x = 0;
+		//	}
+		//	if (abs(wind_direction.y) < FLT_EPSILON) {
+		//		wind_direction.y = 0;
+		//	}
 
-	//		move_terrain(hill_location_host, num_of_hills, wind_direction, wind_speed);
-	//		if (num_of_hills < origin_num_of_hills) {
-	//			make_new_hills(hill_location_host, num_of_hills, origin_num_of_hills, wind_direction, wind_speed);
-	//		}
+		//	move_terrain(hill_location_host, num_of_hills, wind_direction, wind_speed);
+		//	if (num_of_hills < origin_num_of_hills) {
+		//		make_new_hills(hill_location_host, num_of_hills, origin_num_of_hills, wind_direction, wind_speed);
+		//	}
 
-	//		cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
+		//	cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
 
-	//		//Player Sight Update
-	//		//player_location.x += 20;
-	//		//player_location.y += 20;
-	//		//thread must be 1024 for efficiency
-	//		player_terrain_update_cuda << <player_sight_size, player_sight_size >> > (terrain_player_sight_device, hill_location_device, num_of_hills, player_location, wind_direction, wind_speed);
-	//		for (int i = 0; i < player_sight_size; i++) {
-	//			cudaMemcpy(terrain_player_sight_host[i], terrain_player_sight_temp[i], player_sight_size * sizeof(char), cudaMemcpyDeviceToHost);
-	//		}
-	//		clock_t t_2 = clock();
-	//		cout << "Player Sight Update Time : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " Seconds" << endl;
-	//		//show_array(terrain_player_sight_host, player_sight_size);
-	//		cout << "==============================" << endl;
-	//	}
-	//}
+		//	//Player Sight Update
+		//	//player_location.x += 20;
+		//	//player_location.y += 20;
+		//	//thread must be 1024 for efficiency
+		//	player_terrain_update_cuda << <player_sight_size, player_sight_size >> > (terrain_player_sight_device, hill_location_device, num_of_hills, player_location, wind_direction, wind_speed);
+		//	for (int i = 0; i < player_sight_size; i++) {
+		//		cudaMemcpy(terrain_player_sight_host[i], terrain_player_sight_temp[i], player_sight_size * sizeof(char), cudaMemcpyDeviceToHost);
+		//	}
+		//	clock_t t_2 = clock();
+		//	cout << "Player Sight Update Time : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " Seconds" << endl;
+		//	//show_array(terrain_player_sight_host, player_sight_size);
+		//	cout << "==============================" << endl;
+		//}
+	}
 	
 	void get_device_info()
 	{
@@ -713,8 +794,6 @@ public:
 		wind_angle += 10;
 		cout << wind_speed << " " << wind_angle << endl;
 		//풍향을 언제마다 한번 업데이트 할 것인지, 풍속은 언제마다 한번 업데이트 할 것인지 회의를 통해 결정하자
-
-
 	}
 	
 	char** get_map() {
