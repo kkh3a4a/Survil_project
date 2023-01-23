@@ -167,11 +167,22 @@ int main(int argc, char* argv[])
 	char** map_host = map.get_map();
 	char** player_sight = map.get_player_sight_map();
 	map.show_array(map_host, one_side_number);
+	//map.add_all();
 
-	for (int i = 0; i < 50; i++) {
-		//map.terrain_flatten();
-		map.wind_blow(0, 50);
+	for (int i = 0; i < 1000; i++) {
+		if(i < 30)
+			map.wind_blow(0, 50);
+		else if(i >= 30 && i < 60)
+			map.wind_blow(90, 50);
+		else
+			map.wind_blow(180, 50);
+
+
+		if (i % 3 == 0) {
+			//map.terrain_change();
+		}
 		map.show_array(map_host, one_side_number);
+		//map.add_all();
 	}
 	
 	
