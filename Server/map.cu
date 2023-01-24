@@ -14,7 +14,7 @@
 using namespace std;
 
 const int one_side_number = 128;	//39936
-const int player_sight_size = 1024;	//1024 넘으면 안됨
+const int player_sight_size = 64;	//1024 넘으면 안됨
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -194,32 +194,26 @@ void terrain_change_cuda(char** terrain_array_device, int height)
 }
 
 __global__
-void wind_blow_cuda(char** terrain_array_device, FF wind_direction)
+void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 {
 	//wind_direction은 x, y중 하나는 무조건 0이여야 함
 	II terrain[5];
 	terrain[0].x = blockIdx.x * blockDim.x + threadIdx.x;	//middle
 	terrain[0].y = blockIdx.y * blockDim.y + threadIdx.y;
-	terrain[1] = { terrain[0].x, terrain[0].y };
 	
-	terrain[1].x += wind_direction.x;	//이동방향의 전방 블럭
-	terrain[1].y += wind_direction.y;
-	terrain[2] = terrain[1];	//이동방향의 왼쪽 대각선 블럭
-	terrain[3] = terrain[1];	//이동방향의 오른쪽 대각선 블럭
+	terrain[1].x = terrain[0].x + wind_direction.x;			//forward
+	terrain[1].y = terrain[0].y + wind_direction.y;
 	
-	terrain[4] = terrain[0];	//이동방향의 후방 블럭
-	terrain[4].x -= wind_direction.x;
-	terrain[4].y -= wind_direction.y;
+	terrain[2].x = terrain[1].x + wind_direction.y;			//forward left
+	terrain[2].y = terrain[1].y - wind_direction.x;
 	
-	if ((int)wind_direction.x == 0) {
-		terrain[2].x -= 1;
-		terrain[3].x += 1;
-	}
-	else if ((int)wind_direction.y == 0) {
-		terrain[2].y -= 1;
-		terrain[3].y += 1;
-	}
-	//printf("%d %d,,, %d %d, %d %d, %d %d, %d %d\n", terrain[0].x, terrain[0].y, terrain[2].x, terrain[2].y, terrain[1].x, terrain[1].y, terrain[3].x, terrain[3].y, terrain[4].x, terrain[4].y);
+	terrain[3].x = terrain[1].x - wind_direction.y;			//forward right
+	terrain[3].y = terrain[1].y + wind_direction.x;
+	
+	terrain[4].x = terrain[0].x - wind_direction.x;			//back
+	terrain[4].y = terrain[0].y - wind_direction.y;
+
+	//printf("M: %d %d,,, L: %d %d, F: %d %d, R: %d %d, B: %d %d\n", terrain[0].x, terrain[0].y, terrain[2].x, terrain[2].y, terrain[1].x, terrain[1].y, terrain[3].x, terrain[3].y, terrain[4].x, terrain[4].y);
 
 	if (terrain_array_device[terrain[0].x][terrain[0].y] <= base_floor) {	//base floor 보다 작으면 더이상 낮추면 안됨
 		return;
@@ -479,20 +473,22 @@ public:
 		cout << "Terrain Flatten : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
-	void wind_blow(int wind_angle, int wind_speed)
+	void wind_blow(II wind_direction, int wind_speed)
 	{
 		clock_t t_0 = clock();
 		//1m 이동이면 블럭 4칸이니, 풍향을 90도 단위로 주되, 여러 방향을 여러번 적용시켜서 원하는 풍향에 맞춘다.
 		//만약 3번 왼쪽으로 주고 1번 위로 주면, 이동거리는 1m이고, 풍향은 25도가 된다.
 		//2차원 배열이라, 정확하진 않지만 근삿값은 됨.
 		
-		FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
+		/*FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
 		if (abs(wind_direction.x) < FLT_EPSILON) {
 			wind_direction.x = 0;
 		}
 		if (abs(wind_direction.y) < FLT_EPSILON) {
 			wind_direction.y = 0;
-		}
+		}*/
+
+		
 		
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
@@ -545,7 +541,7 @@ public:
 		cout << "copy_for_player_map : " << double(end_t - start_t) / CLOCKS_PER_SEC << endl;
 	}
 	
-	void update_player_sight()
+	void update_player_sight()	//현재 안쓰임
 	{
 		//Terrain move & Player Sight Update===================================================
 		//for (int i = 0; i < 1; i++) {
