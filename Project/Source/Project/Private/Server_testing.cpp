@@ -105,6 +105,21 @@ void AServer_testing::Tick(float DeltaTime)
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MYplayer_controller->MouseInput.location.x, MYplayer_controller->MouseInput.location.y)
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MouseInput.location.x, MouseInput.location.y)
 
+		
+		//===================
+		for (int i = 0; i < 64; ++i)
+		{
+			ret = recv(s_socket, (char*)&terrain_2d_array[i], (int)(sizeof(char) * 64), 0);
+			if (SOCKET_ERROR == ret)
+			{
+				return;
+			}
+			for (int j = 0; j < 64; j++) {
+				UE_LOG(LogTemp, Log, TEXT("%d "), terrain_2d_array[i][j]);
+			}
+		}
+		
+
 	}
 
 

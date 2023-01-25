@@ -17,10 +17,6 @@
 using namespace std;
 using namespace chrono;
 
-
-
-
-
 UCLASS()
 class PROJECT_API AServer_testing : public AActor
 {
@@ -54,6 +50,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FActor_location_rotation test_Actor;
+
+	char terrain_2d_array[64][64];
 
 	/*
 	DWORD WINAPI Angle_Receiver(LPVOID arg);*/
