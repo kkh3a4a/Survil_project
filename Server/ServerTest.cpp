@@ -19,15 +19,18 @@ DWORD WINAPI ProcessClient(LPVOID arg);
 DWORD WINAPI ingame_thread(LPVOID arg);
 
 
-map<int, FActor*> players_list; //port, player_info
+map<int, players_profile*> players_list; //port, player_info
 bool game_start = false;
 int len = 0;
 
-std::mutex mylock;
+std::mutex player_cnt_lock;
 TF sun_angle;
 
 vector<SOCKET> player_list;
-map <FActor*, location_rotation>my_citizen;
+map <int, Citizen_moving*>citizen_Move;
+
+volatile int player_cnt;
+volatile bool player_location_set = false;
 
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
@@ -48,7 +51,15 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	FActor player_info;
 	//해당 클라이언트의 port번호 map에 저장
 	int port = ntohs(clientaddr.sin_port);
-	players_list[port] = &player_info;
+
+	player_cnt_lock.lock();
+	players_profile* my_profile = new players_profile;
+	players_list[port] = my_profile;
+	player_cnt_lock.unlock();
+	player_cnt++;
+	//while (!player_location_set);
+
+	Sleep(500);
 
 	//======================
 	Map map;
@@ -56,69 +67,59 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	char** player_sight = map.get_player_sight_map();
 	//======================
 
-	int cnt = 0;
-	retval = recv(client_sock, (char*)&cnt, sizeof(int), 0);
-
-	if (retval == SOCKET_ERROR) {
-		err_display("send()");
-		return 0;
-	}
-	for (int i = 0; i < cnt; ++i)
+	while (1)
 	{
-		bool overlap = false;
-		retval = recv(client_sock, (char*)&testActor, sizeof(testActor), 0);
-		for (auto& a : my_citizen){
-			if (wcscmp(a.first->name, testActor.name) == 0)
+		if (!player_location_set)
+		{
+			continue;
+		}
+		retval = send(client_sock, (char*)&(players_list[port]->player_info), (int)sizeof(FActor), 0);
+		for (int i = 0; i < 10; ++i)
+		{
+			cout << i << "//" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
+			retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FActor), 0);
+		}
+		for (auto& a : players_list)
+		{
+			if (port != a.first)
 			{
-				overlap = true;
+				retval = send(client_sock, (char*)&(a.second->player_info), (int)sizeof(FActor), 0);
+				for (int i = 0; i < 10; ++i)
+				{
+					retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FActor), 0);
+				}
 			}
+
 		}
-		if(!overlap){
-			FActor* tempActor = new FActor();
-			wcscpy(tempActor->name, testActor.name);
-			if (retval == SOCKET_ERROR) {
-				err_display("send()");
-				return 0;
-			}
-			FActor_TF_define(my_citizen[tempActor].location, testActor.location);
-			FActor_TF_define(tempActor->location, testActor.location);
-			FActor_TF_define(my_citizen[tempActor].rotation, testActor.rotation);
-			FActor_TF_define(tempActor->rotation, testActor.rotation);
-		}
-		/*wcout << testActor.name;
-		cout << " : " << testActor.location.x << ", " << testActor.location.y << endl;*/
+
+		break;
 	}
 
 	while (1) {
 		auto end_t = high_resolution_clock::now();
 		if (duration_cast<milliseconds>(end_t - start_t).count() > 50) {
 			start_t = high_resolution_clock::now();
-			retval = recv(client_sock, (char*)&testActor, (int)sizeof(testActor), 0);
+			Citizen_moving temp_citizen_moving;
+			retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
+			cout << temp_citizen_moving.team << " " << temp_citizen_moving.citizen_number << " " << temp_citizen_moving.location.x << " " << temp_citizen_moving.location.y << endl;
+			players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->team = temp_citizen_moving.team;
+			players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.x = temp_citizen_moving.location.x;
+			players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.y = temp_citizen_moving.location.y;
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
 			}
-			if (wcscmp(testActor.name, L"temp") != 0){
-				for (auto& a : my_citizen){{
-						FActor_TF_define(a.second.location, testActor.location);	
-					}
-				}
-			}
+
 			retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
 			}
-			for (auto& a : my_citizen){
-				retval = send(client_sock, (char*)&(*a.first), (int)sizeof(testActor), 0);
-				if (retval == SOCKET_ERROR) {
-					err_display("send()");
-					break;
-				}
-				wcout << a.first->name;
-				cout << " : " << a.second.location.x << ", " << a.second.location.y << endl;
+			for (int i = 0; i < 10; ++i)
+			{
+				cout << i << ":" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
+				retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FActor), 0);
 			}
-			//cout << sun_angle.y << endl;
 			
 			//=======================
 			II player_location{ one_side_number / 2, one_side_number / 2 };
@@ -147,15 +148,17 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
-	/*sun_angle.x = 0.0f;
+	while(player_cnt != MAXPLAYER);
+
+	player_location_set = player_random_location(players_list, citizen_Move);
+	for (auto& a : players_list)
+	{
+		cout << "위치 : " << a.second->player_info.location.x << ", " << a.second->player_info.location.y << endl;
+	}
+
+	sun_angle.x = 0.0f;
 	sun_angle.y = 0.0f;
 	sun_angle.z = 0.0f;
-	testActor.location.x = 0.0f;
-	testActor.location.y = 0.0f;
-	testActor.location.z = 500.0f;
-	testActor.rotation.x = 0.0f;
-	testActor.rotation.y = 0.0f;
-	testActor.rotation.z = 0.0f;*/
 
 	auto sunangle_start_t = high_resolution_clock::now();
 	auto actor_move_start_t = high_resolution_clock::now();
@@ -170,10 +173,19 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			if (sun_angle.y >= 180.f) {
 				sun_angle.y = -180.f;
 			}
-			for (auto& a : my_citizen){
+
+			for (auto& a : players_list) {
 				float distance = 0.0f;
-				if (location_distance(a.first->location, a.second.location) > 10){
-					Move_Civil(a.first->location, a.second.location);
+				int cnt = 0;
+				for (auto& b : a.second->player_citizen)
+				{
+					if (a.second->player_citizen_arrival_location[cnt]->team != -1)
+					{
+						if (location_distance(b->location, a.second->player_citizen_arrival_location[cnt]->location) > 10) {
+							Move_Civil(b->location, a.second->player_citizen_arrival_location[cnt]->location);
+						}
+					}
+					cnt++;
 				}
 			}
 		}
@@ -183,13 +195,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
-	
-	
-	
-
-
-
-	
 	
 	
 	int retval;

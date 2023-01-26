@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Server_testing.h"
-#include "MyPlayerController.h"
+
 
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
@@ -33,9 +33,9 @@ AMyPlayerController::AMyPlayerController()
     }
 
     bShowMouseCursor = true;
-    wcscpy(server_MouseInput->MouseInput.name, L"temp");
-    server_MouseInput->MouseInput.location = { 0, 0, 0 };
-    server_MouseInput->MouseInput.rotation = { 0, 0, 0 };
+    server_MouseInput->Citizen_moving.team = -1;
+    server_MouseInput->Citizen_moving.location = { 0, 0, 0 };
+    server_MouseInput->Citizen_moving.rotation = { 0, 0, 0 };
     //UE_LOG(LogTemp, Log, TEXT("%s : %f, %f"), *(server_MouseInput->MouseInput.name), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
     //UE_LOG(LogTemp, Log, TEXT("%f, %f"), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
 }
@@ -76,19 +76,22 @@ void AMyPlayerController::MoveToMouseCursor()
 {
     FHitResult Hit;
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-    
+
 
     if (Hit.bBlockingHit)
     {
         hitActor = Hit.GetActor();
         if (hitActor->ActorHasTag("Citizen"))
         {
-            wcscpy(server_MouseInput->MouseInput.name, *(hitActor->GetName()));
-            server_MouseInput->MouseInput.location.x = hitActor->GetActorLocation().X;
-            server_MouseInput->MouseInput.location.y = hitActor->GetActorLocation().Y;
-            server_MouseInput->MouseInput.location.z = hitActor->GetActorLocation().Z;
-            UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"), server_MouseInput->MouseInput.name, server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
-
+            if (wcscmp(*hitActor->Tags[1].ToString(), L"0") == 0)
+            {
+                server_MouseInput->Citizen_moving.team = FCString::Atoi(*hitActor->Tags[1].ToString());
+                server_MouseInput->Citizen_moving.citizen_number = FCString::Atoi(*hitActor->Tags[2].ToString());
+                server_MouseInput->Citizen_moving.location.x = hitActor->GetActorLocation().X;
+                server_MouseInput->Citizen_moving.location.y = hitActor->GetActorLocation().Y;
+                server_MouseInput->Citizen_moving.location.z = hitActor->GetActorLocation().Z;
+                // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), server_MouseInput->Citizen_moving.team, server_MouseInput->Citizen_moving.citizen_number ,server_MouseInput->Citizen_moving.location.x, server_MouseInput->Citizen_moving.location.y);
+            }
         }
     }
 }
@@ -103,9 +106,9 @@ void AMyPlayerController::MoveToActor()
         if (hitActor) {
             if (hitActor->ActorHasTag("Citizen"))
             {
-                server_MouseInput->MouseInput.location.x = DestLocation.X;
-                server_MouseInput->MouseInput.location.y = DestLocation.Y;
-                server_MouseInput->MouseInput.location.z = DestLocation.Z;
+                server_MouseInput->Citizen_moving.location.x = DestLocation.X;
+                server_MouseInput->Citizen_moving.location.y = DestLocation.Y;
+                server_MouseInput->Citizen_moving.location.z = DestLocation.Z;
                 hitActor = NULL;
             }
         }

@@ -3,10 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Math/Vector.h"
+#include <string>
 #include"global.generated.h"
+
 /**
  *
  */
+
+
+#define MAXPLAYER 1
+
 
 USTRUCT(Atomic, BlueprintType)
 struct Fthree_float {
@@ -32,6 +39,40 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float rotation;
 };
+
+
+USTRUCT(Atomic, BlueprintType)
+struct Fcitizen_struct {
+	GENERATED_USTRUCT_BODY()
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<FActor_location_rotation> citizen_location_rotation;
+
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct FAActor_struct {
+	GENERATED_USTRUCT_BODY()
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<AActor*> citizen_AActor;
+
+};
+
+
+USTRUCT(Atomic, BlueprintType)
+struct FCitizen_moving
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	int team;
+	int citizen_number;
+	Fthree_float location;
+	Fthree_float rotation;
+};
+
 class PROJECT_API global
 {
 public:

@@ -81,21 +81,52 @@ public:
 	const short SERVER_PORT = 9000;
 	const int BUFSIZE = 256;
 	int ret = 0;
-	TMap<FString, AActor*> My_Citizen;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TMap<int, FActor_location_rotation> players_list;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TMap<int, Fcitizen_struct> citizen;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FActor_location_rotation temp_Actor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TMap<int, FAActor_struct> My_Citizen;
+
 	int My_Citizen_Num = 0;
+
 	steady_clock::time_point start_t;
 	WSADATA WSAData;
 	SOCKET s_socket;
 	HANDLE hThread;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FActor_location_rotation MouseInput;
+		int max_player_cnt = MAXPLAYER;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* My_Town;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<class AActor> citizen_Blueprint;
+
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		//FActor_location_rotation MouseInput;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FCitizen_moving Citizen_moving;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float sunangle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FActor_location_rotation test_Actor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int Citizen_num = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool first_recv_send = false;
 	
 	int8 terrain_2d_array[map_size];
 

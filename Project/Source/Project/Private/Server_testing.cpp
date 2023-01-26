@@ -35,42 +35,47 @@ void AServer_testing::BeginPlay()
 
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
-	if (UWorld* World = GetWorld())
-	{
-		UGameplayStatics::GetAllActorsOfClassWithTag(GetWorld(), Acitizen::StaticClass(), FName("Citizen"), CitizensToFind);
+	int cnt = 0;
 
-		for (AActor* MY_CIT : CitizensToFind)
 
+	for (int i = 0; i < MAXPLAYER; ++i) {
+		Citizen_num++;
+		recv(s_socket, (char*)&temp_Actor, sizeof(FActor_location_rotation), 0);
+		FActor_location_rotation tmp;
+		players_list.Add(i, tmp);
+
+		players_list[i].location.x = temp_Actor.location.x;
+		players_list[i].location.y = temp_Actor.location.y;
+		players_list[i].location.z = temp_Actor.location.z;
+		//UE_LOG(LogTemp, Log, TEXT("player : %f %f"), players_list[i].location.x, players_list[i].location.y);
+		Fcitizen_struct temp;
+		citizen.Add(i, temp);
+		for (int j = 0; j < 10; ++j)
 		{
+			recv(s_socket, (char*)&temp_Actor, sizeof(FActor_location_rotation), 0);
 
-			Acitizen* CitizenCast = Cast<Acitizen>(MY_CIT);
-
-			if (CitizenCast)
-			{
-				My_Citizen.Add(*MY_CIT->GetName(), MY_CIT);
-				//UE_LOG(LogTemp, Log, TEXT("%s %lf %lf"), *MY_CIT->GetName(), MY_CIT->GetActorLocation().X, MY_CIT->GetActorLocation().Y);
-			}
-
+			FActor_location_rotation citizentemp;
+			citizentemp.location.x = temp_Actor.location.x;
+			citizentemp.location.y = temp_Actor.location.y;
+			citizentemp.location.z = temp_Actor.location.z;
+			citizen[i].citizen_location_rotation.Add(citizentemp);
+			citizen[i].citizen_location_rotation[j].location.x = temp_Actor.location.x;
+			citizen[i].citizen_location_rotation[j].location.y = temp_Actor.location.y;
+			citizen[i].citizen_location_rotation[j].location.z = temp_Actor.location.z;
+			//UE_LOG(LogTemp, Log, TEXT("citizen %d %d : %f %f"), i , j, citizen[i].citizen_location_rotation[j].location.x, citizen[i].citizen_location_rotation[j].location.y);
 		}
 	}
-	int tmp = My_Citizen.Num();
-	ret = send(s_socket, (char*)&tmp, sizeof(int), 0);
-	//UE_LOG(LogTemp, Log, TEXT("%d"), tmp);
-	for (auto& a : My_Citizen)
+	for (auto& a : citizen)
 	{
-		wcscpy(test_Actor.name, *a.Key);
-		test_Actor.location.x = a.Value->GetActorLocation().X;
-		test_Actor.location.y = a.Value->GetActorLocation().Y;
-		test_Actor.location.z = a.Value->GetActorLocation().Z;
-		UE_LOG(LogTemp, Log, TEXT("%lf %lf %lf"), test_Actor.location.x, test_Actor.location.y, test_Actor.location.z);
-		//UE_LOG(LogTemp, Log, TEXT("%s %lf %lf"), *a.Key, a.Value->GetActorLocation().X, a.Value->GetActorLocation().Y);
-
-
-		ret = send(s_socket, (char*)&test_Actor, (int)sizeof(test_Actor), 0);
+		for (int j = 0; j < 10; ++j)
+		{
+			//UE_LOG(LogTemp, Log, TEXT("%f %f"), a.Value.citizen_location_rotation[j].location.x, a.Value.citizen_location_rotation[j].location.y);
+		}
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("connected to server"));
+	first_recv_send = true;
 
+	UE_LOG(LogTemp, Log, TEXT("connected to server"));
 	start_t = high_resolution_clock::now();
 }
 
@@ -87,26 +92,33 @@ void AServer_testing::Tick(float DeltaTime)
 	if (duration_cast<milliseconds>(end_t - start_t).count() > 50) {
 
 		start_t = high_resolution_clock::now();
-		ret = send(s_socket, (char*)&MouseInput, (int)sizeof(FActor_location_rotation), 0);
+		ret = send(s_socket, (char*)&Citizen_moving, (int)sizeof(FCitizen_moving), 0);
 		if (SOCKET_ERROR == ret)
 		{
 			return;
 		}
+
 		ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
 		if (SOCKET_ERROR == ret)
 		{
 			return;
 		}
-		int cnt = 0;
-		for (auto& a : My_Citizen) {
-			cnt++;
-			ret = recv(s_socket, (char*)&test_Actor, (int)sizeof(FActor_location_rotation), 0);
-			if (SOCKET_ERROR == ret)
+		for (int i = 0; i < MAXPLAYER; ++i) {
+			for (int j = 0; j < 10; ++j)
 			{
-				return;
+				recv(s_socket, (char*)&temp_Actor, sizeof(FActor_location_rotation), 0);
+
+				citizen[i].citizen_location_rotation[j].location.x = temp_Actor.location.x;
+				citizen[i].citizen_location_rotation[j].location.y = temp_Actor.location.y;
+				citizen[i].citizen_location_rotation[j].location.z = temp_Actor.location.z;
+
+				/*FVector citizen_tmp = { temp_Actor.location.x,temp_Actor.location.y,temp_Actor.location.z };
+				if (My_Citizen[i].citizen_AActor[j] != nullptr)
+				{
+					My_Citizen[i].citizen_AActor[j]->SetActorLocation(citizen_tmp);
+				}*/
+				//UE_LOG(LogTemp, Log, TEXT("citizen %d : %f %f"), i, citizen[i].citizen_location_rotation[j].location.x, citizen[i].citizen_location_rotation[j].location.y);
 			}
-			FVector tmp = { test_Actor.location.x, test_Actor.location.y, test_Actor.location.z };
-			a.Value->SetActorLocation(tmp);
 		}
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MYplayer_controller->MouseInput.location.x, MYplayer_controller->MouseInput.location.y)
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MouseInput.location.x, MouseInput.location.y)
