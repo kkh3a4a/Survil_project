@@ -16,6 +16,49 @@
 
 using namespace std;
 using namespace chrono;
+const int map_size = 64;
+
+USTRUCT(Atomic, BlueprintType)
+struct FOneArray
+{
+	GENERATED_BODY()
+public:
+	TArray<int8> one_side_array;
+	
+	int8 operator[] (int32 i)
+	{
+		return one_side_array[i];
+	}
+	
+	void Init(int32 size) 
+	{
+		one_side_array.Init(0, size);
+	}
+	
+	void Add(int8 item)
+	{
+		one_side_array.Add(item);
+	}
+	
+	int32 Num() 
+	{
+		return one_side_array.Num();
+	}
+	
+	int32 GetTypeSize()
+	{
+		return one_side_array.GetTypeSize();
+	}
+	int32 GetAllocatedSize()
+	{
+		return one_side_array.GetAllocatedSize();
+	}
+
+	void Empty()
+	{
+		one_side_array.Empty();
+	}
+};
 
 UCLASS()
 class PROJECT_API AServer_testing : public AActor
@@ -24,6 +67,8 @@ class PROJECT_API AServer_testing : public AActor
 public:
 	// Sets default values for this actor's properties
 	AServer_testing();
+	
+	int8 get_height(int32, int32);
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,6 +87,7 @@ public:
 	WSADATA WSAData;
 	SOCKET s_socket;
 	HANDLE hThread;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FActor_location_rotation MouseInput;
 
@@ -50,10 +96,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FActor_location_rotation test_Actor;
+	
+	int8 terrain_2d_array[map_size];
 
-	char terrain_2d_array[64][64];
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<FOneArray> terrain_array;
 
-	/*
-	DWORD WINAPI Angle_Receiver(LPVOID arg);*/
+	
+	/*DWORD WINAPI Angle_Receiver(LPVOID arg);*/
 };
 

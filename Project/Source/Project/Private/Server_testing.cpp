@@ -14,6 +14,11 @@ AServer_testing::AServer_testing()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+int8 AServer_testing::get_height(int32 x, int32 y)
+{
+	return terrain_array[x][y];
+}
+
 // Called when the game starts or when spawned
 void AServer_testing::BeginPlay()
 {
@@ -65,6 +70,7 @@ void AServer_testing::BeginPlay()
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("connected to server"));
+
 	start_t = high_resolution_clock::now();
 }
 
@@ -104,22 +110,27 @@ void AServer_testing::Tick(float DeltaTime)
 		}
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MYplayer_controller->MouseInput.location.x, MYplayer_controller->MouseInput.location.y)
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MouseInput.location.x, MouseInput.location.y)
-
 		
 		//===================
-		for (int i = 0; i < 64; ++i)
+		FOneArray temp_array;
+		terrain_array.Init(temp_array, map_size);
+		
+		for (int i = 0; i < map_size; i++)
 		{
-			ret = recv(s_socket, (char*)&terrain_2d_array[i], (int)(sizeof(char) * 64), 0);
+			//terrain_array[i].Empty();
+			ret = recv(s_socket, (char*)&terrain_2d_array, (int)(sizeof(char) * map_size), 0);
 			if (SOCKET_ERROR == ret)
 			{
 				return;
 			}
-			for (int j = 0; j < 64; j++) {
-				UE_LOG(LogTemp, Log, TEXT("%d "), terrain_2d_array[i][j]);
+			for (int j = 0; j < map_size; j++)
+			{
+				terrain_array[i].Add(terrain_2d_array[j]);
+				//UE_LOG(LogTemp, Log, TEXT("%d %d %d"), i, j, terrain_array[i][j]);
 			}
 		}
-		
-
+		UE_LOG(LogTemp, Log, TEXT("map load once"));
+		//=====================
 	}
 
 
