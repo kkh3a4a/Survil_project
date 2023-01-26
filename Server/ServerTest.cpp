@@ -50,6 +50,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int port = ntohs(clientaddr.sin_port);
 	players_list[port] = &player_info;
 
+	//======================
+	Map map;
+	char** map_host = map.get_map();
+	char** player_sight = map.get_player_sight_map();
+	//======================
+
 	int cnt = 0;
 	retval = recv(client_sock, (char*)&cnt, sizeof(int), 0);
 
@@ -113,6 +119,21 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				cout << " : " << a.second.location.x << ", " << a.second.location.y << endl;
 			}
 			//cout << sun_angle.y << endl;
+			
+			//=======================
+			II player_location{ one_side_number / 2, one_side_number / 2 };
+			map.copy_for_player_map(player_location);
+			//map.show_array(player_sight, player_sight_size);
+			for (int i = 0; i < player_sight_size; ++i)
+			{
+				retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size, 0);
+				if (retval == SOCKET_ERROR) {
+					err_display("send()");
+					break;
+				}
+			}
+			cout << "map Àü¼Û" << endl;
+			//========================
 		}
 	}
 
@@ -162,22 +183,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
-	Map map;
-	//map.get_device_info();
-	char** map_host = map.get_map();
-	char** player_sight = map.get_player_sight_map();
-	map.show_array(map_host, one_side_number);
-
-	for (int i = 0; i < 50; i++) {
-		//map.terrain_flatten();
-		map.wind_blow(0, 50);
-		map.show_array(map_host, one_side_number);
-	}
 	
 	
-	//II player_location{ one_side_number/2, one_side_number / 2 };
-	//map.copy_for_player_map(player_location);
-	//map.show_array(player_sight, player_sight_size);
+	
 
 
 

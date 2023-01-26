@@ -13,8 +13,8 @@
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 96;	//39936
-const int player_sight_size = 1024;	//1024 넘으면 안됨
+const int one_side_number = 128;	//39936
+const int player_sight_size = 64;	//1024 넘으면 안됨
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -194,59 +194,71 @@ void terrain_change_cuda(char** terrain_array_device, int height)
 }
 
 __global__
-void wind_blow_cuda(char** terrain_array_device, FF wind_direction, int wind_speed)
+void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 {
 	//wind_direction은 x, y중 하나는 무조건 0이여야 함
-	const int block_num = 4;
-	II terrain[block_num];
+	II terrain[5];
 	terrain[0].x = blockIdx.x * blockDim.x + threadIdx.x;	//middle
 	terrain[0].y = blockIdx.y * blockDim.y + threadIdx.y;
-	terrain[1] = { terrain[0].x, terrain[0].y };
 	
-	terrain[1].x += wind_direction.x;	//이동방향의 전방 블럭
-	terrain[1].y += wind_direction.y;
-	terrain[2] = terrain[1];	//이동방향의 왼쪽 대각선 블럭
-	terrain[3] = terrain[1];	//이동방향의 오른쪽 대각선 블럭
-
+	terrain[1].x = terrain[0].x + wind_direction.x;			//forward
+	terrain[1].y = terrain[0].y + wind_direction.y;
 	
-	if ((int)wind_direction.x == 0) {
-		terrain[2].x -= 1;
-		terrain[3].x += 1;
-	}
-	else if ((int)wind_direction.y == 0) {
-		terrain[2].y -= 1;
-		terrain[3].y += 1;
-	}
-	//printf("%d %d,,, %d %d, %d %d, %d %d\n", terrain[0].x, terrain[0].y, terrain[2].x, terrain[2].y, terrain[1].x, terrain[1].y, terrain[3].x, terrain[3].y);
+	terrain[2].x = terrain[1].x + wind_direction.y;			//forward left
+	terrain[2].y = terrain[1].y - wind_direction.x;
+	
+	terrain[3].x = terrain[1].x - wind_direction.y;			//forward right
+	terrain[3].y = terrain[1].y + wind_direction.x;
+	
+	terrain[4].x = terrain[0].x - wind_direction.x;			//back
+	terrain[4].y = terrain[0].y - wind_direction.y;
 
-	if (terrain[1].x < 0 || terrain[1].x >= one_side_number || terrain[1].y < 0 || terrain[1].y >= one_side_number) {	//next가 맵 외부일때
-		return;
-	}
-	if (terrain[2].x < 0 || terrain[2].x >= one_side_number || terrain[2].y < 0 || terrain[2].y >= one_side_number) {	//next가 맵 외부일때
-		return;
-	}
-	if (terrain[3].x < 0 || terrain[3].x >= one_side_number || terrain[3].y < 0 || terrain[3].y >= one_side_number) {	//next가 맵 외부일때
-		return;
-	}
+	//printf("M: %d %d,,, L: %d %d, F: %d %d, R: %d %d, B: %d %d\n", terrain[0].x, terrain[0].y, terrain[2].x, terrain[2].y, terrain[1].x, terrain[1].y, terrain[3].x, terrain[3].y, terrain[4].x, terrain[4].y);
+
 	if (terrain_array_device[terrain[0].x][terrain[0].y] <= base_floor) {	//base floor 보다 작으면 더이상 낮추면 안됨
+		return;
+	}
+	if (terrain[4].x >= 0 && terrain[4].x < one_side_number && terrain[4].y >= 0 && terrain[4].y < one_side_number) {	//i번째 블럭이 맵 외부일때
+		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[4].x][terrain[4].y] <= 0) {	//후방 블럭이 현 블럭보다 같거나 높을 경우 바람의 영향을 박지 않음
+			return;
+		}
+	}
+
+	if (terrain[1].x < 0 || terrain[1].x >= one_side_number || terrain[1].y < 0 || terrain[1].y >= one_side_number) {	//전방 블럭이 외부일때 걍 전방으로 보냄
+		terrain_array_device[terrain[0].x][terrain[0].y]--;
 		return;
 	}
 
 	int height_difference = -10000;
-	for (int i = 1; i < block_num; i++) {
+	for (int i = 1; i < 4; i++) {
+		if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
+			continue;
+		}
 		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y]  > height_difference) {
 			height_difference = terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y];	//i블럭와 0블럭의 높이 차이
 		}
 	}
-	//낮으면 내려가고, 높을때 1칸 차이면 올라감
+	if (height_difference < 0) {	//전방 3개 블럭들의 높이가 모두 현 블럭보다 높을 경우 영향 안받음
+		return;
+	}
+
 	int num_of_lowest{};
-	for (int i = 1; i < block_num; i++) {
-		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {
+	for (int i = 1; i < 4; i++) {
+		if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
+			continue;
+		}
+		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {	//최저 높이 동일 몇개인지
 			num_of_lowest++;
 		}
 	}
+	if (num_of_lowest == 0)
+		return; {
+	}
 	if (num_of_lowest == 1) {	//최저높이가 하나일 경우 그리로 감
-		for (int i = 1; i < block_num; i++) {
+		for (int i = 1; i < 4; i++) {
+			if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
+				continue;
+			}
 			if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {
 				terrain_array_device[terrain[i].x][terrain[i].y]++;
 				terrain_array_device[terrain[0].x][terrain[0].y]--;
@@ -254,29 +266,26 @@ void wind_blow_cuda(char** terrain_array_device, FF wind_direction, int wind_spe
 			}
 		}
 	}
-	if (num_of_lowest == 3) {	//좌,전방,우의 높이가 최저높이로 같을 때, 전방 우선 이동
-		terrain_array_device[terrain[1].x][terrain[1].y]++;
-		terrain_array_device[terrain[0].x][terrain[0].y]--;
-	}
-	//여러개일 경우 랜덤으로 함
-	//쓰레드 많아서 중복처리 될수있으니까 바람 방향에서 one side num 만큼 for문으로 돌려서 cuda실행해야함
-	//바람으로 넘어가는 거에 우선순위: 높이가 같을때 앞으로, 높이가 다르다면 낮은쪽으로
 	
-	/*if (terrain_array_device[terrain[1].x][terrain[1].y] - terrain_array_device[terrain[0].x][terrain[0].y] < 2) {
+	if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[1].x][terrain[1].y] == height_difference) {		//전방 블럭이 최저 높이일때 최저높이 블럭이 몇개든 전방으로 보냄
 		terrain_array_device[terrain[0].x][terrain[0].y]--;
 		terrain_array_device[terrain[1].x][terrain[1].y]++;
+		return;
 	}
-	else if (terrain_array_device[terrain[2].x][terrain[2].y] - terrain_array_device[terrain[0].x][terrain[0].y] < 2) {
-		terrain_array_device[terrain[0].x][terrain[0].y]--;
-		terrain_array_device[terrain[2].x][terrain[2].y]++;
+	//printf("%d\n", (terrain[0].x + terrain[0].y )% num_of_lowest);
+	int radom_seed = (terrain[0].x + terrain[0].y) % num_of_lowest + 2;
+	for (int i = 2; i <= 3; i++) {		//왼 오 둘중 하나로 랜덤 이동
+		if (radom_seed == i) {
+			//printf("%d\n", i);
+			if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
+				terrain_array_device[terrain[0].x][terrain[0].y]--;
+				return;
+			}
+			terrain_array_device[terrain[0].x][terrain[0].y]--;
+			terrain_array_device[terrain[i].x][terrain[i].y]++;
+			return;
+		}
 	}
-	else if (terrain_array_device[terrain[3].x][terrain[3].y] - terrain_array_device[terrain[0].x][terrain[0].y] < 2) {
-		terrain_array_device[terrain[0].x][terrain[0].y]--;
-		terrain_array_device[terrain[3].x][terrain[3].y]++;
-	}
-	if (terrain_array_device[terrain[0].x][terrain[0].y] < 1) {
-		terrain_array_device[terrain[0].x][terrain[0].y] = 1;
-	}*/
 }
 
 __global__
@@ -453,9 +462,7 @@ public:
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		for (int height = hi_low.x; height > hi_low.y; height--) {
-			for (int j = 0; j < 1; j++) {
-				terrain_change_cuda << <grid, block >> > (terrain_array_device, height);
-			}
+			terrain_change_cuda << <grid, block >> > (terrain_array_device, height);
 		}
 		
 		for (int i = 0; i < one_side_number; i++) {
@@ -466,24 +473,26 @@ public:
 		cout << "Terrain Flatten : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
-	void wind_blow(int wind_angle, int wind_speed)
+	void wind_blow(II wind_direction, int wind_speed)
 	{
 		clock_t t_0 = clock();
 		//1m 이동이면 블럭 4칸이니, 풍향을 90도 단위로 주되, 여러 방향을 여러번 적용시켜서 원하는 풍향에 맞춘다.
 		//만약 3번 왼쪽으로 주고 1번 위로 주면, 이동거리는 1m이고, 풍향은 25도가 된다.
 		//2차원 배열이라, 정확하진 않지만 근삿값은 됨.
 		
-		FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
+		/*FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
 		if (abs(wind_direction.x) < FLT_EPSILON) {
 			wind_direction.x = 0;
 		}
 		if (abs(wind_direction.y) < FLT_EPSILON) {
 			wind_direction.y = 0;
-		}
+		}*/
+
+		
 		
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
-		wind_blow_cuda << <grid, block >> > (terrain_array_device, wind_direction, wind_speed);
+		wind_blow_cuda << <grid, block >> > (terrain_array_device, wind_direction);
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}
@@ -532,7 +541,7 @@ public:
 		cout << "copy_for_player_map : " << double(end_t - start_t) / CLOCKS_PER_SEC << endl;
 	}
 	
-	void update_player_sight()
+	void update_player_sight()	//현재 안쓰임
 	{
 		//Terrain move & Player Sight Update===================================================
 		//for (int i = 0; i < 1; i++) {
