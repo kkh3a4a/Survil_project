@@ -92,6 +92,10 @@ void AMyPlayerController::MoveToMouseCursor()
                 server_MouseInput->Citizen_moving.location.z = hitActor->GetActorLocation().Z;
                 // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), server_MouseInput->Citizen_moving.team, server_MouseInput->Citizen_moving.citizen_number ,server_MouseInput->Citizen_moving.location.x, server_MouseInput->Citizen_moving.location.y);
             }
+            else
+            {
+                hitActor = NULL;
+            }
         }
     }
 }
