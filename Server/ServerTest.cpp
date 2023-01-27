@@ -115,10 +115,13 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				err_display("send()");
 				break;
 			}
-			for (int i = 0; i < 10; ++i)
+			for (int playercnts = 0; playercnts < MAXPLAYER; ++playercnts)
 			{
-				cout << i << ":" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
-				retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FActor), 0);
+				for (int i = 0; i < 10; ++i)
+				{
+					cout << i << ":" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
+					retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FActor), 0);
+				}
 			}
 			
 			//=======================
