@@ -82,16 +82,16 @@ public:
 	const int BUFSIZE = 256;
 	int ret = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TMap<int, FActor_location_rotation> players_list;
+	TMap<int, FActor_location_rotation> players_list;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TMap<int, Fcitizen_struct> citizen;
+	TMap<int, Fcitizen_struct> citizen;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FActor_location_rotation temp_Actor;
+	FActor_location_rotation temp_Actor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TMap<int, FAActor_struct> My_Citizen;
+	TMap<int, FAActor_struct> My_Citizen;
 
 	int My_Citizen_Num = 0;
 
@@ -101,39 +101,46 @@ public:
 	HANDLE hThread;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int max_player_cnt = MAXPLAYER;
+	int max_player_cnt = MAXPLAYER;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UStaticMesh* My_Town;
+	UStaticMesh* My_Town;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<class AActor> citizen_Blueprint;
+	TSubclassOf<class AActor> citizen_Blueprint;
 
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		//FActor_location_rotation MouseInput;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FCitizen_moving Citizen_moving;
+	FCitizen_moving Citizen_moving;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Fthree_float sunangle;
+	Fthree_float sunangle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FActor_location_rotation test_Actor;
+	FActor_location_rotation test_Actor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int Citizen_num = 0;
+	int Citizen_num = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool first_recv_send = false;
+	bool first_recv_send = false;
 	
 	int8 terrain_2d_array[map_size];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FOneArray> terrain_array;
+	TArray<FOneArray> terrain_array;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 sands_size {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int32> int_array;
+
+
+
 	/*DWORD WINAPI Angle_Receiver(LPVOID arg);*/
 };
 

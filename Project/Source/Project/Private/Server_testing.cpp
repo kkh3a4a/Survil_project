@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include <math.h>
 #include "MyPlayerController.h"
 #include "Server_testing.h"
 #include "Kismet/GameplayStatics.h"
@@ -12,6 +13,7 @@ AServer_testing::AServer_testing()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 }
 
 int8 AServer_testing::get_height(int32 x, int32 y)
@@ -127,6 +129,7 @@ void AServer_testing::Tick(float DeltaTime)
 		FOneArray temp_array;
 		terrain_array.Init(temp_array, map_size);
 		
+
 		for (int i = 0; i < map_size; i++)
 		{
 			//terrain_array[i].Empty();
@@ -139,9 +142,15 @@ void AServer_testing::Tick(float DeltaTime)
 			{
 				terrain_array[i].Add(terrain_2d_array[j]);
 				//UE_LOG(LogTemp, Log, TEXT("%d %d %d"), i, j, terrain_array[i][j]);
+				int_array[i*64+j] = (terrain_array[i][j]);
+				UE_LOG(LogTemp, Log, TEXT("int array[%d] [%d] : %d"), i, j, int_array[i * 64 + j]);
 			}
 		}
-		UE_LOG(LogTemp, Log, TEXT("map load once"));
+
+		sands_size = sqrt(int_array.Num());
+		//UE_LOG(LogTemp, Log, TEXT("int array size : %d\n"), int_array.Num());
+
+		//UE_LOG(LogTemp, Log, TEXT("map load once"));
 		//=====================
 	}
 
