@@ -89,8 +89,6 @@ bool player_random_location(std::map<int, players_profile*>& players_list, std::
 				{
 					goto retry;
 				}
-
-
 			}
 		}
 		for (int i = 0; i < 2; ++i)

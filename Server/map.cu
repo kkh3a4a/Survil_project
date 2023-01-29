@@ -333,7 +333,7 @@ void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_loc
 	}
 }
 
-class Map
+class Terrain
 {
 private:
 	char** terrain_array_host = new char* [one_side_number];
@@ -346,7 +346,7 @@ private:
 	int origin_num_of_hills;
 
 public:
-	Map()
+	Terrain()
 	{
 		//Make Random Hills Information===================================================
 		clock_t t_0 = clock();
@@ -419,7 +419,7 @@ public:
 
 	}
 
-	~Map()
+	~Terrain()
 	{
 		for (int i = 0; i < one_side_number; i++) {
 			delete[] terrain_array_host[i];

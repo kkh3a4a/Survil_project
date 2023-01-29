@@ -18,7 +18,6 @@ using namespace chrono;
 DWORD WINAPI ProcessClient(LPVOID arg);
 DWORD WINAPI ingame_thread(LPVOID arg);
 
-
 map<int, players_profile*> players_list; //port, player_info
 bool game_start = false;
 int len = 0;
@@ -28,6 +27,9 @@ TF sun_angle;
 
 vector<SOCKET> player_list;
 map <int, Citizen_moving*>citizen_Move;
+
+Terrain terrain;
+char** total_terrain = terrain.get_map();
 
 volatile int player_cnt;
 volatile bool player_location_set = false;
@@ -62,36 +64,27 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	Sleep(500);
 
 	//======================
-	Map map;
-	char** map_host = map.get_map();
-	char** player_sight = map.get_player_sight_map();
+	char** player_sight = terrain.get_player_sight_map();
 	//======================
 
 	while (1)
 	{
-		if (!player_location_set)
-		{
+		if (!player_location_set){
 			continue;
 		}
 		retval = send(client_sock, (char*)&(players_list[port]->player_info), (int)sizeof(FActor), 0);
-		for (int i = 0; i < 10; ++i)
-		{
+		for (int i = 0; i < 10; ++i){
 			cout << i << "//" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
 			retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FActor), 0);
 		}
-		for (auto& a : players_list)
-		{
-			if (port != a.first)
-			{
+		for (auto& a : players_list){
+			if (port != a.first){
 				retval = send(client_sock, (char*)&(a.second->player_info), (int)sizeof(FActor), 0);
-				for (int i = 0; i < 10; ++i)
-				{
+				for (int i = 0; i < 10; ++i){
 					retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FActor), 0);
 				}
 			}
-
 		}
-
 		break;
 	}
 
@@ -115,35 +108,34 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				err_display("send()");
 				break;
 			}
-			for (int playercnts = 0; playercnts < MAXPLAYER; ++playercnts)
-			{
-				for (int i = 0; i < 10; ++i)
-				{
+			for (int playercnts = 0; playercnts < MAXPLAYER; ++playercnts){
+				for (int i = 0; i < 10; ++i){
 					cout << i << ":" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
 					retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FActor), 0);
 				}
 			}
 			
+			//클라이언트로부터 카메라 위치 받아와야 함
+
+			
 			//=======================
-			map.wind_blow({1,1}, 1);
+			terrain.wind_blow({1,1}, 1);
 			II player_location{ one_side_number / 2, one_side_number / 2 };
-			map.copy_for_player_map(player_location);
+			terrain.copy_for_player_map(player_location);
 			//map.show_array(player_sight, player_sight_size);
-			for (int i = 0; i < player_sight_size; ++i)
-			{
+			for (int i = 0; i < player_sight_size; ++i){
 				retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size, 0);
 				if (retval == SOCKET_ERROR) {
 					err_display("send()");
 					break;
 				}
 			}
-			cout << "map 전송" << endl;
+			cout << "terrain 전송" << endl;
 			//========================
 		}
 	}
 
-	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
-		addr, ntohs(clientaddr.sin_port));
+	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
 	closesocket(client_sock);
 
@@ -155,8 +147,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	while(player_cnt != MAXPLAYER);
 
 	player_location_set = player_random_location(players_list, citizen_Move);
-	for (auto& a : players_list)
-	{
+	for (auto& a : players_list){
 		cout << "위치 : " << a.second->player_info.location.x << ", " << a.second->player_info.location.y << endl;
 	}
 
@@ -181,10 +172,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			for (auto& a : players_list) {
 				float distance = 0.0f;
 				int cnt = 0;
-				for (auto& b : a.second->player_citizen)
-				{
-					if (a.second->player_citizen_arrival_location[cnt]->team != -1)
-					{
+				for (auto& b : a.second->player_citizen){
+					if (a.second->player_citizen_arrival_location[cnt]->team != -1){
 						if (location_distance(b->location, a.second->player_citizen_arrival_location[cnt]->location) > 10) {
 							Move_Civil(b->location, a.second->player_citizen_arrival_location[cnt]->location);
 						}
