@@ -128,13 +128,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool first_recv_send = false;
 	
-	int8 terrain_2d_array[map_size];
+	int8 terrain_recv_array[map_size];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FOneArray> terrain_array;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 sands_size {};
+	int32 sands_size {map_size};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<int32> int_array;

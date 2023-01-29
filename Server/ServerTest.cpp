@@ -125,6 +125,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			}
 			
 			//=======================
+			map.wind_blow({1,1}, 1);
 			II player_location{ one_side_number / 2, one_side_number / 2 };
 			map.copy_for_player_map(player_location);
 			//map.show_array(player_sight, player_sight_size);

@@ -138,14 +138,14 @@ void AServer_testing::Tick(float DeltaTime)
 		for (int i = 0; i < map_size; i++)
 		{
 			//terrain_array[i].Empty();
-			ret = recv(s_socket, (char*)&terrain_2d_array, (int)(sizeof(char) * map_size), 0);
+			ret = recv(s_socket, (char*)&terrain_recv_array, (int)(sizeof(char) * map_size), 0);
 			if (SOCKET_ERROR == ret)
 			{
 				return;
 			}
 			for (int j = 0; j < map_size; j++)
 			{
-				terrain_array[i].Add(terrain_2d_array[j]);
+				terrain_array[i].Add(terrain_recv_array[j]);
 				//UE_LOG(LogTemp, Log, TEXT("%d %d %d"), i, j, terrain_array[i][j]);
 				if(int_array[i*map_size+j] != terrain_array[i][j])
 					int_array[i*map_size+j] = (terrain_array[i][j]);
