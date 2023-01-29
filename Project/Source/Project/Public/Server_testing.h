@@ -140,7 +140,6 @@ public:
 	TArray<int32> int_array;
 
 
-
 	/*DWORD WINAPI Angle_Receiver(LPVOID arg);*/
 };
 

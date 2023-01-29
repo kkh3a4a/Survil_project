@@ -14,6 +14,11 @@ AServer_testing::AServer_testing()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+
+	for (int i = 0; i < map_size * map_size; ++i)
+	{
+		int_array.Emplace(1);
+	}
 }
 
 int8 AServer_testing::get_height(int32 x, int32 y)
@@ -142,11 +147,12 @@ void AServer_testing::Tick(float DeltaTime)
 			{
 				terrain_array[i].Add(terrain_2d_array[j]);
 				//UE_LOG(LogTemp, Log, TEXT("%d %d %d"), i, j, terrain_array[i][j]);
-				int_array[i*64+j] = (terrain_array[i][j]);
-				UE_LOG(LogTemp, Log, TEXT("int array[%d] [%d] : %d"), i, j, int_array[i * 64 + j]);
+				if(int_array[i*map_size+j] != terrain_array[i][j])
+					int_array[i*map_size+j] = (terrain_array[i][j]);
+				//UE_LOG(LogTemp, Log, TEXT("int array[%d] [%d] : %d"), i, j, int_array[i * 64 + j]);
 			}
 		}
-
+		UE_LOG(LogTemp, Log, TEXT("terrain_array : %d"),sizeof(terrain_array));
 		sands_size = sqrt(int_array.Num());
 		//UE_LOG(LogTemp, Log, TEXT("int array size : %d\n"), int_array.Num());
 
