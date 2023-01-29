@@ -27,12 +27,13 @@ TF sun_angle;
 
 vector<SOCKET> player_list;
 map <int, Citizen_moving*>citizen_Move;
+map<int, resource_actor*> resource_create_landscape;
 
 Terrain terrain;
 char** total_terrain = terrain.get_map();
 
 volatile int player_cnt;
-volatile bool player_location_set = false;
+volatile bool location_set = false;
 
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
@@ -69,7 +70,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	while (1)
 	{
-		if (!player_location_set){
+		if (!location_set){
 			continue;
 		}
 		retval = send(client_sock, (char*)&(players_list[port]->player_info), (int)sizeof(FActor), 0);
@@ -144,9 +145,11 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
+	
 	while(player_cnt != MAXPLAYER);
 
-	player_location_set = player_random_location(players_list, citizen_Move);
+	player_random_location(players_list, citizen_Move);
+	location_set = create_map_location(resource_create_landscape);
 	for (auto& a : players_list){
 		cout << "À§Ä¡ : " << a.second->player_info.location.x << ", " << a.second->player_info.location.y << endl;
 	}

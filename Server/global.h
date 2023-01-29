@@ -8,7 +8,7 @@
 #include<iostream>
 #define MAXPLAYER 1
 
-std::uniform_int_distribution <int>uid{ -5000, 5000 };
+std::uniform_int_distribution <int>uid{ -10000, 0 };
 
 typedef struct three_float {
 	float x = 0.0f;
@@ -21,6 +21,8 @@ typedef struct FActor_location_rotation {
 	TF location;
 	TF rotation;
 }FActor;
+
+
 
 typedef struct location_rotation
 {
@@ -42,7 +44,15 @@ typedef struct players_profile {
 	FActor player_info;
 	std::vector<FActor*> player_citizen;
 	std::vector<Citizen_moving*> player_citizen_arrival_location;
+	std::chrono::steady_clock::time_point resource_clcok;
 }PP;
+
+typedef struct resource_actor
+{
+	int type;		///////////////0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
+	int count;
+	TF location;
+}resource_actor;
 
 void FActor_TF_define(TF& a, TF& b)
 {
@@ -71,7 +81,7 @@ void Move_Civil(TF& civil, TF& end_location) {
 	civil.z += ((end_location.z - civil.z) / distance) * 20;
 }
 
-bool player_random_location(std::map<int, players_profile*>& players_list, std::map <int, Citizen_moving*>& citizen_Move)
+void player_random_location(std::map<int, players_profile*>& players_list, std::map <int, Citizen_moving*>& citizen_Move)
 {
 	std::default_random_engine dre2;
 	dre2.seed(std::chrono::system_clock::now().time_since_epoch().count());
@@ -110,6 +120,21 @@ bool player_random_location(std::map<int, players_profile*>& players_list, std::
 		}
 	}
 
+
+	//return true;
+}
+
+
+bool create_map_location(std::map<int, resource_actor*>& resource_create_landscape) {
+	
+	for(int i =0;i<5;++i)
+	{
+		resource_actor* temp = new resource_actor;
+		temp->count = 200;
+		temp->type = i;
+		temp->location;
+		resource_create_landscape.insert({ i,temp });
+	}
 
 	return true;
 }
