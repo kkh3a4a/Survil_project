@@ -68,7 +68,8 @@ public:
 	// Sets default values for this actor's properties
 	AServer_testing();
 	
-	int8 get_height(int32, int32);
+	UFUNCTION(BlueprintCallable)
+	int32 get_height(int32 x, int32 y);
 
 protected:
 	// Called when the game starts or when spawned
@@ -131,13 +132,10 @@ public:
 	int8 terrain_recv_array[map_size];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FOneArray> terrain_array;
+	TArray<FOneArray> terrain_2d_array;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int32 sands_size {map_size};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<int32> int_array;
 
 
 	/*DWORD WINAPI Angle_Receiver(LPVOID arg);*/

@@ -14,16 +14,22 @@ AServer_testing::AServer_testing()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
-	for (int i = 0; i < map_size * map_size; ++i)
-	{
-		int_array.Emplace(1);
-	}
 }
 
-int8 AServer_testing::get_height(int32 x, int32 y)
+int32 AServer_testing::get_height(int32 x, int32 y)
 {
-	return terrain_array[x][y];
+	if (x < 0 || x >= map_size || y < 0 || y >= map_size)
+	{
+		return 0;
+	}
+	else if (terrain_2d_array.Num() == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return terrain_2d_array[x][y];
+	}
 }
 
 // Called when the game starts or when spawned
@@ -132,7 +138,7 @@ void AServer_testing::Tick(float DeltaTime)
 		
 		//===================
 		FOneArray temp_array;
-		terrain_array.Init(temp_array, map_size);
+		terrain_2d_array.Init(temp_array, map_size);
 		
 
 		for (int i = 0; i < map_size; i++)
@@ -145,18 +151,9 @@ void AServer_testing::Tick(float DeltaTime)
 			}
 			for (int j = 0; j < map_size; j++)
 			{
-				terrain_array[i].Add(terrain_recv_array[j]);
-				//UE_LOG(LogTemp, Log, TEXT("%d %d %d"), i, j, terrain_array[i][j]);
-				if(int_array[i*map_size+j] != terrain_array[i][j])
-					int_array[i*map_size+j] = (terrain_array[i][j]);
-				//UE_LOG(LogTemp, Log, TEXT("int array[%d] [%d] : %d"), i, j, int_array[i * 64 + j]);
+				terrain_2d_array[i].Add(terrain_recv_array[j]);
 			}
 		}
-		UE_LOG(LogTemp, Log, TEXT("terrain_array : %d"),sizeof(terrain_array));
-		sands_size = sqrt(int_array.Num());
-		//UE_LOG(LogTemp, Log, TEXT("int array size : %d\n"), int_array.Num());
-
-		//UE_LOG(LogTemp, Log, TEXT("map load once"));
 		//=====================
 	}
 
