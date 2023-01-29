@@ -40,6 +40,31 @@ public:
 		Fthree_float rotation;
 };
 
+USTRUCT(Atomic, BlueprintType)
+struct FCitizen_sole {
+	GENERATED_USTRUCT_BODY()
+public:
+	TCHAR name[30];
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		Fthree_float location;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		Fthree_float rotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int resource_type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int resource_count;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int HP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int isJob;
+};
+
 
 USTRUCT(Atomic, BlueprintType)
 struct Fcitizen_struct {
@@ -47,7 +72,7 @@ struct Fcitizen_struct {
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FActor_location_rotation> citizen_location_rotation;
+		TArray<FCitizen_sole> citizen_location_rotation;
 
 };
 
@@ -71,6 +96,19 @@ public:
 	int citizen_number;
 	Fthree_float location;
 	Fthree_float rotation;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct Fresources_actor
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int type;		///////////////0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int count;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	Fthree_float location;
 };
 
 class PROJECT_API global

@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "Server_testing.h"
 #include <math.h>
 #include "MyPlayerController.h"
-#include "Server_testing.h"
+
 #include "Kismet/GameplayStatics.h"
 #include "citizen.h"
 // Sets default values
@@ -65,9 +65,9 @@ void AServer_testing::BeginPlay()
 		citizen.Add(i, temp);
 		for (int j = 0; j < 10; ++j)
 		{
-			recv(s_socket, (char*)&temp_Actor, sizeof(FActor_location_rotation), 0);
+			recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
 
-			FActor_location_rotation citizentemp;
+			FCitizen_sole citizentemp;
 			citizentemp.location.x = temp_Actor.location.x;
 			citizentemp.location.y = temp_Actor.location.y;
 			citizentemp.location.z = temp_Actor.location.z;
@@ -82,11 +82,23 @@ void AServer_testing::BeginPlay()
 	{
 		for (int j = 0; j < 10; ++j)
 		{
-			//UE_LOG(LogTemp, Log, TEXT("%f %f"), a.Value.citizen_location_rotation[j].location.x, a.Value.citizen_location_rotation[j].location.y);
+			UE_LOG(LogTemp, Log, TEXT("%f %f"), a.Value.citizen_location_rotation[j].location.x, a.Value.citizen_location_rotation[j].location.y);
 		}
 	}
+	for (int i = 0; i < MAXPLAYER * 10; ++i)
+	{
+		Fresources_actor temp_resource;
+		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
+		resources_create_landscape.Add(i, temp_resource);
+		resources_create_landscape[i].count = temp_resource.count;
+		resources_create_landscape[i].type = temp_resource.type;
+		resources_create_landscape[i].location.x = temp_resource.location.x;
+		resources_create_landscape[i].location.y = temp_resource.location.y;
+	}
+
 
 	first_recv_send = true;
+
 
 	UE_LOG(LogTemp, Log, TEXT("connected to server"));
 	start_t = high_resolution_clock::now();
@@ -119,7 +131,7 @@ void AServer_testing::Tick(float DeltaTime)
 		for (int i = 0; i < MAXPLAYER; ++i) {
 			for (int j = 0; j < 10; ++j)
 			{
-				recv(s_socket, (char*)&temp_Actor, sizeof(FActor_location_rotation), 0);
+				recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
 
 				citizen[i].citizen_location_rotation[j].location.x = temp_Actor.location.x;
 				citizen[i].citizen_location_rotation[j].location.y = temp_Actor.location.y;

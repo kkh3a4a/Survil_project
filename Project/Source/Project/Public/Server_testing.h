@@ -89,10 +89,13 @@ public:
 	TMap<int, Fcitizen_struct> citizen;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FActor_location_rotation temp_Actor;
+		FCitizen_sole temp_Actor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<int, FAActor_struct> My_Citizen;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int, Fresources_actor> resources_create_landscape;
 
 	int My_Citizen_Num = 0;
 

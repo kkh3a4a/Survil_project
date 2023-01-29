@@ -8,8 +8,8 @@
 #include<iostream>
 #define MAXPLAYER 1
 
-std::uniform_int_distribution <int>uid{ -10000, 0 };
-
+std::uniform_int_distribution <int>uid{ -10000, -3000 };
+std::uniform_int_distribution <int>resource_uid{ -1000, 1000 };
 typedef struct three_float {
 	float x = 0.0f;
 	float y = 0.0f;
@@ -20,9 +20,18 @@ typedef struct FActor_location_rotation {
 	TCHAR name[30];
 	TF location;
 	TF rotation;
+	
 }FActor;
 
-
+typedef struct FCitizen_sole {
+	TCHAR name[30];
+	TF location;
+	TF rotation;
+	int resource_type;
+	int resource_count;
+	int HP;
+	int isJob;
+}FCitizen_sole;
 
 typedef struct location_rotation
 {
@@ -42,9 +51,10 @@ typedef struct Citizen_moving
 typedef struct players_profile {
 	int port;
 	FActor player_info;
-	std::vector<FActor*> player_citizen;
+	std::vector<FCitizen_sole*> player_citizen;
 	std::vector<Citizen_moving*> player_citizen_arrival_location;
 	std::chrono::steady_clock::time_point resource_clcok;
+	int resources[5] = {};
 }PP;
 
 typedef struct resource_actor
@@ -105,12 +115,13 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 		{
 			for (int j = 0; j < 5; ++j)
 			{
-				FActor* temp = new FActor;
+				FCitizen_sole* temp = new FCitizen_sole;
 				Citizen_moving* temp_citizen_move = new Citizen_moving;
 				temp->location.x = a.second->player_info.location.x + i * 500 + 2000;
 				temp->location.y = a.second->player_info.location.y + j * 500 - 500;
 				temp_citizen_move->location.x = temp->location.x;
 				temp_citizen_move->location.y = temp->location.y;
+				temp->resource_count = 0;
 				a.second->player_citizen.emplace_back(temp);
 				a.second->player_citizen_arrival_location.emplace_back(temp_citizen_move);
 
@@ -125,16 +136,68 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 }
 
 
-bool create_map_location(std::map<int, resource_actor*>& resource_create_landscape) {
+bool create_map_location(std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape) {
 	
-	for(int i =0;i<5;++i)
+	int cnt = 0;
+	std::default_random_engine dre2;
+	for (auto& a : players_list)
 	{
-		resource_actor* temp = new resource_actor;
-		temp->count = 200;
-		temp->type = i;
-		temp->location;
-		resource_create_landscape.insert({ i,temp });
+
+		for (int i = 0; i < 10; ++i)
+		{
+			resource_actor* temp = new resource_actor;
+			temp->count = 200;
+			temp->type = i;
+			temp->location.x = a.second->player_info.location.x + resource_uid(dre2)*5;
+			temp->location.y = a.second->player_info.location.y + resource_uid(dre2)*5;
+			resource_create_landscape.insert({ cnt * 10+ i,temp });
+		}
+		cnt++;
 	}
 
 	return true;
+}
+
+void resource_collect(std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape) {
+	
+	for (auto& a : players_list)
+	{
+		int cnt = 0;
+		for (auto& citizens : a.second->player_citizen)
+		{
+			for (auto& resources : resource_create_landscape)
+			{
+				
+				if (location_distance(citizens->location, resources.second->location) < 800)
+				{
+					if (citizens->resource_type != -1 && citizens->resource_count < 10)
+					{
+						citizens->resource_type = resources.second->type;
+						citizens->resource_count++;
+						resources.second->count--;
+						
+					}
+				}
+				if (citizens->resource_count >= 10)
+				{
+					
+					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
+					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y + 1500;
+				}
+				if (location_distance(citizens->location, a.second->player_info.location) < 1500)
+				{
+					if(citizens->resource_type != -1)
+					{
+						a.second->resources[citizens->resource_type] += citizens->resource_count;
+						citizens->resource_count = 0;
+						citizens->resource_type = -1;
+					}
+
+				}
+			}
+			cnt++;
+		}
+
+
+	}
 }

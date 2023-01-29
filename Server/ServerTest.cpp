@@ -76,16 +76,21 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		retval = send(client_sock, (char*)&(players_list[port]->player_info), (int)sizeof(FActor), 0);
 		for (int i = 0; i < 10; ++i){
 			cout << i << "//" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
-			retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FActor), 0);
+			retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 		}
 		for (auto& a : players_list){
 			if (port != a.first){
 				retval = send(client_sock, (char*)&(a.second->player_info), (int)sizeof(FActor), 0);
 				for (int i = 0; i < 10; ++i){
-					retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FActor), 0);
+					retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 				}
 			}
 		}
+		for (auto& a : resource_create_landscape)
+		{
+			retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
+		}
+
 		break;
 	}
 
@@ -112,7 +117,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			for (int playercnts = 0; playercnts < MAXPLAYER; ++playercnts){
 				for (int i = 0; i < 10; ++i){
 					cout << i << ":" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
-					retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FActor), 0);
+					retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 				}
 			}
 			
@@ -145,12 +150,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
-	
-	while(player_cnt != MAXPLAYER);
+
+	while (player_cnt != MAXPLAYER);
 
 	player_random_location(players_list, citizen_Move);
-	location_set = create_map_location(resource_create_landscape);
-	for (auto& a : players_list){
+	location_set = create_map_location(players_list, resource_create_landscape);
+	for (auto& a : players_list) {
 		cout << "À§Ä¡ : " << a.second->player_info.location.x << ", " << a.second->player_info.location.y << endl;
 	}
 
@@ -175,8 +180,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			for (auto& a : players_list) {
 				float distance = 0.0f;
 				int cnt = 0;
-				for (auto& b : a.second->player_citizen){
-					if (a.second->player_citizen_arrival_location[cnt]->team != -1){
+				for (auto& b : a.second->player_citizen) {
+					if (a.second->player_citizen_arrival_location[cnt]->team != -1) {
 						if (location_distance(b->location, a.second->player_citizen_arrival_location[cnt]->location) > 10) {
 							Move_Civil(b->location, a.second->player_citizen_arrival_location[cnt]->location);
 						}
@@ -185,6 +190,12 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				}
 			}
 		}
+		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 500) {
+			actor_move_start_t = high_resolution_clock::now();
+			resource_collect(players_list, resource_create_landscape);
+			
+		}
+		
 	}
 	return 0;
 }
