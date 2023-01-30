@@ -9,7 +9,7 @@
 #define MAXPLAYER 1
 
 std::uniform_int_distribution <int>uid{ -10000, -3000 };
-std::uniform_int_distribution <int>resource_uid{ -1000, 1000 };
+std::uniform_int_distribution <int>resource_uid{ -1001, 1001 };
 typedef struct three_float {
 	float x = 0.0f;
 	float y = 0.0f;
@@ -86,9 +86,9 @@ void Move_Civil(TF& civil, TF& end_location) {
 	float distance;
 	distance = location_distance(civil, end_location);
 
-	civil.x += ((end_location.x - civil.x) / distance) * 20;
-	civil.y += ((end_location.y - civil.y) / distance) * 20;
-	civil.z += ((end_location.z - civil.z) / distance) * 20;
+	civil.x += ((end_location.x - civil.x) / distance) * 21;
+	civil.y += ((end_location.y - civil.y) / distance) * 21;
+	civil.z += ((end_location.z - civil.z) / distance) * 21;
 }
 
 void player_random_location(std::map<int, players_profile*>& players_list, std::map <int, Citizen_moving*>& citizen_Move)
@@ -122,6 +122,7 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 				temp_citizen_move->location.x = temp->location.x;
 				temp_citizen_move->location.y = temp->location.y;
 				temp->resource_count = 0;
+				temp->resource_type = -1;
 				a.second->player_citizen.emplace_back(temp);
 				a.second->player_citizen_arrival_location.emplace_back(temp_citizen_move);
 
@@ -170,7 +171,7 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 				
 				if (location_distance(citizens->location, resources.second->location) < 800)
 				{
-					if (citizens->resource_type != -1 && citizens->resource_count < 10)
+					if (citizens->resource_count < 10)
 					{
 						citizens->resource_type = resources.second->type;
 						citizens->resource_count++;
@@ -184,7 +185,7 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
 					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y + 1500;
 				}
-				if (location_distance(citizens->location, a.second->player_info.location) < 1500)
+				if (location_distance(citizens->location, a.second->player_info.location) < 1600)
 				{
 					if(citizens->resource_type != -1)
 					{
