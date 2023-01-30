@@ -20,11 +20,11 @@ int32 AServer_testing::get_height(int32 x, int32 y)
 {
 	if (x < 0 || x >= map_size || y < 0 || y >= map_size)
 	{
-		return 0;
+		return 1;
 	}
 	else if (terrain_2d_array.Num() == 0)
 	{
-		return 0;
+		return 1;
 	}
 	else
 	{
