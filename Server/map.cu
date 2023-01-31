@@ -13,7 +13,7 @@
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 128;	//39936
+const int one_side_number = 640;	//39936
 const int player_sight_size = 64;	//1024 넘으면 안됨
 
 const int max_height = 8;
@@ -23,24 +23,20 @@ typedef struct two_int {
 	int x;
 	int y;
 } II;
-
 typedef struct two_char {
 	int x;
 	int y;
 } CC;
-
 typedef struct two_float {
 	float x;
 	float y;
 } FF;
-
 typedef struct hill_info {
 	int x;
 	int y;
 	int radius;
 	int height;
 } HI;
-
 typedef struct compare_block {
 	II middle;
 	II up;
@@ -51,7 +47,7 @@ typedef struct compare_block {
 
 random_device rd;
 default_random_engine dre(rd());
-uniform_int_distribution <int>hills_location(0, one_side_number);
+uniform_int_distribution <int>terrain_distance(0, one_side_number - 1);
 uniform_int_distribution <int>number_of_hills_uid(one_side_number / 10, one_side_number / 10);
 uniform_int_distribution <int>hill_size_uid(one_side_number / 20, one_side_number / 10);
 uniform_int_distribution <int>height_uid(5, max_height);
@@ -60,53 +56,37 @@ uniform_int_distribution <int>wind_speed_uid(0, 50);
 uniform_int_distribution <int>wind_angle_uid(0, 360);
 
 __global__
-void make_hills_cuda(char** terrain_array_device, HI* hill_location_device, int hill_number)
+void make_hills_cuda(char** terrain_array_device, HI* hill_location_device, int num_of_hills)
 {
 	II terrain;
 	terrain.x = blockIdx.x * blockDim.x + threadIdx.x;
 	terrain.y = blockIdx.y * blockDim.y + threadIdx.y;
 	HI hill;
 	int distance;
-	//printf("%d %d %d\n", terrain.x, terrain.y, i);
-	//terrain_array_device[terrain.x][terrain.y] = base_floor;
-	for (int i = 0; i < hill_number; i++) {
-		//원래 언덕 채우기
-		hill.x = hill_location_device[i].x;
-		hill.y = hill_location_device[i].y;
-		hill.radius = hill_location_device[i].radius;
-		hill.height = hill_location_device[i].height;
-		distance = sqrt(pow(terrain.y - hill.y, 2) + pow(terrain.x - hill.x, 2));
 
-		if (distance <= hill.radius) {
-			terrain_array_device[terrain.x][terrain.y] += (hill.height) * (hill.radius - distance) / hill.radius;
-			return;
-		}
+	if (terrain.x % 5 == 0 && terrain.y % 5 == 0) {
+		terrain_array_device[terrain.x][terrain.y] += 4;
 	}
-	
-	
-	////int id = threadIdx.x + blockIdx.x * blockDim.x;
-	//int my_hill = threadIdx.x;
-	//int my_y = blockIdx.x;
-	//int hill_location_x = hill_location_device[my_hill].x;
-	//int hill_location_y = hill_location_device[my_hill].y;
-	//int radius = hill_location_device[my_hill].radius;
-	//int height = hill_location_device[my_hill].height;
-	//int distance{};
-	//for (int x = 0; x < one_side_number; x++) {
-	//	if (x < 0 || x >= one_side_number)
-	//		continue;
-	//	distance = sqrt(pow(x - hill_location_x, 2) + pow(my_y - hill_location_y, 2));
-	//	if (distance <= radius) {
-	//		terrain_array_device[x][my_y] = (height - 1) * (radius - distance) / radius;
-	//		if (terrain_array_device[x][my_y] > max_height) {
-	//			terrain_array_device[x][my_y] = max_height;
-	//		}
+
+
+	//terrain_array_device[terrain.x][terrain.y] = base_floor;
+	//for (int i = 0; i < num_of_hills; i++) {
+	//	//원래 언덕 채우기
+	//	hill.x = hill_location_device[i].x;
+	//	hill.y = hill_location_device[i].y;
+	//	hill.radius = hill_location_device[i].radius;
+	//	hill.height = hill_location_device[i].height;
+	//	distance = sqrt(pow(terrain.y - hill.y, 2) + pow(terrain.x - hill.x, 2));
+
+	//	if (distance <= hill.radius) {
+	//		terrain_array_device[terrain.x][terrain.y] += (hill.height) * (hill.radius - distance) / hill.radius;
+	//		return;
 	//	}
 	//}
 }
 
 __global__
-void terrain_change_cuda(char** terrain_array_device, int height)
+void terrain_corrosion_cuda(char** terrain_array_device, int height)
 {
 	//바람이 불면 그쪽으로 이동하게끔 수정해야 함
 	//아니면 바람으로 인한 함수 따로 만들어서 중복으로 했을 때 어떤지 확인
@@ -131,11 +111,24 @@ void terrain_change_cuda(char** terrain_array_device, int height)
 	terrain[7] = { terrain[0].x + 1, terrain[0].y - 1 };	//up right
 	terrain[8] = { terrain[0].x + 1, terrain[0].y + 1 };	//down right
 
+	//상하좌우 연결
+	for (int i = 0; i < block_num; i++) {
+		if (terrain[i].x < 0) {
+			terrain[i].x += one_side_number;
+		}
+		if (terrain[i].x >= one_side_number) {
+			terrain[i].x -= one_side_number;
+		}
+		if (terrain[i].y < 0) {
+			terrain[i].y += one_side_number;
+		}
+		if (terrain[i].y >= one_side_number) {
+			terrain[i].y -= one_side_number;
+		}
+	}
+
 	int height_difference = 0;
 	for (int i = 1; i < block_num; i++) {	//주변 블럭들의 높이 차이를 구함
-		if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
-			continue;
-		}
 		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] > height_difference) {
 			height_difference = terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y];
 		}
@@ -147,10 +140,6 @@ void terrain_change_cuda(char** terrain_array_device, int height)
 
 	int num_of_lowest{};
 	for (int i = 1; i < block_num; i++) {
-		if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
-			num_of_lowest++;
-			continue;
-		}
 		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {
 			num_of_lowest++;
 		}
@@ -158,9 +147,6 @@ void terrain_change_cuda(char** terrain_array_device, int height)
 
 	if (num_of_lowest == 1) {	//가장 낮은 높이가 하나면 거기로 이동
 		for (int i = 1; i < block_num; i++) {
-			if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
-				continue;
-			}
 			if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {
 				terrain_array_device[terrain[i].x][terrain[i].y]++;
 				terrain_array_device[terrain[0].x][terrain[0].y]--;
@@ -175,14 +161,7 @@ void terrain_change_cuda(char** terrain_array_device, int height)
 	char thread_seed = (terrain[0].x + terrain[0].y + abs(terrain[0].x + terrain[0].y * height)) % num_of_lowest;	//random seed made by myself
 	int iter = 0;
 	for (int i = 0; i < block_num; i++) {
-		if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
-			if (thread_seed == iter) {	//랜덤으로 선택된 블럭으로 이동
-				terrain_array_device[terrain[0].x][terrain[0].y]--;
-				return;
-			}
-			iter++;
-		}
-		else if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {	//가장 낮은 높이가 여러개면 랜덤으로 하나 선택
+		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {	//가장 낮은 높이가 여러개면 랜덤으로 하나 선택
 			if (thread_seed == iter) {	//랜덤으로 선택된 블럭으로 이동
 				terrain_array_device[terrain[i].x][terrain[i].y]++;
 				terrain_array_device[terrain[0].x][terrain[0].y]--;
@@ -200,40 +179,66 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 	II terrain[5];
 	terrain[0].x = blockIdx.x * blockDim.x + threadIdx.x;	//middle
 	terrain[0].y = blockIdx.y * blockDim.y + threadIdx.y;
-	
+
 	terrain[1].x = terrain[0].x + wind_direction.x;			//forward
 	terrain[1].y = terrain[0].y + wind_direction.y;
+
+	//if (wind_direction.x == 0 || wind_direction.y == 0) {	//수직일때
+		terrain[2].x = terrain[1].x + wind_direction.y;			//forward left
+		terrain[2].y = terrain[1].y - wind_direction.x;
 	
-	terrain[2].x = terrain[1].x + wind_direction.y;			//forward left
-	terrain[2].y = terrain[1].y - wind_direction.x;
-	
-	terrain[3].x = terrain[1].x - wind_direction.y;			//forward right
-	terrain[3].y = terrain[1].y + wind_direction.x;
-	
+		terrain[3].x = terrain[1].x - wind_direction.y;			//forward right
+		terrain[3].y = terrain[1].y + wind_direction.x;
+	//}
+	//else {													//사선일때
+	//	if (wind_direction.x == wind_direction.y) {	
+	//		terrain[2].x = terrain[0].x + wind_direction.x;
+	//		terrain[2].y = terrain[0].y;
+	//		
+	//		terrain[3].x = terrain[0].x;			
+	//		terrain[3].y = terrain[0].y + wind_direction.y;
+	//	}
+	//	else {										
+	//		terrain[2].x = terrain[0].x;
+	//		terrain[2].y = terrain[0].y - wind_direction.y;
+	//		
+	//		terrain[3].x = terrain[0].x - wind_direction.x;			
+	//		terrain[3].y = terrain[0].y;
+	//	}
+	//}
+
 	terrain[4].x = terrain[0].x - wind_direction.x;			//back
 	terrain[4].y = terrain[0].y - wind_direction.y;
-
-	//printf("M: %d %d,,, L: %d %d, F: %d %d, R: %d %d, B: %d %d\n", terrain[0].x, terrain[0].y, terrain[2].x, terrain[2].y, terrain[1].x, terrain[1].y, terrain[3].x, terrain[3].y, terrain[4].x, terrain[4].y);
+	
+	//지형 상하좌우 연결
+	for (int i = 0; i < 5; i++) {
+		if (terrain[i].x < 0 ) {
+			terrain[i].x += one_side_number;
+		}
+		if (terrain[i].x >= one_side_number) {
+			terrain[i].x -= one_side_number;
+		}
+		if (terrain[i].y < 0) {
+			terrain[i].y += one_side_number;
+		}
+		if (terrain[i].y >= one_side_number) {
+			terrain[i].y -= one_side_number;
+		}
+	}
 
 	if (terrain_array_device[terrain[0].x][terrain[0].y] <= base_floor) {	//base floor 보다 작으면 더이상 낮추면 안됨
 		return;
 	}
-	if (terrain[4].x >= 0 && terrain[4].x < one_side_number && terrain[4].y >= 0 && terrain[4].y < one_side_number) {	//i번째 블럭이 맵 외부일때
-		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[4].x][terrain[4].y] <= 0) {	//후방 블럭이 현 블럭보다 같거나 높을 경우 바람의 영향을 박지 않음
-			return;
-		}
+	//이거때문에 간격이 좁아짐
+	if (terrain_array_device[terrain[0].x][terrain[0].y] > base_floor && terrain_array_device[terrain[0].x][terrain[0].y] == terrain_array_device[terrain[4].x][terrain[4].y] && terrain_array_device[terrain[0].x][terrain[0].y] == terrain_array_device[terrain[1].x][terrain[1].y]) {	//길게 늘어나는 교착상태 제거
+		
 	}
-
-	if (terrain[1].x < 0 || terrain[1].x >= one_side_number || terrain[1].y < 0 || terrain[1].y >= one_side_number) {	//전방 블럭이 외부일때 걍 전방으로 보냄
-		terrain_array_device[terrain[0].x][terrain[0].y]--;
+	else if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[4].x][terrain[4].y] <= 0) {	//후방 블럭이 현 블럭보다 같거나 높을 경우 바람의 영향을 박지 않음
 		return;
 	}
 
 	int height_difference = -10000;
 	for (int i = 1; i < 4; i++) {
-		if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
-			continue;
-		}
 		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y]  > height_difference) {
 			height_difference = terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y];	//i블럭와 0블럭의 높이 차이
 		}
@@ -244,47 +249,50 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 
 	int num_of_lowest{};
 	for (int i = 1; i < 4; i++) {
-		if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
-			continue;
-		}
 		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {	//최저 높이 동일 몇개인지
 			num_of_lowest++;
 		}
 	}
+
 	if (num_of_lowest == 0)
 		return; {
 	}
-	if (num_of_lowest == 1) {	//최저높이가 하나일 경우 그리로 감
+	//최저높이가 하나일 경우 그리로 감
+	if (num_of_lowest == 1) {	
 		for (int i = 1; i < 4; i++) {
-			if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
-				continue;
-			}
 			if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {
-				terrain_array_device[terrain[i].x][terrain[i].y]++;
-				terrain_array_device[terrain[0].x][terrain[0].y]--;
+				--terrain_array_device[terrain[0].x][terrain[0].y];
+				++terrain_array_device[terrain[i].x][terrain[i].y];
 				return;
 			}
 		}
 	}
 	
-	if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[1].x][terrain[1].y] == height_difference) {		//전방 블럭이 최저 높이일때 최저높이 블럭이 몇개든 전방으로 보냄
-		terrain_array_device[terrain[0].x][terrain[0].y]--;
-		terrain_array_device[terrain[1].x][terrain[1].y]++;
+	//최저높이가 여러개 일 때, 전방 블럭이 최저 높이이면 전방으로 보냄
+	if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[1].x][terrain[1].y] == height_difference) {		
+		--terrain_array_device[terrain[0].x][terrain[0].y];
+		++terrain_array_device[terrain[1].x][terrain[1].y];
 		return;
 	}
-	//printf("%d\n", (terrain[0].x + terrain[0].y )% num_of_lowest);
+
 	int radom_seed = (terrain[0].x + terrain[0].y) % num_of_lowest + 2;
 	for (int i = 2; i <= 3; i++) {		//왼 오 둘중 하나로 랜덤 이동
 		if (radom_seed == i) {
-			//printf("%d\n", i);
-			if (terrain[i].x < 0 || terrain[i].x >= one_side_number || terrain[i].y < 0 || terrain[i].y >= one_side_number) {	//i번째 블럭이 맵 외부일때
-				terrain_array_device[terrain[0].x][terrain[0].y]--;
-				return;
-			}
-			terrain_array_device[terrain[0].x][terrain[0].y]--;
-			terrain_array_device[terrain[i].x][terrain[i].y]++;
-			return;
+			--terrain_array_device[terrain[0].x][terrain[0].y];
+			++terrain_array_device[terrain[i].x][terrain[i].y];
+			return; 
 		}
+	}
+}
+
+__global__
+void add_scarce_cuda(char** terrain_array_device, int scarce_blocks) {
+	int x = blockIdx.x * blockDim.x + threadIdx.x;
+	int y = blockIdx.y * blockDim.y + threadIdx.y;
+	int interval = sqrt((double)(one_side_number * one_side_number / scarce_blocks));
+	//printf("%d\n", interval);
+	if (x % interval == interval - 1 && y % interval == interval - 1) {
+		terrain_array_device[x][y]++;
 	}
 }
 
@@ -341,10 +349,8 @@ private:
 	char* terrain_array_temp[one_side_number];
 
 	char** terrain_player_sight_host = new char* [player_sight_size];
-
-	int num_of_hills;
-	int origin_num_of_hills;
-
+	unsigned __int64 init_total_hill_height = 0;
+	
 public:
 	Terrain()
 	{
@@ -356,8 +362,7 @@ public:
 		hill_location_host = new HI[4000];
 		hill_location_device;
 		cudaMalloc((void**)&hill_location_device, 4000 * sizeof(HI));
-		num_of_hills = make_hill_location(hill_location_host);
-		origin_num_of_hills = num_of_hills;
+		int num_of_hills = make_hill_location(hill_location_host);
 		cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
 		printf("Random Hill Info Complete\n");
 		for (int i = 0; i < num_of_hills; i++) {
@@ -372,7 +377,7 @@ public:
 		}
 		for (int i = 0; i < one_side_number; i++) {
 			for (int j = 0; j < one_side_number; j++) {
-				terrain_array_host[i][j] = 1;
+				terrain_array_host[i][j] = height_uid(dre) - 4;			//언덕 생성 안하고 랜덤으로 생성
 			}
 		}
 		cudaMalloc((void**)&terrain_array_device, one_side_number * sizeof(char*));
@@ -399,24 +404,24 @@ public:
 
 		//Make Hills===================================================
 		clock_t t_3 = clock();
-		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
+		/*dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		make_hills_cuda << <grid, block >> > (terrain_array_device, hill_location_device, num_of_hills);
-		//make_hills_cuda << <one_side_number, num_of_hills >> > (terrain_array_device, hill_location_device);
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}
-		printf("Terrain Generation Complete\n");
+		}*/
+
 		clock_t  t_4 = clock();
+		init_total_hill_height = add_all();
 
 		cout << "Terrain size : " << one_side_number << " * " << one_side_number << endl;
 		cout << "Terrain Array Size : " << one_side_number * one_side_number * sizeof(char) << " Bytes" << endl;
 		cout << "Make Random Hills Information : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 		cout << "Terrain Memory Assignement : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
 		cout << "Terrain Memory Assignment For Player's Sight : " << (double)(t_3 - t_2) / CLOCKS_PER_SEC << " sec" << endl;
-		cout << "Make Hills : " << (double)(t_4 - t_3) / CLOCKS_PER_SEC << " sec" << endl;
+		cout << "Make Hills (GPU) : " << (double)(t_4 - t_3) / CLOCKS_PER_SEC << " sec" << endl;
+		//cout << "Make Hills (CPU) : " << (double)(t_6 - t_5) / CLOCKS_PER_SEC << " sec" << endl;
 		cout << endl;
-
 	}
 
 	~Terrain()
@@ -431,6 +436,39 @@ public:
 		delete[] terrain_player_sight_host;
 		cudaFree(terrain_array_temp);
 		cudaFree(terrain_array_device);
+	}
+	
+	void make_hills_cpu(char** terrain_array_host, HI* hill_location_host, int hill_number)
+	{
+		II terrain;
+		HI hill;
+		int distance;
+		for (int i = 0; i < one_side_number; i++) {
+			terrain.y = i;
+			for (int j = 0; j < one_side_number; j++) {
+				terrain.x = j;
+				
+				//printf("%d %d %d\n", terrain.x, terrain.y, i);
+				//terrain_array_device[terrain.x][terrain.y] = base_floor;
+				for (int k = 0; k < hill_number; k++) {
+					//원래 언덕 채우기
+					hill.x = hill_location_host[k].x;
+					hill.y = hill_location_host[k].y;
+					hill.radius = hill_location_host[k].radius;
+					hill.height = hill_location_host[k].height;
+					distance = sqrt(pow(terrain.y - hill.y, 2) + pow(terrain.x - hill.x, 2));
+					//cout << distance << endl;
+
+					if (distance <= hill.radius) {
+						//cout << hill.x << " " << hill.y << endl;
+
+						terrain_array_host[terrain.x][terrain.y] += (hill.height) * (hill.radius - distance) / hill.radius;
+					}
+				}
+			}
+		}
+
+
 	}
 	
 	CC get_highest_lowest()
@@ -454,7 +492,7 @@ public:
 		return value;
 	}
 
-	void terrain_change()
+	void terrain_corrosion()
 	{
 		clock_t t_0 = clock();
 		CC hi_low = get_highest_lowest();
@@ -462,7 +500,7 @@ public:
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		for (int height = hi_low.x; height > hi_low.y; height--) {
-			terrain_change_cuda << <grid, block >> > (terrain_array_device, height);
+			terrain_corrosion_cuda << <grid, block >> > (terrain_array_device, height);
 		}
 		
 		for (int i = 0; i < one_side_number; i++) {
@@ -473,12 +511,43 @@ public:
 		cout << "Terrain Flatten : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
+	void add_scarce()
+	{
+		clock_t t_0 = clock();
+	
+		int scarce_blocks = init_total_hill_height - add_all();
+		if (scarce_blocks <= 0) {
+			return;
+		}
+		cout<< "scarce_blocks: " << scarce_blocks << endl;
+		for (int i = 0; i < scarce_blocks; i++) {
+			int x = terrain_distance(dre);
+			int y = terrain_distance(dre);
+			terrain_array_host[x][y] += 1;
+		}
+		
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
+		}
+		//cuda사용해서 부족한만큼 랜덤으로 생성하게 해야함
+		/*dim3 grid(one_side_number / 32, one_side_number / 32, 1);
+		dim3 block(32, 32, 1);
+		add_scarce_cuda << <grid, block >> > (terrain_array_device, scarce_blocks);
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+		}*/
+		
+		clock_t t_1 = clock();
+		scarce_blocks = init_total_hill_height - add_all();
+		cout << "after_add_blocks: " << scarce_blocks << endl;
+
+		cout << "Add Scarce : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+	}
+
 	void wind_blow(II wind_direction, int wind_speed)
 	{
 		clock_t t_0 = clock();
-		//1m 이동이면 블럭 4칸이니, 풍향을 90도 단위로 주되, 여러 방향을 여러번 적용시켜서 원하는 풍향에 맞춘다.
-		//만약 3번 왼쪽으로 주고 1번 위로 주면, 이동거리는 1m이고, 풍향은 25도가 된다.
-		//2차원 배열이라, 정확하진 않지만 근삿값은 됨.
+		
 		
 		/*FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
 		if (abs(wind_direction.x) < FLT_EPSILON) {
@@ -489,30 +558,32 @@ public:
 		}*/
 
 		
-		
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
-		wind_blow_cuda << <grid, block >> > (terrain_array_device, wind_direction);
-		for (int i = 0; i < one_side_number; i++) {
-			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+		for (int i = 0; i < wind_speed; i++) {
+			wind_blow_cuda << <grid, block >> > (terrain_array_device, wind_direction);
+			for (int i = 0; i < one_side_number; i++) {
+				cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+			}
+			add_scarce();
 		}
+		
 		clock_t t_1 = clock();
 		cout << "Wind Blow : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 	
-	void add_all()
+	unsigned __int64 add_all()
 	{
 		clock_t t_0 = clock();
-		unsigned int all = 0;
+		unsigned __int64 all = 0;
 		for (int i = 0; i < one_side_number; i++) {
 			for (int j = 0; j < one_side_number; j++) {
 				all += terrain_array_host[i][j];
 			}
 		}
-
 		clock_t t_1 = clock();
-		cout << all << endl;
-		cout << "Terrain Add All : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		//cout << "Terrain Add All : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		return all;
 	}
 	
 	void show_array(char** terrain_array_host, int size)
@@ -636,12 +707,12 @@ public:
 
 	int make_hill_location(HI* hill_location_host)
 	{
-		num_of_hills = number_of_hills_uid(dre);
+		int num_of_hills = number_of_hills_uid(dre);
 		cout << "expected num of hills: " << num_of_hills << endl;
 
 		for (int i = 0; i < num_of_hills; i++) {
-			hill_location_host[i].x = hills_location(dre);
-			hill_location_host[i].y = hills_location(dre);
+			hill_location_host[i].x = terrain_distance(dre);
+			hill_location_host[i].y = terrain_distance(dre);
 			hill_location_host[i].radius = hill_size_uid(dre);
 			hill_location_host[i].height = height_uid(dre);
 		}
@@ -658,28 +729,28 @@ public:
 				}
 			}
 		}
-		//for (int i = 0; i < num_of_hills; i++) {
-		//	if (hill_location_host[i].x - hill_location_host[i].radius < 0) {
-		//		num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-		//		--i;
-		//		continue;
-		//	}
-		//	else if (hill_location_host[i].x + hill_location_host[i].radius >= one_side_number) {
-		//		num_of_hills = delete_array (hill_location_host, i, num_of_hills);
-		//		--i;
-		//		continue;
-		//	}
-		//	else if (hill_location_host[i].y - hill_location_host[i].radius < 0) {
-		//		num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-		//		--i;
-		//		continue;
-		//	}
-		//	else if (hill_location_host[i].y + hill_location_host[i].radius >= one_side_number) {
-		//		num_of_hills = delete_array(hill_location_host, i, num_of_hills);
-		//		--i;
-		//		continue;
-		//	}
-		//}
+		/*for (int i = 0; i < num_of_hills; i++) {
+			if (hill_location_host[i].x - hill_location_host[i].radius < 0) {
+				num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+				--i;
+				continue;
+			}
+			else if (hill_location_host[i].x + hill_location_host[i].radius >= one_side_number) {
+				num_of_hills = delete_array (hill_location_host, i, num_of_hills);
+				--i;
+				continue;
+			}
+			else if (hill_location_host[i].y - hill_location_host[i].radius < 0) {
+				num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+				--i;
+				continue;
+			}
+			else if (hill_location_host[i].y + hill_location_host[i].radius >= one_side_number) {
+				num_of_hills = delete_array(hill_location_host, i, num_of_hills);
+				--i;
+				continue;
+			}
+		}*/
 		cout << "real num of hills: " << num_of_hills << endl;
 		return num_of_hills;
 	}
@@ -691,8 +762,8 @@ public:
 			hill_location_host[num_of_hills].radius = hill_size_uid(dre);
 			hill_location_host[num_of_hills].height = height_uid(dre);
 
-			hill_location_host[num_of_hills].x = hills_location(dre);
-			hill_location_host[num_of_hills].y = hills_location(dre);
+			hill_location_host[num_of_hills].x = terrain_distance(dre);
+			hill_location_host[num_of_hills].y = terrain_distance(dre);
 
 			while (1) {
 				hill_location_host[num_of_hills].x -= wind_direction.x * wind_speed;
@@ -725,8 +796,8 @@ public:
 						hill_location_host[num_of_hills].radius = hill_size_uid(dre);
 						hill_location_host[num_of_hills].height = height_uid(dre);
 
-						hill_location_host[num_of_hills].x = hills_location(dre);
-						hill_location_host[num_of_hills].y = hills_location(dre);
+						hill_location_host[num_of_hills].x = terrain_distance(dre);
+						hill_location_host[num_of_hills].y = terrain_distance(dre);
 
 						while (1) {
 							hill_location_host[num_of_hills].x -= wind_direction.x * wind_speed;
@@ -749,7 +820,6 @@ public:
 						collide_iter++;
 					}
 				}
-
 			}
 			cout << " 최종: " << num_of_hills << " " << hill_location_host[num_of_hills].x << " " << hill_location_host[num_of_hills].y << " " << hill_location_host[num_of_hills].radius << " " << hill_location_host[num_of_hills].height << endl << endl;
 			num_of_hills++;

@@ -126,6 +126,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			
 			//=======================
 			terrain.wind_blow({1,1}, 1);
+			terrain.add_scarce();
 			II player_location{ one_side_number / 2, one_side_number / 2 };
 			terrain.copy_for_player_map(player_location);
 			//map.show_array(player_sight, player_sight_size);
@@ -150,7 +151,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
-
 	while (player_cnt != MAXPLAYER);
 
 	player_random_location(players_list, citizen_Move);
@@ -193,16 +193,21 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 500) {
 			actor_move_start_t = high_resolution_clock::now();
 			resource_collect(players_list, resource_create_landscape);
-			
 		}
-		
 	}
 	return 0;
 }
 
 int main(int argc, char* argv[])
 {
-	
+	//terrain.show_array(total_terrain, one_side_number);
+	terrain.add_all();
+
+	for (int i = 0; i < 400; i++){
+		terrain.wind_blow({ 1, 0 }, 100);
+		
+		terrain.show_array(total_terrain, one_side_number);
+	}
 	
 	int retval;
 	// 윈속 초기화
