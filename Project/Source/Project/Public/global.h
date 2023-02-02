@@ -62,7 +62,13 @@ public:
 		int HP;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int job;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int isJob;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	Fthree_float Job_location;
 };
 
 
@@ -96,6 +102,7 @@ public:
 	int citizen_number;
 	Fthree_float location;
 	Fthree_float rotation;
+	int citizen_job; //////////////// 0 : 무직, 1 : 자원 채취
 };
 
 USTRUCT(Atomic, BlueprintType)

@@ -101,9 +101,19 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			Citizen_moving temp_citizen_moving;
 			retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
 			cout << temp_citizen_moving.team << " " << temp_citizen_moving.citizen_number << " " << temp_citizen_moving.location.x << " " << temp_citizen_moving.location.y << endl;
-			players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->team = temp_citizen_moving.team;
-			players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.x = temp_citizen_moving.location.x;
-			players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.y = temp_citizen_moving.location.y;
+			if(temp_citizen_moving.citizen_number != -1)
+			{
+				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->team = temp_citizen_moving.team;
+				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.x = temp_citizen_moving.location.x;
+				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.y = temp_citizen_moving.location.y;
+				if (temp_citizen_moving.citizen_job != 0)
+				{
+					players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->job = temp_citizen_moving.citizen_job;
+					players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.x = temp_citizen_moving.location.x;
+					players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.y = temp_citizen_moving.location.y;
+				}
+
+			}
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
@@ -204,11 +214,11 @@ int main(int argc, char* argv[])
 	terrain.add_all();
 
 	for (int i = 0; i < 400; i++){
-		terrain.wind_blow({ 1, 0 }, 100);
+		//terrain.wind_blow({ 1, 0 }, 100);
 		
-		terrain.show_array(total_terrain, one_side_number);
+		//terrain.show_array(total_terrain, one_side_number);
 	}
-	
+	cout << "end " << endl;
 	int retval;
 	// 윈속 초기화
 	WSADATA wsa;

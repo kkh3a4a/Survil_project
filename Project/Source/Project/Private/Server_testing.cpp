@@ -122,7 +122,6 @@ void AServer_testing::Tick(float DeltaTime)
 		{
 			return;
 		}
-
 		ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
 		if (SOCKET_ERROR == ret)
 		{
@@ -168,7 +167,6 @@ void AServer_testing::Tick(float DeltaTime)
 		}
 		//=====================
 	}
-
 
 	//UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location.x , test_Actor.location.y, test_Actor.location.z);
 	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(" %d, %d, %d", sunangle.x, sunangle.y, sunangle.z));

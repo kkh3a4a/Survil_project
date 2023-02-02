@@ -30,7 +30,9 @@ typedef struct FCitizen_sole {
 	int resource_type;
 	int resource_count;
 	int HP;
-	int isJob;
+	int job;				/////////////// 0 : 무직, 1 : 자원 채취
+	int isJob;		
+	TF Job_location;		
 }FCitizen_sole;
 
 typedef struct location_rotation
@@ -46,6 +48,7 @@ typedef struct Citizen_moving
 	int citizen_number;
 	TF location;
 	TF rotation;
+	int citizen_job;		/////////////// 0 : 무직, 1 : 자원 채취
 }Citizen_moving;
 
 typedef struct players_profile {
@@ -183,9 +186,9 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 				{
 					
 					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
-					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y + 1500;
+					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
 				}
-				if (location_distance(citizens->location, a.second->player_info.location) < 1600)
+				if (location_distance(citizens->location, a.second->player_info.location) < 1550)
 				{
 					if(citizens->resource_type != -1)
 					{
@@ -193,7 +196,11 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 						citizens->resource_count = 0;
 						citizens->resource_type = -1;
 					}
-
+					if (citizens->job != 0)
+					{
+						a.second->player_citizen_arrival_location[cnt]->location.x = citizens->Job_location.x;
+						a.second->player_citizen_arrival_location[cnt]->location.y = citizens->Job_location.y;
+					}
 				}
 			}
 			cnt++;

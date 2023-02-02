@@ -36,6 +36,7 @@ AMyPlayerController::AMyPlayerController()
     server_MouseInput->Citizen_moving.team = -1;
     server_MouseInput->Citizen_moving.location = { 0, 0, 0 };
     server_MouseInput->Citizen_moving.rotation = { 0, 0, 0 };
+    server_MouseInput->Citizen_moving.citizen_job = 0;
     //UE_LOG(LogTemp, Log, TEXT("%s : %f, %f"), *(server_MouseInput->MouseInput.name), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
     //UE_LOG(LogTemp, Log, TEXT("%f, %f"), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
 }
@@ -107,6 +108,18 @@ void AMyPlayerController::MoveToActor()
     if (Hit.bBlockingHit)
     {
         DestLocation = Hit.ImpactPoint;
+        if (wcscmp(*Hit.GetActor()->Tags[0].ToString(), L"Resource") == 0)
+        {
+            server_MouseInput->Citizen_moving.citizen_job = 1;
+            DestLocation = Hit.GetActor()->GetActorLocation();
+
+            UE_LOG(LogTemp, Log, TEXT("Resource"));
+        }
+        else
+        {
+            server_MouseInput->Citizen_moving.citizen_job = 0;
+        }
+
         if (hitActor) {
             if (hitActor->ActorHasTag("Citizen"))
             {
