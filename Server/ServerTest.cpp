@@ -210,15 +210,23 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
-	//terrain.show_array(total_terrain, one_side_number);
+	terrain.show_array(total_terrain, one_side_number);
 	terrain.add_all();
 
 	for (int i = 0; i < 400; i++){
-		//terrain.wind_blow({ 1, 0 }, 100);
-		
-		//terrain.show_array(total_terrain, one_side_number);
+		cout << i << "번째=========" << endl;
+		if (i < 10) {
+			terrain.wind_blow({ 1, 0 }, 10);
+			terrain.show_array(total_terrain, one_side_number);
+		}
+		else{
+			terrain.wind_blow({ 0, 1}, 10);
+			terrain.show_array(total_terrain, one_side_number);
+		}
 	}
 	cout << "end " << endl;
+	
+	
 	int retval;
 	// 윈속 초기화
 	WSADATA wsa;

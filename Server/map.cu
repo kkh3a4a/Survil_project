@@ -286,14 +286,14 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 }
 
 __global__
-void add_scarce_cuda(char** terrain_array_device, int scarce_blocks) {
-	int x = blockIdx.x * blockDim.x + threadIdx.x;
-	int y = blockIdx.y * blockDim.y + threadIdx.y;
-	int interval = sqrt((double)(one_side_number * one_side_number / scarce_blocks));
-	//printf("%d\n", interval);
-	if (x % interval == interval - 1 && y % interval == interval - 1) {
-		terrain_array_device[x][y]++;
-	}
+void add_scarce_cuda(char** terrain_array_device, II* random_seed_device, int scarce_blocks) {
+	int id = blockIdx.x * blockDim.x + threadIdx.x;
+
+	II my_seed;
+	my_seed.x = random_seed_device[id].x;
+	my_seed.y = random_seed_device[id].y;
+
+	terrain_array_device[my_seed.x][my_seed.y]++;
 }
 
 __global__
@@ -378,6 +378,8 @@ public:
 		for (int i = 0; i < one_side_number; i++) {
 			for (int j = 0; j < one_side_number; j++) {
 				terrain_array_host[i][j] = height_uid(dre) - 4;			//언덕 생성 안하고 랜덤으로 생성
+				//terrain_array_host[i][j] = 1;			//언덕 생성 안하고 랜덤으로 생성
+
 			}
 		}
 		cudaMalloc((void**)&terrain_array_device, one_side_number * sizeof(char*));
@@ -467,8 +469,6 @@ public:
 				}
 			}
 		}
-
-
 	}
 	
 	CC get_highest_lowest()
@@ -514,28 +514,47 @@ public:
 	void add_scarce()
 	{
 		clock_t t_0 = clock();
-	
 		int scarce_blocks = init_total_hill_height - add_all();
-		if (scarce_blocks <= 0) {
-			return;
-		}
 		cout<< "scarce_blocks: " << scarce_blocks << endl;
-		for (int i = 0; i < scarce_blocks; i++) {
+		
+		/*for (int i = 0; i < scarce_blocks; i++) {
 			int x = terrain_distance(dre);
 			int y = terrain_distance(dre);
 			terrain_array_host[x][y] += 1;
 		}
-		
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
-		}
+		}*/
+		
 		//cuda사용해서 부족한만큼 랜덤으로 생성하게 해야함
-		/*dim3 grid(one_side_number / 32, one_side_number / 32, 1);
-		dim3 block(32, 32, 1);
-		add_scarce_cuda << <grid, block >> > (terrain_array_device, scarce_blocks);
+		int grid, block;
+		if (scarce_blocks <= 1024) {
+			grid = 1;
+			block = scarce_blocks;
+		}
+		else {
+			grid = scarce_blocks / 1024;
+			block = 1024;
+		}
+		
+		II* random_seed = new II[scarce_blocks];
+		for (int i = 0; i < scarce_blocks; i++) {
+			random_seed[i].x = terrain_distance(dre);
+			random_seed[i].y = terrain_distance(dre);
+		}
+		II* random_seed_device;
+		cudaMalloc((void**)&random_seed_device, scarce_blocks * sizeof(II));
+		cudaMemcpy(random_seed_device, random_seed, scarce_blocks * sizeof(II), cudaMemcpyHostToDevice);
+		
+		cout << "Grid * Block: " << grid * block << endl;
+		add_scarce_cuda << <grid, block >> > (terrain_array_device, random_seed_device, scarce_blocks);
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}*/
+		}
+		
+		//메모리 삭제
+		delete[] random_seed;
+		cudaFree(random_seed_device);
 		
 		clock_t t_1 = clock();
 		scarce_blocks = init_total_hill_height - add_all();
@@ -582,7 +601,7 @@ public:
 			}
 		}
 		clock_t t_1 = clock();
-		//cout << "Terrain Add All : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		cout << "Terrain Add All : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 		return all;
 	}
 	
@@ -610,45 +629,6 @@ public:
 		}
 		end_t = clock();
 		cout << "copy_for_player_map : " << double(end_t - start_t) / CLOCKS_PER_SEC << endl;
-	}
-	
-	void update_player_sight()	//현재 안쓰임
-	{
-		//Terrain move & Player Sight Update===================================================
-		//for (int i = 0; i < 1; i++) {
-		//	clock_t t_1 = clock();
-
-		//	//Terrain Move
-		//	wind_decide(wind_speed, wind_angle);
-
-		//	FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
-		//	if (abs(wind_direction.x) < FLT_EPSILON) {
-		//		wind_direction.x = 0;
-		//	}
-		//	if (abs(wind_direction.y) < FLT_EPSILON) {
-		//		wind_direction.y = 0;
-		//	}
-
-		//	move_terrain(hill_location_host, num_of_hills, wind_direction, wind_speed);
-		//	if (num_of_hills < origin_num_of_hills) {
-		//		make_new_hills(hill_location_host, num_of_hills, origin_num_of_hills, wind_direction, wind_speed);
-		//	}
-
-		//	cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
-
-		//	//Player Sight Update
-		//	//player_location.x += 20;
-		//	//player_location.y += 20;
-		//	//thread must be 1024 for efficiency
-		//	player_terrain_update_cuda << <player_sight_size, player_sight_size >> > (terrain_player_sight_device, hill_location_device, num_of_hills, player_location, wind_direction, wind_speed);
-		//	for (int i = 0; i < player_sight_size; i++) {
-		//		cudaMemcpy(terrain_player_sight_host[i], terrain_player_sight_temp[i], player_sight_size * sizeof(char), cudaMemcpyDeviceToHost);
-		//	}
-		//	clock_t t_2 = clock();
-		//	cout << "Player Sight Update Time : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " Seconds" << endl;
-		//	//show_array(terrain_player_sight_host, player_sight_size);
-		//	cout << "==============================" << endl;
-		//}
 	}
 	
 	void get_device_info()
