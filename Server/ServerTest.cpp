@@ -58,8 +58,10 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	player_cnt_lock.lock();
 	players_profile* my_profile = new players_profile;
 	players_list[port] = my_profile;
-	player_cnt_lock.unlock();
 	player_cnt++;
+	players_list[port]->port = port;
+	player_cnt_lock.unlock();
+	
 	//while (!player_location_set);
 
 	Sleep(500);
@@ -124,21 +126,33 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				err_display("send()");
 				break;
 			}
-			for (int playercnts = 0; playercnts < MAXPLAYER; ++playercnts){
-				for (int i = 0; i < 10; ++i){
-					cout << i << ":" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
-					retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
+			int playercnts = 0;
+
+
+			for (int i = 0; i < 10; ++i) {
+				retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
+			}
+
+
+			for (auto& a : players_list){
+				if (a.second->port != port)
+				{
+					for (int i = 0; i < 10; ++i) {
+						retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
+					}
 				}
+				playercnts++;
+
 			}
 			
 			//클라이언트로부터 카메라 위치 받아와야 함
 
 			
 			//=======================
-			terrain.wind_blow({1,1}, 1);
-			terrain.add_scarce();
+			//terrain.wind_blow({1,1}, 1);
+			//terrain.add_scarce();
 			II player_location{ one_side_number / 2, one_side_number / 2 };
-			terrain.copy_for_player_map(player_location);
+			//terrain.copy_for_player_map(player_location);
 			//map.show_array(player_sight, player_sight_size);
 			for (int i = 0; i < player_sight_size; ++i){
 				retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size, 0);
@@ -200,7 +214,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				}
 			}
 		}
-		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 500) {
+		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 1000) {
 			actor_move_start_t = high_resolution_clock::now();
 			resource_collect(players_list, resource_create_landscape);
 		}
@@ -210,7 +224,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
-	terrain.show_array(total_terrain, one_side_number);
+	/*terrain.show_array(total_terrain, one_side_number);
 	terrain.add_all();
 
 	for (int i = 0; i < 400; i++){
@@ -223,7 +237,7 @@ int main(int argc, char* argv[])
 			terrain.wind_blow({ 0, 1}, 10);
 			terrain.show_array(total_terrain, one_side_number);
 		}
-	}
+	}*/
 	cout << "end " << endl;
 	
 	

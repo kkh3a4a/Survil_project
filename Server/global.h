@@ -6,7 +6,7 @@
 #include<vector>
 #include<chrono>
 #include<iostream>
-#define MAXPLAYER 1
+#define MAXPLAYER 2
 
 std::uniform_int_distribution <int>uid{ -10000, -3000 };
 std::uniform_int_distribution <int>resource_uid{ -1001, 1001 };
@@ -126,6 +126,7 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 				temp_citizen_move->location.y = temp->location.y;
 				temp->resource_count = 0;
 				temp->resource_type = -1;
+				temp->job = 0;
 				a.second->player_citizen.emplace_back(temp);
 				a.second->player_citizen_arrival_location.emplace_back(temp_citizen_move);
 
@@ -172,7 +173,7 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 			for (auto& resources : resource_create_landscape)
 			{
 				
-				if (location_distance(citizens->location, resources.second->location) < 800)
+				if (location_distance(citizens->location, resources.second->location) < 10)
 				{
 					if (citizens->resource_count < 10)
 					{

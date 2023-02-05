@@ -108,7 +108,7 @@ void AMyPlayerController::MoveToActor()
     if (Hit.bBlockingHit)
     {
         DestLocation = Hit.ImpactPoint;
-        if (wcscmp(*Hit.GetActor()->Tags[0].ToString(), L"Resource") == 0)
+        if (Hit.GetActor()->ActorHasTag(L"Resource"))
         {
             server_MouseInput->Citizen_moving.citizen_job = 1;
             DestLocation = Hit.GetActor()->GetActorLocation();
