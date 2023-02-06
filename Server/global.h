@@ -6,9 +6,9 @@
 #include<vector>
 #include<chrono>
 #include<iostream>
-#define MAXPLAYER 2
+#define MAXPLAYER 1
 
-std::uniform_int_distribution <int>uid{ -10000, -3000 };
+std::uniform_int_distribution <int>uid{ -50000, -3000 };
 std::uniform_int_distribution <int>resource_uid{ -1001, 1001 };
 typedef struct three_float {
 	float x = 0.0f;
