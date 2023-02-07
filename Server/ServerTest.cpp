@@ -146,7 +146,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			}
 			
 			//클라이언트로부터 카메라 위치 받아와야 함
-
+			retval = send(client_sock, (char*)&(players_list[port]->camera_location), (int)sizeof(TF), 0);
 			
 			//=======================
 			//terrain.wind_blow({1,1}, 1);

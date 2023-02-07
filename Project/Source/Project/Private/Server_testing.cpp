@@ -146,7 +146,9 @@ void AServer_testing::Tick(float DeltaTime)
 		}
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MYplayer_controller->MouseInput.location.x, MYplayer_controller->MouseInput.location.y)
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MouseInput.location.x, MouseInput.location.y)
-		
+		recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
+
+
 		//===================
 		FOneArray temp_array;
 		terrain_2d_array.Init(temp_array, map_size);

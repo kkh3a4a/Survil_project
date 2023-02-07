@@ -99,6 +99,9 @@ public:
 
 	int My_Citizen_Num = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		Fthree_float my_camera_location;
+
 	steady_clock::time_point start_t;
 	WSADATA WSAData;
 	SOCKET s_socket;

@@ -8,7 +8,7 @@
 #include<iostream>
 #define MAXPLAYER 1
 
-std::uniform_int_distribution <int>uid{ -50000, -3000 };
+std::uniform_int_distribution <int>uid{ -20000, 20000 };
 std::uniform_int_distribution <int>resource_uid{ -1001, 1001 };
 typedef struct three_float {
 	float x = 0.0f;
@@ -54,6 +54,7 @@ typedef struct Citizen_moving
 typedef struct players_profile {
 	int port;
 	FActor player_info;
+	TF camera_location;
 	std::vector<FCitizen_sole*> player_citizen;
 	std::vector<Citizen_moving*> player_citizen_arrival_location;
 	std::chrono::steady_clock::time_point resource_clcok;
@@ -114,6 +115,12 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 				}
 			}
 		}
+
+		a.second->camera_location.x = a.second->player_info.location.x;
+		a.second->camera_location.y = a.second->player_info.location.y + 5000;
+		a.second->camera_location.z = a.second->player_info.location.z + 10000;
+
+
 		for (int i = 0; i < 2; ++i)
 		{
 			for (int j = 0; j < 5; ++j)
@@ -129,7 +136,6 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 				temp->job = 0;
 				a.second->player_citizen.emplace_back(temp);
 				a.second->player_citizen_arrival_location.emplace_back(temp_citizen_move);
-
 
 				std::cout << a.second->player_citizen[i * 5 + j]->location.x << ", " << a.second->player_citizen[i * 5 + j]->location.y << std::endl;
 			}
