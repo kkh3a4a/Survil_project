@@ -51,10 +51,18 @@ typedef struct Citizen_moving
 	int citizen_job;		/////////////// 0 : 무직, 1 : 자원 채취
 }Citizen_moving;
 
+typedef struct keyboard_input {
+	bool w;
+	bool a;
+	bool s;
+	bool d;
+}keyboard_input;
+
 typedef struct players_profile {
 	int port;
 	FActor player_info;
 	TF camera_location;
+	keyboard_input my_keyinput;
 	std::vector<FCitizen_sole*> player_citizen;
 	std::vector<Citizen_moving*> player_citizen_arrival_location;
 	std::chrono::steady_clock::time_point resource_clcok;
@@ -67,6 +75,9 @@ typedef struct resource_actor
 	int count;
 	TF location;
 }resource_actor;
+
+
+
 
 void FActor_TF_define(TF& a, TF& b)
 {
@@ -119,8 +130,10 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 		a.second->camera_location.x = a.second->player_info.location.x;
 		a.second->camera_location.y = a.second->player_info.location.y + 5000;
 		a.second->camera_location.z = a.second->player_info.location.z + 10000;
-
-
+		a.second->my_keyinput.w = false;
+		a.second->my_keyinput.s = false;
+		a.second->my_keyinput.a = false;
+		a.second->my_keyinput.d = false;
 		for (int i = 0; i < 2; ++i)
 		{
 			for (int j = 0; j < 5; ++j)
@@ -211,6 +224,31 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 				}
 			}
 			cnt++;
+		}
+
+
+	}
+}
+
+void camera_movement(std::map<int, players_profile*>& players_list)
+{
+	for (auto& a : players_list)
+	{
+		if (a.second->my_keyinput.w)
+		{
+			a.second->camera_location.y -= 300;
+		}
+		if (a.second->my_keyinput.s)
+		{
+			a.second->camera_location.y += 300;
+		}
+		if (a.second->my_keyinput.a)
+		{
+			a.second->camera_location.x -= 300;
+		}
+		if (a.second->my_keyinput.d)
+		{
+			a.second->camera_location.x += 300;
 		}
 
 

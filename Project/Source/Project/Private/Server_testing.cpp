@@ -146,6 +146,9 @@ void AServer_testing::Tick(float DeltaTime)
 		}
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MYplayer_controller->MouseInput.location.x, MYplayer_controller->MouseInput.location.y)
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MouseInput.location.x, MouseInput.location.y)
+
+		//카메라 위치 및 입력보내버리기
+		send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
 		recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
 
 

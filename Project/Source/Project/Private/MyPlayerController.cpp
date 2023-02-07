@@ -51,7 +51,73 @@ void AMyPlayerController::SetupInputComponent()
     InputComponent->BindAction("LeftClick", IE_Pressed, this, &AMyPlayerController::InputLeftMoustButtonPressed);
 
     InputComponent->BindAction("LeftClick", IE_Released, this, &AMyPlayerController::InputLeftMoustButtonReleased);
+
+
+
+
+
+    InputComponent->BindAction("Up", IE_Pressed, this, &AMyPlayerController::InputUpPressed);
+
+    InputComponent->BindAction("Up", IE_Released, this, &AMyPlayerController::InputUpReleased);
+
+    InputComponent->BindAction("Down", IE_Pressed, this, &AMyPlayerController::InputDownPressed);
+
+    InputComponent->BindAction("Down", IE_Released, this, &AMyPlayerController::InputDownReleased);
+
+    InputComponent->BindAction("Left", IE_Pressed, this, &AMyPlayerController::InputLeftPressed);
+ 
+    InputComponent->BindAction("Left", IE_Released, this, &AMyPlayerController::InputLeftReleased);
+
+    InputComponent->BindAction("Right", IE_Pressed, this, &AMyPlayerController::InputRightPressed);
+
+    InputComponent->BindAction("Right", IE_Released, this, &AMyPlayerController::InputRightReleased);
+
 }
+
+void AMyPlayerController::InputUpPressed()
+{
+    server_MouseInput->my_key_input.w = true;
+}
+
+void AMyPlayerController::InputDownPressed()
+{
+    server_MouseInput->my_key_input.s = true;
+}
+
+void AMyPlayerController::InputLeftPressed()
+{
+    server_MouseInput->my_key_input.a = true;
+}
+
+void AMyPlayerController::InputRightPressed()
+{
+    server_MouseInput->my_key_input.d = true;
+}
+
+
+
+void AMyPlayerController::InputUpReleased()
+{
+    server_MouseInput->my_key_input.w = false;
+}
+
+void AMyPlayerController::InputDownReleased()
+{
+    server_MouseInput->my_key_input.s = false;
+}
+
+void AMyPlayerController::InputLeftReleased()
+{
+    server_MouseInput->my_key_input.a = false;
+}
+
+void AMyPlayerController::InputRightReleased()
+{
+    server_MouseInput->my_key_input.d = false;
+}
+
+
+
 
 void AMyPlayerController::InputRightMoustButtonPressed()
 {

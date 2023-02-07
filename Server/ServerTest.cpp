@@ -102,7 +102,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			start_t = high_resolution_clock::now();
 			Citizen_moving temp_citizen_moving;
 			retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
-			cout << temp_citizen_moving.team << " " << temp_citizen_moving.citizen_number << " " << temp_citizen_moving.location.x << " " << temp_citizen_moving.location.y << endl;
 			if(temp_citizen_moving.citizen_number != -1)
 			{
 				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->team = temp_citizen_moving.team;
@@ -146,8 +145,10 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			}
 			
 			//클라이언트로부터 카메라 위치 받아와야 함
+			retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
 			retval = send(client_sock, (char*)&(players_list[port]->camera_location), (int)sizeof(TF), 0);
 			
+
 			//=======================
 			//terrain.wind_blow({1,1}, 1);
 			//terrain.add_scarce();
@@ -161,7 +162,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 					break;
 				}
 			}
-			cout << "terrain 전송" << endl;
+			//cout << "terrain 전송" << endl;
 			//========================
 		}
 	}
@@ -213,11 +214,15 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					cnt++;
 				}
 			}
+
+			camera_movement(players_list);
+
 		}
 		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 1000) {
 			actor_move_start_t = high_resolution_clock::now();
 			resource_collect(players_list, resource_create_landscape);
 		}
+
 	}
 	return 0;
 }

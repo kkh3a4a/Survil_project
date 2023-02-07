@@ -118,6 +118,17 @@ public:
 	Fthree_float location;
 };
 
+USTRUCT(Atomic, BlueprintType)
+struct Fkeyboard_input
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	bool w;
+	bool a;
+	bool s;
+	bool d;
+};
+
 class PROJECT_API global
 {
 public:

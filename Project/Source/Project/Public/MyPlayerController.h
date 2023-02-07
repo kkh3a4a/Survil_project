@@ -40,6 +40,22 @@ protected:
 
 	void InputLeftMoustButtonReleased();
 
+	void InputUpPressed();
+
+	void InputDownPressed();
+
+	void InputLeftPressed();
+
+	void InputRightPressed();
+
+	void InputUpReleased();
+
+	void InputDownReleased();
+
+	void InputLeftReleased();
+
+	void InputRightReleased();
+
 	//void SetNewDestination(const FVector DestLocation);
 
 	void MoveToMouseCursor();

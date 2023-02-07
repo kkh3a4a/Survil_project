@@ -124,6 +124,9 @@ public:
 	FCitizen_moving Citizen_moving;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	Fkeyboard_input my_key_input;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	Fthree_float sunangle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -135,6 +138,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool first_recv_send = false;
 	
+	
+
 	int8 terrain_recv_array[map_size];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
