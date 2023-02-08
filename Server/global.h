@@ -6,7 +6,7 @@
 #include<vector>
 #include<chrono>
 #include<iostream>
-#define MAXPLAYER 1
+#define MAXPLAYER 2
 
 std::uniform_int_distribution <int>uid{ -20000, 20000 };
 std::uniform_int_distribution <int>resource_uid{ -1001, 1001 };
@@ -120,7 +120,7 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 		{
 			if (a.first != b.first)
 			{
-				if (location_distance(a.second->player_info.location, b.second->player_info.location) < 5000)
+				if (location_distance(a.second->player_info.location, b.second->player_info.location) < 7000)
 				{
 					goto retry;
 				}
