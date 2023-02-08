@@ -152,6 +152,9 @@ void AServer_testing::Tick(float DeltaTime)
 		recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
 
 
+		//자원 받기
+		recv(s_socket, (char*)&resources, sizeof(int)*5, 0);
+		UE_LOG(LogTemp, Log, TEXT("%d %d %d %d %d"),resources[0], resources[1], resources[2], resources[3], resources[4])
 		//===================
 		FOneArray temp_array;
 		terrain_2d_array.Init(temp_array, map_size);

@@ -82,6 +82,9 @@ public:
 	const short SERVER_PORT = 9000;
 	const int BUFSIZE = 256;
 	int ret = 0;
+	int resources[5] = {};
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<int, FActor_location_rotation> players_list;
 

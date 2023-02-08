@@ -6,7 +6,7 @@
 #include<vector>
 #include<chrono>
 #include<iostream>
-#define MAXPLAYER 2
+#define MAXPLAYER 1
 
 std::uniform_int_distribution <int>uid{ -20000, 20000 };
 std::uniform_int_distribution <int>resource_uid{ -1001, 1001 };
@@ -27,8 +27,7 @@ typedef struct FCitizen_sole {
 	TCHAR name[30];
 	TF location;
 	TF rotation;
-	int resource_type;
-	int resource_count;
+	int resources[5];
 	int HP;
 	int job;				/////////////// 0 : 무직, 1 : 자원 채취
 	int isJob;		
@@ -144,8 +143,11 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 				temp->location.y = a.second->player_info.location.y + j * 500 - 500;
 				temp_citizen_move->location.x = temp->location.x;
 				temp_citizen_move->location.y = temp->location.y;
-				temp->resource_count = 0;
-				temp->resource_type = -1;
+				temp->resources[0] = 0;
+				temp->resources[1] = 0;
+				temp->resources[2] = 0;
+				temp->resources[3] = 0;
+				temp->resources[4] = 0;
 				temp->job = 0;
 				a.second->player_citizen.emplace_back(temp);
 				a.second->player_citizen_arrival_location.emplace_back(temp_citizen_move);
@@ -191,18 +193,20 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 		{
 			for (auto& resources : resource_create_landscape)
 			{
-				
+				int resource_count = 0;
+				for (int i = 0; i < 5; ++i)
+				{
+					resource_count += citizens->resources[i];
+				}
 				if (location_distance(citizens->location, resources.second->location) < 10)
 				{
-					if (citizens->resource_count < 10)
+					if (resource_count < 10)
 					{
-						citizens->resource_type = resources.second->type;
-						citizens->resource_count++;
+						citizens->resources[resources.second->type]++;
 						resources.second->count--;
-						
 					}
 				}
-				if (citizens->resource_count >= 10)
+				if (resource_count >= 10)
 				{
 					
 					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
@@ -210,11 +214,10 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 				}
 				if (location_distance(citizens->location, a.second->player_info.location) < 1550)
 				{
-					if(citizens->resource_type != -1)
+					for (int i = 0; i < 5; ++i)
 					{
-						a.second->resources[citizens->resource_type] += citizens->resource_count;
-						citizens->resource_count = 0;
-						citizens->resource_type = -1;
+						a.second->resources[i] += citizens->resources[i];
+						citizens->resources[i] = 0;
 					}
 					if (citizens->job != 0)
 					{

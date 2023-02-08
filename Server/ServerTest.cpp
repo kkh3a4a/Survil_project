@@ -149,6 +149,10 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			retval = send(client_sock, (char*)&(players_list[port]->camera_location), (int)sizeof(TF), 0);
 			
 
+			//자원 보내기
+			retval = send(client_sock, (char*)&(players_list[port]->resources), sizeof(int) * 5, 0);
+
+
 			//=======================
 			//terrain.wind_blow({1,1}, 1);
 			//terrain.add_scarce();

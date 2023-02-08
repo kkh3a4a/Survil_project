@@ -12,7 +12,7 @@
  */
 
 
-#define MAXPLAYER 2
+#define MAXPLAYER 1
 
 
 USTRUCT(Atomic, BlueprintType)
@@ -52,11 +52,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float rotation;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int resource_type;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int resource_count;
+	int resources[5];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int HP;
