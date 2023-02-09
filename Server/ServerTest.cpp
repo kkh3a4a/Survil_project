@@ -217,12 +217,12 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					}
 					cnt++;
 				}
-				cout << a.second->port << " ";
+				/*cout << a.second->port << " ";
 				for (int i = 0; i < 5;i++)
 				{
 					cout << a.second->resources[i] << " ";
 				}
-				cout << endl;
+				cout << endl;*/
 			}
 
 			camera_movement(players_list);

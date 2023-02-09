@@ -84,6 +84,21 @@ public:
 	int ret = 0;
 	int resources[5] = {};
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int oil_count = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int water_count = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int iron_count = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int food_count = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		int wood_count = 0;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<int, FActor_location_rotation> players_list;
