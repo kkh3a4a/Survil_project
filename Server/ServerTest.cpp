@@ -102,7 +102,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			start_t = high_resolution_clock::now();
 			Citizen_moving temp_citizen_moving;
 			retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
-			if(temp_citizen_moving.citizen_number != -1)
+			cout << temp_citizen_moving.team << " : " << temp_citizen_moving.location.x << ", "<< temp_citizen_moving.location.y<<endl;
+			if(temp_citizen_moving.team != -1)
 			{
 				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->team = temp_citizen_moving.team;
 				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.x = temp_citizen_moving.location.x;

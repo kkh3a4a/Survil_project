@@ -2,6 +2,8 @@
 
 
 #pragma once
+
+#include <chrono>
 #include "global.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
@@ -26,6 +28,11 @@ public:
 	AActor* hitActor;
 
 	AActor* server;
+
+	std::chrono::steady_clock::time_point mouse_start_t;
+	std::chrono::steady_clock::time_point mouse_end_t;
+
+	bool temped;
 
 protected:
 	bool bRightClickMouse;

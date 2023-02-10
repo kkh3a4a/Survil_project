@@ -189,6 +189,8 @@ void AMyPlayerController::MoveToActor()
         if (hitActor) {
             if (hitActor->ActorHasTag("Citizen"))
             {
+                temped = true;
+                mouse_end_t = high_resolution_clock::now();
                 server_MouseInput->Citizen_moving.location.x = DestLocation.X;
                 server_MouseInput->Citizen_moving.location.y = DestLocation.Y;
                 server_MouseInput->Citizen_moving.location.z = DestLocation.Z;
@@ -213,4 +215,18 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     {
         MoveToActor();
     }
+    
+    mouse_start_t = high_resolution_clock::now();
+    if (temped) 
+    {
+        if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
+        {
+           
+            server_MouseInput->Citizen_moving.team = -1;
+            temped = false;
+
+        }
+    }
+
+
 }

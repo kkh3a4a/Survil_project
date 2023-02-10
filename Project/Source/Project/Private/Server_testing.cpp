@@ -127,7 +127,8 @@ void AServer_testing::Tick(float DeltaTime)
 		{
 			return;
 		}
-		for (int i = 0; i < MAXPLAYER; ++i) {
+		for (int i = 0; i < MAXPLAYER; ++i) 
+		{
 			for (int j = 0; j < 10; ++j)
 			{
 				recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
