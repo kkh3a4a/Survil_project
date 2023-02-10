@@ -157,18 +157,16 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 		}
 	}
 
-
 	//return true;
 }
 
 
-bool create_map_location(std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape) {
+bool create_resource_location(std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape) {
 	
 	int cnt = 0;
 	std::default_random_engine dre2;
 	for (auto& a : players_list)
 	{
-
 		for (int i = 0; i < 10; ++i)
 		{
 			resource_actor* temp = new resource_actor;
@@ -180,7 +178,6 @@ bool create_map_location(std::map<int, players_profile*>& players_list, std::map
 		}
 		cnt++;
 	}
-
 	return true;
 }
 
@@ -228,8 +225,6 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 			}
 			cnt++;
 		}
-
-
 	}
 }
 
@@ -253,7 +248,5 @@ void camera_movement(std::map<int, players_profile*>& players_list)
 		{
 			a.second->camera_location.x += 300;
 		}
-
-
 	}
 }

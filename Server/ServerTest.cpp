@@ -66,24 +66,27 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	Sleep(500);
 
-	//======================
+	//player sight 주소값
 	char** player_sight = terrain.get_player_sight_map();
-	//======================
 
 	while (1)
 	{
-		if (!location_set){
+		if (!location_set)
+		{
 			continue;
 		}
 		retval = send(client_sock, (char*)&(players_list[port]->player_info), (int)sizeof(FActor), 0);
-		for (int i = 0; i < 10; ++i){
+		for (int i = 0; i < 10; ++i)
+		{
 			cout << i << "//" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
 			retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 		}
 		for (auto& a : players_list){
-			if (port != a.first){
+			if (port != a.first)
+			{
 				retval = send(client_sock, (char*)&(a.second->player_info), (int)sizeof(FActor), 0);
-				for (int i = 0; i < 10; ++i){
+				for (int i = 0; i < 10; ++i)
+				{
 					retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 				}
 			}
@@ -98,7 +101,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	while (1) {
 		auto end_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 50) {
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 50) 
+		{
 			start_t = high_resolution_clock::now();
 			Citizen_moving temp_citizen_moving;
 			retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
@@ -116,28 +120,30 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				}
 
 			}
-			if (retval == SOCKET_ERROR) {
+			if (retval == SOCKET_ERROR)
+			{
 				err_display("send()");
 				break;
 			}
 
 			retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
-			if (retval == SOCKET_ERROR) {
+			if (retval == SOCKET_ERROR) 
+			{
 				err_display("send()");
 				break;
 			}
 			int playercnts = 0;
 
-
-			for (int i = 0; i < 10; ++i) {
+			for (int i = 0; i < 10; ++i) 
+			{
 				retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 			}
-
 
 			for (auto& a : players_list){
 				if (a.second->port != port)
 				{
-					for (int i = 0; i < 10; ++i) {
+					for (int i = 0; i < 10; ++i) 
+					{
 						retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 					}
 				}
@@ -153,29 +159,28 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			//자원 보내기
 			retval = send(client_sock, (char*)&(players_list[port]->resources), sizeof(int) * 5, 0);
 
-
 			//=======================
-			//terrain.wind_blow({1,1}, 1);
-			//terrain.add_scarce();
+			time_t t_1 = clock();
 			II player_location{ one_side_number / 2, one_side_number / 2 };
-			//terrain.copy_for_player_map(player_location);
-			//map.show_array(player_sight, player_sight_size);
-			for (int i = 0; i < player_sight_size; ++i){
+			terrain.copy_for_player_map(player_location);
+			terrain.show_array(player_sight, player_sight_size);
+			for (int i = 0; i < player_sight_size; ++i)
+			{
 				retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size, 0);
 				if (retval == SOCKET_ERROR) {
 					err_display("send()");
 					break;
 				}
 			}
-			//cout << "terrain 전송" << endl;
+			time_t t_2 = clock();
+			cout << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
+			cout << "terrain 전송" << endl;
 			//========================
 		}
 	}
-
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
 	closesocket(client_sock);
-
 	return 0;
 }
 
@@ -184,8 +189,13 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	while (player_cnt != MAXPLAYER);
 
 	player_random_location(players_list, citizen_Move);
-	location_set = create_map_location(players_list, resource_create_landscape);
-	for (auto& a : players_list) {
+	location_set = create_resource_location(players_list, resource_create_landscape);
+	
+	int player_list_iter{};
+	for (auto& a : players_list) 
+	{
+		terrain.set_city_location(a.second->player_info.location, player_list_iter);
+		player_list_iter++;
 		cout << "위치 : " << a.second->player_info.location.x << ", " << a.second->player_info.location.y << endl;
 	}
 
@@ -200,18 +210,23 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		auto sunangle_end_t = high_resolution_clock::now();
 		auto actor_move_end_t = high_resolution_clock::now();
 
-		if (duration_cast<milliseconds>(sunangle_end_t - sunangle_start_t).count() > 50) {
+		if (duration_cast<milliseconds>(sunangle_end_t - sunangle_start_t).count() > 50) 
+		{
 			sunangle_start_t = high_resolution_clock::now();
 			sun_angle.y += 0.2f;
-			if (sun_angle.y >= 180.f) {
+			if (sun_angle.y >= 180.f) 
+			{
 				sun_angle.y = -180.f;
 			}
 
-			for (auto& a : players_list) {
+			for (auto& a : players_list) 
+			{
 				float distance = 0.0f;
 				int cnt = 0;
-				for (auto& b : a.second->player_citizen) {
-					if (a.second->player_citizen_arrival_location[cnt]->team != -1) {
+				for (auto& b : a.second->player_citizen) 
+				{
+					if (a.second->player_citizen_arrival_location[cnt]->team != -1) 
+					{
 						if (location_distance(b->location, a.second->player_citizen_arrival_location[cnt]->location) > 10) {
 							Move_Civil(b->location, a.second->player_citizen_arrival_location[cnt]->location);
 						}
@@ -225,35 +240,32 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				}
 				cout << endl;*/
 			}
-
 			camera_movement(players_list);
-
 		}
-		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 1000) {
+		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 1000) 
+		{
 			actor_move_start_t = high_resolution_clock::now();
 			resource_collect(players_list, resource_create_landscape);
 		}
-
 	}
 	return 0;
 }
 
 int main(int argc, char* argv[])
 {
-	/*terrain.show_array(total_terrain, one_side_number);
-	terrain.add_all();
+	//terrain.show_array(total_terrain, one_side_number);
+	for (int i = 0; i < 5; i++) {
+		TF pos = { 50 + i * 120, 200 };
+		terrain.set_city_location(pos, i);
+	}
 
-	for (int i = 0; i < 400; i++){
+	for (int i = 0; i < 100; i++)
+	{
 		cout << i << "번째=========" << endl;
-		if (i < 10) {
-			terrain.wind_blow({ 1, 0 }, 10);
-			terrain.show_array(total_terrain, one_side_number);
-		}
-		else{
-			terrain.wind_blow({ 0, 1}, 10);
-			terrain.show_array(total_terrain, one_side_number);
-		}
-	}*/
+		terrain.wind_blow({ 1, 0 }, 10);
+		terrain.except_city_terrain();
+		terrain.show_array(total_terrain, one_side_number);
+	}
 	cout << "end " << endl;
 	
 	
@@ -292,7 +304,8 @@ int main(int argc, char* argv[])
 		// accept()
 		addrlen = sizeof(clientaddr);
 		client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);
-		if (client_sock == INVALID_SOCKET) {
+		if (client_sock == INVALID_SOCKET) 
+		{
 			err_display("accept()");
 			break;
 		}
