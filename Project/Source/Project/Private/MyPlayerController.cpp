@@ -39,6 +39,10 @@ AMyPlayerController::AMyPlayerController()
     server_MouseInput->Citizen_moving.citizen_job = 0;
     //UE_LOG(LogTemp, Log, TEXT("%s : %f, %f"), *(server_MouseInput->MouseInput.name), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
     //UE_LOG(LogTemp, Log, TEXT("%f, %f"), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
+
+    bEnableClickEvents = true;
+    bEnableTouchEvents = true;
+    bEnableMouseOverEvents = true;
 }
 
 void AMyPlayerController::SetupInputComponent()
@@ -229,4 +233,24 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     }
 
 
+}
+
+void AMyPlayerController::SetPlacementModeEnabled(bool IsEnabled)
+{
+    if (IsEnabled == PlacementModeEnabled)
+    {
+        return;
+    }
+    else
+    {
+        IsEnabled = PlacementModeEnabled;
+    }
+}
+
+void AMyPlayerController::UpdatePlacement()
+{
+}
+
+void AMyPlayerController::SpawnBuilding()
+{
 }
