@@ -106,7 +106,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			start_t = high_resolution_clock::now();
 			Citizen_moving temp_citizen_moving;
 			retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
-			cout << temp_citizen_moving.team << " : " << temp_citizen_moving.location.x << ", "<< temp_citizen_moving.location.y<<endl;
+			//cout << temp_citizen_moving.team << " : " << temp_citizen_moving.location.x << ", "<< temp_citizen_moving.location.y<<endl;
 			if(temp_citizen_moving.team != -1)
 			{
 				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->team = temp_citizen_moving.team;
@@ -139,7 +139,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 			}
 
-			for (auto& a : players_list){
+			for (auto& a : players_list)
+			{
 				if (a.second->port != port)
 				{
 					for (int i = 0; i < 10; ++i) 
@@ -149,6 +150,16 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				}
 				playercnts++;
 
+			}
+
+			for (int j = 0; j < MAXPLAYER; ++j) {
+				for (auto& a : resource_create_landscape)
+				{
+					retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
+					cout << a.second->count <<", ";
+				}
+				cout << endl;
+				
 			}
 			
 			//클라이언트로부터 카메라 위치 받아와야 함
@@ -162,8 +173,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			//=======================
 			time_t t_1 = clock();
 			II player_location{ one_side_number / 2, one_side_number / 2 };
-			terrain.copy_for_player_map(player_location);
-			terrain.show_array(player_sight, player_sight_size);
+			//terrain.copy_for_player_map(player_location);
+			//terrain.show_array(player_sight, player_sight_size);
 			for (int i = 0; i < player_sight_size; ++i)
 			{
 				retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size, 0);
@@ -173,8 +184,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				}
 			}
 			time_t t_2 = clock();
-			cout << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
-			cout << "terrain 전송" << endl;
+			//cout << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
+			//cout << "terrain 전송" << endl;
 			//========================
 		}
 	}
@@ -232,8 +243,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						}
 					}
 					cnt++;
-				}
-				/*cout << a.second->port << " ";
+				}/*
+				cout << a.second->port << " ";
 				for (int i = 0; i < 5;i++)
 				{
 					cout << a.second->resources[i] << " ";
@@ -254,7 +265,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 int main(int argc, char* argv[])
 {
 	//terrain.show_array(total_terrain, one_side_number);
-	for (int i = 0; i < 5; i++) {
+	/*for (int i = 0; i < 5; i++) {
 		TF pos = { 50 + i * 120, 200 };
 		terrain.set_city_location(pos, i);
 	}
@@ -266,7 +277,7 @@ int main(int argc, char* argv[])
 		terrain.except_city_terrain();
 		terrain.show_array(total_terrain, one_side_number);
 	}
-	cout << "end " << endl;
+	cout << "end " << endl;*/
 	
 	
 	int retval;

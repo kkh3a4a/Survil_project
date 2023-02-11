@@ -249,6 +249,7 @@ void AMyPlayerController::SetPlacementModeEnabled(bool IsEnabled)
 
 void AMyPlayerController::UpdatePlacement()
 {
+
 }
 
 void AMyPlayerController::SpawnBuilding()

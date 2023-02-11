@@ -9,7 +9,7 @@
 #define MAXPLAYER 1
 
 std::uniform_int_distribution <int>uid{ -20000, 20000 };
-std::uniform_int_distribution <int>resource_uid{ -1001, 1001 };
+std::uniform_int_distribution <int>resource_uid{ -100, 100 };
 typedef struct three_float {
 	float x = 0.0f;
 	float y = 0.0f;
@@ -167,14 +167,19 @@ bool create_resource_location(std::map<int, players_profile*>& players_list, std
 	std::default_random_engine dre2;
 	for (auto& a : players_list)
 	{
+
 		for (int i = 0; i < 10; ++i)
 		{
 			resource_actor* temp = new resource_actor;
-			temp->count = 200;
-			temp->type = i;
-			temp->location.x = a.second->player_info.location.x + resource_uid(dre2)*5;
-			temp->location.y = a.second->player_info.location.y + resource_uid(dre2)*5;
+			temp->count = 20;
+			temp->type = i % 5;
+			do
+			{
+				temp->location.x = a.second->player_info.location.x + resource_uid(dre2) * 50;
+				temp->location.y = a.second->player_info.location.y + resource_uid(dre2) * 50;
+			} while (location_distance(a.second->player_info.location, temp->location) < 2000);
 			resource_create_landscape.insert({ cnt * 10+ i,temp });
+
 		}
 		cnt++;
 	}
@@ -197,7 +202,11 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 				}
 				if (location_distance(citizens->location, resources.second->location) < 10)
 				{
-					if (resource_count < 10)
+					if (resources.second->count <= 0)
+					{
+						citizens->job = 0;
+					}
+					else if (resource_count < 10)
 					{
 						citizens->resources[resources.second->type]++;
 						resources.second->count--;

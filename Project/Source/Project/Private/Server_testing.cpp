@@ -148,6 +148,17 @@ void AServer_testing::Tick(float DeltaTime)
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MYplayer_controller->MouseInput.location.x, MYplayer_controller->MouseInput.location.y)
 		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MouseInput.location.x, MouseInput.location.y)
 
+
+		for (int i = 0; i < MAXPLAYER * 10; ++i)
+		{
+			Fresources_actor temp_resource;
+			recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
+			resources_create_landscape[i].count = temp_resource.count;
+			resources_create_landscape[i].type = temp_resource.type;
+			resources_create_landscape[i].location.x = temp_resource.location.x;
+			resources_create_landscape[i].location.y = temp_resource.location.y;
+		}
+
 		//카메라 위치 및 입력보내버리기
 		send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
 		recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
