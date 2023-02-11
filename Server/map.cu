@@ -51,10 +51,27 @@ default_random_engine dre(rd());
 uniform_int_distribution <int>terrain_distance(0, one_side_number - 1);
 uniform_int_distribution <int>number_of_hills_uid(one_side_number / 10, one_side_number / 10);
 uniform_int_distribution <int>hill_size_uid(one_side_number / 20, one_side_number / 10);
-uniform_int_distribution <int>height_uid(5, max_height);
+uniform_int_distribution <int>height_uid(4, max_height);
 
 uniform_int_distribution <int>wind_speed_uid(0, 50);
 uniform_int_distribution <int>wind_angle_uid(0, 360);
+
+void make_random_array(II* random_array, unsigned __int64 array_size, int spacing, int remainder, int i, int num_of_thread)
+{
+	int t = 0;
+	cout << i << " " << spacing << " " << remainder << endl;
+	for (int iter = i * spacing; iter < (i + 1) * spacing; iter++) {
+		if (iter >= array_size) {
+			cout << "Error" << endl;
+			break;
+		}
+		random_array[i].x = terrain_distance(dre);
+		random_array[i].y = terrain_distance(dre);
+		t++;
+
+	}
+	cout << "making random done " << t << " " << i << " " << "numofthread " << num_of_thread << endl;
+}
 
 __global__
 void make_hills_cuda(char** terrain_array_device, HI* hill_location_device, int num_of_hills)
@@ -178,35 +195,17 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 {
 	//wind_direction은 x, y중 하나는 무조건 0이여야 함
 	II terrain[5];
-	terrain[0].x = blockIdx.x * blockDim.x + threadIdx.x;	//middle
-	terrain[0].y = blockIdx.y * blockDim.y + threadIdx.y;
+	terrain[0].x = blockIdx.y * blockDim.y + threadIdx.y;	//희안하게도 x,y맞게 하면 지형 많이 변화할시 특정 무늬가 생김. 이렇게 하면 안생김. 이렇게 바꿔도 로직에는 영향 무
+	terrain[0].y = blockIdx.x * blockDim.x + threadIdx.x;	//middle
 
 	terrain[1].x = terrain[0].x + wind_direction.x;			//forward
 	terrain[1].y = terrain[0].y + wind_direction.y;
 
-	//if (wind_direction.x == 0 || wind_direction.y == 0) {	//수직일때
-		terrain[2].x = terrain[1].x + wind_direction.y;			//forward left
-		terrain[2].y = terrain[1].y - wind_direction.x;
+	terrain[2].x = terrain[1].x + wind_direction.y;			//forward left
+	terrain[2].y = terrain[1].y - wind_direction.x;
 	
-		terrain[3].x = terrain[1].x - wind_direction.y;			//forward right
-		terrain[3].y = terrain[1].y + wind_direction.x;
-	//}
-	//else {													//사선일때
-	//	if (wind_direction.x == wind_direction.y) {	
-	//		terrain[2].x = terrain[0].x + wind_direction.x;
-	//		terrain[2].y = terrain[0].y;
-	//		
-	//		terrain[3].x = terrain[0].x;			
-	//		terrain[3].y = terrain[0].y + wind_direction.y;
-	//	}
-	//	else {										
-	//		terrain[2].x = terrain[0].x;
-	//		terrain[2].y = terrain[0].y - wind_direction.y;
-	//		
-	//		terrain[3].x = terrain[0].x - wind_direction.x;			
-	//		terrain[3].y = terrain[0].y;
-	//	}
-	//}
+	terrain[3].x = terrain[1].x - wind_direction.y;			//forward right
+	terrain[3].y = terrain[1].y + wind_direction.x;
 
 	terrain[4].x = terrain[0].x - wind_direction.x;			//back
 	terrain[4].y = terrain[0].y - wind_direction.y;
@@ -241,7 +240,7 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 		return;
 	}
 
-	int height_difference = -10000;
+	int height_difference = -1;
 	for (int i = 1; i < 4; i++) 
 	{
 		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y]  > height_difference) 
@@ -288,15 +287,10 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 	}
 
 	int radom_seed = (terrain[0].x + terrain[0].y) % num_of_lowest + 2;
-	for (int i = 2; i <= 3; i++) //왼 오 둘중 하나로 랜덤 이동
-	{		
-		if (radom_seed == i) 
-		{
-			--terrain_array_device[terrain[0].x][terrain[0].y];
-			++terrain_array_device[terrain[i].x][terrain[i].y];
-			return; 
-		}
-	}
+	//왼 오 둘중 하나로 랜덤 이동
+	--terrain_array_device[terrain[0].x][terrain[0].y];
+	++terrain_array_device[terrain[radom_seed].x][terrain[radom_seed].y];
+	return;
 }
 
 __global__
@@ -360,12 +354,33 @@ void except_city_terrain_cuda(char** terrain_array_device, II* city_location_dev
 {
 	int x = blockIdx.x * blockDim.x + threadIdx.x;
 	int y = blockIdx.y * blockDim.y + threadIdx.y;
-	int distance = 20;
+	int outer_radius = 40;
+	int inner_radius = outer_radius - 10;
+	II distance;
 
 	for (int i = 0; i < num_of_city; i++) {
-		if (x + distance >= city_location_device[i].x && x - distance <= city_location_device[i].x && y + distance >= city_location_device[i].y && y - distance <= city_location_device[i].y) {
-			terrain_array_device[x][y] = 0;
+		if (city_location_device[i].x == 0 && city_location_device[i].y == 0) 
+			continue;
+		if (abs(x - city_location_device[i].x) <= inner_radius && abs(y - city_location_device[i].y) <= inner_radius) {
+			terrain_array_device[x][y] = 1;
+			return;
 		}
+		
+		distance.x = abs(x - city_location_device[i].x);
+		distance.y = abs(y - city_location_device[i].y);
+		//printf("%d, %d\n", distance.x, distance.y);
+		if (distance.x > outer_radius || distance.y > outer_radius)
+			continue;
+		
+		if (distance.x == distance.y && distance.x == 0) 
+			terrain_array_device[x][y] -= outer_radius;
+		else if (distance.x >= distance.y) 
+			terrain_array_device[x][y] += distance.x - outer_radius;
+		else if (distance.x < distance.y) 
+			terrain_array_device[x][y] += distance.y - outer_radius;
+		
+		if (terrain_array_device[x][y] < 1) 
+			terrain_array_device[x][y] = 1;
 	}
 }
 
@@ -379,7 +394,7 @@ private:
 	char** terrain_player_sight_host = new char* [player_sight_size];
 	unsigned __int64 init_total_hill_height = 0;
 	
-	II city_location[5];
+	II city_location[5];	//나중에 크기 MAXPLAYER로 수정해야 함
 	II* city_location_device;
 	
 public:
@@ -410,7 +425,7 @@ public:
 		}
 		for (int i = 0; i < one_side_number; i++) {
 			for (int j = 0; j < one_side_number; j++) {
-				terrain_array_host[i][j] = height_uid(dre) - 4;			//언덕 생성 안하고 랜덤으로 생성
+				terrain_array_host[i][j] = height_uid(dre);			//언덕 생성 안하고 랜덤으로 생성
 				//terrain_array_host[i][j] = 1;			//언덕 생성 안하고 랜덤으로 생성
 
 			}
@@ -445,7 +460,7 @@ public:
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}*/
-
+		
 		clock_t  t_4 = clock();
 		init_total_hill_height = add_all();
 
@@ -549,10 +564,34 @@ public:
 
 	void add_scarce()
 	{
-		clock_t t_0 = clock();
-		int scarce_blocks = init_total_hill_height - add_all();
+		unsigned __int64 scarce_blocks = init_total_hill_height - add_all();
+		if (scarce_blocks == 0) {
+			return;
+		}
 		cout<< "scarce_blocks: " << scarce_blocks << endl;
 
+		clock_t t_0 = clock();
+
+		II* random_seed = new II[scarce_blocks];
+		for (int i = 0; i < scarce_blocks; i++) {
+			random_seed[i].x = terrain_distance(dre);
+			random_seed[i].y = terrain_distance(dre);
+		}
+
+		//multithread test
+		/*const int num_of_threads = 2;
+		int spacing = scarce_blocks / num_of_threads;
+		int remainder = scarce_blocks % num_of_threads;
+		thread thread_array[num_of_threads];
+
+		for (int i = 0; i < num_of_threads; i++) {
+			thread_array[i] = thread(make_random_array, random_seed, scarce_blocks, spacing, remainder, i, num_of_threads);
+		}
+		for (int i = 0; i < num_of_threads; i++) {
+			thread_array[i].join();
+		}
+		cout << "making done real" << endl;*/
+		
 		//cpu
 		/*for (int i = 0; i < scarce_blocks; i++) {
 			int x = terrain_distance(dre);
@@ -563,7 +602,14 @@ public:
 			cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
 		}*/
 		
+
+		clock_t t_1 = clock();
+		//            랜덤 배열 만드는걸 아예 처음부터 while문 있는 쓰레드에서 계속 미리 생성해놓게끔 할것
 		//cuda
+		II* random_seed_device;
+		cudaMalloc((void**)&random_seed_device, scarce_blocks * sizeof(II));
+		cudaMemcpy(random_seed_device, random_seed, scarce_blocks * sizeof(II), cudaMemcpyHostToDevice);
+
 		int grid, block;
 		if (scarce_blocks <= 1024) {
 			grid = 1;
@@ -573,38 +619,26 @@ public:
 			grid = scarce_blocks / 1024;
 			block = 1024;
 		}
-		
-		II* random_seed = new II[scarce_blocks];
-		for (int i = 0; i < scarce_blocks; i++) {
-			random_seed[i].x = terrain_distance(dre);
-			random_seed[i].y = terrain_distance(dre);
-		}
-		II* random_seed_device;
-		cudaMalloc((void**)&random_seed_device, scarce_blocks * sizeof(II));
-		cudaMemcpy(random_seed_device, random_seed, scarce_blocks * sizeof(II), cudaMemcpyHostToDevice);
-		
 		//cout << "Grid * Block: " << grid * block << endl;
 		add_scarce_cuda << <grid, block >> > (terrain_array_device, random_seed_device, scarce_blocks);
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}
-		
 		//메모리 삭제
 		delete[] random_seed;
 		cudaFree(random_seed_device);
 		
-		clock_t t_1 = clock();
+		clock_t t_2 = clock();
+		
 		/*scarce_blocks = init_total_hill_height - add_all();
 		cout << "after_add_blocks: " << scarce_blocks << endl;*/
 
-		cout << "Add Scarce : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		cout << "Random for Scarce: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		cout << "Add Scarce Cuda: " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
 	void wind_blow(II wind_direction, int wind_speed)
 	{
-		clock_t t_0 = clock();
-		
-		
 		/*FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
 		if (abs(wind_direction.x) < FLT_EPSILON) {
 			wind_direction.x = 0;
@@ -612,21 +646,30 @@ public:
 		if (abs(wind_direction.y) < FLT_EPSILON) {
 			wind_direction.y = 0;
 		}*/
-
+		clock_t t_0, t_1, t_2, t_3;
 		
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
+		
+		//add_scarce();
+		t_0 = clock();
+
 		for (int i = 0; i < wind_speed; i++) {
 			cout << "==========================" << endl;
+			add_scarce();
+
+			t_1 = clock();
+
 			wind_blow_cuda << <grid, block >> > (terrain_array_device, wind_direction);
 			for (int i = 0; i < one_side_number; i++) {
 				cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 			}
-			add_scarce();
+			t_2 = clock();
+			cout << "Once Wind Blow Cuda: " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
 		}
-		
-		clock_t t_1 = clock();
-		cout << "Wind Blow : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+
+		t_3 = clock();
+		cout << "Total Wind Blow: " << (double)(t_3 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 	
 	unsigned __int64 add_all()
@@ -645,6 +688,7 @@ public:
 	
 	void except_city_terrain()
 	{
+		clock_t t_0 = clock();
 		city_location_device = new II[5];
 		cudaMalloc((void**)&city_location_device, 5 * sizeof(II));
 		cudaMemcpy(city_location_device, city_location, 5 * sizeof(II), cudaMemcpyHostToDevice);
@@ -655,13 +699,19 @@ public:
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}
+		clock_t t_1 = clock();
+		cout << "Except City Terrain: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 	
 	void show_array(char** terrain_array_host, int size)
 	{
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
-				printf("%d ", terrain_array_host[x][y]);
+				if (terrain_array_host[x][y] > 9) {
+					printf("H ");
+				}
+				else
+					printf("%d ", terrain_array_host[x][y]);
 			}
 			printf("\n");
 		}
@@ -916,6 +966,9 @@ public:
 	}
 
 	void set_city_location(TF location, int iter) {
+		if (iter > 4) {
+			cout << "Error: set_city_location, Bigger than array size" << endl;
+		}
 		city_location[iter].x = location.x;
 		city_location[iter].y = location.y;
 		cout << "city_location[" << iter << "] = " << city_location[iter].x << " " << city_location[iter].y << endl;
