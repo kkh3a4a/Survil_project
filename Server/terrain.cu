@@ -12,9 +12,9 @@
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 39936;	//39936
+const int one_side_number = 320;	//39936
 const int player_sight_size = 64;	//1024 넘으면 안됨
-const int random_array_size = 150000000;// 150000000;
+const int random_array_size = 500000;// 150000000;
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -615,24 +615,6 @@ public:
 		cudaFree(random_array_device);
 		//==================================================================================
 
-		//int grid, block;
-		//if (scarce_blocks <= 1024) {
-		//	grid = 1;
-		//	block = scarce_blocks;
-		//}
-		//else {
-		//	grid = scarce_blocks / 1024;
-		//	block = 1024;
-		//}
-		////cout << "Grid * Block: " << grid * block << endl;
-		//add_scarce_cuda << <grid, block >> > (terrain_array_device, random_seed_device, scarce_blocks);
-		//for (int i = 0; i < one_side_number; i++) {
-		//	cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		//}
-		////메모리 삭제
-		//delete[] random_seed;
-		//cudaFree(random_seed_device);
-		
 		clock_t t_2 = clock();
 		
 		/*scarce_blocks = init_total_hill_height - add_all();
@@ -670,6 +652,8 @@ public:
 			}
 			t_2 = clock();
 			cout << "Only Wind Blow Cuda: " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
+			
+			except_city_terrain();
 		}
 
 		t_3 = clock();

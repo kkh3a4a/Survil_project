@@ -264,20 +264,19 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {	
-	//terrain.show_array(total_terrain, one_side_number);
-	for (int i = 0; i < 5; i++) {
-		TF pos = { 50 + i * 120, 200 };
-		terrain.set_city_location(pos, i);
-	}
+	////terrain.show_array(total_terrain, one_side_number);
+	//for (int i = 0; i < 5; i++) {
+	//	TF pos = { 50 + i * 120, 200 };
+	//	terrain.set_city_location(pos, i);
+	//}
 
-	for (int i = 0; i < 1000; i++)
-	{
-		cout << endl << i << "번째" << endl;
-		terrain.wind_blow({ 1, 0 }, 1);
-		terrain.except_city_terrain();
-		//terrain.show_array(total_terrain, one_side_number);
-	}
-	cout << "end " << endl;
+	//for (int i = 0; i < 1000; i++)
+	//{
+	//	cout << endl << i << "번째" << endl;
+	//	terrain.wind_blow({ 1, 0 }, 10);
+	//	terrain.show_array(total_terrain, one_side_number);
+	//}
+	//cout << "end " << endl;
 	
 	
 	int retval;
