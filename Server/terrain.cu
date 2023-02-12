@@ -6,16 +6,15 @@
 #include <math.h>
 #include <fstream>
 #include <cuda_runtime.h>
-#include <curand.h>
-#include <curand_kernel.h>
 #include <cooperative_groups.h>
 #include "device_launch_parameters.h"
 #include "global.h"
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 640;	//39936
+const int one_side_number = 39936;	//39936
 const int player_sight_size = 64;	//1024 넘으면 안됨
+const int random_array_size = 150000000;// 150000000;
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -56,21 +55,23 @@ uniform_int_distribution <int>height_uid(4, max_height);
 uniform_int_distribution <int>wind_speed_uid(0, 50);
 uniform_int_distribution <int>wind_angle_uid(0, 360);
 
-void make_random_array(II* random_array, unsigned __int64 array_size, int spacing, int remainder, int i, int num_of_thread)
+void make_random_array(II* random_array, bool& random_array_used)
 {
-	int t = 0;
-	cout << i << " " << spacing << " " << remainder << endl;
-	for (int iter = i * spacing; iter < (i + 1) * spacing; iter++) {
-		if (iter >= array_size) {
-			cout << "Error" << endl;
-			break;
+	while (1) {
+		if (random_array_used) {
+			clock_t t_0 = clock();
+			for (int i = 0; i < random_array_size; i++) {
+				random_array[i].x = terrain_distance(dre);
+				random_array[i].y = terrain_distance(dre);
+			}
+			random_array_used = false;
+			clock_t t_1 = clock();
+			cout << "_Thread_ Random for Scarce: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec\n";
 		}
-		random_array[i].x = terrain_distance(dre);
-		random_array[i].y = terrain_distance(dre);
-		t++;
-
+		else {
+			Sleep(10);
+		}
 	}
-	cout << "making random done " << t << " " << i << " " << "numofthread " << num_of_thread << endl;
 }
 
 __global__
@@ -294,7 +295,7 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 }
 
 __global__
-void add_scarce_cuda(char** terrain_array_device, II* random_seed_device, int scarce_blocks) {
+void add_scarce_cuda(char** terrain_array_device, II* random_seed_device, int size) {
 	int id = blockIdx.x * blockDim.x + threadIdx.x;
 
 	II my_seed;
@@ -396,11 +397,20 @@ private:
 	
 	II city_location[5];	//나중에 크기 MAXPLAYER로 수정해야 함
 	II* city_location_device;
+
+	II* random_array = new II[random_array_size];
+	II* random_array_device;
+	bool random_array_used = true;
+	
 	
 public:
 	Terrain()  
 	{
 		cout << "Generating Terrain Start" << endl;
+		
+		//랜덤배열 제작 쓰레드 가동
+		thread t1 = thread(make_random_array, random_array, ref(random_array_used));
+		t1.detach();
 		
 		//Make Random Hills Information===================================================
 		//clock_t t_0 = clock();
@@ -426,8 +436,6 @@ public:
 		for (int i = 0; i < one_side_number; i++) {
 			for (int j = 0; j < one_side_number; j++) {
 				terrain_array_host[i][j] = height_uid(dre);			//언덕 생성 안하고 랜덤으로 생성
-				//terrain_array_host[i][j] = 1;			//언덕 생성 안하고 랜덤으로 생성
-
 			}
 		}
 		cudaMalloc((void**)&terrain_array_device, one_side_number * sizeof(char*));
@@ -570,46 +578,19 @@ public:
 		}
 		cout<< "scarce_blocks: " << scarce_blocks << endl;
 
+		//==================================================================================
 		clock_t t_0 = clock();
 
-		II* random_seed = new II[scarce_blocks];
-		for (int i = 0; i < scarce_blocks; i++) {
-			random_seed[i].x = terrain_distance(dre);
-			random_seed[i].y = terrain_distance(dre);
+		while (random_array_used) {
+			cout << "Waiting for Thread\n";
+			Sleep(10);
 		}
-
-		//multithread test
-		/*const int num_of_threads = 2;
-		int spacing = scarce_blocks / num_of_threads;
-		int remainder = scarce_blocks % num_of_threads;
-		thread thread_array[num_of_threads];
-
-		for (int i = 0; i < num_of_threads; i++) {
-			thread_array[i] = thread(make_random_array, random_seed, scarce_blocks, spacing, remainder, i, num_of_threads);
-		}
-		for (int i = 0; i < num_of_threads; i++) {
-			thread_array[i].join();
-		}
-		cout << "making done real" << endl;*/
 		
-		//cpu
-		/*for (int i = 0; i < scarce_blocks; i++) {
-			int x = terrain_distance(dre);
-			int y = terrain_distance(dre);
-			terrain_array_host[x][y] += 1;
-		}
-		for (int i = 0; i < one_side_number; i++) {
-			cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
-		}*/
-		
-
 		clock_t t_1 = clock();
-		//            랜덤 배열 만드는걸 아예 처음부터 while문 있는 쓰레드에서 계속 미리 생성해놓게끔 할것
-		//cuda
-		II* random_seed_device;
-		cudaMalloc((void**)&random_seed_device, scarce_blocks * sizeof(II));
-		cudaMemcpy(random_seed_device, random_seed, scarce_blocks * sizeof(II), cudaMemcpyHostToDevice);
 
+		cudaMalloc((void**)&random_array_device, random_array_size * sizeof(II));
+		cudaMemcpy(random_array_device, random_array, random_array_size * sizeof(II), cudaMemcpyHostToDevice);
+		
 		int grid, block;
 		if (scarce_blocks <= 1024) {
 			grid = 1;
@@ -619,21 +600,45 @@ public:
 			grid = scarce_blocks / 1024;
 			block = 1024;
 		}
-		//cout << "Grid * Block: " << grid * block << endl;
-		add_scarce_cuda << <grid, block >> > (terrain_array_device, random_seed_device, scarce_blocks);
+
+		if (scarce_blocks > random_array_size) {
+			cout << "FATAL ERROR: scarce_blocks is bigger than random_array_size !!!\n";
+			return;
+		}
+		add_scarce_cuda << <grid, block >> > (terrain_array_device, random_array_device, scarce_blocks);
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}
+		random_array_used = true;
+		
 		//메모리 삭제
-		delete[] random_seed;
-		cudaFree(random_seed_device);
+		cudaFree(random_array_device);
+		//==================================================================================
+
+		//int grid, block;
+		//if (scarce_blocks <= 1024) {
+		//	grid = 1;
+		//	block = scarce_blocks;
+		//}
+		//else {
+		//	grid = scarce_blocks / 1024;
+		//	block = 1024;
+		//}
+		////cout << "Grid * Block: " << grid * block << endl;
+		//add_scarce_cuda << <grid, block >> > (terrain_array_device, random_seed_device, scarce_blocks);
+		//for (int i = 0; i < one_side_number; i++) {
+		//	cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+		//}
+		////메모리 삭제
+		//delete[] random_seed;
+		//cudaFree(random_seed_device);
 		
 		clock_t t_2 = clock();
 		
 		/*scarce_blocks = init_total_hill_height - add_all();
 		cout << "after_add_blocks: " << scarce_blocks << endl;*/
 
-		cout << "Random for Scarce: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		cout << "Waiting Time for Random Thread: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 		cout << "Add Scarce Cuda: " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
@@ -651,11 +656,10 @@ public:
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		
-		//add_scarce();
 		t_0 = clock();
 
 		for (int i = 0; i < wind_speed; i++) {
-			cout << "==========================" << endl;
+			cout << "__________________________" << endl;
 			add_scarce();
 
 			t_1 = clock();
@@ -665,11 +669,11 @@ public:
 				cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 			}
 			t_2 = clock();
-			cout << "Once Wind Blow Cuda: " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
+			cout << "Only Wind Blow Cuda: " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
 		}
 
 		t_3 = clock();
-		cout << "Total Wind Blow: " << (double)(t_3 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		cout << "[Total Wind Blow: " << (double)(t_3 - t_0) / CLOCKS_PER_SEC << " sec]" << endl;
 	}
 	
 	unsigned __int64 add_all()

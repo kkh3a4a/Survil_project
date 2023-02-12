@@ -138,13 +138,13 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="ServerTest.cpp" />
+    <CudaCompile Include="server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="map.cu">
+    <None Include="terrain.cu">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

@@ -7,7 +7,7 @@
 #include<string>
 #include<map>
 #include <chrono>
-#include "map.cu"
+#include "terrain.cu"
 
 #define SERVERPORT 9000
 #define BUFSIZE    4096
@@ -263,21 +263,21 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 }
 
 int main(int argc, char* argv[])
-{
+{	
 	//terrain.show_array(total_terrain, one_side_number);
-	/*for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 5; i++) {
 		TF pos = { 50 + i * 120, 200 };
 		terrain.set_city_location(pos, i);
 	}
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 1000; i++)
 	{
-		cout << i << "번째=========" << endl;
-		terrain.wind_blow({ 1, 0 }, 10);
+		cout << endl << i << "번째" << endl;
+		terrain.wind_blow({ 1, 0 }, 1);
 		terrain.except_city_terrain();
-		terrain.show_array(total_terrain, one_side_number);
+		//terrain.show_array(total_terrain, one_side_number);
 	}
-	cout << "end " << endl;*/
+	cout << "end " << endl;
 	
 	
 	int retval;
