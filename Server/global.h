@@ -243,19 +243,19 @@ void camera_movement(std::map<int, players_profile*>& players_list)
 	{
 		if (a.second->my_keyinput.w)
 		{
-			a.second->camera_location.y -= 300;
+			a.second->camera_location.y -= 100;
 		}
 		if (a.second->my_keyinput.s)
 		{
-			a.second->camera_location.y += 300;
+			a.second->camera_location.y += 100;
 		}
 		if (a.second->my_keyinput.a)
 		{
-			a.second->camera_location.x -= 300;
+			a.second->camera_location.x -= 100;
 		}
 		if (a.second->my_keyinput.d)
 		{
-			a.second->camera_location.x += 300;
+			a.second->camera_location.x += 100;
 		}
 	}
 }
