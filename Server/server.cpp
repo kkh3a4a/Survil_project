@@ -173,7 +173,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			//=======================
 			time_t t_1 = clock();
 			II player_location{ one_side_number / 2, one_side_number / 2 };
-			//terrain.copy_for_player_map(player_location);
+			terrain.copy_for_player_map(player_location);
+			terrain.wind_blow({ 1,0 }, 1);
+
 			//terrain.show_array(player_sight, player_sight_size);
 			for (int i = 0; i < player_sight_size; ++i)
 			{
