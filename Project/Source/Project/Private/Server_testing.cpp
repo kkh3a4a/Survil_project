@@ -28,6 +28,7 @@ int32 AServer_testing::get_height(int32 x, int32 y)
 	}
 	else
 	{
+		UE_LOG(LogTemp, Log, TEXT("height : %d "), terrain_2d_array[x][y]);
 		return terrain_2d_array[x][y];
 	}
 }
