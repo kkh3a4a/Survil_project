@@ -5,6 +5,7 @@
 #include <time.h>
 #include <math.h>
 #include <fstream>
+#include "cuda.h"
 #include <cuda_runtime.h>
 #include <cooperative_groups.h>
 #include "device_launch_parameters.h"
@@ -12,7 +13,7 @@
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 320;	//39936
+const int one_side_number = 640;	//39936
 const int player_sight_size = 64;	//1024 넘으면 안됨
 const int random_array_size = 500000;// 150000000;
 
@@ -272,6 +273,8 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 		{
 			if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) 
 			{
+				/*atomic_fetch_add(&terrain_array_device[terrain[i].x][terrain[i].y], -1);
+				atomic_fetch_add(&terrain_array_device[terrain[0].x][terrain[0].y], 1);*/
 				--terrain_array_device[terrain[0].x][terrain[0].y];
 				++terrain_array_device[terrain[i].x][terrain[i].y];
 				return;
@@ -282,6 +285,8 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 	//최저높이가 여러개 일 때, 전방 블럭이 최저 높이이면 전방으로 보냄
 	if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[1].x][terrain[1].y] == height_difference) 
 	{		
+		/*atomicAdd(&terrain_array_device[terrain[1].x][terrain[1].y], -1);
+		atomicAdd(&terrain_array_device[terrain[0].x][terrain[0].y], 1);*/
 		--terrain_array_device[terrain[0].x][terrain[0].y];
 		++terrain_array_device[terrain[1].x][terrain[1].y];
 		return;
@@ -289,6 +294,8 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 
 	int radom_seed = (terrain[0].x + terrain[0].y) % num_of_lowest + 2;
 	//왼 오 둘중 하나로 랜덤 이동
+	/*atomicAdd(&terrain_array_device[terrain[radom_seed].x][terrain[radom_seed].y], -1);
+	atomicAdd(&terrain_array_device[terrain[0].x][terrain[0].y], 1);*/
 	--terrain_array_device[terrain[0].x][terrain[0].y];
 	++terrain_array_device[terrain[radom_seed].x][terrain[radom_seed].y];
 	return;
@@ -385,12 +392,65 @@ void except_city_terrain_cuda(char** terrain_array_device, II* city_location_dev
 	}
 }
 
+__global__
+void make_shadow_map_cuda(char** terrain_array_device, char** shadow_map_device, int sun_angle)
+{
+	II coo;
+	coo.y = blockIdx.y * blockDim.y + threadIdx.y;
+	coo.x = blockIdx.x * blockDim.x + threadIdx.x;
+	
+	float height = terrain_array_device[coo.x][coo.y];
+	float ratio = tanf(sun_angle * PI / 180);
+
+	if (abs(height) < FLT_EPSILON) {
+		height = 0;
+	}
+	int distance = height / ratio * -1;
+
+	if (distance == 0) {
+		return;
+	}
+
+	if (distance < 0) {
+		for (int i = -1; i >= distance; i--) {
+			//printf("%d, %d\n", i, distance);
+			if (coo.x + i < 0) {
+				return;
+			}
+			if (terrain_array_device[coo.x + i][coo.y] >= height) {
+				return;
+			}
+			shadow_map_device[coo.x + i][coo.y] = 1;
+		}
+	}
+	else if (distance > 0) {
+		for (int i = 1; i <= distance; i++) {
+			if (coo.x + i >= one_side_number) {
+				return;
+			}
+			if (terrain_array_device[coo.x + i][coo.y] >= height) {
+				return;
+			}
+			shadow_map_device[coo.x + i][coo.y] = 1;
+		}
+	}
+}
+
 class Terrain
 {
 private:
-	char** terrain_array_host = new char* [one_side_number];
+	char** terrain_array_host = new char * [one_side_number];
 	char** terrain_array_device;
 	char* terrain_array_temp[one_side_number];
+
+	char** shadow_map_host = new char* [one_side_number];
+	char** shadow_map_device;
+	char* shadow_map_temp[one_side_number];
+	
+	char** temperature_map_host = new char* [one_side_number];
+	char** temperature_map_device;
+	char* temperature_map_temp[one_side_number];
+	
 
 	char** terrain_player_sight_host = new char* [player_sight_size];
 	unsigned __int64 init_total_hill_height = 0;
@@ -408,43 +468,40 @@ public:
 	{
 		cout << "Generating Terrain Start" << endl;
 		
-		//랜덤배열 제작 쓰레드 가동
+		//랜덤배열 제작 쓰레드 가동===================================================
 		thread t1 = thread(make_random_array, random_array, ref(random_array_used));
 		t1.detach();
-		
-		//Make Random Hills Information===================================================
-		//clock_t t_0 = clock();
-
-		//HI* hill_location_host;
-		//HI* hill_location_device;
-		//hill_location_host = new HI[4000];
-		//hill_location_device;
-		//cudaMalloc((void**)&hill_location_device, 4000 * sizeof(HI));
-		//int num_of_hills = make_hill_location(hill_location_host);
-		//cudaMemcpy(hill_location_device, hill_location_host, num_of_hills * sizeof(HI), cudaMemcpyHostToDevice); //Memcpy to Device
-		//printf("Random Hill Info Complete\n");
-		//for (int i = 0; i < num_of_hills; i++) {
-		//	cout << hill_location_host[i].x << ", " << hill_location_host[i].y << ", " << hill_location_host[i].height << ", " << hill_location_host[i].radius << endl;
-		//}
 
 
 		//Terrain Memory Assignement===================================================
 		clock_t t_1 = clock();
 		for (int i = 0; i < one_side_number; i++) {
 			terrain_array_host[i] = new char[one_side_number];
+			shadow_map_host[i] = new char[one_side_number];
+			temperature_map_host[i] = new char[one_side_number];
 		}
 		for (int i = 0; i < one_side_number; i++) {
 			for (int j = 0; j < one_side_number; j++) {
 				terrain_array_host[i][j] = height_uid(dre);			//언덕 생성 안하고 랜덤으로 생성
+				shadow_map_host[i][j] = 0;
+				temperature_map_host[i][j] = 0;
 			}
 		}
 		cudaMalloc((void**)&terrain_array_device, one_side_number * sizeof(char*));
+		cudaMalloc((void**)&shadow_map_device, one_side_number * sizeof(char*));
+		cudaMalloc((void**)&temperature_map_device, one_side_number * sizeof(char*));
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMalloc((void**)&terrain_array_temp[i], one_side_number * sizeof(char));
+			cudaMalloc((void**)&shadow_map_temp[i], one_side_number * sizeof(char));
+			cudaMalloc((void**)&temperature_map_temp[i], one_side_number * sizeof(char));
 		}
 		cudaMemcpy(terrain_array_device, terrain_array_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
+		cudaMemcpy(shadow_map_device, shadow_map_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
+		cudaMemcpy(temperature_map_device, temperature_map_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
+			cudaMemcpy(shadow_map_temp[i], shadow_map_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
+			cudaMemcpy(temperature_map_temp[i], temperature_map_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
 		}
 
 
@@ -462,14 +519,7 @@ public:
 
 		//Make Hills===================================================
 		clock_t t_3 = clock();
-		/*dim3 grid(one_side_number / 32, one_side_number / 32, 1);
-		dim3 block(32, 32, 1);
-		make_hills_cuda << <grid, block >> > (terrain_array_device, hill_location_device, num_of_hills);
-		for (int i = 0; i < one_side_number; i++) {
-			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}*/
 		
-		clock_t  t_4 = clock();
 		init_total_hill_height = add_all();
 
 		cout << "Terrain size : " << one_side_number << " * " << one_side_number << endl;
@@ -478,7 +528,7 @@ public:
 		//cout << "Make Random Hills Information : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 		cout << "Terrain Memory Assignement : " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
 		cout << "Terrain Memory Assignment For Player's Sight : " << (double)(t_3 - t_2) / CLOCKS_PER_SEC << " sec" << endl;
-		cout << "Make Hills (GPU) : " << (double)(t_4 - t_3) / CLOCKS_PER_SEC << " sec" << endl;
+		//cout << "Make Hills (GPU) : " << (double)(t_4 - t_3) / CLOCKS_PER_SEC << " sec" << endl;
 		//cout << "Make Hills (CPU) : " << (double)(t_6 - t_5) / CLOCKS_PER_SEC << " sec" << endl;
 
 		cout << "Terrain Completely Generated !" << endl;
@@ -549,6 +599,30 @@ public:
 		clock_t t_1 = clock();
 		cout << "Get Highest : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 		return value;
+	}
+
+	void make_shadow_map(int sun_angle) {
+		clock_t t_0 = clock();
+		
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemset(shadow_map_temp[i], 0, one_side_number * sizeof(char));
+		}
+		cudaMemcpy(terrain_array_device, terrain_array_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
+		
+		if (sun_angle < 0 || sun_angle > 180) {
+			cout << "Sun Angle is not valid: " << sun_angle << endl;
+			return;
+		}
+		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
+		dim3 block(32, 32, 1);
+		make_shadow_map_cuda << <grid, block >> > (terrain_array_device, shadow_map_device, sun_angle);
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(shadow_map_host[i], shadow_map_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+		}
+		
+		clock_t t_1 = clock();
+		cout << "Sun Angle: " << sun_angle << endl;
+		cout << "Make Shadow Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
 	void terrain_corrosion()
@@ -633,31 +707,35 @@ public:
 		if (abs(wind_direction.y) < FLT_EPSILON) {
 			wind_direction.y = 0;
 		}*/
-		clock_t t_0, t_1, t_2, t_3;
+		clock_t t_0, t_1, t_2, t_3, t_4, t_5;
 		
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		
 		t_0 = clock();
-
+		
 		for (int i = 0; i < wind_speed; i++) {
 			cout << "__________________________" << endl;
-			add_scarce();
-
 			t_1 = clock();
 
+			add_scarce();
+
+			t_2 = clock();
 			wind_blow_cuda << <grid, block >> > (terrain_array_device, wind_direction);
 			for (int i = 0; i < one_side_number; i++) {
 				cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 			}
-			t_2 = clock();
-			cout << "Only Wind Blow Cuda: " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
-			
 			except_city_terrain();
+			t_3 = clock();
+			cout << "Wind Blow Cuda: " << (double)(t_3 - t_2) / CLOCKS_PER_SEC << " sec" << endl;
+
+
+			t_4 = clock();
+			cout << "=> Once Wind Blow: " << (double)(t_4 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
 		}
 
-		t_3 = clock();
-		cout << "[Total Wind Blow: " << (double)(t_3 - t_0) / CLOCKS_PER_SEC << " sec]" << endl;
+		t_5 = clock();
+		cout << "Total Wind Blow: " << (double)(t_5 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 	
 	unsigned __int64 add_all()
@@ -947,6 +1025,10 @@ public:
 	
 	char** get_map() {
 		return terrain_array_host;
+	}
+
+	char** get_shadow_map() {
+		return shadow_map_host;
 	}
 
 	char** get_player_sight_map() {
