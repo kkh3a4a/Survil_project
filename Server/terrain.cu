@@ -13,9 +13,9 @@
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 640;	//39936
+const int one_side_number = 32000;	//39936
 const int player_sight_size = 64;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
-const int random_array_size = 500000;// 150000000;
+const int random_array_size = 100000000;// 150000000;
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -362,8 +362,8 @@ void except_city_terrain_cuda(char** terrain_array_device, II* city_location_dev
 {
 	int x = blockIdx.x * blockDim.x + threadIdx.x;
 	int y = blockIdx.y * blockDim.y + threadIdx.y;
-	int outer_radius = 40;
-	int inner_radius = outer_radius - 10;
+	int inner_radius = 20;
+	int outer_radius = inner_radius + 20;
 	II distance;
 
 	for (int i = 0; i < num_of_city; i++) {
@@ -387,8 +387,8 @@ void except_city_terrain_cuda(char** terrain_array_device, II* city_location_dev
 		else if (distance.x < distance.y) 
 			terrain_array_device[x][y] += distance.y - outer_radius;
 		
-		if (terrain_array_device[x][y] < 1) 
-			terrain_array_device[x][y] = 1;
+		if (terrain_array_device[x][y] < base_floor)
+			terrain_array_device[x][y] = base_floor;
 	}
 }
 
@@ -434,6 +434,30 @@ void make_shadow_map_cuda(char** terrain_array_device, char** shadow_map_device,
 			shadow_map_device[coo.x + i][coo.y] = 1;
 		}
 	}
+}
+
+__global__
+void make_temperature_map_cuda(char** terrain_array_device, char** temperature_map_device, int sun_angle)
+{
+	II coo;
+	coo.y = blockIdx.y * blockDim.y + threadIdx.y;
+	coo.x = blockIdx.x * blockDim.x + threadIdx.x;
+
+	int height = terrain_array_device[coo.x][coo.y];
+	int temperature = 0;
+
+	II terrain[3];
+	terrain[0].x = coo.x - 1;
+	terrain[0].y = coo.y;
+	
+	terrain[1].x = coo.x;
+	terrain[1].y = coo.y;
+	
+	terrain[2].x = coo.x + 1;
+	terrain[2].y = coo.y;
+	
+	
+	
 }
 
 class Terrain
@@ -623,6 +647,28 @@ public:
 		clock_t t_1 = clock();
 		cout << "Sun Angle: " << sun_angle << endl;
 		cout << "Make Shadow Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+	}
+
+	void make_tempertature_map(int sun_angle)
+	{
+		clock_t t_0 = clock();
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemset(temperature_map_temp[i], 0, one_side_number * sizeof(char));
+		}
+		cudaMemcpy(terrain_array_device, terrain_array_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
+			
+		if (sun_angle < 0 || sun_angle > 180) {
+			cout << "Sun Angle is not valid: " << sun_angle << endl;
+			return;
+		}
+		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
+		dim3 block(32, 32, 1);
+		make_temperature_map_cuda << <grid, block >> > (terrain_array_device, temperature_map_device, sun_angle);
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+		}
+		clock_t t_1 = clock();
+		cout << "Make Temperature Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
 	void terrain_corrosion()
