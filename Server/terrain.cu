@@ -13,9 +13,9 @@
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 32000;	//39936
+const int one_side_number = 160;	//32000
 const int player_sight_size = 64;	//1024 넘으면 안됨
-const int random_array_size = 100000000;// 150000000;
+const int random_array_size = 100000;// 100000000;
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -399,65 +399,84 @@ void make_shadow_map_cuda(char** terrain_array_device, char** shadow_map_device,
 	coo.y = blockIdx.y * blockDim.y + threadIdx.y;
 	coo.x = blockIdx.x * blockDim.x + threadIdx.x;
 	
-	float height = terrain_array_device[coo.x][coo.y];
+	int height = terrain_array_device[coo.x][coo.y];
 	float ratio = tanf(sun_angle * PI / 180);
 
-	if (abs(height) < FLT_EPSILON) {
-		height = 0;
+	if (abs(ratio) < FLT_EPSILON) {
+		ratio = 0;
 	}
 	int distance = height / ratio * -1;
-
-	if (distance == 0) {
-		return;
-	}
 
 	if (distance < 0) {
 		for (int i = -1; i >= distance; i--) {
 			//printf("%d, %d\n", i, distance);
 			if (coo.x + i < 0) {
-				return;
+				break;
 			}
 			if (terrain_array_device[coo.x + i][coo.y] >= height) {
-				return;
+				break;
 			}
-			shadow_map_device[coo.x + i][coo.y] = 1;
+			shadow_map_device[coo.x + i][coo.y] = 0;
 		}
 	}
 	else if (distance > 0) {
 		for (int i = 1; i <= distance; i++) {
 			if (coo.x + i >= one_side_number) {
-				return;
+				break;
 			}
 			if (terrain_array_device[coo.x + i][coo.y] >= height) {
-				return;
+				break;
 			}
-			shadow_map_device[coo.x + i][coo.y] = 1;
+			shadow_map_device[coo.x + i][coo.y] = 0;
 		}
 	}
 }
 
 __global__
-void make_temperature_map_cuda(char** terrain_array_device, char** temperature_map_device, int sun_angle)
+void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_device, char** temperature_map_device, int sun_angle)
 {
 	II coo;
-	coo.y = blockIdx.y * blockDim.y + threadIdx.y;
-	coo.x = blockIdx.x * blockDim.x + threadIdx.x;
+	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
+	coo.y = blockIdx.x * blockDim.x + threadIdx.x;
 
-	int height = terrain_array_device[coo.x][coo.y];
-	int temperature = 0;
+	char height[3];
+	if (coo.x - 1 < 0) {
+		height[0] = 0;
+	}
+	else {
+		height[0] = terrain_array_device[coo.x - 1][coo.y];
+	}
+	height[1] = terrain_array_device[coo.x][coo.y];		//중앙
+	if (coo.x + 1 >= one_side_number) {
+		height[2] = 0;
+	}
+	else {
+		height[2] = terrain_array_device[coo.x + 1][coo.y];
+	}
 
-	II terrain[3];
-	terrain[0].x = coo.x - 1;
-	terrain[0].y = coo.y;
-	
-	terrain[1].x = coo.x;
-	terrain[1].y = coo.y;
-	
-	terrain[2].x = coo.x + 1;
-	terrain[2].y = coo.y;
-	
-	
-	
+	////왼 중 오의 높이를 비교하여 각도를 만들고, 그 각도와 태양의 각도와 비교하여 온도로 변환
+	if (shadow_map_device[coo.x][coo.y] == 1) {
+		int ground_angle{};
+		if (height[0] > height[2]) {
+			ground_angle = (atanf(abs(height[0] - height[2])) * 180 / PI);
+			//temperature_map_device[coo.x][coo.y] = 1;
+		}
+		else if (height[0] < height[2]) {
+			ground_angle = (atanf(abs(height[0] - height[2])) * 180 / PI) + 90;
+			//temperature_map_device[coo.x][coo.y] = 2;
+		}
+		else {
+			ground_angle = 90;
+			//temperature_map_device[coo.x][coo.y] = 3;
+		}
+		char temperature{};
+		temperature = (180 - abs(ground_angle - sun_angle)) / 180 * 100;		//0~10으로 변환
+		//printf("%d\n", temperature);
+		temperature_map_device[coo.x][coo.y] += temperature;
+	}
+	else if (shadow_map_device[coo.x][coo.y] == 0) {
+		temperature_map_device[coo.x][coo.y] -= 1;
+	}
 }
 
 class Terrain
@@ -508,7 +527,7 @@ public:
 			for (int j = 0; j < one_side_number; j++) {
 				terrain_array_host[i][j] = height_uid(dre);			//언덕 생성 안하고 랜덤으로 생성
 				shadow_map_host[i][j] = 0;
-				temperature_map_host[i][j] = 0;
+				temperature_map_host[i][j] = 30;
 			}
 		}
 		cudaMalloc((void**)&terrain_array_device, one_side_number * sizeof(char*));
@@ -629,9 +648,8 @@ public:
 		clock_t t_0 = clock();
 		
 		for (int i = 0; i < one_side_number; i++) {
-			cudaMemset(shadow_map_temp[i], 0, one_side_number * sizeof(char));
+			cudaMemset(shadow_map_temp[i], 1, one_side_number * sizeof(char));
 		}
-		cudaMemcpy(terrain_array_device, terrain_array_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
 		
 		if (sun_angle < 0 || sun_angle > 180) {
 			cout << "Sun Angle is not valid: " << sun_angle << endl;
@@ -652,18 +670,17 @@ public:
 	void make_tempertature_map(int sun_angle)
 	{
 		clock_t t_0 = clock();
-		for (int i = 0; i < one_side_number; i++) {
-			cudaMemset(temperature_map_temp[i], 0, one_side_number * sizeof(char));
-		}
-		cudaMemcpy(terrain_array_device, terrain_array_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
 			
+		/*for (int i = 0; i < one_side_number; i++) {
+			cudaMemset(temperature_map_temp[i], 0, one_side_number * sizeof(char));
+		}*/
 		if (sun_angle < 0 || sun_angle > 180) {
 			cout << "Sun Angle is not valid: " << sun_angle << endl;
 			return;
 		}
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
-		make_temperature_map_cuda << <grid, block >> > (terrain_array_device, temperature_map_device, sun_angle);
+		make_temperature_map_cuda << <grid, block >> > (terrain_array_device, shadow_map_device, temperature_map_device, sun_angle);
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}
@@ -819,13 +836,18 @@ public:
 	{
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
-				if (terrain_array_host[x][y] > 9) {
-					printf("H ");
+				/*if (terrain_array_host[x][y] > 9) {
+					printf("%d_", terrain_array_host[x][y] / 100);
 				}
-				else
-					printf("%d ", terrain_array_host[x][y]);
+				else if (terrain_array_host[x][y] < 0) {
+					printf("%d-", abs(terrain_array_host[x][y]) / 100);
+				}
+				else*/
+					printf("%4d", terrain_array_host[x][y]);
 			}
 			printf("\n");
+			printf("\n");
+
 		}
 	}
 
@@ -1075,6 +1097,11 @@ public:
 
 	char** get_shadow_map() {
 		return shadow_map_host;
+	}
+	
+	char** get_temperature_map()
+	{
+		return temperature_map_host;
 	}
 
 	char** get_player_sight_map() {
