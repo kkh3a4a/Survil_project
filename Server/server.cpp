@@ -267,24 +267,24 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {	
-	//terrain.show_array(total_terrain, one_side_number);
-	for (int i = 0; i < 5; i++) {
-		TF pos = { 50 + i * 120, 200 };
-		terrain.set_city_location(pos, i);
-	}
+	////terrain.show_array(total_terrain, one_side_number);
+	//for (int i = 0; i < 5; i++) {
+	//	TF pos = { 50 + i * 120, 200 };
+	//	terrain.set_city_location(pos, i);
+	//}
 
-	for (int i = 0; i < 1000; i++)
-	{
-		clock_t t_0 = clock();
-		cout << endl << i << "번째" << endl;
-		terrain.wind_blow({ 1, 0 }, 1);
-		terrain.make_shadow_map(i*5);
-		//terrain.show_array(total_terrain, one_side_number);
-		//terrain.show_array(shadow_map, one_side_number);
-		clock_t t_1 = clock();
-		cout << "[[[ Loop: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]]]" << endl;
-	}
-	cout << "end " << endl;
+	//for (int i = 0; i < 1000; i++)
+	//{
+	//	clock_t t_0 = clock();
+	//	cout << endl << i << "번째" << endl;
+	//	terrain.wind_blow({ 1, 0 }, 1);
+	//	terrain.make_shadow_map(i*5);
+	//	//terrain.show_array(total_terrain, one_side_number);
+	//	//terrain.show_array(shadow_map, one_side_number);
+	//	clock_t t_1 = clock();
+	//	cout << "[[[ Loop: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]]]" << endl;
+	//}
+	//cout << "end " << endl;
 	
 	int retval;
 	// 윈속 초기화

@@ -17,6 +17,7 @@ const int one_side_number = 160;	//32000
 const int player_sight_size = 64;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
 const int random_array_size = 100000;// 100000000;
 
+
 const int max_height = 8;
 const int base_floor = 1;
 
