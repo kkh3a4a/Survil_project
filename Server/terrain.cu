@@ -13,9 +13,9 @@
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 32000;	//39936
+const int one_side_number = 320;	//39936
 const int player_sight_size = 64;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
-const int random_array_size = 100000000;// 150000000;
+const int random_array_size = 100000;// 150000000;
 
 const int max_height = 8;
 const int base_floor = 1;
