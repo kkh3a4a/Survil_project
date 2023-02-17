@@ -32,7 +32,7 @@ map<int, resource_actor*> resource_create_landscape;
 Terrain terrain;
 char** total_terrain = terrain.get_map();
 char** shadow_map = terrain.get_shadow_map();
-
+char** temperature_map = terrain.get_temperature_map();
 volatile int player_cnt;
 volatile bool location_set = false;
 
@@ -273,18 +273,21 @@ int main(int argc, char* argv[])
 	//	terrain.set_city_location(pos, i);
 	//}
 
-	//for (int i = 0; i < 1000; i++)
-	//{
+	//for (int i = 0; i < 1000; i++) {
 	//	clock_t t_0 = clock();
 	//	cout << endl << i << "번째" << endl;
 	//	terrain.wind_blow({ 1, 0 }, 1);
-	//	terrain.make_shadow_map(i*5);
-	//	//terrain.show_array(total_terrain, one_side_number);
-	//	//terrain.show_array(shadow_map, one_side_number);
+	//	terrain.make_shadow_map(i * 5);
+	//	terrain.make_tempertature_map(i * 5);
+	//	
+	//	terrain.show_array(total_terrain, one_side_number);
+	//	terrain.show_array(shadow_map, one_side_number);
+	//	terrain.show_array(temperature_map, one_side_number);
 	//	clock_t t_1 = clock();
 	//	cout << "[[[ Loop: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]]]" << endl;
 	//}
 	//cout << "end " << endl;
+	
 	
 	int retval;
 	// 윈속 초기화
