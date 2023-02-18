@@ -134,7 +134,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 					players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.x = temp_citizen_moving.location.x;
 					players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.y = temp_citizen_moving.location.y;
 				}
-
 			}
 			if (retval == SOCKET_ERROR){
 				err_display("send()");
@@ -273,6 +272,29 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {	
+	//terrain.log_on();
+	////terrain.show_array(total_terrain, one_side_number);
+	//for (int i = 0; i < 5; i++) {
+	//	TF pos = { 50 + i * 120, 200 };
+	//	terrain.set_city_location(pos, i);
+	//}
+	//int terrain_i;
+	//while (1) {
+	//	clock_t t_0 = clock();
+	//	//cout << endl << i << "번째" << endl;
+	//	terrain.wind_blow({ 1, 0 }, 1);
+	//	//terrain.make_shadow_map(terrain_i * 5);
+	//	//terrain.make_tempertature_map(terrain_i * 5);
+
+	//	//terrain.show_array(total_terrain, one_side_number);
+	//	//terrain.show_array(shadow_map, one_side_number);
+	//	//terrain.show_array(temperature_map, one_side_number);
+	//	clock_t t_1 = clock();
+	//	cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
+	//	terrain_i++;
+	//}
+	//cout << "end " << endl;
+	
 	int retval;
 	// 윈속 초기화
 	WSADATA wsa;

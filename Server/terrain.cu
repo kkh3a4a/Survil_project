@@ -13,10 +13,12 @@
 #define PI 3.1415926
 using namespace std;
 
+//const int one_side_number = 640;	//32000
+//const int player_sight_size = 30;	//1024 넘으면 안됨
+//const int random_array_size = 500000;// 90000000;
 const int one_side_number = 32000;	//32000
 const int player_sight_size = 30;	//1024 넘으면 안됨
-const int random_array_size = 100000000;// 100000000;
-
+const int random_array_size = 90000000;// 90000000;
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -459,7 +461,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 		int temperature = angle_difference / 10;
 		temperature_map_device[coo.x][coo.y] += angle_difference;
 		if (angle_difference > 0) {
-			printf("%d %d\n", angle_difference, temperature);
+			//printf("%d %d\n", angle_difference, temperature);
 		}
 	}
 	else if (shadow_map_device[coo.x][coo.y] == 0) {
@@ -553,9 +555,8 @@ private:
 	II* random_array = new II[random_array_size];
 	II* random_array_device;
 	bool random_array_used = true;
-
-	bool log = false;
 	
+	bool log = false;
 	
 public:
 	Terrain()  
@@ -751,7 +752,7 @@ public:
 		clock_t t_0 = clock();
 
 		while (random_array_used) {
-			cout << "Waiting for Thread\n";
+			//cout << "Waiting for Thread\n";
 			Sleep(10);
 		}
 		
@@ -775,9 +776,11 @@ public:
 			return;
 		}
 		add_scarce_cuda << <grid, block >> > (terrain_array_device, random_array_device, scarce_blocks);
-		for (int i = 0; i < one_side_number; i++) {
+		cudaDeviceSynchronize();
+		/*for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}
+		}*/
+		
 		random_array_used = true;
 		
 		//메모리 삭제
@@ -797,13 +800,6 @@ public:
 
 	void wind_blow(II wind_direction, int wind_speed)
 	{
-		/*FF wind_direction = { cos(wind_angle * PI / 180), sin(wind_angle * PI / 180) };
-		if (abs(wind_direction.x) < FLT_EPSILON) {
-			wind_direction.x = 0;
-		}
-		if (abs(wind_direction.y) < FLT_EPSILON) {
-			wind_direction.y = 0;
-		}*/
 		clock_t t_0, t_1, t_2, t_3, t_4, t_5;
 		
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
@@ -819,20 +815,21 @@ public:
 
 			t_2 = clock();
 			wind_blow_cuda << <grid, block >> > (terrain_array_device, wind_direction);
-			for (int i = 0; i < one_side_number; i++) {
+			cudaDeviceSynchronize();
+			/*for (int i = 0; i < one_side_number; i++) {
 				cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-			}
-			except_city_terrain();
+			}*/
+			
 			t_3 = clock();
 			if (log)
 				cout << "Wind Blow Cuda: " << (double)(t_3 - t_2) / CLOCKS_PER_SEC << " sec" << endl;
-
+			
+			except_city_terrain();
 
 			t_4 = clock();
 			if (log)
 				cout << "=> Once Wind Blow: " << (double)(t_4 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
 		}
-
 		t_5 = clock();
 		if (log)
 			cout << "Total Wind Blow: " << (double)(t_5 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
@@ -875,17 +872,19 @@ public:
 	{
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
-				/*if (terrain_array_host[x][y] > 9) {
+				if (terrain_array_host[x][y] > 9) {
 					printf("%d_", terrain_array_host[x][y] / 100);
 				}
 				else if (terrain_array_host[x][y] < 0) {
 					printf("%d-", abs(terrain_array_host[x][y]) / 100);
 				}
-				else*/
-					printf("%4d", terrain_array_host[x][y]);
+				else
+					//printf("%4d", terrain_array_host[x][y]);
+					printf("%d ", terrain_array_host[x][y]);
+
 			}
 			printf("\n");
-			printf("\n");
+			//printf("\n");
 
 		}
 	}
@@ -1156,4 +1155,10 @@ public:
 		city_location[iter].y = location.y;
 		cout << "city_location[" << iter << "] = " << city_location[iter].x << " " << city_location[iter].y << endl;
 	}
+
+	void log_on()
+	{
+		log = true;
+	}
+
 };
