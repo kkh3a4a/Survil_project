@@ -36,6 +36,30 @@ char** temperature_map = terrain.get_temperature_map();
 volatile int player_cnt;
 volatile bool location_set = false;
 
+DWORD WINAPI terrain_change(LPVOID arg)
+{
+	//terrain.show_array(total_terrain, one_side_number);
+	for (int i = 0; i < 5; i++) {
+		TF pos = { 50 + i * 120, 200 };
+		terrain.set_city_location(pos, i);
+	}
+	while (1){
+		clock_t t_0 = clock();
+		//cout << endl << i << "번째" << endl;
+		terrain.wind_blow({ 1, 0 }, 1);
+		//terrain.make_shadow_map(i * 5);
+		//terrain.make_tempertature_map(i * 5);
+
+		/*terrain.show_array(total_terrain, one_side_number);
+		terrain.show_array(shadow_map, one_side_number);
+		terrain.show_array(temperature_map, one_side_number);*/
+		clock_t t_1 = clock();
+		cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
+	}
+
+	cout << "end " << endl;
+}
+
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
 	int retval = 0;
@@ -70,30 +94,24 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	//player sight 주소값
 	char** player_sight = terrain.get_player_sight_map();
 
-	while (1)
-	{
-		if (!location_set)
-		{
+	while (1){
+		if (!location_set){
 			continue;
 		}
 		retval = send(client_sock, (char*)&(players_list[port]->player_info), (int)sizeof(FActor), 0);
-		for (int i = 0; i < 10; ++i)
-		{
+		for (int i = 0; i < 10; ++i){
 			cout << i << "//" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
 			retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 		}
 		for (auto& a : players_list){
-			if (port != a.first)
-			{
+			if (port != a.first){
 				retval = send(client_sock, (char*)&(a.second->player_info), (int)sizeof(FActor), 0);
-				for (int i = 0; i < 10; ++i)
-				{
+				for (int i = 0; i < 10; ++i){
 					retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 				}
 			}
 		}
-		for (auto& a : resource_create_landscape)
-		{
+		for (auto& a : resource_create_landscape){
 			retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
 		}
 
@@ -102,65 +120,53 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	while (1) {
 		auto end_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 50) 
-		{
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 0) {
 			start_t = high_resolution_clock::now();
 			Citizen_moving temp_citizen_moving;
 			retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
 			//cout << temp_citizen_moving.team << " : " << temp_citizen_moving.location.x << ", "<< temp_citizen_moving.location.y<<endl;
-			if(temp_citizen_moving.team != -1)
-			{
+			if(temp_citizen_moving.team != -1){
 				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->team = temp_citizen_moving.team;
 				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.x = temp_citizen_moving.location.x;
 				players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.y = temp_citizen_moving.location.y;
-				if (temp_citizen_moving.citizen_job != 0)
-				{
+				if (temp_citizen_moving.citizen_job != 0){
 					players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->job = temp_citizen_moving.citizen_job;
 					players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.x = temp_citizen_moving.location.x;
 					players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.y = temp_citizen_moving.location.y;
 				}
 
 			}
-			if (retval == SOCKET_ERROR)
-			{
+			if (retval == SOCKET_ERROR){
 				err_display("send()");
 				break;
 			}
 
 			retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
-			if (retval == SOCKET_ERROR) 
-			{
+			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
 			}
 			int playercnts = 0;
 
-			for (int i = 0; i < 10; ++i) 
-			{
+			for (int i = 0; i < 10; ++i) {
 				retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 			}
 
-			for (auto& a : players_list)
-			{
-				if (a.second->port != port)
-				{
-					for (int i = 0; i < 10; ++i) 
-					{
+			for (auto& a : players_list){
+				if (a.second->port != port){
+					for (int i = 0; i < 10; ++i) {
 						retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
 					}
 				}
 				playercnts++;
-
 			}
 
 			for (int j = 0; j < MAXPLAYER; ++j) {
-				for (auto& a : resource_create_landscape)
-				{
+				for (auto& a : resource_create_landscape){
 					retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
-					cout << a.second->count <<", ";
+					//cout << a.second->count <<", ";
 				}
-				cout << endl;
-				
+				//cout << endl;	
 			}
 			
 			//클라이언트로부터 카메라 위치 받아와야 함
@@ -173,13 +179,13 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 			//=======================
 			time_t t_1 = clock();
-			II player_location{ one_side_number / 2, one_side_number / 2 };
+			//10배 축소해서 일단 테스트
+			//cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
+			II player_location{ (int)players_list[port]->camera_location.x / 10, (int)players_list[port]->camera_location.y / 10 };
 			terrain.copy_for_player_map(player_location);
-			terrain.wind_blow({ 1,0 }, 1);
 
 			//terrain.show_array(player_sight, player_sight_size);
-			for (int i = 0; i < player_sight_size; ++i)
-			{
+			for (int i = 0; i < player_sight_size; ++i){
 				retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size, 0);
 				if (retval == SOCKET_ERROR) {
 					err_display("send()");
@@ -267,28 +273,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {	
-	////terrain.show_array(total_terrain, one_side_number);
-	//for (int i = 0; i < 5; i++) {
-	//	TF pos = { 50 + i * 120, 200 };
-	//	terrain.set_city_location(pos, i);
-	//}
-
-	//for (int i = 0; i < 1000; i++) {
-	//	clock_t t_0 = clock();
-	//	cout << endl << i << "번째" << endl;
-	//	terrain.wind_blow({ 1, 0 }, 1);
-	//	terrain.make_shadow_map(i * 5);
-	//	terrain.make_tempertature_map(i * 5);
-	//	
-	//	terrain.show_array(total_terrain, one_side_number);
-	//	terrain.show_array(shadow_map, one_side_number);
-	//	terrain.show_array(temperature_map, one_side_number);
-	//	clock_t t_1 = clock();
-	//	cout << "[[[ Loop: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]]]" << endl;
-	//}
-	//cout << "end " << endl;
-	
-	
 	int retval;
 	// 윈속 초기화
 	WSADATA wsa;
@@ -317,8 +301,8 @@ int main(int argc, char* argv[])
 	struct sockaddr_in clientaddr;
 	int addrlen;
 	HANDLE hThread;
-	hThread = CreateThread(NULL, 0, ingame_thread,
-		0, 0, NULL);
+	hThread = CreateThread(NULL, 0, ingame_thread,0, 0, NULL);
+	hThread = CreateThread(NULL, 0, terrain_change,0, 0, NULL);
 
 	while (1) {
 		// accept()

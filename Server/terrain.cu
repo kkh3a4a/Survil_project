@@ -13,9 +13,9 @@
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 320;	//32000
-const int player_sight_size = 64;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
-const int random_array_size = 1000000;// 100000000;
+const int one_side_number = 32000;	//32000
+const int player_sight_size = 30;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
+const int random_array_size = 100000000;// 100000000;
 
 
 const int max_height = 8;
@@ -553,6 +553,8 @@ private:
 	II* random_array = new II[random_array_size];
 	II* random_array_device;
 	bool random_array_used = true;
+
+	bool log = false;
 	
 	
 public:
@@ -687,8 +689,10 @@ public:
 		}
 		
 		clock_t t_1 = clock();
-		cout << "Sun Angle: " << sun_angle << endl;
-		cout << "Make Shadow Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		if (log) {
+			cout << "Sun Angle: " << sun_angle << endl;
+			cout << "Make Shadow Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		}
 	}
 
 	void make_tempertature_map(int sun_angle)
@@ -710,7 +714,8 @@ public:
 			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}
 		clock_t t_1 = clock();
-		cout << "Make Temperature Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		if(log)
+			cout << "Make Temperature Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
 	void terrain_corrosion()
@@ -729,7 +734,8 @@ public:
 		}
 		
 		clock_t t_1 = clock();
-		cout << "Terrain Flatten : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		if (log)
+			cout << "Terrain Flatten : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
 	void add_scarce()
@@ -738,7 +744,8 @@ public:
 		if (scarce_blocks == 0) {
 			return;
 		}
-		cout<< "scarce_blocks: " << scarce_blocks << endl;
+		if (log)
+			cout<< "scarce_blocks: " << scarce_blocks << endl;
 
 		//==================================================================================
 		clock_t t_0 = clock();
@@ -782,8 +789,10 @@ public:
 		/*scarce_blocks = init_total_hill_height - add_all();
 		cout << "after_add_blocks: " << scarce_blocks << endl;*/
 
-		cout << "Waiting Time for Random Thread: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
-		cout << "Add Scarce Cuda: " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
+		if (log) {
+			cout << "Waiting Time for Random Thread: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+			cout << "Add Scarce Cuda: " << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
+		}
 	}
 
 	void wind_blow(II wind_direction, int wind_speed)
@@ -815,15 +824,18 @@ public:
 			}
 			except_city_terrain();
 			t_3 = clock();
-			cout << "Wind Blow Cuda: " << (double)(t_3 - t_2) / CLOCKS_PER_SEC << " sec" << endl;
+			if (log)
+				cout << "Wind Blow Cuda: " << (double)(t_3 - t_2) / CLOCKS_PER_SEC << " sec" << endl;
 
 
 			t_4 = clock();
-			cout << "=> Once Wind Blow: " << (double)(t_4 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
+			if (log)
+				cout << "=> Once Wind Blow: " << (double)(t_4 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
 		}
 
 		t_5 = clock();
-		cout << "Total Wind Blow: " << (double)(t_5 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		if (log)
+			cout << "Total Wind Blow: " << (double)(t_5 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 	
 	unsigned __int64 add_all()
@@ -836,7 +848,8 @@ public:
 			}
 		}
 		clock_t t_1 = clock();
-		cout << "Terrain Add All : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		if (log)
+			cout << "Terrain Add All : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 		return all;
 	}
 	
@@ -854,7 +867,8 @@ public:
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}
 		clock_t t_1 = clock();
-		cout << "Except City Terrain: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		if (log)
+			cout << "Except City Terrain: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 	
 	void show_array(char** terrain_array_host, int size)
@@ -889,7 +903,8 @@ public:
 			}
 		}
 		end_t = clock();
-		cout << "copy_for_player_map : " << double(end_t - start_t) / CLOCKS_PER_SEC << endl;
+		if (log)
+			cout << "copy_for_player_map : " << double(end_t - start_t) / CLOCKS_PER_SEC << endl;
 	}
 	
 	void get_device_info()

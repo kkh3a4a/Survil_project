@@ -18,17 +18,13 @@ AServer_testing::AServer_testing()
 
 int32 AServer_testing::get_height(int32 x, int32 y)
 {
-	if (x < 0 || x >= map_size || y < 0 || y >= map_size)
-	{
+	if (x < 0 || x >= map_size || y < 0 || y >= map_size){
 		return 1;
 	}
-	else if (terrain_2d_array.Num() == 0)
-	{
+	else if (terrain_2d_array.Num() == 0){
 		return 1;
 	}
-	else
-	{
-		//UE_LOG(LogTemp, Log, TEXT("height : %d "), terrain_2d_array[x][y]);
+	else{
 		return terrain_2d_array[x][y];
 	}
 }

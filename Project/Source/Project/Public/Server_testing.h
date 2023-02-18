@@ -16,7 +16,7 @@
 
 using namespace std;
 using namespace chrono;
-const int map_size = 64;
+const int map_size = 30;
 
 USTRUCT(Atomic, BlueprintType)
 struct FOneArray
