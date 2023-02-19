@@ -14,11 +14,11 @@
 using namespace std;
 
 //const int one_side_number = 640;	//32000
-//const int player_sight_size = 30;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
+//const int player_sight_size = 50;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
 //const int random_array_size = 500000;// 90000000;
-const int one_side_number = 32000;	//32000
-const int player_sight_size = 30;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
-const int random_array_size = 90000000;// 90000000;
+const int one_side_number = 16000;	//32000
+const int player_sight_size = 50;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
+const int random_array_size = 50000000;// 90000000;
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -70,7 +70,7 @@ void make_random_array(II* random_array, bool& random_array_used)
 			}
 			random_array_used = false;
 			clock_t t_1 = clock();
-			cout << "_Thread_ Random for Scarce: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec\n";
+			//cout << "_Thread_ Random for Scarce: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec\n";
 		}
 		else {
 			Sleep(10);
@@ -808,7 +808,7 @@ public:
 		t_0 = clock();
 		
 		for (int i = 0; i < wind_speed; i++) {
-			cout << "__________________________" << endl;
+			//cout << "__________________________" << endl;
 			t_1 = clock();
 
 			add_scarce();

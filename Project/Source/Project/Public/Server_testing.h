@@ -15,7 +15,7 @@
 
 using namespace std;
 using namespace chrono;
-const int map_size = 30;
+const int map_size = 50;
 
 USTRUCT(Atomic, BlueprintType)
 struct FOneArray
@@ -23,27 +23,42 @@ struct FOneArray
 	GENERATED_BODY()
 public:
 	TArray<int8> one_side_array;
-	
+
 	int8 operator[] (int32 i)
 	{
 		return one_side_array[i];
 	}
-	
-	void Init(int32 size) 
+
+	void Init(int32 size)
 	{
 		one_side_array.Init(0, size);
 	}
+
+	void SetNum(int32 size)
+	{
+		one_side_array.SetNum(size);
+	}
 	
+	void Copy (const TArray<int8>* other)
+	{
+		memcpy(&one_side_array, other, map_size * sizeof(int8));
+	}
+
+	void Set(int i, int8 value)
+	{
+		one_side_array[i] = value;
+	}
+
 	void Add(int8 item)
 	{
 		one_side_array.Add(item);
 	}
-	
-	int32 Num() 
+
+	int32 Num()
 	{
 		return one_side_array.Num();
 	}
-	
+
 	int32 GetTypeSize()
 	{
 		return one_side_array.GetTypeSize();
@@ -52,7 +67,6 @@ public:
 	{
 		return one_side_array.GetAllocatedSize();
 	}
-
 	void Empty()
 	{
 		one_side_array.Empty();
@@ -71,7 +85,10 @@ public:
 	int32 get_height(int32 x, int32 y);
 
 	UFUNCTION()
-	void SpawnISM();
+	void SpawnTerrain();
+
+	UFUNCTION()
+	void UpdateTerrainHeight();
 
 protected:
 	// Called when the game starts or when spawned
@@ -85,12 +102,6 @@ public:
 	const int BUFSIZE = 256;
 	int ret = 0;
 	int resources[5] = {};
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor> TerrainBlock;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UInstancedStaticMeshComponent* InstancedTerrainBlock;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int oil_count = 0;
@@ -166,13 +177,21 @@ public:
 	
 	
 
+	int32 UpdateTerrainIter{};
 	int8 terrain_recv_array[map_size];
+	//FOneArray terrain_recv_array;
+	//TArray<int8> terrain_recv_array;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FOneArray> terrain_2d_array;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor> TerrainBlock;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int32 sands_size {map_size};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray< AActor*> TerrainBlocks;
+	
+
 
 
 	/*DWORD WINAPI Angle_Receiver(LPVOID arg);*/

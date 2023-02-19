@@ -44,7 +44,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		terrain.set_city_location(pos, i);
 	}
 	while (1){
-		clock_t t_0 = clock();
+		//clock_t t_0 = clock();
 		//cout << endl << i << "번째" << endl;
 		terrain.wind_blow({ 1, 0 }, 1);
 		//terrain.make_shadow_map(i * 5);
@@ -53,11 +53,9 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		/*terrain.show_array(total_terrain, one_side_number);
 		terrain.show_array(shadow_map, one_side_number);
 		terrain.show_array(temperature_map, one_side_number);*/
-		clock_t t_1 = clock();
-		cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
+		//clock_t t_1 = clock();
+		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
 	}
-
-	cout << "end " << endl;
 }
 
 DWORD WINAPI ProcessClient(LPVOID arg)
@@ -180,7 +178,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			time_t t_1 = clock();
 			//10배 축소해서 일단 테스트
 			//cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
-			II player_location{ (int)players_list[port]->camera_location.x / 10, (int)players_list[port]->camera_location.y / 10 };
+			II player_location{ (int)players_list[port]->camera_location.x / 100, (int)players_list[port]->camera_location.y / 100 };
 			terrain.copy_for_player_map(player_location);
 
 			//terrain.show_array(player_sight, player_sight_size);

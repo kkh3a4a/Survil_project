@@ -2,9 +2,11 @@
 #include "Server_testing.h"
 #include <math.h>
 #include "MyPlayerController.h"
-
 #include "Kismet/GameplayStatics.h"
 #include "citizen.h"
+#include <future>
+#include "Async/Async.h"
+#include "GenericPlatform/GenericPlatformProcess.h"
 // Sets default values
 
 //AMyPlayerController* my_controller;
@@ -13,7 +15,6 @@ AServer_testing::AServer_testing()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 int32 AServer_testing::get_height(int32 x, int32 y)
@@ -29,21 +30,35 @@ int32 AServer_testing::get_height(int32 x, int32 y)
 	}
 }
 
-void AServer_testing::SpawnISM()
+void AServer_testing::SpawnTerrain()
 {
-	InstancedTerrainBlock = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstancedStaticMesh"));
-	
-
 	FRotator SpawnRotation = FRotator(0, 0, 0);
 	FVector SpawnLocation = FVector(0, 0, 0);
-	for (int i = 0; i < 200; i++) {
-		for (int j = 0; j < 200; j++) {
-			SpawnLocation = FVector(i * 100.1, j * 100.1, 1000);
-			GetWorld()->SpawnActor<AActor>(TerrainBlock, SpawnLocation, SpawnRotation);
-			//ISM->AddInstance(FTransform(SpawnRotation, SpawnLocation, FVector(1, 1, 1)));
-			UE_LOG(LogTemp, Warning, TEXT("SpawnedActor"));
+	for (int i = 0; i < map_size; i++) {
+		for (int j = 0; j < map_size; j++) {
+			SpawnLocation = FVector(i * 100, j * 100, 3000);
+			AActor* SpawnedActor = GetWorld()->SpawnActor<AActor>(TerrainBlock, SpawnLocation, SpawnRotation);
+			TerrainBlocks.Add(SpawnedActor);
 		}
 	}
+}
+
+void AServer_testing::UpdateTerrainHeight()
+{
+	clock_t start = clock();
+	FVector CamLocation = GetActorLocation();
+	FVector Scale;
+	Scale.X = 1;
+	Scale.Y = 1;
+	for (int i = 0; i < map_size; i++) {
+		for (int j = 0; j < map_size; j++) {
+			Scale.Z = terrain_2d_array[i][j];
+			TerrainBlocks[i * map_size + j]->SetActorScale3D(Scale);
+			TerrainBlocks[i * map_size + j]->SetActorLocation(CamLocation + FVector(i * 100 - map_size * 100 / 2, j * 100 - 5000, -3000));
+		}
+	}
+	clock_t end = clock();
+	UE_LOG(LogTemp, Warning, TEXT("UpdateTerrainHeight: %f"), (float)(end - start) / CLOCKS_PER_SEC);
 }
 
 // Called when the game starts or when spawned
@@ -60,7 +75,7 @@ void AServer_testing::BeginPlay()
 	server_addr.sin_port = htons(SERVER_PORT);
 	ret = inet_pton(AF_INET, SERVER_ADDR, &server_addr.sin_addr);
 
-	SpawnISM();
+	SpawnTerrain();
 
 
 	//connect();
@@ -115,7 +130,14 @@ void AServer_testing::BeginPlay()
 
 	first_recv_send = true;
 
+	//Set Size of Terrain Array
+	terrain_2d_array.SetNum(map_size);
+	for (int i = 0; i < map_size; ++i)
+	{
+		terrain_2d_array[i].SetNum(map_size);
+	}
 
+	
 	UE_LOG(LogTemp, Log, TEXT("connected to server"));
 	start_t = high_resolution_clock::now();
 }
@@ -124,13 +146,13 @@ void AServer_testing::BeginPlay()
 void AServer_testing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	steady_clock::time_point end_t = high_resolution_clock::now();
 	//UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"), *MouseInput.name, MouseInput.location.x, MouseInput.location.y);
 	//UE_LOG(LogTemp, Log, TEXT("%d"), test);
 	//my_controller->testFunction();
 	//UE_LOG(LogTemp, Log, TEXT("%d"), test);
-	if (duration_cast<milliseconds>(end_t - start_t).count() > 50) {
+	if (duration_cast<milliseconds>(end_t - start_t).count() > 0) {
 
 		start_t = high_resolution_clock::now();
 		ret = send(s_socket, (char*)&Citizen_moving, (int)sizeof(FCitizen_moving), 0);
@@ -183,12 +205,9 @@ void AServer_testing::Tick(float DeltaTime)
 		//자원 받기
 		recv(s_socket, (char*)&resources, sizeof(int)*5, 0);
 		
-		
 		oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
 		//===================
 		FOneArray temp_array;
-		terrain_2d_array.Init(temp_array, map_size);
-		
 
 		for (int i = 0; i < map_size; i++)
 		{
@@ -198,11 +217,14 @@ void AServer_testing::Tick(float DeltaTime)
 			{
 				return;
 			}
+			//terrain_2d_array[i].Copy(&terrain_recv_array);
 			for (int j = 0; j < map_size; j++)
 			{
-				terrain_2d_array[i].Add(terrain_recv_array[j]);
+				terrain_2d_array[i].Set(j, terrain_recv_array[j]);
 			}
 		}
+
+		UpdateTerrainHeight();
 		//=====================
 	}
 
@@ -221,4 +243,3 @@ void AServer_testing::Tick(float DeltaTime)
 //		ret = send(s_socket, (char*)&sunangle, (int)sizeof(SunAngle), 0);
 //	}
 //}
-
