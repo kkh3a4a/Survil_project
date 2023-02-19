@@ -29,7 +29,7 @@ typedef struct FCitizen_sole {
 	TF rotation;
 	int resources[5];
 	int HP;
-	int job;				/////////////// 0 : ¹«Á÷, 1 : ÀÚ¿ø Ã¤Ãë
+	int job;				/////////////// 0 : ï¿½ï¿½ï¿½ï¿½, 1 : ï¿½Ú¿ï¿½ Ã¤ï¿½ï¿½
 	int isJob;		
 	TF Job_location;		
 }FCitizen_sole;
@@ -47,7 +47,7 @@ typedef struct Citizen_moving
 	int citizen_number;
 	TF location;
 	TF rotation;
-	int citizen_job;		/////////////// 0 : ¹«Á÷, 1 : ÀÚ¿ø Ã¤Ãë
+	int citizen_job;		/////////////// 0 : ï¿½ï¿½ï¿½ï¿½, 1 : ï¿½Ú¿ï¿½ Ã¤ï¿½ï¿½
 }Citizen_moving;
 
 typedef struct keyboard_input {
@@ -70,7 +70,7 @@ typedef struct players_profile {
 
 typedef struct resource_actor
 {
-	int type;		///////////////0 : ¼®À¯,		1 : ¹°,		2 : Ã¶,		3 : ½Ä·®,	4 : ³ª¹«
+	int type;		///////////////0 : ï¿½ï¿½ï¿½ï¿½,		1 : ï¿½ï¿½,		2 : Ã¶,		3 : ï¿½Ä·ï¿½,	4 : ï¿½ï¿½ï¿½ï¿½
 	int count;
 	TF location;
 }resource_actor;
@@ -89,8 +89,8 @@ float location_distance(TF& p1, TF& p2)
 {
 	float distance;
 
-	// ÇÇÅ¸°í¶ó½ºÀÇ Á¤¸®
-	// pow(x,2) xÀÇ 2½Â,  sqrt() Á¦°ö±Ù
+	// ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// pow(x,2) xï¿½ï¿½ 2ï¿½ï¿½,  sqrt() ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	distance = sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
 
 	return distance;
