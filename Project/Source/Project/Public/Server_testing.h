@@ -187,11 +187,8 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor> TerrainBlock;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray< AActor*> TerrainBlocks;
 	
-
+	TArray< AActor*> TerrainBlocks;
 
 
 	/*DWORD WINAPI Angle_Receiver(LPVOID arg);*/

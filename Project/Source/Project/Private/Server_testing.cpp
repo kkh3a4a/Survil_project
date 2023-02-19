@@ -6,7 +6,9 @@
 #include "citizen.h"
 #include <future>
 #include "Async/Async.h"
+#include "Async/ParallelFor.h"
 #include "GenericPlatform/GenericPlatformProcess.h"
+#include "Components/InstancedStaticMeshComponent.h"
 // Sets default values
 
 //AMyPlayerController* my_controller;
@@ -61,6 +63,7 @@ void AServer_testing::UpdateTerrainHeight()
 	UE_LOG(LogTemp, Warning, TEXT("UpdateTerrainHeight: %f"), (float)(end - start) / CLOCKS_PER_SEC);
 }
 
+
 // Called when the game starts or when spawned
 void AServer_testing::BeginPlay()
 {
@@ -76,7 +79,6 @@ void AServer_testing::BeginPlay()
 	ret = inet_pton(AF_INET, SERVER_ADDR, &server_addr.sin_addr);
 
 	SpawnTerrain();
-
 
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
