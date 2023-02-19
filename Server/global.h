@@ -29,7 +29,7 @@ typedef struct FCitizen_sole {
 	TF rotation;
 	int resources[5];
 	int HP;
-	int job;				/////////////// 0 : ����, 1 : �ڿ� ä��
+	int job;				/////////////// 0 : 무직, 1 : 자원 채취
 	int isJob;		
 	TF Job_location;		
 }FCitizen_sole;
@@ -47,7 +47,7 @@ typedef struct Citizen_moving
 	int citizen_number;
 	TF location;
 	TF rotation;
-	int citizen_job;		/////////////// 0 : ����, 1 : �ڿ� ä��
+	int citizen_job;		/////////////// 0 : 무직, 1 : 자원 채취
 }Citizen_moving;
 
 typedef struct keyboard_input {
@@ -70,7 +70,7 @@ typedef struct players_profile {
 
 typedef struct resource_actor
 {
-	int type;		///////////////0 : ����,		1 : ��,		2 : ö,		3 : �ķ�,	4 : ����
+	int type;		///////////////0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	int count;
 	TF location;
 }resource_actor;
@@ -89,8 +89,8 @@ float location_distance(TF& p1, TF& p2)
 {
 	float distance;
 
-	// ��Ÿ����� ����
-	// pow(x,2) x�� 2��,  sqrt() ������
+	// 피타고라스의 정리
+	// pow(x,2) x의 2승,  sqrt() 제곱근
 	distance = sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
 
 	return distance;

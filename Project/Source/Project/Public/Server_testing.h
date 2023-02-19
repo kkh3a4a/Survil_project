@@ -13,7 +13,6 @@
 #include "GameFramework/Actor.h"
 #include "Server_testing.generated.h"
 
-
 using namespace std;
 using namespace chrono;
 const int map_size = 30;
@@ -71,6 +70,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 get_height(int32 x, int32 y);
 
+	UFUNCTION()
+	void SpawnISM();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -83,6 +85,12 @@ public:
 	const int BUFSIZE = 256;
 	int ret = 0;
 	int resources[5] = {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor> TerrainBlock;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UInstancedStaticMeshComponent* InstancedTerrainBlock;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int oil_count = 0;

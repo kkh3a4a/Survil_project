@@ -29,6 +29,23 @@ int32 AServer_testing::get_height(int32 x, int32 y)
 	}
 }
 
+void AServer_testing::SpawnISM()
+{
+	InstancedTerrainBlock = CreateDefaultSubobject<UInstancedStaticMeshComponent>(TEXT("InstancedStaticMesh"));
+	
+
+	FRotator SpawnRotation = FRotator(0, 0, 0);
+	FVector SpawnLocation = FVector(0, 0, 0);
+	for (int i = 0; i < 200; i++) {
+		for (int j = 0; j < 200; j++) {
+			SpawnLocation = FVector(i * 100.1, j * 100.1, 1000);
+			GetWorld()->SpawnActor<AActor>(TerrainBlock, SpawnLocation, SpawnRotation);
+			//ISM->AddInstance(FTransform(SpawnRotation, SpawnLocation, FVector(1, 1, 1)));
+			UE_LOG(LogTemp, Warning, TEXT("SpawnedActor"));
+		}
+	}
+}
+
 // Called when the game starts or when spawned
 void AServer_testing::BeginPlay()
 {
@@ -43,10 +60,12 @@ void AServer_testing::BeginPlay()
 	server_addr.sin_port = htons(SERVER_PORT);
 	ret = inet_pton(AF_INET, SERVER_ADDR, &server_addr.sin_addr);
 
+	SpawnISM();
+
+
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
 	int cnt = 0;
-
 
 	for (int i = 0; i < MAXPLAYER; ++i) {
 		Citizen_num++;
