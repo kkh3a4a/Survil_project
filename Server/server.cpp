@@ -14,7 +14,7 @@
 using namespace std;
 using namespace chrono;
 
-//ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ 
+//ÇÔ¼öÁ¤ÀÇ 
 DWORD WINAPI ProcessClient(LPVOID arg);
 DWORD WINAPI ingame_thread(LPVOID arg);
 
@@ -38,7 +38,6 @@ volatile bool location_set = false;
 
 DWORD WINAPI terrain_change(LPVOID arg)
 {
-	//terrain.log_on();
 	//terrain.show_array(total_terrain, one_side_number);
 	for (int i = 0; i < 5; i++) {
 		TF pos = { 50 + i * 120, 200 };
@@ -46,14 +45,14 @@ DWORD WINAPI terrain_change(LPVOID arg)
 	}
 	while (1){
 		clock_t t_0 = clock();
-		//cout << endl << i << "ï¿½ï¿½Â°" << endl;
+		//cout << endl << i << "¹øÂ°" << endl;
 		terrain.wind_blow({ 1, 0 }, 1);
 		//terrain.make_shadow_map(i * 5);
 		//terrain.make_tempertature_map(i * 5);
 
-		//terrain.show_array(total_terrain, one_side_number);
-		//terrain.show_array(shadow_map, one_side_number);
-		//terrain.show_array(temperature_map, one_side_number);
+		/*terrain.show_array(total_terrain, one_side_number);
+		terrain.show_array(shadow_map, one_side_number);
+		terrain.show_array(temperature_map, one_side_number);*/
 		clock_t t_1 = clock();
 		cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
 	}
@@ -70,15 +69,15 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int addrlen;
 	FActor testActor;
 	game_start = true;
-	// Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+	// Å¬¶óÀÌ¾ðÆ® Á¤º¸ ¾ò±â
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
-	printf("[TCP ï¿½ï¿½ï¿½ï¿½] Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½: IP ï¿½Ö¼ï¿½=%s, ï¿½ï¿½Æ® ï¿½ï¿½È£=%d\n", addr, ntohs(clientaddr.sin_port));
+	printf("[TCP ¼­¹ö] Å¬¶óÀÌ¾ðÆ® Á¢¼Ó: IP ÁÖ¼Ò=%s, Æ÷Æ® ¹øÈ£=%d\n", addr, ntohs(clientaddr.sin_port));
 	auto start_t = high_resolution_clock::now();
 
 	FActor player_info;
-	//ï¿½Ø´ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½ï¿½ portï¿½ï¿½È£ mapï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//ÇØ´ç Å¬¶óÀÌ¾ðÆ®ÀÇ port¹øÈ£ map¿¡ ÀúÀå
 	int port = ntohs(clientaddr.sin_port);
 
 	player_cnt_lock.lock();
@@ -92,7 +91,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	Sleep(500);
 
-	//player sight ï¿½Ö¼Ò°ï¿½
+	//player sight ÁÖ¼Ò°ª
 	char** player_sight = terrain.get_player_sight_map();
 
 	while (1){
@@ -169,17 +168,17 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				//cout << endl;	
 			}
 			
-			//Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ®ï¿½Îºï¿½ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½Ä¡ ï¿½Þ¾Æ¿Í¾ï¿½ ï¿½ï¿½
+			//Å¬¶óÀÌ¾ðÆ®·ÎºÎÅÍ Ä«¸Þ¶ó À§Ä¡ ¹Þ¾Æ¿Í¾ß ÇÔ
 			retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
 			retval = send(client_sock, (char*)&(players_list[port]->camera_location), (int)sizeof(TF), 0);
 			
 
-			//ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			//ÀÚ¿ø º¸³»±â
 			retval = send(client_sock, (char*)&(players_list[port]->resources), sizeof(int) * 5, 0);
 
 			//=======================
 			time_t t_1 = clock();
-			//10ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ï´ï¿½ ï¿½×½ï¿½Æ®
+			//10¹è Ãà¼ÒÇØ¼­ ÀÏ´Ü Å×½ºÆ®
 			//cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
 			II player_location{ (int)players_list[port]->camera_location.x / 10, (int)players_list[port]->camera_location.y / 10 };
 			terrain.copy_for_player_map(player_location);
@@ -193,13 +192,13 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				}
 			}
 			time_t t_2 = clock();
-			cout << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
-			//cout << "terrain ï¿½ï¿½ï¿½ï¿½" << endl;
+			//cout << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
+			//cout << "terrain Àü¼Û" << endl;
 			//========================
 		}
 	}
-	printf("[TCP ï¿½ï¿½ï¿½ï¿½] Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½: IP ï¿½Ö¼ï¿½=%s, ï¿½ï¿½Æ® ï¿½ï¿½È£=%d\n",addr, ntohs(clientaddr.sin_port));
-	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ý±ï¿½
+	printf("[TCP ¼­¹ö] Å¬¶óÀÌ¾ðÆ® Á¾·á: IP ÁÖ¼Ò=%s, Æ÷Æ® ¹øÈ£=%d\n",addr, ntohs(clientaddr.sin_port));
+	// ¼ÒÄÏ ´Ý±â
 	closesocket(client_sock);
 	return 0;
 }
@@ -216,7 +215,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	{
 		terrain.set_city_location(a.second->player_info.location, player_list_iter);
 		player_list_iter++;
-		cout << "ï¿½ï¿½Ä¡ : " << a.second->player_info.location.x << ", " << a.second->player_info.location.y << endl;
+		cout << "À§Ä¡ : " << a.second->player_info.location.x << ", " << a.second->player_info.location.y << endl;
 	}
 
 	sun_angle.x = 0.0f;
@@ -273,7 +272,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {	
-	//terrain.get_device_info();
 	//terrain.log_on();
 	////terrain.show_array(total_terrain, one_side_number);
 	//for (int i = 0; i < 5; i++) {
@@ -283,7 +281,7 @@ int main(int argc, char* argv[])
 	//int terrain_i;
 	//while (1) {
 	//	clock_t t_0 = clock();
-	//	//cout << endl << i << "ï¿½ï¿½Â°" << endl;
+	//	//cout << endl << i << "¹øÂ°" << endl;
 	//	terrain.wind_blow({ 1, 0 }, 1);
 	//	//terrain.make_shadow_map(terrain_i * 5);
 	//	//terrain.make_tempertature_map(terrain_i * 5);
@@ -298,12 +296,12 @@ int main(int argc, char* argv[])
 	//cout << "end " << endl;
 	
 	int retval;
-	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
+	// À©¼Ó ÃÊ±âÈ­
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 		return 1;
 
-	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// ¼ÒÄÏ »ý¼º
 	SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 
@@ -320,7 +318,7 @@ int main(int argc, char* argv[])
 	retval = listen(listen_sock, SOMAXCONN);
 	if (retval == SOCKET_ERROR) err_quit("listen()");
 
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// µ¥ÀÌÅÍ Åë½Å¿¡ »ç¿ëÇÒ º¯¼ö
 	SOCKET client_sock;
 	struct sockaddr_in clientaddr;
 	int addrlen;
@@ -338,25 +336,25 @@ int main(int argc, char* argv[])
 			break;
 		}
 
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ì¾ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+		// Á¢¼ÓÇÑ Å¬¶óÀÌ¾ðÆ® Á¤º¸ Ãâ·Â
 		char addr[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 
 		cout << addr << endl;
 
 		player_list.emplace_back(client_sock);
-		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		// ½º·¹µå »ý¼º
 		hThread = CreateThread(NULL, 0, ProcessClient,
 			(LPVOID)client_sock, 0, NULL);
-		//ï¿½ï¿½ï¿½ï¿½ ï¿½Ý±ï¿½
+		//¼ÒÄÏ ´Ý±â
 		if (hThread == NULL) { closesocket(client_sock); }
 		else { CloseHandle(hThread); }
 	}
 
-	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ý±ï¿½
+	// ¼ÒÄÏ ´Ý±â
 	closesocket(listen_sock);
 
-	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// À©¼Ó Á¾·á
 	WSACleanup();
 	return 0;
 }

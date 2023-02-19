@@ -9,18 +9,16 @@
 #include <cuda_runtime.h>
 #include <cooperative_groups.h>
 #include "device_launch_parameters.h"
-#include "device_atomic_functions.h"
-
 #include "global.h"
 #define PI 3.1415926
 using namespace std;
 
-const int one_side_number = 640;	//32000
-const int player_sight_size = 30;	//1024 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½
-const int random_array_size = 500000;// 90000000;
-//const int one_side_number = 32000;	//32000
-//const int player_sight_size = 30;	//1024 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½
-//const int random_array_size = 90000000;// 90000000;
+//const int one_side_number = 640;	//32000
+//const int player_sight_size = 30;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
+//const int random_array_size = 500000;// 90000000;
+const int one_side_number = 32000;	//32000
+const int player_sight_size = 30;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
+const int random_array_size = 90000000;// 90000000;
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -72,7 +70,7 @@ void make_random_array(II* random_array, bool& random_array_used)
 			}
 			random_array_used = false;
 			clock_t t_1 = clock();
-			//cout << "_Thread_ Random for Scarce: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec\n";
+			cout << "_Thread_ Random for Scarce: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec\n";
 		}
 		else {
 			Sleep(10);
@@ -97,17 +95,17 @@ void make_hills_cuda(char** terrain_array_device, HI* hill_location_device, int 
 __global__
 void terrain_corrosion_cuda(char** terrain_array_device, int height)
 {
-	//ï¿½Ù¶ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ï°Ô²ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½
-	//ï¿½Æ´Ï¸ï¿½ ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½ßºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½î¶²ï¿½ï¿½ È®ï¿½ï¿½
+	//¹Ù¶÷ÀÌ ºÒ¸é ±×ÂÊÀ¸·Î ÀÌµ¿ÇÏ°Ô²û ¼öÁ¤ÇØ¾ß ÇÔ
+	//¾Æ´Ï¸é ¹Ù¶÷À¸·Î ÀÎÇÑ ÇÔ¼ö µû·Î ¸¸µé¾î¼­ Áßº¹À¸·Î ÇßÀ» ¶§ ¾î¶²Áö È®ÀÎ
 	const int block_num = 9;
 	II terrain[block_num];
 	terrain[0].x = blockIdx.x * blockDim.x + threadIdx.x;	//middle
 	terrain[0].y = blockIdx.y * blockDim.y + threadIdx.y;
 
-	if (terrain_array_device[terrain[0].x][terrain[0].y] != height) {	//ï¿½ï¿½ï¿½Ú·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½Æ´Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+	if (terrain_array_device[terrain[0].x][terrain[0].y] != height) {	//ÀÎÀÚ·Î µé¾î¿Â ³ôÀÌ°¡ ¾Æ´Ï¸é ¸®ÅÏ
 		return;
 	}
-	if (terrain_array_device[terrain[0].x][terrain[0].y] <= base_floor) {	//base floor ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ß¸ï¿½ ï¿½Èµï¿½
+	if (terrain_array_device[terrain[0].x][terrain[0].y] <= base_floor) {	//base floor º¸´Ù ÀÛÀ¸¸é ´õÀÌ»ó ³·Ãß¸é ¾ÈµÊ
 		return;
 	}
 	
@@ -120,7 +118,7 @@ void terrain_corrosion_cuda(char** terrain_array_device, int height)
 	terrain[7] = { terrain[0].x + 1, terrain[0].y - 1 };	//up right
 	terrain[8] = { terrain[0].x + 1, terrain[0].y + 1 };	//down right
 
-	//ï¿½ï¿½ï¿½ï¿½ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//»óÇÏÁÂ¿ì ¿¬°á
 	for (int i = 0; i < block_num; i++) {
 		if (terrain[i].x < 0) {
 			terrain[i].x += one_side_number;
@@ -137,13 +135,13 @@ void terrain_corrosion_cuda(char** terrain_array_device, int height)
 	}
 
 	int height_difference = 0;
-	for (int i = 1; i < block_num; i++) {	//ï¿½Öºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+	for (int i = 1; i < block_num; i++) {	//ÁÖº¯ ºí·°µéÀÇ ³ôÀÌ Â÷ÀÌ¸¦ ±¸ÇÔ
 		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] > height_difference) {
 			height_difference = terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y];
 		}
 	}
 
-	if (height_difference <= 0) {	//ï¿½Öºï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	if (height_difference <= 0) {	//ÁÖº¯¿¡ ´õ ³·Àº ºí·°ÀÌ ¾øÀ¸¸é ¸®ÅÏ
 		return;
 	}
 
@@ -154,7 +152,7 @@ void terrain_corrosion_cuda(char** terrain_array_device, int height)
 		}
 	}
 
-	if (num_of_lowest == 1) {	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½Å±ï¿½ï¿½ ï¿½Ìµï¿½
+	if (num_of_lowest == 1) {	//°¡Àå ³·Àº ³ôÀÌ°¡ ÇÏ³ª¸é °Å±â·Î ÀÌµ¿
 		for (int i = 1; i < block_num; i++) {
 			if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {
 				terrain_array_device[terrain[i].x][terrain[i].y]++;
@@ -163,15 +161,15 @@ void terrain_corrosion_cuda(char** terrain_array_device, int height)
 			}
 		}
 	}
-	if (num_of_lowest == 8 && height_difference == 1) {	//ï¿½Öºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ 1ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+	if (num_of_lowest == 8 && height_difference == 1) {	//ÁÖº¯ÀÌ ¸ðµÎ ³ôÀÌ°¡ °°°í ³ôÀÌ Â÷ÀÌ°¡ 1ÀÌ¸é ¸®ÅÏ
 		return;
 	}
 	
 	char thread_seed = (terrain[0].x + terrain[0].y + abs(terrain[0].x + terrain[0].y * height)) % num_of_lowest;	//random seed made by myself
 	int iter = 0;
 	for (int i = 0; i < block_num; i++) {
-		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ ï¿½ï¿½ï¿½ï¿½
-			if (thread_seed == iter) {	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ãµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
+		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) {	//°¡Àå ³·Àº ³ôÀÌ°¡ ¿©·¯°³¸é ·£´ýÀ¸·Î ÇÏ³ª ¼±ÅÃ
+			if (thread_seed == iter) {	//·£´ýÀ¸·Î ¼±ÅÃµÈ ºí·°À¸·Î ÀÌµ¿
 				terrain_array_device[terrain[i].x][terrain[i].y]++;
 				terrain_array_device[terrain[0].x][terrain[0].y]--;
 				return;
@@ -184,9 +182,9 @@ void terrain_corrosion_cuda(char** terrain_array_device, int height)
 __global__
 void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 {
-	//wind_directionï¿½ï¿½ x, yï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½
+	//wind_directionÀº x, yÁß ÇÏ³ª´Â ¹«Á¶°Ç 0ÀÌ¿©¾ß ÇÔ
 	II terrain[5];
-	terrain[0].x = blockIdx.y * blockDim.y + threadIdx.y;	//ï¿½ï¿½ï¿½ï¿½Ï°Ôµï¿½ x,yï¿½Â°ï¿½ ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­ï¿½Ò½ï¿½ Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½È»ï¿½ï¿½ï¿½. ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½Ù²ãµµ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+	terrain[0].x = blockIdx.y * blockDim.y + threadIdx.y;	//Èñ¾ÈÇÏ°Ôµµ x,y¸Â°Ô ÇÏ¸é ÁöÇü ¸¹ÀÌ º¯È­ÇÒ½Ã Æ¯Á¤ ¹«´Ì°¡ »ý±è. ÀÌ·¸°Ô ÇÏ¸é ¾È»ý±è. ÀÌ·¸°Ô ¹Ù²ãµµ ·ÎÁ÷¿¡´Â ¿µÇâ ¹«
 	terrain[0].y = blockIdx.x * blockDim.x + threadIdx.x;	//middle
 
 	terrain[1].x = terrain[0].x + wind_direction.x;			//forward
@@ -201,7 +199,7 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 	terrain[4].x = terrain[0].x - wind_direction.x;			//back
 	terrain[4].y = terrain[0].y - wind_direction.y;
 	
-	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//ÁöÇü »óÇÏÁÂ¿ì ¿¬°á
 	for (int i = 0; i < 5; i++) 
 	{
 		if (terrain[i].x < 0 ) {
@@ -219,15 +217,15 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 	}
 
 	if (terrain_array_device[terrain[0].x][terrain[0].y] <= base_floor) 
-	{	//base floor ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ß¸ï¿½ ï¿½Èµï¿½
+	{	//base floor º¸´Ù ÀÛÀ¸¸é ´õÀÌ»ó ³·Ãß¸é ¾ÈµÊ
 		return;
 	}
-	//ï¿½Ì°Å¶ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	if (terrain_array_device[terrain[0].x][terrain[0].y] > base_floor && terrain_array_device[terrain[0].x][terrain[0].y] == terrain_array_device[terrain[4].x][terrain[4].y] && terrain_array_device[terrain[0].x][terrain[0].y] == terrain_array_device[terrain[1].x][terrain[1].y]) {	//ï¿½ï¿½ï¿½ ï¿½Ã¾î³ªï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//ÀÌ°Å¶§¹®¿¡ °£°ÝÀÌ Á¼¾ÆÁü
+	if (terrain_array_device[terrain[0].x][terrain[0].y] > base_floor && terrain_array_device[terrain[0].x][terrain[0].y] == terrain_array_device[terrain[4].x][terrain[4].y] && terrain_array_device[terrain[0].x][terrain[0].y] == terrain_array_device[terrain[1].x][terrain[1].y]) {	//±æ°Ô ´Ã¾î³ª´Â ±³Âø»óÅÂ Á¦°Å
 		
 	}
 	else if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[4].x][terrain[4].y] <= 0) 
-	{	//ï¿½Ä¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ù¶ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	{	//ÈÄ¹æ ºí·°ÀÌ Çö ºí·°º¸´Ù °°°Å³ª ³ôÀ» °æ¿ì ¹Ù¶÷ÀÇ ¿µÇâÀ» ¹ÚÁö ¾ÊÀ½
 		return;
 	}
 
@@ -236,10 +234,10 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 	{
 		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y]  > height_difference) 
 		{
-			height_difference = terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y];	//iï¿½ï¿½ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+			height_difference = terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y];	//iºí·°¿Í 0ºí·°ÀÇ ³ôÀÌ Â÷ÀÌ
 		}
 	}
-	if (height_difference < 0) {	//ï¿½ï¿½ï¿½ï¿½ 3ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½È¹ï¿½ï¿½ï¿½
+	if (height_difference < 0) {	//Àü¹æ 3°³ ºí·°µéÀÇ ³ôÀÌ°¡ ¸ðµÎ Çö ºí·°º¸´Ù ³ôÀ» °æ¿ì ¿µÇâ ¾È¹ÞÀ½
 		return;
 	}
 
@@ -247,7 +245,7 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 	for (int i = 1; i < 4; i++) 
 	{
 		if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[i].x][terrain[i].y] == height_difference) 
-		{	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½î°³ï¿½ï¿½ï¿½ï¿½
+		{	//ÃÖÀú ³ôÀÌ µ¿ÀÏ ¸î°³ÀÎÁö
 			num_of_lowest++;
 		}
 	}
@@ -255,7 +253,7 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 	if (num_of_lowest == 0)
 		return; 
 	
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½
+	//ÃÖÀú³ôÀÌ°¡ ÇÏ³ªÀÏ °æ¿ì ±×¸®·Î °¨
 	if (num_of_lowest == 1) 
 	{	
 		for (int i = 1; i < 4; i++) 
@@ -271,7 +269,7 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 		}
 	}
 	
-	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	//ÃÖÀú³ôÀÌ°¡ ¿©·¯°³ ÀÏ ¶§, Àü¹æ ºí·°ÀÌ ÃÖÀú ³ôÀÌÀÌ¸é Àü¹æÀ¸·Î º¸³¿
 	if (terrain_array_device[terrain[0].x][terrain[0].y] - terrain_array_device[terrain[1].x][terrain[1].y] == height_difference) 
 	{		
 		/*atomicAdd(&terrain_array_device[terrain[1].x][terrain[1].y], -1);
@@ -282,7 +280,7 @@ void wind_blow_cuda(char** terrain_array_device, II wind_direction)
 	}
 
 	int radom_seed = (terrain[0].x + terrain[0].y) % num_of_lowest + 2;
-	//ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
+	//¿Þ ¿À µÑÁß ÇÏ³ª·Î ·£´ý ÀÌµ¿
 	/*atomicAdd(&terrain_array_device[terrain[radom_seed].x][terrain[radom_seed].y], -1);
 	atomicAdd(&terrain_array_device[terrain[0].x][terrain[0].y], 1);*/
 	--terrain_array_device[terrain[0].x][terrain[0].y];
@@ -313,7 +311,7 @@ void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_loc
 		terrain_player_sight_device[x][y] = base_floor;
 		for (int i = 0; i < num_of_hills; i++) {
 			
-			//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Ã¤ï¿½ï¿½ï¿½
+			//¿ø·¡ ¾ð´ö Ã¤¿ì±â
 			int hill_location_x = hill_location_device[i].x;
 			int hill_location_y = hill_location_device[i].y;
 			int radius = hill_location_device[i].radius;
@@ -323,7 +321,7 @@ void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_loc
 			if (distance <= radius) {
 				terrain_player_sight_device[x][y] += (height) * (radius - distance) / radius;
 
-				//ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+				//¾ð´ö ±ð±â
 				hill_location_x = hill_location_device[i].x - radius * wind_direction.x * (100 - wind_speed) / 50;
 				hill_location_y = hill_location_device[i].y - radius * wind_direction.y * (100 - wind_speed) / 50;
 				distance = sqrt(pow(terrain_y - hill_location_y, 2) + pow(terrain_x - hill_location_x, 2));
@@ -341,7 +339,7 @@ void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_loc
 		}
 	}
 	else {
-		//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ 0
+		//¸Ê ¹ÛÀÇ °æ¿ì 0
 		terrain_player_sight_device[x][y] = 0;
 	}
 }
@@ -429,7 +427,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 	coo.y = blockIdx.x * blockDim.x + threadIdx.x;
 
 	char height[3];
-	height[1] = terrain_array_device[coo.x][coo.y];	//ï¿½ß½ï¿½
+	height[1] = terrain_array_device[coo.x][coo.y];	//Áß½É
 
 	if (coo.x - 1 < 0) {
 		height[0] = height[1];
@@ -456,9 +454,9 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 		else {
 			ground_angle = 90;
 		}
-		// ï¿½Âµï¿½ ï¿½ï¿½È¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.
-		// sun angle ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ò¶ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½É¸ï¿½
-		// ï¿½Ï·ï¿½ 3ï¿½Ð¿ï¿½ ï¿½Â°ï¿½ sunangle ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ø¾ï¿½ï¿½ï¿½
+		// ¿Âµµ º¯È¯½Ä Á¦´ë·Î ¸¸µé¾î¾ß ÇÔ.
+		// sun angle ¾÷µ¥ÀÌÆ®ÇÒ¶§¸¶´Ù ¿Âµµ ¾÷µ¥ÀÌÆ® ¸øÇÔ ¿Âµµ ¾÷µ¥ÀÌÆ® ½Ã°£ÀÌ ¿À·¡°É¸²
+		// ÇÏ·ç 3ºÐ¿¡ ¸Â°Ô sunangle ¾÷µ¥ÀÌÆ® ÇØ¾ßÇÔ
 		int angle_difference = (180 - abs(ground_angle - sun_angle));
 		int temperature = angle_difference / 10;
 		temperature_map_device[coo.x][coo.y] += angle_difference;
@@ -479,7 +477,7 @@ void heat_conduction_cuda(char** temperature_map_device)
 	coo.y = blockIdx.x * blockDim.x + threadIdx.x;
 
 	char temperature[9];
-	temperature[4] = temperature_map_device[coo.x][coo.y];	//ï¿½ß½ï¿½
+	temperature[4] = temperature_map_device[coo.x][coo.y];	//Áß½É
 	if (coo.x - 1 >= 0) {
 		temperature[0] = temperature_map_device[coo.x - 1][coo.y - 1];
 		temperature[3] = temperature_map_device[coo.x - 1][coo.y];
@@ -551,7 +549,7 @@ private:
 	char** terrain_player_sight_host = new char* [player_sight_size];
 	unsigned __int64 init_total_hill_height = 0;
 	
-	II city_location[5];	//ï¿½ï¿½ï¿½ß¿ï¿½ Å©ï¿½ï¿½ MAXPLAYERï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½
+	II city_location[5];	//³ªÁß¿¡ Å©±â MAXPLAYER·Î ¼öÁ¤ÇØ¾ß ÇÔ
 	II* city_location_device;
 
 	II* random_array = new II[random_array_size];
@@ -559,15 +557,13 @@ private:
 	bool random_array_used = true;
 	
 	bool log = false;
-
-	bool using_terrain_array = false;
 	
 public:
 	Terrain()  
 	{
 		cout << "Generating Terrain Start" << endl;
 		
-		//ï¿½ï¿½ï¿½ï¿½ï¿½è¿­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½===================================================
+		//·£´ý¹è¿­ Á¦ÀÛ ¾²·¹µå °¡µ¿===================================================
 		thread t1 = thread(make_random_array, random_array, ref(random_array_used));
 		t1.detach();
 
@@ -581,7 +577,7 @@ public:
 		}
 		for (int i = 0; i < one_side_number; i++) {
 			for (int j = 0; j < one_side_number; j++) {
-				terrain_array_host[i][j] = height_uid(dre);			//ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+				terrain_array_host[i][j] = height_uid(dre);			//¾ð´ö »ý¼º ¾ÈÇÏ°í ·£´ýÀ¸·Î »ý¼º
 				shadow_map_host[i][j] = 0;
 				temperature_map_host[i][j] = 30;
 			}
@@ -787,7 +783,7 @@ public:
 		
 		random_array_used = true;
 		
-		//ï¿½Þ¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+		//¸Þ¸ð¸® »èÁ¦
 		cudaFree(random_array_device);
 		//==================================================================================
 
@@ -812,8 +808,7 @@ public:
 		t_0 = clock();
 		
 		for (int i = 0; i < wind_speed; i++) {
-			if(log)
-				cout << "__________________________" << endl;
+			cout << "__________________________" << endl;
 			t_1 = clock();
 
 			add_scarce();
@@ -831,7 +826,6 @@ public:
 			
 			except_city_terrain();
 
-			copy_terrain_device_to_host();
 			t_4 = clock();
 			if (log)
 				cout << "=> Once Wind Blow: " << (double)(t_4 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
@@ -866,7 +860,9 @@ public:
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		except_city_terrain_cuda << <grid, block >> > (terrain_array_device, city_location_device, 5);
-		cudaDeviceSynchronize();
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+		}
 		clock_t t_1 = clock();
 		if (log)
 			cout << "Except City Terrain: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
@@ -893,25 +889,8 @@ public:
 		}
 	}
 
-	void copy_terrain_device_to_host()
-	{
-		clock_t t_0 = clock();
-		using_terrain_array = true;
-		for (int i = 0; i < one_side_number; i++) {
-			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}
-		using_terrain_array = false;
-		clock_t t_1 = clock();
-		if (log)
-			cout << "Copy Terrain Device to Host: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
-	}
-
 	void copy_for_player_map(II player_location)
 	{
-		/*if (using_terrain_array == false) {
-			cout << "Error: Terrain Array is using" << endl;
-			return;
-		}*/
 		clock_t start_t, end_t;
 		start_t = clock();
 		for (int i = 0; i < player_sight_size; i++) {
@@ -927,7 +906,7 @@ public:
 			cout << "copy_for_player_map : " << double(end_t - start_t) / CLOCKS_PER_SEC << endl;
 	}
 	
-	void get_device_infod()
+	void get_device_info()
 	{
 		cudaDeviceProp  prop;
 
@@ -1060,11 +1039,11 @@ public:
 
 			int collide_iter{};
 			for (int a = 0; a < num_of_hills; a++) {
-				if (collide_iter > 10) {	//ï¿½ï¿½ï¿½Ñ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+				if (collide_iter > 10) {	//¹«ÇÑ·çÇÁ ºüÁú °¡´É¼ºÀ¸·Î ÀÎÇØ È½¼ö Á¦ÇÑ
 					return;
 				}
-				//cout << "ï¿½ï¿½ï¿½: "<<a << " " << hill_location_host[a].x << " " << hill_location_host[a].y << " " << hill_location_host[a].radius << " " << hill_location_host[a].height << endl;
-				//cout << " ï¿½ï¿½: "<< num_of_hills<< " " << hill_location_host[num_of_hills].x << " " << hill_location_host[num_of_hills ].y << " " << hill_location_host[num_of_hills ].radius << " " << hill_location_host[num_of_hills].height << endl << endl;
+				//cout << "´ë»ó: "<<a << " " << hill_location_host[a].x << " " << hill_location_host[a].y << " " << hill_location_host[a].radius << " " << hill_location_host[a].height << endl;
+				//cout << " ³ª: "<< num_of_hills<< " " << hill_location_host[num_of_hills].x << " " << hill_location_host[num_of_hills ].y << " " << hill_location_host[num_of_hills ].radius << " " << hill_location_host[num_of_hills].height << endl << endl;
 
 				if (pow(hill_location_host[a].x - hill_location_host[num_of_hills].x, 2) - pow(hill_location_host[a].radius + hill_location_host[num_of_hills].radius, 2) <= 0) {
 					if (pow(hill_location_host[a].y - hill_location_host[num_of_hills].y, 2) - pow(hill_location_host[a].radius + hill_location_host[num_of_hills].radius, 2) <= 0) {
@@ -1091,13 +1070,13 @@ public:
 								break;
 							}
 						}
-						cout << "ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½" << endl;
+						cout << "Ãæµ¹·Î ÀÎÇØ ¹Ù²Þ" << endl;
 						a = -1;
 						collide_iter++;
 					}
 				}
 			}
-			cout << " ï¿½ï¿½ï¿½ï¿½: " << num_of_hills << " " << hill_location_host[num_of_hills].x << " " << hill_location_host[num_of_hills].y << " " << hill_location_host[num_of_hills].radius << " " << hill_location_host[num_of_hills].height << endl << endl;
+			cout << " ÃÖÁ¾: " << num_of_hills << " " << hill_location_host[num_of_hills].x << " " << hill_location_host[num_of_hills].y << " " << hill_location_host[num_of_hills].radius << " " << hill_location_host[num_of_hills].height << endl << endl;
 			num_of_hills++;
 		}
 	}
@@ -1148,7 +1127,7 @@ public:
 		//wind_angle = 90; // wind_angle_uid(dre);
 		wind_angle += 10;
 		cout << wind_speed << " " << wind_angle << endl;
-		//Ç³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Ç³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¸ï¿½Ç¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//Ç³ÇâÀ» ¾ðÁ¦¸¶´Ù ÇÑ¹ø ¾÷µ¥ÀÌÆ® ÇÒ °ÍÀÎÁö, Ç³¼ÓÀº ¾ðÁ¦¸¶´Ù ÇÑ¹ø ¾÷µ¥ÀÌÆ® ÇÒ °ÍÀÎÁö È¸ÀÇ¸¦ ÅëÇØ °áÁ¤ÇÏÀÚ
 	}
 	
 	char** get_map() {
@@ -1181,4 +1160,5 @@ public:
 	{
 		log = true;
 	}
+
 };
