@@ -31,4 +31,3 @@ void Aservers_sand_test::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-

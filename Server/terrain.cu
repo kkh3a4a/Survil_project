@@ -17,7 +17,7 @@ using namespace std;
 //const int player_sight_size = 50;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
 //const int random_array_size = 500000;// 90000000;
 const int one_side_number = 16000;	//32000
-const int player_sight_size = 50;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
+const int player_sight_size = 70;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
 const int random_array_size = 50000000;// 90000000;
 
 const int max_height = 8;

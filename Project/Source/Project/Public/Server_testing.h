@@ -15,7 +15,7 @@
 
 using namespace std;
 using namespace chrono;
-const int map_size = 50;
+const int map_size = 70;
 
 USTRUCT(Atomic, BlueprintType)
 struct FOneArray
@@ -88,7 +88,7 @@ public:
 	void SpawnTerrain();
 
 	UFUNCTION()
-	void UpdateTerrainHeight();
+	void UpdateTerrain();
 
 protected:
 	// Called when the game starts or when spawned
@@ -179,18 +179,21 @@ public:
 
 	int32 UpdateTerrainIter{};
 	int8 terrain_recv_array[map_size];
-	//FOneArray terrain_recv_array;
-	//TArray<int8> terrain_recv_array;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FOneArray> terrain_2d_array;
+	
+	TArray<TArray<int8>> terrain_2d_array;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor> TerrainBlock;
 	
-	TArray< AActor*> TerrainBlocks;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UStaticMesh* TerrainMesh;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UMaterial* TerrainMaterial;
+	
+	TArray<TArray< AActor*>> TerrainBlocks2D;
+	TArray<TArray< UInstancedStaticMeshComponent*> > TerrainBlocks2D_Instanced;
+	UInstancedStaticMeshComponent* InstancedTerrain;
 	/*DWORD WINAPI Angle_Receiver(LPVOID arg);*/
 };
 
