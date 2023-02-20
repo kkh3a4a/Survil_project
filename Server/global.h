@@ -218,6 +218,14 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
 					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
 				}
+				if (resources.second->count == 0 &&
+					citizens->Job_location.x == resources.second->location.x &&
+					citizens->Job_location.y == resources.second->location.y)
+				{
+					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
+					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
+					citizens->job = 0;
+				}
 				if (location_distance(citizens->location, a.second->player_info.location) < 1550)
 				{
 					for (int i = 0; i < 5; ++i)
@@ -229,6 +237,11 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 					{
 						a.second->player_citizen_arrival_location[cnt]->location.x = citizens->Job_location.x;
 						a.second->player_citizen_arrival_location[cnt]->location.y = citizens->Job_location.y;
+					}
+					else if (citizens->job == 0)
+					{
+						a.second->player_citizen_arrival_location[cnt]->location.x = citizens->location.x;
+						a.second->player_citizen_arrival_location[cnt]->location.y = citizens->location.y;
 					}
 				}
 			}

@@ -177,6 +177,7 @@ void AMyPlayerController::MoveToActor()
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
     if (Hit.bBlockingHit)
     {
+        UE_LOG(LogTemp, Log, TEXT("checkmouse"));
         DestLocation = Hit.ImpactPoint;
         if (Hit.GetActor()->ActorHasTag(L"Resource"))
         {
@@ -209,6 +210,7 @@ void AMyPlayerController::MoveToActor()
 void AMyPlayerController::PlayerTick(float DeltaTime)
 {
     Super::PlayerTick(DeltaTime);
+    mouse_cnt++;
     //UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"),  *(server_MouseInput->MouseInput.name), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
     //오른쪽 클릭 작업
     if (bLeftClickMouse)
@@ -221,7 +223,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     }
     
     mouse_start_t = high_resolution_clock::now();
-    if (temped) 
+    if (temped && (mouse_cnt % 1000 == 0))
     {
         if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
         {

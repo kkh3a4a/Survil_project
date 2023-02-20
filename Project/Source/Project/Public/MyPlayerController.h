@@ -35,6 +35,8 @@ public:
 	bool temped;
 
 protected:
+	long long int mouse_cnt = 0;
+
 	bool bRightClickMouse;
 
 	bool bLeftClickMouse;
