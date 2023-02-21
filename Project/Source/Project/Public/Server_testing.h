@@ -8,14 +8,14 @@
 #include <chrono>
 #include "global.h"
 #include "Windows/HideWindowsPlatformTypes.h"
+#include "MeshTerrain.h"
 #include "CoreMinimal.h"
+#include "HAL/Runnable.h"
 #include "GameFramework/Actor.h"
-#include "ProceduralMeshComponent.h"
 #include "Server_testing.generated.h"
 
 using namespace std;
 using namespace chrono;
-const int map_size = 200;
 
 UCLASS()
 class PROJECT_API AServer_testing : public AActor
@@ -25,13 +25,6 @@ public:
 	// Sets default values for this actor's properties
 	AServer_testing();
 
-	UFUNCTION()
-	void SpawnTerrain();
-
-	UFUNCTION()
-	void UpdateTerrain(int x, int y, int space);
-	void InitializeTerrain();
-	void UpdateMeshTerrain();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -116,22 +109,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool first_recv_send = false;
 
-	int32 TerrainIterX{};
-	int32 TerrainIterY{};
-	
 	int8 terrain_recv_array[map_size];
 	TArray<TArray<int8>> Terrain2DArray;
-	TArray<TArray<int8>> PreTerrain2DArray;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UStaticMesh* TerrainMesh;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UMaterial* TerrainMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor> TerrainBlock;
 	
-	UInstancedStaticMeshComponent* InstancedTerrain;
-
-	TArray<FVector> Vertices;
-	UProceduralMeshComponent* MeshTerrain;
+	AMeshTerrain* TerrainActor;
 };
 

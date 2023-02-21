@@ -8,10 +8,6 @@
 #include <thread>
 #include <mutex>
 #include "CoreMinimal.h"
-#include "Async/Async.h"
-#include "RenderingThread.h"
-#include "Async/ParallelFor.h"
-#include "GameFramework/Actor.h"
 #include "Components/SceneComponent.h"
 #include "GenericPlatform/GenericPlatformProcess.h"
 #include "Components/InstancedStaticMeshComponent.h"
@@ -22,86 +18,6 @@ AServer_testing::AServer_testing()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-}
-
-void AServer_testing::InitializeTerrain()
-{
-	for (int32 Y = 0; Y < map_size; Y++)
-	{
-		for (int32 X = 0; X < map_size; X++)
-		{
-			FVector Vertex(100 * X, 100 * Y, Terrain2DArray[X][Y]);
-			Vertices.Add(Vertex);
-		}
-	}
-
-	TArray<int32> Triangles;
-	for (int32 Y = 0; Y < map_size - 1; Y++)
-	{
-		for (int32 X = 0; X < map_size - 1; X++)
-		{
-			Triangles.Add(Y * map_size + X);
-			Triangles.Add((Y + 1) * map_size + X);
-			Triangles.Add(Y * map_size + X + 1);
-
-			Triangles.Add((Y + 1) * map_size + (X+1));
-			Triangles.Add(Y * map_size + X + 1);
-			Triangles.Add((Y + 1) * map_size + X);
-		}
-	}
-
-	// Create the mesh component
-	MeshTerrain = NewObject<UProceduralMeshComponent>(this);
-	MeshTerrain->CreateMeshSection_LinearColor(0, Vertices, Triangles, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>(), true);
-
-	// Add the mesh component to the actor
-	MeshTerrain->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	MeshTerrain->SetMaterial(0, TerrainMaterial);
-	MeshTerrain->RegisterComponent();
-}
-
-void AServer_testing::UpdateMeshTerrain()
-{
-	for (int32 i = 0; i < Vertices.Num(); i++)
-	{
-		Vertices[i].Z = Terrain2DArray[i%map_size][i/map_size ] * 50;
-	}
-	MeshTerrain->UpdateMeshSection_LinearColor(0, Vertices, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>());
-}
-
-void AServer_testing::SpawnTerrain()
-{
-	InstancedTerrain = NewObject<UInstancedStaticMeshComponent>(this);
-	InstancedTerrain->RegisterComponent();
-	InstancedTerrain->SetStaticMesh(TerrainMesh);
-	InstancedTerrain->SetMaterial(0, TerrainMaterial);
-	InstancedTerrain->SetFlags(RF_Transactional);
-	this->AddInstanceComponent(InstancedTerrain);
-	for (int i = 0; i < map_size; ++i) {
-		for (int j = 0; j < map_size; ++j) {
-			FTransform transform;
-			transform.SetLocation(FVector(0, 0, 0));
-			InstancedTerrain->AddInstance(transform);
-			InstancedTerrain->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-		}
-	}
-}
-
-void AServer_testing::UpdateTerrain(int x, int y, int space)
-{
-	FVector RootLocation = GetActorLocation();
-	FTransform InstanceTransform;
-	x = 0;
-	y = 0;
-	space = map_size;
-	for (int i = x * space; i < (x + 1) * space; i++) {
-		for (int j = y * space; j < (y + 1) * space; j++) {
-			InstanceTransform.SetLocation(RootLocation + FVector(i * 100, j * 100, 0));
-			InstanceTransform.SetScale3D(FVector(1, 1, Terrain2DArray[i][j]));
-			InstancedTerrain->UpdateInstanceTransform(i * map_size + j, InstanceTransform, true, true);
-			
-		}
-	}
 }
 
 // Called when the game starts or when spawned
@@ -121,15 +37,18 @@ void AServer_testing::BeginPlay()
 
 	//Set Size of Terrain Array 
 	Terrain2DArray.SetNum(map_size);
-	PreTerrain2DArray.SetNum(map_size);
 	for (int i = 0; i < map_size; ++i){
 		Terrain2DArray[i].SetNum(map_size);
-		PreTerrain2DArray[i].SetNum(map_size);
 	}
 	
-	InitializeTerrain();
-	//SpawnTerrain();
-
+	FVector Location(0.0f, 0.0f, 0.0f);
+	FRotator Rotation(0.0f, 0.0f, 0.0f);
+	FActorSpawnParameters SpawnInfo;
+	
+	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(Location, Rotation, SpawnInfo);
+	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	TerrainActor->InitializeMeshTerrain(TerrainMaterial);
+	
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
 	int cnt = 0;
@@ -161,15 +80,12 @@ void AServer_testing::BeginPlay()
 			//UE_LOG(LogTemp, Log, TEXT("citizen %d %d : %f %f"), i , j, citizen[i].citizen_location_rotation[j].location.x, citizen[i].citizen_location_rotation[j].location.y);
 		}
 	}
-	for (auto& a : citizen)
-	{
-		for (int j = 0; j < 10; ++j)
-		{
+	for (auto& a : citizen){
+		for (int j = 0; j < 10; ++j){
 			UE_LOG(LogTemp, Log, TEXT("%f %f"), a.Value.citizen_location_rotation[j].location.x, a.Value.citizen_location_rotation[j].location.y);
 		}
 	}
-	for (int i = 0; i < MAXPLAYER * 10; ++i)
-	{
+	for (int i = 0; i < MAXPLAYER * 10; ++i){
 		Fresources_actor temp_resource;
 		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
 		resources_create_landscape.Add(i, temp_resource);
@@ -182,7 +98,6 @@ void AServer_testing::BeginPlay()
 
 	UE_LOG(LogTemp, Log, TEXT("connected to server"));
 	start_t = high_resolution_clock::now();
-
 }
 
 // Called every frame
@@ -258,12 +173,10 @@ void AServer_testing::Tick(float DeltaTime)
 	clock_t t_6 = clock();
 
 	//Recv Terrain
-	for (int i = 0; i < map_size; i++)
-	{
+	for (int i = 0; i < map_size; i++) {
 		//terrain_array[i].Empty();
 		ret = recv(s_socket, (char*)&terrain_recv_array, (int)(sizeof(char) * map_size), 0);
-		if (SOCKET_ERROR == ret)
-		{
+		if (SOCKET_ERROR == ret){
 			return;
 		}
 		for (int j = 0; j < map_size; j++)
@@ -272,33 +185,17 @@ void AServer_testing::Tick(float DeltaTime)
 		}
 	}
 	clock_t t_7 = clock();
+	
+	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
+	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
-	if (TerrainIterX == 4) {
-		TerrainIterX = 0;
-		TerrainIterY++;
-	}
-	if (TerrainIterY == 4) {
-		TerrainIterY = 0;
-	}
+
+	//UE_LOG(LogTemp, Log, TEXT("TerrainActor : %f %f %f"), TerrainActor->GetActorLocation().X, TerrainActor->GetActorLocation().Y, TerrainActor->GetActorLocation().Z);
 	clock_t t_8 = clock();
 	if (t_8 - t_0 > 100)
-		UE_LOG(LogTemp, Log, TEXT("send : %lf, recv : %lf, citizen : %lf, resource : %lf, camera : %lf, resource : %lf, terrain recv : %lf, terrain update : %lf"), (double)(t_1 - t_0) / CLOCKS_PER_SEC, (double)(t_2 - t_1) / CLOCKS_PER_SEC, (double)(t_3 - t_2) / CLOCKS_PER_SEC, (double)(t_4 - t_3) / CLOCKS_PER_SEC, (double)(t_5 - t_4) / CLOCKS_PER_SEC, (double)(t_6 - t_5) / CLOCKS_PER_SEC, (double)(t_7 - t_6) / CLOCKS_PER_SEC, (double)(t_8 - t_7) / CLOCKS_PER_SEC);
-	//UpdateTerrain(TerrainIterX, TerrainIterY, map_size / 4);
-	TerrainIterX++;
-	UpdateMeshTerrain();
+		UE_LOG(LogTemp, Log, TEXT("send : %lf, recv : %lf, citizen : %lf, resource : %lf, camera : %lf, resource : %lf, terrain recv : %lf, terrain update : %lf, TOTAL: %lf"), (double)(t_1 - t_0) / CLOCKS_PER_SEC, (double)(t_2 - t_1) / CLOCKS_PER_SEC, (double)(t_3 - t_2) / CLOCKS_PER_SEC, (double)(t_4 - t_3) / CLOCKS_PER_SEC, (double)(t_5 - t_4) / CLOCKS_PER_SEC, (double)(t_6 - t_5) / CLOCKS_PER_SEC, (double)(t_7 - t_6) / CLOCKS_PER_SEC, (double)(t_8 - t_7) / CLOCKS_PER_SEC, (double)(t_8 - t_0) / CLOCKS_PER_SEC);
 	//=====================
 	//UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location.x , test_Actor.location.y, test_Actor.location.z);
 	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(" %d, %d, %d", sunangle.x, sunangle.y, sunangle.z));
 
 }
-//
-//DWORD WINAPI AServer_testing::Angle_Receiver(LPVOID arg)
-//{
-//	while (1) {
-//		if (SOCKET_ERROR == ret)
-//		{
-//			break;
-//		}
-//		ret = send(s_socket, (char*)&sunangle, (int)sizeof(SunAngle), 0);
-//	}
-//}
