@@ -2,7 +2,6 @@
 
 #pragma once
 #include "Windows/AllowWindowsPlatformTypes.h"
-
 // include header with included Windows.h
 #include<WS2tcpip.h>
 #include<iostream>
@@ -11,67 +10,12 @@
 #include "Windows/HideWindowsPlatformTypes.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ProceduralMeshComponent.h"
 #include "Server_testing.generated.h"
 
 using namespace std;
 using namespace chrono;
-const int map_size = 70;
-
-USTRUCT(Atomic, BlueprintType)
-struct FOneArray
-{
-	GENERATED_BODY()
-public:
-	TArray<int8> one_side_array;
-
-	int8 operator[] (int32 i)
-	{
-		return one_side_array[i];
-	}
-
-	void Init(int32 size)
-	{
-		one_side_array.Init(0, size);
-	}
-
-	void SetNum(int32 size)
-	{
-		one_side_array.SetNum(size);
-	}
-	
-	void Copy (const TArray<int8>* other)
-	{
-		memcpy(&one_side_array, other, map_size * sizeof(int8));
-	}
-
-	void Set(int i, int8 value)
-	{
-		one_side_array[i] = value;
-	}
-
-	void Add(int8 item)
-	{
-		one_side_array.Add(item);
-	}
-
-	int32 Num()
-	{
-		return one_side_array.Num();
-	}
-
-	int32 GetTypeSize()
-	{
-		return one_side_array.GetTypeSize();
-	}
-	int32 GetAllocatedSize()
-	{
-		return one_side_array.GetAllocatedSize();
-	}
-	void Empty()
-	{
-		one_side_array.Empty();
-	}
-};
+const int map_size = 200;
 
 UCLASS()
 class PROJECT_API AServer_testing : public AActor
@@ -80,16 +24,14 @@ class PROJECT_API AServer_testing : public AActor
 public:
 	// Sets default values for this actor's properties
 	AServer_testing();
-	
-	UFUNCTION(BlueprintCallable)
-	int32 get_height(int32 x, int32 y);
 
 	UFUNCTION()
 	void SpawnTerrain();
 
 	UFUNCTION()
-	void UpdateTerrain();
-
+	void UpdateTerrain(int x, int y, int space);
+	void InitializeTerrain();
+	void UpdateMeshTerrain();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -99,7 +41,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	const char* SERVER_ADDR = "127.0.0.1";
 	const short SERVER_PORT = 9000;
-	const int BUFSIZE = 256;
 	int ret = 0;
 	int resources[5] = {};
 
@@ -174,16 +115,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool first_recv_send = false;
-	
-	
 
-	int32 UpdateTerrainIter{};
+	int32 TerrainIterX{};
+	int32 TerrainIterY{};
+	
 	int8 terrain_recv_array[map_size];
-	
-	TArray<TArray<int8>> terrain_2d_array;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor> TerrainBlock;
+	TArray<TArray<int8>> Terrain2DArray;
+	TArray<TArray<int8>> PreTerrain2DArray;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMesh* TerrainMesh;
@@ -191,9 +129,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UMaterial* TerrainMaterial;
 	
-	TArray<TArray< AActor*>> TerrainBlocks2D;
-	TArray<TArray< UInstancedStaticMeshComponent*> > TerrainBlocks2D_Instanced;
 	UInstancedStaticMeshComponent* InstancedTerrain;
-	/*DWORD WINAPI Angle_Receiver(LPVOID arg);*/
+
+	TArray<FVector> Vertices;
+	UProceduralMeshComponent* MeshTerrain;
 };
 

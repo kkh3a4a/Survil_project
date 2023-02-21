@@ -5,13 +5,16 @@
 #include "Kismet/GameplayStatics.h"
 #include "citizen.h"
 #include <future>
+#include <thread>
+#include <mutex>
+#include "CoreMinimal.h"
 #include "Async/Async.h"
+#include "RenderingThread.h"
 #include "Async/ParallelFor.h"
 #include "GameFramework/Actor.h"
 #include "Components/SceneComponent.h"
 #include "GenericPlatform/GenericPlatformProcess.h"
 #include "Components/InstancedStaticMeshComponent.h"
-// Sets default values
 
 //AMyPlayerController* my_controller;
 
@@ -21,17 +24,49 @@ AServer_testing::AServer_testing()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-int32 AServer_testing::get_height(int32 x, int32 y)
+void AServer_testing::InitializeTerrain()
 {
-	if (x < 0 || x >= map_size || y < 0 || y >= map_size) {
-		return 1;
+	for (int32 Y = 0; Y < map_size; Y++)
+	{
+		for (int32 X = 0; X < map_size; X++)
+		{
+			FVector Vertex(100 * X, 100 * Y, Terrain2DArray[X][Y]);
+			Vertices.Add(Vertex);
+		}
 	}
-	else if (terrain_2d_array.Num() == 0) {
-		return 1;
+
+	TArray<int32> Triangles;
+	for (int32 Y = 0; Y < map_size - 1; Y++)
+	{
+		for (int32 X = 0; X < map_size - 1; X++)
+		{
+			Triangles.Add(Y * map_size + X);
+			Triangles.Add((Y + 1) * map_size + X);
+			Triangles.Add(Y * map_size + X + 1);
+
+			Triangles.Add((Y + 1) * map_size + (X+1));
+			Triangles.Add(Y * map_size + X + 1);
+			Triangles.Add((Y + 1) * map_size + X);
+		}
 	}
-	else {
-		return terrain_2d_array[x][y];
+
+	// Create the mesh component
+	MeshTerrain = NewObject<UProceduralMeshComponent>(this);
+	MeshTerrain->CreateMeshSection_LinearColor(0, Vertices, Triangles, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>(), true);
+
+	// Add the mesh component to the actor
+	MeshTerrain->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	MeshTerrain->SetMaterial(0, TerrainMaterial);
+	MeshTerrain->RegisterComponent();
+}
+
+void AServer_testing::UpdateMeshTerrain()
+{
+	for (int32 i = 0; i < Vertices.Num(); i++)
+	{
+		Vertices[i].Z = Terrain2DArray[i%map_size][i/map_size ] * 50;
 	}
+	MeshTerrain->UpdateMeshSection_LinearColor(0, Vertices, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>());
 }
 
 void AServer_testing::SpawnTerrain()
@@ -42,79 +77,38 @@ void AServer_testing::SpawnTerrain()
 	InstancedTerrain->SetMaterial(0, TerrainMaterial);
 	InstancedTerrain->SetFlags(RF_Transactional);
 	this->AddInstanceComponent(InstancedTerrain);
-	//spawn instance static mesh
-	for (int32 i = 0; i < map_size; ++i) {
-		for (int32 j = 0; j < map_size; ++j) {
+	for (int i = 0; i < map_size; ++i) {
+		for (int j = 0; j < map_size; ++j) {
 			FTransform transform;
-			transform.SetLocation(FVector(i * 100, j * 100, 1000));
+			transform.SetLocation(FVector(0, 0, 0));
 			InstancedTerrain->AddInstance(transform);
+			InstancedTerrain->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 		}
 	}
-
-
-	/*FRotator SpawnRotation;
-	FVector SpawnLocation;
-	AActor* SpawnedActor;
-	TerrainBlocks2D.SetNum(map_size);
-	for (int i = 0; i < map_size; i++) {
-		TerrainBlocks2D[i].SetNum(map_size);
-	}
-
-	for (int i = 0; i < map_size; i++) {
-		for (int j = 0; j < map_size; j++) {
-			SpawnLocation = FVector(i * 100, j * 100, 0);
-			SpawnedActor = GetWorld()->SpawnActor<AActor>(TerrainBlock, SpawnLocation, SpawnRotation);
-			SpawnedActor->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
-			TerrainBlocks2D[i][j] = SpawnedActor;
-		}
-	}*/
 }
 
-void AServer_testing::UpdateTerrain()
+void AServer_testing::UpdateTerrain(int x, int y, int space)
 {
-	/*ParallelFor(10, [&](int32 i) {
-		ParallelFor(10, [&](int32 j) {
-			UE_LOG(LogTemp, Warning, TEXT("Updating terrain: (%d, %d)"), i, j);
-			});
-		});*/
-
 	FVector RootLocation = GetActorLocation();
 	FTransform InstanceTransform;
-	int InstanceIndex;
-	for (int i = 0; i < map_size; i++) {
-		for (int j = 0; j < map_size; j++) {
-			//TerrainBlocks2D[i][j]->SetActorScale3D(FVector(1, 1, terrain_2d_array[i][j]));
-			InstanceIndex = i * map_size + j;
+	x = 0;
+	y = 0;
+	space = map_size;
+	for (int i = x * space; i < (x + 1) * space; i++) {
+		for (int j = y * space; j < (y + 1) * space; j++) {
 			InstanceTransform.SetLocation(RootLocation + FVector(i * 100, j * 100, 0));
-			InstanceTransform.SetScale3D(FVector(1, 1, terrain_2d_array[i][j]));
+			InstanceTransform.SetScale3D(FVector(1, 1, Terrain2DArray[i][j]));
+			InstancedTerrain->UpdateInstanceTransform(i * map_size + j, InstanceTransform, true, true);
 			
-			InstancedTerrain->UpdateInstanceTransform(InstanceIndex, InstanceTransform, true, true);
 		}
 	}
-	//clock_t start = clock();
-	/*FVector Scale;
-	FVector CurrSclale;
-	Scale.X = 1;
-	Scale.Y = 1;
-	for (int i = 0; i < map_size; i++) {
-
-		for (int j = 0; j < map_size; j++) {
-			Scale.Z = terrain_2d_array[i][j];
-			CurrSclale = TerrainBlocks2D[i][j]->GetActorScale3D();
-			if (Scale.Z != CurrSclale.Z) {
-				TerrainBlocks2D[i][j]->SetActorScale3D(Scale);
-			}
-		}
-	}*/
-	//clock_t end = clock();
-	//UE_LOG(LogTemp, Warning, TEXT("UpdateTerrainHeight: %f"), (float)(end - start) / CLOCKS_PER_SEC);
 }
-
 
 // Called when the game starts or when spawned
 void AServer_testing::BeginPlay()
 {
 	Super::BeginPlay();
+
 	TArray<AActor*> CitizensToFind;
 	wcout.imbue(locale("korean"));
 	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
@@ -125,7 +119,16 @@ void AServer_testing::BeginPlay()
 	server_addr.sin_port = htons(SERVER_PORT);
 	ret = inet_pton(AF_INET, SERVER_ADDR, &server_addr.sin_addr);
 
-	SpawnTerrain();
+	//Set Size of Terrain Array 
+	Terrain2DArray.SetNum(map_size);
+	PreTerrain2DArray.SetNum(map_size);
+	for (int i = 0; i < map_size; ++i){
+		Terrain2DArray[i].SetNum(map_size);
+		PreTerrain2DArray[i].SetNum(map_size);
+	}
+	
+	InitializeTerrain();
+	//SpawnTerrain();
 
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
@@ -175,20 +178,11 @@ void AServer_testing::BeginPlay()
 		resources_create_landscape[i].location.x = temp_resource.location.x;
 		resources_create_landscape[i].location.y = temp_resource.location.y;
 	}
-
-
 	first_recv_send = true;
-
-	//Set Size of Terrain Array
-	terrain_2d_array.SetNum(map_size);
-	for (int i = 0; i < map_size; ++i)
-	{
-		terrain_2d_array[i].SetNum(map_size);
-	}
-
 
 	UE_LOG(LogTemp, Log, TEXT("connected to server"));
 	start_t = high_resolution_clock::now();
+
 }
 
 // Called every frame
@@ -201,81 +195,98 @@ void AServer_testing::Tick(float DeltaTime)
 	//UE_LOG(LogTemp, Log, TEXT("%d"), test);
 	//my_controller->testFunction();
 	//UE_LOG(LogTemp, Log, TEXT("%d"), test);
-	if (duration_cast<milliseconds>(end_t - start_t).count() > 0) {
+	start_t = high_resolution_clock::now();
 
-		start_t = high_resolution_clock::now();
-		ret = send(s_socket, (char*)&Citizen_moving, (int)sizeof(FCitizen_moving), 0);
-		if (SOCKET_ERROR == ret)
-		{
-			return;
-		}
-		ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
-		if (SOCKET_ERROR == ret)
-		{
-			return;
-		}
-		for (int i = 0; i < MAXPLAYER; ++i)
-		{
-			for (int j = 0; j < 10; ++j)
-			{
-				recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
-
-				citizen[i].citizen_location_rotation[j].location.x = temp_Actor.location.x;
-				citizen[i].citizen_location_rotation[j].location.y = temp_Actor.location.y;
-				citizen[i].citizen_location_rotation[j].location.z = temp_Actor.location.z;
-
-				/*FVector citizen_tmp = { temp_Actor.location.x,temp_Actor.location.y,temp_Actor.location.z };
-				if (My_Citizen[i].citizen_AActor[j] != nullptr)
-				{
-					My_Citizen[i].citizen_AActor[j]->SetActorLocation(citizen_tmp);
-				}*/
-				//UE_LOG(LogTemp, Log, TEXT("citizen %d : %f %f"), i, citizen[i].citizen_location_rotation[j].location.x, citizen[i].citizen_location_rotation[j].location.y);
-			}
-		}
-		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MYplayer_controller->MouseInput.location.x, MYplayer_controller->MouseInput.location.y)
-		//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MouseInput.location.x, MouseInput.location.y)
-
-
-		for (int i = 0; i < MAXPLAYER * 10; ++i)
-		{
-			Fresources_actor temp_resource;
-			recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
-			resources_create_landscape[i].count = temp_resource.count;
-			resources_create_landscape[i].type = temp_resource.type;
-			resources_create_landscape[i].location.x = temp_resource.location.x;
-			resources_create_landscape[i].location.y = temp_resource.location.y;
-		}
-
-		//카메라 위치 및 입력보내버리기
-		send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
-		recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
-
-
-		//자원 받기
-		recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
-		oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
-
-		//Recv Terrain
-		for (int i = 0; i < map_size; i++)
-		{
-			//terrain_array[i].Empty();
-			ret = recv(s_socket, (char*)&terrain_recv_array, (int)(sizeof(char) * map_size), 0);
-			if (SOCKET_ERROR == ret)
-			{
-				return;
-			}
-			for (int j = 0; j < map_size; j++)
-			{
-				terrain_2d_array[i][j] = terrain_recv_array[j];
-			}
-		}
-
-		UpdateTerrain();
-
-
-		//=====================
+	clock_t t_0 = clock();
+	
+	ret = send(s_socket, (char*)&Citizen_moving, (int)sizeof(FCitizen_moving), 0);
+	if (SOCKET_ERROR == ret){
+		return;
 	}
+	clock_t t_1 = clock();
 
+	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
+	if (SOCKET_ERROR == ret){
+		return;
+	}
+	
+	clock_t t_2 = clock();
+
+	for (int i = 0; i < MAXPLAYER; ++i)
+	{
+		for (int j = 0; j < 10; ++j)
+		{
+			recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
+
+			citizen[i].citizen_location_rotation[j].location.x = temp_Actor.location.x;
+			citizen[i].citizen_location_rotation[j].location.y = temp_Actor.location.y;
+			citizen[i].citizen_location_rotation[j].location.z = temp_Actor.location.z;
+
+			/*FVector citizen_tmp = { temp_Actor.location.x,temp_Actor.location.y,temp_Actor.location.z };
+			if (My_Citizen[i].citizen_AActor[j] != nullptr)
+			{
+				My_Citizen[i].citizen_AActor[j]->SetActorLocation(citizen_tmp);
+			}*/
+			//UE_LOG(LogTemp, Log, TEXT("citizen %d : %f %f"), i, citizen[i].citizen_location_rotation[j].location.x, citizen[i].citizen_location_rotation[j].location.y);
+		}
+	}
+	//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MYplayer_controller->MouseInput.location.x, MYplayer_controller->MouseInput.location.y)
+	//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MouseInput.location.x, MouseInput.location.y)
+	clock_t t_3= clock();
+
+
+	for (int i = 0; i < MAXPLAYER * 10; ++i)
+	{
+		Fresources_actor temp_resource;
+		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
+		resources_create_landscape[i].count = temp_resource.count;
+		resources_create_landscape[i].type = temp_resource.type;
+		resources_create_landscape[i].location.x = temp_resource.location.x;
+		resources_create_landscape[i].location.y = temp_resource.location.y;
+	}
+	clock_t t_4 = clock();
+
+	//카메라 위치 및 입력보내버리기
+	send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
+	recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
+
+	clock_t t_5 = clock();
+
+	//자원 받기
+	recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
+	oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
+	clock_t t_6 = clock();
+
+	//Recv Terrain
+	for (int i = 0; i < map_size; i++)
+	{
+		//terrain_array[i].Empty();
+		ret = recv(s_socket, (char*)&terrain_recv_array, (int)(sizeof(char) * map_size), 0);
+		if (SOCKET_ERROR == ret)
+		{
+			return;
+		}
+		for (int j = 0; j < map_size; j++)
+		{
+			Terrain2DArray[i][j] = terrain_recv_array[j];
+		}
+	}
+	clock_t t_7 = clock();
+
+	if (TerrainIterX == 4) {
+		TerrainIterX = 0;
+		TerrainIterY++;
+	}
+	if (TerrainIterY == 4) {
+		TerrainIterY = 0;
+	}
+	clock_t t_8 = clock();
+	if (t_8 - t_0 > 100)
+		UE_LOG(LogTemp, Log, TEXT("send : %lf, recv : %lf, citizen : %lf, resource : %lf, camera : %lf, resource : %lf, terrain recv : %lf, terrain update : %lf"), (double)(t_1 - t_0) / CLOCKS_PER_SEC, (double)(t_2 - t_1) / CLOCKS_PER_SEC, (double)(t_3 - t_2) / CLOCKS_PER_SEC, (double)(t_4 - t_3) / CLOCKS_PER_SEC, (double)(t_5 - t_4) / CLOCKS_PER_SEC, (double)(t_6 - t_5) / CLOCKS_PER_SEC, (double)(t_7 - t_6) / CLOCKS_PER_SEC, (double)(t_8 - t_7) / CLOCKS_PER_SEC);
+	//UpdateTerrain(TerrainIterX, TerrainIterY, map_size / 4);
+	TerrainIterX++;
+	UpdateMeshTerrain();
+	//=====================
 	//UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location.x , test_Actor.location.y, test_Actor.location.z);
 	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(" %d, %d, %d", sunangle.x, sunangle.y, sunangle.z));
 
