@@ -65,26 +65,14 @@ void AServer_testing::BeginPlay()
 		recv(s_socket, (char*)&temp_Actor, sizeof(FActor_location_rotation), 0);
 		FActor_location_rotation tmp;
 		players_list.Add(i, tmp);
-
-		players_list[i].location.x = temp_Actor.location.x;
-		players_list[i].location.y = temp_Actor.location.y;
-		players_list[i].location.z = temp_Actor.location.z;
-		//UE_LOG(LogTemp, Log, TEXT("player : %f %f"), players_list[i].location.x, players_list[i].location.y);
+		TF_set(players_list[i].location, temp_Actor.location);
 		Fcitizen_struct temp;
 		citizen.Add(i, temp);
 		for (int j = 0; j < 10; ++j)
 		{
 			recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
 
-			FCitizen_sole citizentemp;
-			citizentemp.location.x = temp_Actor.location.x;
-			citizentemp.location.y = temp_Actor.location.y;
-			citizentemp.location.z = temp_Actor.location.z;
-			citizen[i].citizen_location_rotation.Add(citizentemp);
-			citizen[i].citizen_location_rotation[j].location.x = temp_Actor.location.x;
-			citizen[i].citizen_location_rotation[j].location.y = temp_Actor.location.y;
-			citizen[i].citizen_location_rotation[j].location.z = temp_Actor.location.z;
-			//UE_LOG(LogTemp, Log, TEXT("citizen %d %d : %f %f"), i , j, citizen[i].citizen_location_rotation[j].location.x, citizen[i].citizen_location_rotation[j].location.y);
+			citizen_set(i, j);
 		}
 	}
 	for (auto& a : citizen){
@@ -96,10 +84,7 @@ void AServer_testing::BeginPlay()
 		Fresources_actor temp_resource;
 		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
 		resources_create_landscape.Add(i, temp_resource);
-		resources_create_landscape[i].count = temp_resource.count;
-		resources_create_landscape[i].type = temp_resource.type;
-		resources_create_landscape[i].location.x = temp_resource.location.x;
-		resources_create_landscape[i].location.y = temp_resource.location.y;
+		resoure_set(resources_create_landscape[i], temp_resource);
 	}
 	first_recv_send = true;
 
@@ -113,24 +98,15 @@ void AServer_testing::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	steady_clock::time_point end_t = high_resolution_clock::now();
-	//UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"), *MouseInput.name, MouseInput.location.x, MouseInput.location.y);
-	//UE_LOG(LogTemp, Log, TEXT("%d"), test);
-	//my_controller->testFunction();
-	//UE_LOG(LogTemp, Log, TEXT("%d"), test);
 	start_t = high_resolution_clock::now();
 
 	clock_t t_0 = clock();
 	
 	ret = send(s_socket, (char*)&Citizen_moving, (int)sizeof(FCitizen_moving), 0);
-	if (SOCKET_ERROR == ret){
-		return;
-	}
+	
 	clock_t t_1 = clock();
 
 	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
-	if (SOCKET_ERROR == ret){
-		return;
-	}
 	
 	clock_t t_2 = clock();
 
@@ -140,20 +116,10 @@ void AServer_testing::Tick(float DeltaTime)
 		{
 			recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
 
-			citizen[i].citizen_location_rotation[j].location.x = temp_Actor.location.x;
-			citizen[i].citizen_location_rotation[j].location.y = temp_Actor.location.y;
-			citizen[i].citizen_location_rotation[j].location.z = temp_Actor.location.z;
+			TF_set(citizen[i].citizen_location_rotation[j].location, temp_Actor.location);
 
-			/*FVector citizen_tmp = { temp_Actor.location.x,temp_Actor.location.y,temp_Actor.location.z };
-			if (My_Citizen[i].citizen_AActor[j] != nullptr)
-			{
-				My_Citizen[i].citizen_AActor[j]->SetActorLocation(citizen_tmp);
-			}*/
-			//UE_LOG(LogTemp, Log, TEXT("citizen %d : %f %f"), i, citizen[i].citizen_location_rotation[j].location.x, citizen[i].citizen_location_rotation[j].location.y);
-		}
+			}
 	}
-	//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MYplayer_controller->MouseInput.location.x, MYplayer_controller->MouseInput.location.y)
-	//UE_LOG(LogTemp, Log, TEXT("%d %lf %lf"), cnt, MouseInput.location.x, MouseInput.location.y)
 	clock_t t_3= clock();
 
 
@@ -161,10 +127,7 @@ void AServer_testing::Tick(float DeltaTime)
 	{
 		Fresources_actor temp_resource;
 		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
-		resources_create_landscape[i].count = temp_resource.count;
-		resources_create_landscape[i].type = temp_resource.type;
-		resources_create_landscape[i].location.x = temp_resource.location.x;
-		resources_create_landscape[i].location.y = temp_resource.location.y;
+		resoure_set(resources_create_landscape[i], temp_resource);
 	}
 	clock_t t_4 = clock();
 
@@ -205,4 +168,29 @@ void AServer_testing::Tick(float DeltaTime)
 	//UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location.x , test_Actor.location.y, test_Actor.location.z);
 	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(" %d, %d, %d", sunangle.x, sunangle.y, sunangle.z));
 
+}
+
+
+
+
+void AServer_testing::citizen_set(int i,int j)
+{
+	FCitizen_sole citizentemp;
+	TF_set(citizentemp.location, temp_Actor.location);
+	citizen[i].citizen_location_rotation.Add(citizentemp);
+	TF_set(citizen[i].citizen_location_rotation[j].location, temp_Actor.location);
+}
+
+void AServer_testing::TF_set(Fthree_float& a, Fthree_float& b)
+{
+	a.x = b.x;
+	a.y = b.y;
+	a.z = b.z;
+}
+
+void AServer_testing::resoure_set(Fresources_actor& a, Fresources_actor& b)
+{
+	a.count = b.count;
+	a.type = b.type;
+	TF_set(a.location, b.location);
 }

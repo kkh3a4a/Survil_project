@@ -118,5 +118,13 @@ public:
 		TSubclassOf<AActor> TerrainBlock;
 	
 	AMeshTerrain* TerrainActor;
+
+
+	void citizen_set(int i, int j);
+
+	void TF_set(Fthree_float& a, Fthree_float& b);
+
+	void resoure_set(Fresources_actor& a, Fresources_actor& b);
+
 };
 

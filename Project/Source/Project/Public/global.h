@@ -125,6 +125,11 @@ public:
 	bool d;
 };
 
+
+
+
+
+
 class PROJECT_API global
 {
 public:

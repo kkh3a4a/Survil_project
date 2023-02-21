@@ -237,23 +237,3 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
 
 }
 
-//void AMyPlayerController::SetPlacementModeEnabled(bool IsEnabled)
-//{
-//    if (IsEnabled == PlacementModeEnabled)
-//    {
-//        return;
-//    }
-//    else
-//    {
-//        IsEnabled = PlacementModeEnabled;
-//    }
-//}
-//
-//void AMyPlayerController::UpdatePlacement()
-//{
-//
-//}
-//
-//void AMyPlayerController::SpawnBuilding()
-//{
-//}
