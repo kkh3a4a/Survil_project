@@ -25,6 +25,13 @@ void AServer_testing::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//FSocketThread* SocketThread = new FSocketThread(FString("127.0.0.1"), 9000);
+	//bool connected = SocketThread->Init();
+	//UE_LOG(LogTemp, Warning, TEXT("Connected: %d"), connected);
+
+
+	
+
 	TArray<AActor*> CitizensToFind;
 	wcout.imbue(locale("korean"));
 	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
@@ -41,10 +48,10 @@ void AServer_testing::BeginPlay()
 		Terrain2DArray[i].SetNum(map_size);
 	}
 	
+	//Init Mesh Terrain
 	FVector Location(0.0f, 0.0f, 0.0f);
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
-	
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(Location, Rotation, SpawnInfo);
 	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterial);

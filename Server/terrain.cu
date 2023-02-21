@@ -13,12 +13,15 @@
 #define PI 3.1415926
 using namespace std;
 
-//const int one_side_number = 640;	//32000
+//const int one_side_number = 320;	//32000
 //const int player_sight_size = 50;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
 //const int random_array_size = 500000;// 90000000;
 const int one_side_number = 16000;	//32000
 const int player_sight_size = 200;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
 const int random_array_size = 50000000;// 90000000;
+//const int one_side_number = 32000;	//32000
+//const int player_sight_size = 200;	//1024 ³ÑÀ¸¸é ¾ÈµÊ
+//const int random_array_size = 90000000;// 90000000;
 
 const int max_height = 8;
 const int base_floor = 1;

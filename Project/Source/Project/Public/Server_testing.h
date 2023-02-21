@@ -9,6 +9,7 @@
 #include "global.h"
 #include "Windows/HideWindowsPlatformTypes.h"
 #include "MeshTerrain.h"
+#include "NetworkingThread.h"
 #include "CoreMinimal.h"
 #include "HAL/Runnable.h"
 #include "GameFramework/Actor.h"
