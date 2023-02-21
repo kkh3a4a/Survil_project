@@ -127,22 +127,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		Citizen_moving temp_citizen_moving;
 		retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
 		time_t t_1 = clock();
+		mouse_input_checking(temp_citizen_moving, players_list, port);
 
-		//cout << temp_citizen_moving.team << " : " << temp_citizen_moving.location.x << ", "<< temp_citizen_moving.location.y<<endl;
-		if (temp_citizen_moving.team != -1) {
-			players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->team = temp_citizen_moving.team;
-			players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.x = temp_citizen_moving.location.x;
-			players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.y = temp_citizen_moving.location.y;
-			if (temp_citizen_moving.citizen_job != 0) {
-				players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->job = temp_citizen_moving.citizen_job;
-				players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.x = temp_citizen_moving.location.x;
-				players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.y = temp_citizen_moving.location.y;
-			}
-		}
-		if (retval == SOCKET_ERROR) {
-			err_display("send()");
-			break;
-		}
 		time_t t_2 = clock();
 
 		retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);

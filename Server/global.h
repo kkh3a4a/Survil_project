@@ -272,3 +272,16 @@ void camera_movement(std::map<int, players_profile*>& players_list)
 		}
 	}
 }
+
+void mouse_input_checking(Citizen_moving& temp_citizen_moving, std::map<int, players_profile*>& players_list, int port) {
+	if (temp_citizen_moving.team != -1) {
+		players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->team = temp_citizen_moving.team;
+		players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.x = temp_citizen_moving.location.x;
+		players_list[port]->player_citizen_arrival_location[temp_citizen_moving.citizen_number]->location.y = temp_citizen_moving.location.y;
+		if (temp_citizen_moving.citizen_job != 0) {
+			players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->job = temp_citizen_moving.citizen_job;
+			players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.x = temp_citizen_moving.location.x;
+			players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.y = temp_citizen_moving.location.y;
+		}
+	}
+}
