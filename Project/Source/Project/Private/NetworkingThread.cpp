@@ -63,7 +63,6 @@ uint32 FSocketThread::Run()
 				//recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
 
 				TF_set(citizen[i].citizen_location_rotation[j].location, temp_Actor.location);
-
 			}
 		}
 

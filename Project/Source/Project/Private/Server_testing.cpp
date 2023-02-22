@@ -3,7 +3,6 @@
 #include <math.h>
 #include "MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
-#include "citizen.h"
 #include <future>
 #include <thread>
 #include <mutex>
