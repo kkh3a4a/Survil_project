@@ -114,11 +114,11 @@ public:
 	TArray<TArray<int8>> Terrain2DArray;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UMaterial* TerrainMaterial;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor> TerrainBlock;
+
 	
 	AMeshTerrain* TerrainActor;
-
+	FSocketThread* Networking;
+	FRunnableThread* NetworkingThread;
 
 	void citizen_set(int i, int j);
 
