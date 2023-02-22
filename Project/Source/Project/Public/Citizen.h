@@ -16,7 +16,7 @@ class PROJECT_API ACitizen : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ACitizen();
-	void Initialize(TSubclassOf<AActor>);
+	void Initialize(TSubclassOf<AActor>, TSubclassOf<AActor>);
 
 protected:
 
@@ -24,6 +24,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> Citizen_Actor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AActor>EnemyCitizenActor;
 
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)

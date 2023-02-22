@@ -154,13 +154,13 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		time_t t_4 = clock();
 
 
-		for (int j = 0; j < MAXPLAYER; ++j) {
-			for (auto& a : resource_create_landscape) {
-				retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
-				//cout << a.second->count <<", ";
-			}
-			//cout << endl;	
-		}
+		//for (int j = 0; j < MAXPLAYER; ++j) {
+		//	for (auto& a : resource_create_landscape) {
+		//		retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
+		//		//cout << a.second->count <<", ";
+		//	}
+		//	//cout << endl;	
+		//}
 
 		//클라이언트로부터 카메라 위치 받아와야 함
 		retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
@@ -178,13 +178,13 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		terrain.copy_for_player_map(player_location);
 
 		//terrain.show_array(player_sight, player_sight_size);
-		for (int i = 0; i < player_sight_size; ++i) {
+		/*for (int i = 0; i < player_sight_size; ++i) {
 			retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size, 0);
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
 			}
-		}
+		}*/
 		
 		time_t t_6 = clock();
 		

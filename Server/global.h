@@ -6,7 +6,7 @@
 #include<vector>
 #include<chrono>
 #include<iostream>
-#define MAXPLAYER 1
+#define MAXPLAYER 2
 
 std::uniform_int_distribution <int>uid{ 0, 40000 };
 std::uniform_int_distribution <int>resource_uid{ -100, 100 };
@@ -127,8 +127,8 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 		}
 
 		a.second->camera_location.x = a.second->player_info.location.x;
-		a.second->camera_location.y = a.second->player_info.location.y + 5000;
-		a.second->camera_location.z = a.second->player_info.location.z + 10000;
+		a.second->camera_location.y = a.second->player_info.location.y + 3000;
+		a.second->camera_location.z = a.second->player_info.location.z + 6000;
 		a.second->my_keyinput.w = false;
 		a.second->my_keyinput.s = false;
 		a.second->my_keyinput.a = false;

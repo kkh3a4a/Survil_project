@@ -10,10 +10,16 @@ ACitizen::ACitizen()
 	PrimaryActorTick.bCanEverTick = true;
 
 
+	Citizen_moving.team = -1;
+	Citizen_moving.location = { 0, 0, 0 };
+	Citizen_moving.rotation = { 0, 0, 0 };
+	Citizen_moving.citizen_job = 0;
+
 }
-void ACitizen::Initialize(TSubclassOf<AActor> C_Actor)
+void ACitizen::Initialize(TSubclassOf<AActor> C_Actor, TSubclassOf<AActor> E_Actor)
 {
 	Citizen_Actor = C_Actor;
+	EnemyCitizenActor = E_Actor;
 }
 
 void ACitizen::Spawn_Citizen()
@@ -31,8 +37,10 @@ void ACitizen::Spawn_Citizen()
 			for (int i = 0; i < 10; ++i)
 			{
 				Location = { a.Value.citizen_location_rotation[i].location.x, a.Value.citizen_location_rotation[i].location.y, a.Value.citizen_location_rotation[i].location.z };
-				//Spawned_Citizen = GetWorld()->SpawnActor<AActor>(Location, Rotation, SpawnInfo);
 				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(Citizen_Actor, Location, Rotation, SpawnInfo);
+				Spawned_Citizen->Tags.Add("Citizen");
+				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
+				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(i)));
 				New_Actors.Add(Spawned_Citizen);
 			}
 			Citizens_Editer.Add(Is_Mycitizen, New_Actors);
@@ -42,10 +50,16 @@ void ACitizen::Spawn_Citizen()
 			for (int i = 0; i < 10; ++i)
 			{
 				Location = { a.Value.citizen_location_rotation[i].location.x, a.Value.citizen_location_rotation[i].location.y, a.Value.citizen_location_rotation[i].location.z };
-				GetWorld()->SpawnActor<ACitizen>(Location, Rotation, SpawnInfo);
+				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(Citizen_Actor, Location, Rotation, SpawnInfo);
+				Spawned_Citizen->Tags.Add("Citizen");
+				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
+				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(i)));
+				New_Actors.Add(Spawned_Citizen);
 			}
+			Citizens_Editer.Add(Is_Mycitizen, New_Actors);
 		}
 		Is_Mycitizen++;
+		New_Actors.Empty();
 	}
 }
 

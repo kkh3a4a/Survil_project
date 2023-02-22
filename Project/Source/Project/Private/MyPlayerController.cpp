@@ -33,13 +33,7 @@ AMyPlayerController::AMyPlayerController()
     }
 
     bShowMouseCursor = true;
-    //server_MouseInput->Citizens->Citizen_moving.team = -1;
-    //server_MouseInput->Citizens->Citizen_moving.location = { 0, 0, 0 };
-    //server_MouseInput->Citizens->Citizen_moving.rotation = { 0, 0, 0 };
-    //server_MouseInput->Citizens->Citizen_moving.citizen_job = 0;
-    //UE_LOG(LogTemp, Log, TEXT("%s : %f, %f"), *(server_MouseInput->MouseInput.name), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
-    //UE_LOG(LogTemp, Log, TEXT("%f, %f"), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
-
+    
     bEnableClickEvents = true;
     bEnableTouchEvents = true;
     bEnableMouseOverEvents = true;
@@ -154,6 +148,7 @@ void AMyPlayerController::MoveToMouseCursor()
         hitActor = Hit.GetActor();
         if (hitActor->ActorHasTag("Citizen"))
         {
+            UE_LOG(LogTemp, Log, TEXT("Citizen"));
             if (wcscmp(*hitActor->Tags[1].ToString(), L"0") == 0)
             {
                 server_MouseInput->Citizens->Citizen_moving.team = FCString::Atoi(*hitActor->Tags[1].ToString());

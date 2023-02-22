@@ -84,6 +84,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Citizen_Actor;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>EnemyCitizenActor;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<int, Fresources_actor> resources_create_landscape;

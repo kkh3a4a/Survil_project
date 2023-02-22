@@ -34,7 +34,7 @@ void AServer_testing::BeginPlay()
 	FActorSpawnParameters SpawnInfo;
 
 	Citizens = GetWorld()->SpawnActor<ACitizen>(Location, Rotation, SpawnInfo);
-	Citizens->Initialize(Citizen_Actor);
+	Citizens->Initialize(Citizen_Actor,EnemyCitizenActor);
 
 	//Set Size of Terrain Array 
 	Terrain2DArray.SetNum(map_size);
@@ -115,19 +115,19 @@ void AServer_testing::Tick(float DeltaTime)
 
 			TF_set(Citizens->My_Citizen[i].citizen_location_rotation[j].location, Citizens->temp_Actor.location);
 
-			}
+		}
 	}
 
 	Citizens->Citizen_Moving();
 	clock_t t_3= clock();
 
 
-	for (int i = 0; i < MAXPLAYER * 10; ++i)
+	/*for (int i = 0; i < MAXPLAYER * 10; ++i)
 	{
 		Fresources_actor temp_resource;
 		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
 		resoure_set(resources_create_landscape[i], temp_resource);
-	}
+	}*/
 	clock_t t_4 = clock();
 
 	//카메라 위치 및 입력보내버리기
@@ -142,17 +142,17 @@ void AServer_testing::Tick(float DeltaTime)
 	clock_t t_6 = clock();
 
 	//Recv Terrain
-	for (int i = 0; i < map_size; i++) {
-		//terrain_array[i].Empty();
-		ret = recv(s_socket, (char*)&terrain_recv_array, (int)(sizeof(char) * map_size), 0);
-		if (SOCKET_ERROR == ret){
-			return;
-		}
-		for (int j = 0; j < map_size; j++)
-		{
-			Terrain2DArray[i][j] = terrain_recv_array[j];
-		}
-	}
+	//for (int i = 0; i < map_size; i++) {
+	//	//terrain_array[i].Empty();
+	//	ret = recv(s_socket, (char*)&terrain_recv_array, (int)sizeof(char) * map_size, 0);
+	//	if (SOCKET_ERROR == ret){
+	//		return;
+	//	}
+	//	for (int j = 0; j < map_size; j++)
+	//	{
+	//		Terrain2DArray[i][j] = terrain_recv_array[j];
+	//	}
+	//}
 	clock_t t_7 = clock();
 	
 	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
