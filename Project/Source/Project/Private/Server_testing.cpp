@@ -28,17 +28,21 @@ void AServer_testing::BeginPlay()
 	//bool connected = SocketThread->Init();
 	//UE_LOG(LogTemp, Warning, TEXT("Connected: %d"), connected);
 	
+	//Citizen
+	FVector Location(0.0f, 0.0f, 0.0f);
+	FRotator Rotation(0.0f, 0.0f, 0.0f);
+	FActorSpawnParameters SpawnInfo;
+
+	Citizens = GetWorld()->SpawnActor<ACitizen>(Location, Rotation, SpawnInfo);
+	Citizens->Initialize(Citizen_Actor);
 
 	//Set Size of Terrain Array 
 	Terrain2DArray.SetNum(map_size);
 	for (int i = 0; i < map_size; ++i){
 		Terrain2DArray[i].SetNum(map_size);
 	}
-	
+
 	//Init Mesh Terrain
-	FVector Location(0.0f, 0.0f, 0.0f);
-	FRotator Rotation(0.0f, 0.0f, 0.0f);
-	FActorSpawnParameters SpawnInfo;
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(Location, Rotation, SpawnInfo);
 	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterial);
@@ -58,24 +62,21 @@ void AServer_testing::BeginPlay()
 
 	for (int i = 0; i < MAXPLAYER; ++i) {
 		Citizen_num++;
-		recv(s_socket, (char*)&temp_Actor, sizeof(FActor_location_rotation), 0);
+		recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FActor_location_rotation), 0);
 		FActor_location_rotation tmp;
 		players_list.Add(i, tmp);
-		TF_set(players_list[i].location, temp_Actor.location);
+		TF_set(players_list[i].location, Citizens->temp_Actor.location);
 		Fcitizen_struct temp;
-		citizen.Add(i, temp);
+		Citizens->My_Citizen.Add(i, temp);
 		for (int j = 0; j < 10; ++j)
 		{
-			recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
+			recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FCitizen_sole), 0);
 
 			citizen_set(i, j);
 		}
 	}
-	for (auto& a : citizen){
-		for (int j = 0; j < 10; ++j){
-			UE_LOG(LogTemp, Log, TEXT("%f %f"), a.Value.citizen_location_rotation[j].location.x, a.Value.citizen_location_rotation[j].location.y);
-		}
-	}
+
+	Citizens->Spawn_Citizen();
 	for (int i = 0; i < MAXPLAYER * 10; ++i){
 		Fresources_actor temp_resource;
 		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
@@ -98,7 +99,7 @@ void AServer_testing::Tick(float DeltaTime)
 
 	clock_t t_0 = clock();
 	
-	ret = send(s_socket, (char*)&Citizen_moving, (int)sizeof(FCitizen_moving), 0);
+	ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
 	
 	clock_t t_1 = clock();
 
@@ -110,12 +111,14 @@ void AServer_testing::Tick(float DeltaTime)
 	{
 		for (int j = 0; j < 10; ++j)
 		{
-			recv(s_socket, (char*)&temp_Actor, sizeof(FCitizen_sole), 0);
+			recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FCitizen_sole), 0);
 
-			TF_set(citizen[i].citizen_location_rotation[j].location, temp_Actor.location);
+			TF_set(Citizens->My_Citizen[i].citizen_location_rotation[j].location, Citizens->temp_Actor.location);
 
 			}
 	}
+
+	Citizens->Citizen_Moving();
 	clock_t t_3= clock();
 
 
@@ -172,9 +175,9 @@ void AServer_testing::Tick(float DeltaTime)
 void AServer_testing::citizen_set(int i,int j)
 {
 	FCitizen_sole citizentemp;
-	TF_set(citizentemp.location, temp_Actor.location);
-	citizen[i].citizen_location_rotation.Add(citizentemp);
-	TF_set(citizen[i].citizen_location_rotation[j].location, temp_Actor.location);
+	TF_set(citizentemp.location, Citizens->temp_Actor.location);
+	Citizens->My_Citizen[i].citizen_location_rotation.Add(citizentemp);
+	TF_set(Citizens->My_Citizen[i].citizen_location_rotation[j].location, Citizens->temp_Actor.location);
 }
 
 void AServer_testing::TF_set(Fthree_float& a, Fthree_float& b)

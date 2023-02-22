@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include"global.h"
 #include "GameFramework/Actor.h"
 #include "Citizen.generated.h"
+
 
 UCLASS()
 class PROJECT_API ACitizen : public AActor
@@ -14,13 +16,36 @@ class PROJECT_API ACitizen : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ACitizen();
+	void Initialize(TSubclassOf<AActor>);
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AActor> Citizen_Actor;
+
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		//FActor_location_rotation MouseInput;
+
+		FCitizen_moving Citizen_moving;
+
+		int citizen_cnt[MAXPLAYER];
+
+		FCitizen_sole temp_Actor;
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TMap<int, Fcitizen_struct> My_Citizen;
+
+		TMap<int, TArray<AActor*>> Citizens_Editer;
+	
+
+
+	int My_Citizen_Num = 0;
+
+
+	void Spawn_Citizen();
+
+	void Citizen_Moving();
 };

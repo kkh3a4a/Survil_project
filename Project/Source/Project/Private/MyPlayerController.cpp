@@ -33,10 +33,10 @@ AMyPlayerController::AMyPlayerController()
     }
 
     bShowMouseCursor = true;
-    server_MouseInput->Citizen_moving.team = -1;
-    server_MouseInput->Citizen_moving.location = { 0, 0, 0 };
-    server_MouseInput->Citizen_moving.rotation = { 0, 0, 0 };
-    server_MouseInput->Citizen_moving.citizen_job = 0;
+    //server_MouseInput->Citizens->Citizen_moving.team = -1;
+    //server_MouseInput->Citizens->Citizen_moving.location = { 0, 0, 0 };
+    //server_MouseInput->Citizens->Citizen_moving.rotation = { 0, 0, 0 };
+    //server_MouseInput->Citizens->Citizen_moving.citizen_job = 0;
     //UE_LOG(LogTemp, Log, TEXT("%s : %f, %f"), *(server_MouseInput->MouseInput.name), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
     //UE_LOG(LogTemp, Log, TEXT("%f, %f"), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
 
@@ -156,11 +156,11 @@ void AMyPlayerController::MoveToMouseCursor()
         {
             if (wcscmp(*hitActor->Tags[1].ToString(), L"0") == 0)
             {
-                server_MouseInput->Citizen_moving.team = FCString::Atoi(*hitActor->Tags[1].ToString());
-                server_MouseInput->Citizen_moving.citizen_number = FCString::Atoi(*hitActor->Tags[2].ToString());
-                server_MouseInput->Citizen_moving.location.x = hitActor->GetActorLocation().X;
-                server_MouseInput->Citizen_moving.location.y = hitActor->GetActorLocation().Y;
-                server_MouseInput->Citizen_moving.location.z = hitActor->GetActorLocation().Z;
+                server_MouseInput->Citizens->Citizen_moving.team = FCString::Atoi(*hitActor->Tags[1].ToString());
+                server_MouseInput->Citizens->Citizen_moving.citizen_number = FCString::Atoi(*hitActor->Tags[2].ToString());
+                server_MouseInput->Citizens->Citizen_moving.location.x = hitActor->GetActorLocation().X;
+                server_MouseInput->Citizens->Citizen_moving.location.y = hitActor->GetActorLocation().Y;
+                server_MouseInput->Citizens->Citizen_moving.location.z = hitActor->GetActorLocation().Z;
                 // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), server_MouseInput->Citizen_moving.team, server_MouseInput->Citizen_moving.citizen_number ,server_MouseInput->Citizen_moving.location.x, server_MouseInput->Citizen_moving.location.y);
             }
             else
@@ -181,14 +181,14 @@ void AMyPlayerController::MoveToActor()
         DestLocation = Hit.ImpactPoint;
         if (Hit.GetActor()->ActorHasTag(L"Resource"))
         {
-            server_MouseInput->Citizen_moving.citizen_job = 1;
+            server_MouseInput->Citizens->Citizen_moving.citizen_job = 1;
             DestLocation = Hit.GetActor()->GetActorLocation();
 
             UE_LOG(LogTemp, Log, TEXT("Resource"));
         }
         else
         {
-            server_MouseInput->Citizen_moving.citizen_job = 0;
+            server_MouseInput->Citizens->Citizen_moving.citizen_job = 0;
         }
 
         if (hitActor) {
@@ -196,9 +196,9 @@ void AMyPlayerController::MoveToActor()
             {
                 temped = true;
                 mouse_end_t = high_resolution_clock::now();
-                server_MouseInput->Citizen_moving.location.x = DestLocation.X;
-                server_MouseInput->Citizen_moving.location.y = DestLocation.Y;
-                server_MouseInput->Citizen_moving.location.z = DestLocation.Z;
+                server_MouseInput->Citizens->Citizen_moving.location.x = DestLocation.X;
+                server_MouseInput->Citizens->Citizen_moving.location.y = DestLocation.Y;
+                server_MouseInput->Citizens->Citizen_moving.location.z = DestLocation.Z;
                 hitActor = NULL;
             }
         }
@@ -228,7 +228,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
         if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
         {
            
-            server_MouseInput->Citizen_moving.team = -1;
+            server_MouseInput->Citizens->Citizen_moving.team = -1;
             temped = false;
 
         }

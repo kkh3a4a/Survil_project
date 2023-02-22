@@ -58,22 +58,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<int, FActor_location_rotation> players_list;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<int, Fcitizen_struct> citizen;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FCitizen_sole temp_Actor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<int, FAActor_struct> My_Citizen;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<int, Fresources_actor> resources_create_landscape;
-
-	int My_Citizen_Num = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Fthree_float my_camera_location;
+	
 
 	steady_clock::time_point start_t;
 	WSADATA WSAData;
@@ -81,35 +66,33 @@ public:
 	HANDLE hThread;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int max_player_cnt = MAXPLAYER;
+		int max_player_cnt = MAXPLAYER;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMesh* My_Town;
+		UStaticMesh* My_Town;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class AActor> citizen_Blueprint;
-
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		//FActor_location_rotation MouseInput;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FCitizen_moving Citizen_moving;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	Fkeyboard_input my_key_input;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	Fthree_float sunangle;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FActor_location_rotation test_Actor;
+		Fkeyboard_input my_key_input;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Citizen_num = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool first_recv_send = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Citizen_Actor;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int, Fresources_actor> resources_create_landscape;
+	//citizen
+	ACitizen* Citizens;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	Fthree_float sunangle;
+
 
 	int8 terrain_recv_array[map_size];
 	TArray<TArray<int8>> Terrain2DArray;
@@ -120,6 +103,9 @@ public:
 	AMeshTerrain* TerrainActor;
 	FSocketThread* Networking;
 	FRunnableThread* NetworkingThread;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		Fthree_float my_camera_location;
 
 	void citizen_set(int i, int j);
 

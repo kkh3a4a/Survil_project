@@ -151,7 +151,6 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 				temp->job = 0;
 				a.second->player_citizen.emplace_back(temp);
 				a.second->player_citizen_arrival_location.emplace_back(temp_citizen_move);
-
 				std::cout << a.second->player_citizen[i * 5 + j]->location.x << ", " << a.second->player_citizen[i * 5 + j]->location.y << std::endl;
 			}
 		}
