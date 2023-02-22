@@ -6,7 +6,7 @@
 #include<vector>
 #include<chrono>
 #include<iostream>
-#define MAXPLAYER 2
+#define MAXPLAYER 1
 
 std::uniform_int_distribution <int>uid{ 0, 40000 };
 std::uniform_int_distribution <int>resource_uid{ -100, 100 };

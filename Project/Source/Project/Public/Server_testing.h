@@ -110,7 +110,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float my_camera_location;
 
-	void citizen_set(int i, int j);
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
 

@@ -12,7 +12,7 @@
  */
 
 
-#define MAXPLAYER 2
+#define MAXPLAYER 1
 
 
 USTRUCT(Atomic, BlueprintType)

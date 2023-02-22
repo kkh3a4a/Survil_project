@@ -50,7 +50,7 @@ void ACitizen::Spawn_Citizen()
 			for (int i = 0; i < 10; ++i)
 			{
 				Location = { a.Value.citizen_location_rotation[i].location.x, a.Value.citizen_location_rotation[i].location.y, a.Value.citizen_location_rotation[i].location.z };
-				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(Citizen_Actor, Location, Rotation, SpawnInfo);
+				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(EnemyCitizenActor, Location, Rotation, SpawnInfo);
 				Spawned_Citizen->Tags.Add("Citizen");
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(i)));
@@ -79,4 +79,20 @@ void ACitizen::Citizen_Moving()
 
 }
 
+void ACitizen::citizen_set(int i, int j)
+{
+	FCitizen_sole citizentemp;
+	TF_set(citizentemp.location, temp_Actor.location);
+	My_Citizen[i].citizen_location_rotation.Add(citizentemp);
+	TF_set(My_Citizen[i].citizen_location_rotation[j].location, temp_Actor.location);
+}
+
+
+
+void ACitizen::TF_set(Fthree_float& a, Fthree_float& b)
+{
+	a.x = b.x;
+	a.y = b.y;
+	a.z = b.z;
+}
 

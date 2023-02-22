@@ -72,7 +72,7 @@ void AServer_testing::BeginPlay()
 		{
 			recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FCitizen_sole), 0);
 
-			citizen_set(i, j);
+			Citizens->citizen_set(i, j);
 		}
 	}
 
@@ -113,7 +113,7 @@ void AServer_testing::Tick(float DeltaTime)
 		{
 			recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FCitizen_sole), 0);
 
-			TF_set(Citizens->My_Citizen[i].citizen_location_rotation[j].location, Citizens->temp_Actor.location);
+			Citizens->TF_set(Citizens->My_Citizen[i].citizen_location_rotation[j].location, Citizens->temp_Actor.location);
 
 		}
 	}
@@ -171,21 +171,13 @@ void AServer_testing::Tick(float DeltaTime)
 
 
 
-
-void AServer_testing::citizen_set(int i,int j)
-{
-	FCitizen_sole citizentemp;
-	TF_set(citizentemp.location, Citizens->temp_Actor.location);
-	Citizens->My_Citizen[i].citizen_location_rotation.Add(citizentemp);
-	TF_set(Citizens->My_Citizen[i].citizen_location_rotation[j].location, Citizens->temp_Actor.location);
-}
-
 void AServer_testing::TF_set(Fthree_float& a, Fthree_float& b)
 {
 	a.x = b.x;
 	a.y = b.y;
 	a.z = b.z;
 }
+
 
 void AServer_testing::resoure_set(Fresources_actor& a, Fresources_actor& b)
 {
