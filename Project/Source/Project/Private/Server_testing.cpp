@@ -27,19 +27,7 @@ void AServer_testing::BeginPlay()
 	//FSocketThread* SocketThread = new FSocketThread(FString("127.0.0.1"), 9000);
 	//bool connected = SocketThread->Init();
 	//UE_LOG(LogTemp, Warning, TEXT("Connected: %d"), connected);
-
-
 	
-
-	TArray<AActor*> CitizensToFind;
-	wcout.imbue(locale("korean"));
-	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
-	s_socket = socket(AF_INET, SOCK_STREAM, 0);
-	SOCKADDR_IN server_addr;
-	ZeroMemory(&server_addr, sizeof(server_addr));
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_port = htons(SERVER_PORT);
-	ret = inet_pton(AF_INET, SERVER_ADDR, &server_addr.sin_addr);
 
 	//Set Size of Terrain Array 
 	Terrain2DArray.SetNum(map_size);
@@ -54,7 +42,16 @@ void AServer_testing::BeginPlay()
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(Location, Rotation, SpawnInfo);
 	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterial);
+
 	
+	wcout.imbue(locale("korean"));
+	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
+	s_socket = socket(AF_INET, SOCK_STREAM, 0);
+	SOCKADDR_IN server_addr;
+	ZeroMemory(&server_addr, sizeof(server_addr));
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(SERVER_PORT);
+	ret = inet_pton(AF_INET, SERVER_ADDR, &server_addr.sin_addr);
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
 	int cnt = 0;

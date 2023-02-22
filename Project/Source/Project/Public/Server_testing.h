@@ -13,6 +13,7 @@
 #include "CoreMinimal.h"
 #include "HAL/Runnable.h"
 #include "GameFramework/Actor.h"
+#include "Citizen.h"
 #include "Server_testing.generated.h"
 
 using namespace std;
