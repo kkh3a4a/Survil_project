@@ -29,15 +29,12 @@ void AServer_testing::BeginPlay()
 	//UE_LOG(LogTemp, Warning, TEXT("Connected: %d"), connected);
 	
 	//Citizen
-	FVector Location(0.0f, 0.0f, 0.0f);
-	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
-
-	Citizens = GetWorld()->SpawnActor<ACitizen>(Location, Rotation, SpawnInfo);
+	Citizens = GetWorld()->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	Citizens->Initialize(Citizen_Actor,EnemyCitizenActor);
 	
 	//Init Mesh Terrain
-	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(Location, Rotation, SpawnInfo);
+	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(FVector(0,0,0), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
