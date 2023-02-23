@@ -37,9 +37,9 @@ void AServer_testing::BeginPlay()
 	Citizens->Initialize(Citizen_Actor,EnemyCitizenActor);
 
 	//Set Size of Terrain Array 
-	Terrain2DArray.SetNum(map_size);
-	for (int i = 0; i < map_size; ++i){
-		Terrain2DArray[i].SetNum(map_size);
+	Terrain2DArray.SetNum(MapSizeX);
+	for (int i = 0; i < MapSizeX; ++i){
+		Terrain2DArray[i].SetNum(MapSizeY);
 	}
 
 	//Init Mesh Terrain
@@ -48,7 +48,7 @@ void AServer_testing::BeginPlay()
 	TerrainActor->InitializeMeshTerrain(TerrainMaterial);
 
 	
-	wcout.imbue(locale("korean"));
+	/*wcout.imbue(locale("korean"));*/
 	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
 	s_socket = socket(AF_INET, SOCK_STREAM, 0);
 	SOCKADDR_IN server_addr;
@@ -93,19 +93,13 @@ void AServer_testing::BeginPlay()
 void AServer_testing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	steady_clock::time_point end_t = high_resolution_clock::now();
-	start_t = high_resolution_clock::now();
-
-	clock_t t_0 = clock();
+	
 	
 	ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
 	
-	clock_t t_1 = clock();
 
 	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
 	
-	clock_t t_2 = clock();
 
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
@@ -119,8 +113,6 @@ void AServer_testing::Tick(float DeltaTime)
 	}
 
 	Citizens->Citizen_Moving();
-	clock_t t_3= clock();
-
 
 	/*for (int i = 0; i < MAXPLAYER * 10; ++i)
 	{
@@ -128,45 +120,32 @@ void AServer_testing::Tick(float DeltaTime)
 		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
 		resoure_set(resources_create_landscape[i], temp_resource);
 	}*/
-	clock_t t_4 = clock();
 
 	//카메라 위치 및 입력보내버리기
 	send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
 	recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
 
-	clock_t t_5 = clock();
 
 	//자원 받기
 	recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
 	oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
-	clock_t t_6 = clock();
 
 	//Recv Terrain
-	//for (int i = 0; i < map_size; i++) {
-	//	//terrain_array[i].Empty();
-	//	ret = recv(s_socket, (char*)&terrain_recv_array, (int)sizeof(char) * map_size, 0);
-	//	if (SOCKET_ERROR == ret){
-	//		return;
-	//	}
-	//	for (int j = 0; j < map_size; j++)
-	//	{
-	//		Terrain2DArray[i][j] = terrain_recv_array[j];
-	//	}
-	//}
-	clock_t t_7 = clock();
+	//ret = recv(s_socket, (char*)&Terrain2DArray, (int)sizeof(char) * MapSizeX * MapSizeY, 0);
+	for (int i = 0; i < MapSizeX; i++) {
+		ret = recv(s_socket, (char*)&terrain_recv_array, (int)sizeof(char) * MapSizeY, 0);
+		if (SOCKET_ERROR == ret){
+			return;
+		}
+		for (int j = 0; j < MapSizeY; j++)
+		{
+			Terrain2DArray[i][j] = terrain_recv_array[j];
+		}
+	}
+
 	
 	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
-	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-
-
-	//UE_LOG(LogTemp, Log, TEXT("TerrainActor : %f %f %f"), TerrainActor->GetActorLocation().X, TerrainActor->GetActorLocation().Y, TerrainActor->GetActorLocation().Z);
-	clock_t t_8 = clock();
-	if (t_8 - t_0 > 100)
-		UE_LOG(LogTemp, Log, TEXT("send : %lf, recv : %lf, citizen : %lf, resource : %lf, camera : %lf, resource : %lf, terrain recv : %lf, terrain update : %lf, TOTAL: %lf"), (double)(t_1 - t_0) / CLOCKS_PER_SEC, (double)(t_2 - t_1) / CLOCKS_PER_SEC, (double)(t_3 - t_2) / CLOCKS_PER_SEC, (double)(t_4 - t_3) / CLOCKS_PER_SEC, (double)(t_5 - t_4) / CLOCKS_PER_SEC, (double)(t_6 - t_5) / CLOCKS_PER_SEC, (double)(t_7 - t_6) / CLOCKS_PER_SEC, (double)(t_8 - t_7) / CLOCKS_PER_SEC, (double)(t_8 - t_0) / CLOCKS_PER_SEC);
-	//=====================
-	//UE_LOG(LogTemp, Log, TEXT("%f, %f, %f"), test_Actor.location.x , test_Actor.location.y, test_Actor.location.z);
-	//GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Yellow, TEXT(" %d, %d, %d", sunangle.x, sunangle.y, sunangle.z));
-
+	
 }
 
 

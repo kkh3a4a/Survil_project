@@ -14,26 +14,26 @@ AMeshTerrain::AMeshTerrain()
 
 void AMeshTerrain::InitializeMeshTerrain(UMaterial* TerrainMaterial)
 {
-	for (int32 Y = 0; Y < map_size; Y++)
+	for (int32 Y = 0; Y < MapSizeY; Y++)
 	{
-		for (int32 X = 0; X < map_size; X++)
+		for (int32 X = 0; X < MapSizeX; X++)
 		{
 			FVector Vertex(100 * X, 100 * Y, 0);
 			Vertices.Add(Vertex);
 		}
 	}
 	TArray<int32> Triangles;
-	for (int32 Y = 0; Y < map_size - 1; Y++)
+	for (int32 Y = 0; Y < MapSizeY - 1; Y++)
 	{
-		for (int32 X = 0; X < map_size - 1; X++)
+		for (int32 X = 0; X < MapSizeX - 1; X++)
 		{
-			Triangles.Add(Y * map_size + X);
-			Triangles.Add((Y + 1) * map_size + X);
-			Triangles.Add(Y * map_size + X + 1);
+			Triangles.Add(Y * MapSizeX + X);
+			Triangles.Add((Y + 1) * MapSizeX + X);
+			Triangles.Add(Y * MapSizeX + X + 1);
 
-			Triangles.Add((Y + 1) * map_size + (X + 1));
-			Triangles.Add(Y * map_size + X + 1);
-			Triangles.Add((Y + 1) * map_size + X);
+			Triangles.Add((Y + 1) * MapSizeX + (X + 1));
+			Triangles.Add(Y * MapSizeX + X + 1);
+			Triangles.Add((Y + 1) * MapSizeX + X);
 		}
 	}
 	// Create the mesh component
@@ -51,7 +51,9 @@ void AMeshTerrain::InitializeMeshTerrain(UMaterial* TerrainMaterial)
 void AMeshTerrain::UpdateMeshTerrain(TArray<TArray<int8>> Terrain2DArray)
 {
 	for (int32 i = 0; i < Vertices.Num(); i++) {
-		Vertices[i].Z = Terrain2DArray[i % map_size][i / map_size] * 50;
+		Vertices[i].Z = Terrain2DArray[i % MapSizeX][i / MapSizeX] * 50;
+		//UE_LOG(LogTemp, Log, TEXT("%d %d"), i % MapSizeX, i / MapSizeX);
 	}
 	MeshTerrain->UpdateMeshSection_LinearColor(0, Vertices, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>());
+
 }

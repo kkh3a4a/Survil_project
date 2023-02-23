@@ -13,11 +13,16 @@
 #define PI 3.1415926
 using namespace std;
 
+typedef struct two_int {
+	int x;
+	int y;
+} II;
+
 //const int one_side_number = 320;	//32000
 //const int player_sight_size = 50;	//1024 넘으면 안됨
 //const int random_array_size = 500000;// 90000000;
 const int one_side_number = 16000;	//32000
-const int player_sight_size = 200;	//1024 넘으면 안됨
+II player_sight_size{200, 120};	//1024 넘으면 안됨
 const int random_array_size = 50000000;// 90000000;
 //const int one_side_number = 32000;	//32000
 //const int player_sight_size = 200;	//1024 넘으면 안됨
@@ -26,10 +31,6 @@ const int random_array_size = 50000000;// 90000000;
 const int max_height = 8;
 const int base_floor = 1;
 
-typedef struct two_int {
-	int x;
-	int y;
-} II;
 typedef struct two_char {
 	int x;
 	int y;
@@ -549,7 +550,7 @@ private:
 	char** temperature_map_device;
 	char* temperature_map_temp[one_side_number];
 	
-	char** terrain_player_sight_host = new char* [player_sight_size];
+	char** terrain_player_sight_host = new char* [player_sight_size.x];
 	unsigned __int64 init_total_hill_height = 0;
 	
 	II city_location[5];	//나중에 크기 MAXPLAYER로 수정해야 함
@@ -605,11 +606,11 @@ public:
 
 		//Terrain Memory Assignment For Player's Sight===================================================
 		clock_t t_2 = clock();
-		for (int i = 0; i < player_sight_size; i++) {
-			terrain_player_sight_host[i] = new char[player_sight_size];
+		for (int i = 0; i < player_sight_size.x; i++) {
+			terrain_player_sight_host[i] = new char[player_sight_size.y];
 		}
-		for (int i = 0; i < player_sight_size; i++) {
-			for (int j = 0; j < player_sight_size; j++) {
+		for (int i = 0; i < player_sight_size.x; i++) {
+			for (int j = 0; j < player_sight_size.y; j++) {
 				terrain_player_sight_host[i][j] = 0;
 			}
 		}
@@ -636,7 +637,7 @@ public:
 			delete[] shadow_map_host[i];
 			delete[] temperature_map_host[i];
 		}
-		for (int i = 0; i < player_sight_size; i++) {
+		for (int i = 0; i < player_sight_size.x; i++) {
 			delete[] terrain_player_sight_host[i];
 		}
 		delete[] terrain_array_host;
@@ -896,12 +897,12 @@ public:
 	{
 		clock_t start_t, end_t;
 		start_t = clock();
-		for (int i = 0; i < player_sight_size; i++) {
-			for (int j = 0; j < player_sight_size; j++) {
-				if (player_location.x - player_sight_size / 2 + i < 0 || player_location.x - player_sight_size / 2 + i >= one_side_number || player_location.y - player_sight_size / 2 + j < 0 || player_location.y - player_sight_size / 2 + j >= one_side_number)
+		for (int i = 0; i < player_sight_size.x; i++) {
+			for (int j = 0; j < player_sight_size.y; j++) {
+				if (player_location.x - player_sight_size.x / 2 + i < 0 || player_location.x - player_sight_size.x / 2 + i >= one_side_number || player_location.y - player_sight_size.y / 2 + j < 0 || player_location.y - player_sight_size.y / 2 + j >= one_side_number)
 					terrain_player_sight_host[i][j] = 0;
 				else
-					terrain_player_sight_host[i][j] = terrain_array_host[player_location.x - player_sight_size / 2 + i][player_location.y - player_sight_size / 2 + j];
+					terrain_player_sight_host[i][j] = terrain_array_host[player_location.x - player_sight_size.x / 2 + i][player_location.y - player_sight_size.y / 2 + j];
 			}
 		}
 		end_t = clock();

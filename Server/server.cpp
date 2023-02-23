@@ -40,10 +40,10 @@ DWORD WINAPI terrain_change(LPVOID arg)
 {
 	//terrain.show_array(total_terrain, one_side_number);
 	//terrain.log_on();
-	for (int i = 0; i < 5; i++) {
+	/*for (int i = 0; i < 5; i++) {
 		TF pos = { 50 + i * 120, 200 };
 		terrain.set_city_location(pos, i);
-	}
+	}*/
 	int i{};
 	while (1){
 		clock_t t_0 = clock();
@@ -178,13 +178,13 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		terrain.copy_for_player_map(player_location);
 
 		//terrain.show_array(player_sight, player_sight_size);
-		/*for (int i = 0; i < player_sight_size; ++i) {
-			retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size, 0);
+		for (int i = 0; i < player_sight_size.x; ++i) {
+			retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size.y, 0);
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;
 			}
-		}*/
+		}
 		
 		time_t t_6 = clock();
 		

@@ -44,7 +44,7 @@ public:
     int iron_count = 0;
     int food_count = 0;
     int wood_count = 0;
-    int8 terrain_recv_array[map_size];
+    int8 terrain_recv_array[MapSizeX];
     TArray<TArray<int8>> Terrain2DArray;
     AMeshTerrain* TerrainActor;
 

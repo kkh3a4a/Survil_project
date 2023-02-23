@@ -88,10 +88,10 @@ uint32 FSocketThread::Run()
 
 
 		//Recv Terrain
-		for (int i = 0; i < map_size; i++) {
-			IsConnected = Socket->Recv((uint8*)&terrain_recv_array, (sizeof(char) * map_size), BytesReceived);
+		for (int i = 0; i < MapSizeY; i++) {
+			IsConnected = Socket->Recv((uint8*)&terrain_recv_array, (sizeof(char) * MapSizeX), BytesReceived);
 			//ret = recv(s_socket, (char*)&terrain_recv_array, (int)(sizeof(char) * map_size), 0);
-			for (int j = 0; j < map_size; j++)
+			for (int j = 0; j < MapSizeX; j++)
 			{
 				Terrain2DArray[i][j] = terrain_recv_array[j];
 			}

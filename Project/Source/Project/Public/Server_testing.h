@@ -97,7 +97,7 @@ public:
 	Fthree_float sunangle;
 
 
-	int8 terrain_recv_array[map_size];
+	int8 terrain_recv_array[MapSizeY];
 	TArray<TArray<int8>> Terrain2DArray;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UMaterial* TerrainMaterial;

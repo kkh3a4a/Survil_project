@@ -5,7 +5,8 @@
 #include "ProceduralMeshComponent.h"
 #include "MeshTerrain.generated.h"
 
-const int map_size = 200;
+const int MapSizeX = 200;
+const int MapSizeY = 120;
 
 UCLASS()
 class PROJECT_API AMeshTerrain : public AActor
