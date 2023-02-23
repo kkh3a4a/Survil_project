@@ -14,6 +14,7 @@
 #include "HAL/Runnable.h"
 #include "GameFramework/Actor.h"
 #include "Citizen.h"
+#include "MyTown.h"
 #include "Server_testing.generated.h"
 
 using namespace std;
@@ -39,6 +40,7 @@ public:
 	int ret = 0;
 	int resources[5] = {};
 
+	//////////////UI때문에 여기있어야함
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int oil_count = 0;
 
@@ -87,11 +89,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>EnemyCitizenActor;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>WellPump;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<int, Fresources_actor> resources_create_landscape;
+		TSubclassOf<AActor>OilActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>WaterActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>IronActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>FoodActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>WoodActor;
 	//citizen
 	ACitizen* Citizens;
+	AMyTown* MyTown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float sunangle;

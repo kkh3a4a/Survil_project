@@ -33,6 +33,11 @@ void AServer_testing::BeginPlay()
 	Citizens = GetWorld()->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	Citizens->Initialize(Citizen_Actor,EnemyCitizenActor);
 	
+	//resource
+	MyTown = GetWorld()->SpawnActor<AMyTown>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	MyTown->Initialize(WellPump, OilActor, WaterActor, IronActor, FoodActor, WoodActor);
+
+
 	//Init Mesh Terrain
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(FVector(0,0,0), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
@@ -71,9 +76,10 @@ void AServer_testing::BeginPlay()
 	for (int i = 0; i < MAXPLAYER * 10; ++i){
 		Fresources_actor temp_resource;
 		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
-		resources_create_landscape.Add(i, temp_resource);
-		resoure_set(resources_create_landscape[i], temp_resource);
+		MyTown->resources_create_landscape.Add(i, temp_resource);
 	}
+	MyTown->SpawnTown(players_list);
+	MyTown->SpawnResource();
 	first_recv_send = true;
 
 	UE_LOG(LogTemp, Log, TEXT("connected to server"));
