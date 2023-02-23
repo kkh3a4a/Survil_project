@@ -98,7 +98,7 @@ public:
 
 
 	int8 terrain_recv_array[MapSizeY];
-	TArray<TArray<int8>> Terrain2DArray;
+	int8 Terrain2DArray[MapSizeX][MapSizeY];
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UMaterial* TerrainMaterial;
 

@@ -48,12 +48,11 @@ void AMeshTerrain::InitializeMeshTerrain(UMaterial* TerrainMaterial)
 	MeshTerrain->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
-void AMeshTerrain::UpdateMeshTerrain(TArray<TArray<int8>> Terrain2DArray)
+void AMeshTerrain::UpdateMeshTerrain(int8(*Terrain2DArrayPtr)[MapSizeY])
 {
 	for (int32 i = 0; i < Vertices.Num(); i++) {
-		Vertices[i].Z = Terrain2DArray[i % MapSizeX][i / MapSizeX] * 50;
+		Vertices[i].Z = Terrain2DArrayPtr[i % MapSizeX][i / MapSizeX] * 50;
 		//UE_LOG(LogTemp, Log, TEXT("%d %d"), i % MapSizeX, i / MapSizeX);
 	}
 	MeshTerrain->UpdateMeshSection_LinearColor(0, Vertices, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>());
-
 }

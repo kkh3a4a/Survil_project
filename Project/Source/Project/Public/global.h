@@ -7,13 +7,7 @@
 #include <string>
 #include"global.generated.h"
 
-/**
- *
- */
-
-
 #define MAXPLAYER 1
-
 
 USTRUCT(Atomic, BlueprintType)
 struct Fthree_float {

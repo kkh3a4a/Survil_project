@@ -35,13 +35,7 @@ void AServer_testing::BeginPlay()
 
 	Citizens = GetWorld()->SpawnActor<ACitizen>(Location, Rotation, SpawnInfo);
 	Citizens->Initialize(Citizen_Actor,EnemyCitizenActor);
-
-	//Set Size of Terrain Array 
-	Terrain2DArray.SetNum(MapSizeX);
-	for (int i = 0; i < MapSizeX; ++i){
-		Terrain2DArray[i].SetNum(MapSizeY);
-	}
-
+	
 	//Init Mesh Terrain
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(Location, Rotation, SpawnInfo);
 	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
@@ -131,24 +125,14 @@ void AServer_testing::Tick(float DeltaTime)
 	oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
 
 	//Recv Terrain
-	//ret = recv(s_socket, (char*)&Terrain2DArray, (int)sizeof(char) * MapSizeX * MapSizeY, 0);
 	for (int i = 0; i < MapSizeX; i++) {
-		ret = recv(s_socket, (char*)&terrain_recv_array, (int)sizeof(char) * MapSizeY, 0);
+		ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
 		if (SOCKET_ERROR == ret){
 			return;
 		}
-		for (int j = 0; j < MapSizeY; j++)
-		{
-			Terrain2DArray[i][j] = terrain_recv_array[j];
-		}
 	}
-
-	
 	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
-	
 }
-
-
 
 void AServer_testing::TF_set(Fthree_float& a, Fthree_float& b)
 {
@@ -156,7 +140,6 @@ void AServer_testing::TF_set(Fthree_float& a, Fthree_float& b)
 	a.y = b.y;
 	a.z = b.z;
 }
-
 
 void AServer_testing::resoure_set(Fresources_actor& a, Fresources_actor& b)
 {

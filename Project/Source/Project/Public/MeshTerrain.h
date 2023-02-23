@@ -22,7 +22,7 @@ protected:
 public:	
 
 	void InitializeMeshTerrain(UMaterial* TerrainMaterial);
-	void UpdateMeshTerrain(TArray<TArray<int8>> Terrain2DArray);
+	void UpdateMeshTerrain(int8(*Terrain2DArrayPtr)[MapSizeY]);
 	
 
 	UInstancedStaticMeshComponent* InstancedTerrain;
