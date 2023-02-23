@@ -551,6 +551,8 @@ private:
 	char* temperature_map_temp[one_side_number];
 	
 	char** terrain_player_sight_host = new char* [player_sight_size.x];
+	char** temperature_player_sight = new char* [player_sight_size.x];
+
 	unsigned __int64 init_total_hill_height = 0;
 	
 	II city_location[5];	//나중에 크기 MAXPLAYER로 수정해야 함
@@ -608,13 +610,14 @@ public:
 		clock_t t_2 = clock();
 		for (int i = 0; i < player_sight_size.x; i++) {
 			terrain_player_sight_host[i] = new char[player_sight_size.y];
+			temperature_player_sight[i] = new char[player_sight_size.y];
 		}
 		for (int i = 0; i < player_sight_size.x; i++) {
 			for (int j = 0; j < player_sight_size.y; j++) {
 				terrain_player_sight_host[i][j] = 0;
+				temperature_player_sight[i][j] = 0;
 			}
 		}
-
 
 		//Make Hills===================================================
 		clock_t t_3 = clock();
@@ -899,10 +902,14 @@ public:
 		start_t = clock();
 		for (int i = 0; i < player_sight_size.x; i++) {
 			for (int j = 0; j < player_sight_size.y; j++) {
-				if (player_location.x - player_sight_size.x / 2 + i < 0 || player_location.x - player_sight_size.x / 2 + i >= one_side_number || player_location.y - player_sight_size.y / 2 + j < 0 || player_location.y - player_sight_size.y / 2 + j >= one_side_number)
+				if (player_location.x - player_sight_size.x / 2 + i < 0 || player_location.x - player_sight_size.x / 2 + i >= one_side_number || player_location.y - player_sight_size.y / 2 + j < 0 || player_location.y - player_sight_size.y / 2 + j >= one_side_number) {
 					terrain_player_sight_host[i][j] = 0;
-				else
+					temperature_player_sight[i][j] = 0;
+				}
+				else {
 					terrain_player_sight_host[i][j] = terrain_array_host[player_location.x - player_sight_size.x / 2 + i][player_location.y - player_sight_size.y / 2 + j];
+					temperature_player_sight[i][j] = temperature_map_host[player_location.x - player_sight_size.x / 2 + i][player_location.y - player_sight_size.y / 2 + j];
+				}
 			}
 		}
 		end_t = clock();
@@ -1149,6 +1156,11 @@ public:
 
 	char** get_player_sight_map() {
 		return terrain_player_sight_host;
+	}
+	
+	char** get_player_temperature_map()
+	{
+		return temperature_map_host;
 	}
 
 	void set_city_location(TF location, int iter) {

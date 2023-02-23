@@ -93,7 +93,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	Sleep(500);
 
 	//player sight ÁÖ¼Ò°ª
-	char** player_sight = terrain.get_player_sight_map();
+	char** player_sight_terrain = terrain.get_player_sight_map();
+	char** player_sight_temperature = terrain.get_player_temperature_map(); 
 
 	while (1){
 		if (!location_set){
@@ -177,9 +178,16 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		II player_location{ (int)players_list[port]->camera_location.x / 100, (int)players_list[port]->camera_location.y / 100 };
 		terrain.copy_for_player_map(player_location);
 
-		//terrain.show_array(player_sight, player_sight_size);
 		for (int i = 0; i < player_sight_size.x; ++i) {
-			retval = send(client_sock, (char*)player_sight[i], (int)sizeof(char) * player_sight_size.y, 0);
+			retval = send(client_sock, (char*)player_sight_terrain[i], (int)sizeof(char) * player_sight_size.y, 0);
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+				break;
+			}
+		}
+		
+		for (int i = 0; i < player_sight_size.x; ++i) {
+			retval = send(client_sock, (char*)player_sight_temperature[i], (int)sizeof(char) * player_sight_size.y, 0);
 			if (retval == SOCKET_ERROR) {
 				err_display("send()");
 				break;

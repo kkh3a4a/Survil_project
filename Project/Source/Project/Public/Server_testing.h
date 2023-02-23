@@ -94,13 +94,14 @@ public:
 	ACitizen* Citizens;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	Fthree_float sunangle;
+		Fthree_float sunangle;
 
 
-	int8 terrain_recv_array[MapSizeY];
 	int8 Terrain2DArray[MapSizeX][MapSizeY];
+	int8 TerrainTemperature[MapSizeX][MapSizeY];
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UMaterial* TerrainMaterial;
+		UMaterialInstance* TerrainMaterialInstance;
 
 	
 	AMeshTerrain* TerrainActor;

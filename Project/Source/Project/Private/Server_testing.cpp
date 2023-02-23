@@ -39,7 +39,7 @@ void AServer_testing::BeginPlay()
 	//Init Mesh Terrain
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(Location, Rotation, SpawnInfo);
 	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	TerrainActor->InitializeMeshTerrain(TerrainMaterial);
+	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
 	
 	/*wcout.imbue(locale("korean"));*/
@@ -131,6 +131,14 @@ void AServer_testing::Tick(float DeltaTime)
 			return;
 		}
 	}
+	//Recv Temperature
+	for (int i = 0; i < MapSizeX; i++) {
+		ret = recv(s_socket, (char*)&TerrainTemperature[i], sizeof(char) * MapSizeY, 0);
+		if (SOCKET_ERROR == ret) {
+			return;
+		}
+	}
+	
 	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 }
 

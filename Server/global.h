@@ -75,9 +75,6 @@ typedef struct resource_actor
 	TF location;
 }resource_actor;
 
-
-
-
 void FActor_TF_define(TF& a, TF& b)
 {
 	a.x = b.x;
@@ -158,7 +155,6 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 
 	//return true;
 }
-
 
 bool create_resource_location(std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape) {
 	

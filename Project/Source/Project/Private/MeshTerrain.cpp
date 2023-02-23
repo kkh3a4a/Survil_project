@@ -12,7 +12,7 @@ AMeshTerrain::AMeshTerrain()
 	MeshTerrain = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("MeshTerrain"));
 }
 
-void AMeshTerrain::InitializeMeshTerrain(UMaterial* TerrainMaterial)
+void AMeshTerrain::InitializeMeshTerrain(UMaterialInstance* TerrainMaterial)
 {
 	for (int32 Y = 0; Y < MapSizeY; Y++)
 	{

@@ -21,7 +21,7 @@ protected:
 
 public:	
 
-	void InitializeMeshTerrain(UMaterial* TerrainMaterial);
+	void InitializeMeshTerrain(UMaterialInstance* TerrainMaterial);
 	void UpdateMeshTerrain(int8(*Terrain2DArrayPtr)[MapSizeY]);
 	
 
