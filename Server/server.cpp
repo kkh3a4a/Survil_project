@@ -113,7 +113,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				}
 			}
 		}
-		for (auto& a : resource_create_landscape){
+		for (auto& a : resource_create_landscape) {
 			retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
 		}
 
@@ -147,10 +147,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 					playercnts++;
 				}
 
-				for (int j = 0; j < MAXPLAYER; ++j) {
-					for (auto& a : resource_create_landscape) {
-						retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
-					}
+				for (auto& a : resource_create_landscape) {
+					retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
 				}
 
 				retval = send(client_sock, (char*)&(players_list[port]->camera_location), (int)sizeof(TF), 0);
