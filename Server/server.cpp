@@ -119,93 +119,77 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 		break;
 	}
+	Citizen_moving temp_citizen_moving;
 
 	while (1) {
 		auto end_t = high_resolution_clock::now();
-		start_t = high_resolution_clock::now();
-		time_t t_0 = clock();
+		{
+			if (duration_cast<milliseconds>(start_t - end_t).count() > 50)
+				start_t = high_resolution_clock::now();
 
-		Citizen_moving temp_citizen_moving;
-		retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
-		time_t t_1 = clock();
-		mouse_input_checking(temp_citizen_moving, players_list, port);
 
-		time_t t_2 = clock();
+			retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
+			mouse_input_checking(temp_citizen_moving, players_list, port);
 
-		retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
-		if (retval == SOCKET_ERROR) {
-			err_display("send()");
-			break;
-		}
-		time_t t_3 = clock();
+			retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+				break;
+			}
 
-		int playercnts = 0;
-		for (int i = 0; i < 10; ++i) {
-			retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
-		}
-		for (auto& a : players_list) {
-			if (a.second->port != port) {
-				for (int i = 0; i < 10; ++i) {
-					retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
+			int playercnts = 0;
+			for (int i = 0; i < 10; ++i) {
+				retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
+			}
+			for (auto& a : players_list) {
+				if (a.second->port != port) {
+					for (int i = 0; i < 10; ++i) {
+						retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
+					}
+				}
+				playercnts++;
+			}
+
+
+
+			for (int j = 0; j < MAXPLAYER; ++j) {
+				for (auto& a : resource_create_landscape) {
+					retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
+					//cout << a.second->count <<", ";
+				}
+				//cout << endl;	
+			}
+
+			//클라이언트로부터 카메라 위치 받아와야 함
+			retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
+			retval = send(client_sock, (char*)&(players_list[port]->camera_location), (int)sizeof(TF), 0);
+
+			//자원 보내기
+			retval = send(client_sock, (char*)&(players_list[port]->resources), sizeof(int) * 5, 0);
+
+
+			//10배 축소해서 일단 테스트
+			//cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
+			II player_location{ (int)players_list[port]->camera_location.x / 100, (int)players_list[port]->camera_location.y / 100 };
+			terrain.copy_for_player_map(player_location);
+
+			for (int i = 0; i < player_sight_size.x; ++i) {
+				retval = send(client_sock, (char*)player_sight_terrain[i], (int)sizeof(char) * player_sight_size.y, 0);
+				if (retval == SOCKET_ERROR) {
+					err_display("send()");
+					break;
 				}
 			}
-			playercnts++;
-		}
-		
-		time_t t_4 = clock();
 
-
-		//for (int j = 0; j < MAXPLAYER; ++j) {
-		//	for (auto& a : resource_create_landscape) {
-		//		retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
-		//		//cout << a.second->count <<", ";
-		//	}
-		//	//cout << endl;	
-		//}
-
-		//클라이언트로부터 카메라 위치 받아와야 함
-		retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
-		retval = send(client_sock, (char*)&(players_list[port]->camera_location), (int)sizeof(TF), 0);
-
-		//자원 보내기
-		retval = send(client_sock, (char*)&(players_list[port]->resources), sizeof(int) * 5, 0);
-		
-		time_t t_5 = clock();
-
-		
-		//10배 축소해서 일단 테스트
-		//cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
-		II player_location{ (int)players_list[port]->camera_location.x / 100, (int)players_list[port]->camera_location.y / 100 };
-		terrain.copy_for_player_map(player_location);
-
-		for (int i = 0; i < player_sight_size.x; ++i) {
-			retval = send(client_sock, (char*)player_sight_terrain[i], (int)sizeof(char) * player_sight_size.y, 0);
-			if (retval == SOCKET_ERROR) {
-				err_display("send()");
-				break;
+			for (int i = 0; i < player_sight_size.x; ++i) {
+				retval = send(client_sock, (char*)player_sight_temperature[i], (int)sizeof(char) * player_sight_size.y, 0);
+				if (retval == SOCKET_ERROR) {
+					err_display("send()");
+					break;
+				}
 			}
 		}
 		
-		for (int i = 0; i < player_sight_size.x; ++i) {
-			retval = send(client_sock, (char*)player_sight_temperature[i], (int)sizeof(char) * player_sight_size.y, 0);
-			if (retval == SOCKET_ERROR) {
-				err_display("send()");
-				break;
-			}
-		}
-		
-		time_t t_6 = clock();
-		
-		if (t_4 - t_0 > 100) {
-			cout << "==========================" << endl;
-			cout << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
-			cout << (double)(t_2 - t_1) / CLOCKS_PER_SEC << " sec" << endl;
-			cout << (double)(t_3 - t_2) / CLOCKS_PER_SEC << " sec" << endl;
-			cout << (double)(t_4 - t_3) / CLOCKS_PER_SEC << " sec" << endl;
-			cout << (double)(t_5 - t_4) / CLOCKS_PER_SEC << " sec" << endl;
-			cout << (double)(t_6 - t_5) / CLOCKS_PER_SEC << " sec" << endl;
-
-		}
 
 	}
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));

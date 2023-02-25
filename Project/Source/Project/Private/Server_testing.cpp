@@ -90,55 +90,58 @@ void AServer_testing::BeginPlay()
 void AServer_testing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
-	
-	ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
-	
-
-	ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
-	
-
-	for (int i = 0; i < MAXPLAYER; ++i)
+	steady_clock::time_point end_t;
 	{
-		for (int j = 0; j < 10; ++j)
+		start_t = high_resolution_clock::now();
+		if (duration_cast<milliseconds>(start_t - end_t).count() > 50)
+			ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
+
+
+		ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
+
+
+		for (int i = 0; i < MAXPLAYER; ++i)
 		{
-			recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FCitizen_sole), 0);
+			for (int j = 0; j < 10; ++j)
+			{
+				recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FCitizen_sole), 0);
 
-			Citizens->TF_set(Citizens->My_Citizen[i].citizen_location_rotation[j].location, Citizens->temp_Actor.location);
+				Citizens->TF_set(Citizens->My_Citizen[i].citizen_location_rotation[j].location, Citizens->temp_Actor.location);
 
+			}
 		}
-	}
 
-	Citizens->Citizen_Moving();
+		Citizens->Citizen_Moving();
 
-	/*for (int i = 0; i < MAXPLAYER * 10; ++i)
-	{
-		Fresources_actor temp_resource;
-		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
-		resoure_set(resources_create_landscape[i], temp_resource);
-	}*/
-
-	//카메라 위치 및 입력보내버리기
-	send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
-	recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
-
-
-	//자원 받기
-	recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
-	oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
-
-	//Recv Terrain
-	for (int i = 0; i < MapSizeX; i++) {
-		ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
-		if (SOCKET_ERROR == ret){
-			return;
+		for (int i = 0; i < MAXPLAYER * 10; ++i)
+		{
+			Fresources_actor temp_resource;
+			recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
+			resoure_set(MyTown->resources_create_landscape[i], temp_resource);
 		}
-	}
-	//Recv Temperature
-	for (int i = 0; i < MapSizeX; i++) {
-		ret = recv(s_socket, (char*)&TerrainTemperature[i], sizeof(char) * MapSizeY, 0);
-		if (SOCKET_ERROR == ret) {
-			return;
+
+		//카메라 위치 및 입력보내버리기
+		send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
+		recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
+
+
+		//자원 받기
+		recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
+		oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
+
+		//Recv Terrain
+		for (int i = 0; i < MapSizeX; i++) {
+			ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
+			if (SOCKET_ERROR == ret) {
+				return;
+			}
+		}
+		//Recv Temperature
+		for (int i = 0; i < MapSizeX; i++) {
+			ret = recv(s_socket, (char*)&TerrainTemperature[i], sizeof(char) * MapSizeY, 0);
+			if (SOCKET_ERROR == ret) {
+				return;
+			}
 		}
 	}
 	
