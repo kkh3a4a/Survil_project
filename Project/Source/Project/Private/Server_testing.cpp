@@ -91,15 +91,11 @@ void AServer_testing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	steady_clock::time_point end_t;
+	start_t = high_resolution_clock::now();
+	if (duration_cast<milliseconds>(start_t - end_t).count() > 50)
 	{
-		start_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(start_t - end_t).count() > 50)
-			ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
-
-
+		end_t = high_resolution_clock::now();
 		ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
-
-
 		for (int i = 0; i < MAXPLAYER; ++i)
 		{
 			for (int j = 0; j < 10; ++j)
@@ -110,25 +106,16 @@ void AServer_testing::Tick(float DeltaTime)
 
 			}
 		}
-
-		Citizens->Citizen_Moving();
-
 		for (int i = 0; i < MAXPLAYER * 10; ++i)
 		{
 			Fresources_actor temp_resource;
 			recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
 			resoure_set(MyTown->resources_create_landscape[i], temp_resource);
 		}
-
-		//카메라 위치 및 입력보내버리기
-		send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
 		recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
-
-
 		//자원 받기
 		recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
 		oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
-
 		//Recv Terrain
 		for (int i = 0; i < MapSizeX; i++) {
 			ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
@@ -143,9 +130,18 @@ void AServer_testing::Tick(float DeltaTime)
 				return;
 			}
 		}
+
+
+
+		//카메라 위치 및 입력보내버리기
+		ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
+		send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
+
+
+		Citizens->Citizen_Moving();
+		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 	}
-	
-	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
+
 }
 
 void AServer_testing::TF_set(Fthree_float& a, Fthree_float& b)
