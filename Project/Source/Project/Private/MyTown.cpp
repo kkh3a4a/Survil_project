@@ -46,8 +46,8 @@ void AMyTown::SpawnTown(TMap<int, FActor_location_rotation>& player_list)
 	{
 		Location = { player_list[i].location.x,player_list[i].location.y,player_list[i].location.z};
 		SpawnedTown = GetWorld()->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
-		//SpawnedTown->Tags.Add("WellPump");
-		//SpawnedTown->Tags.Add(FName(*FString::FromInt(i)));
+		SpawnedTown->Tags.Add("WellPump");
+		SpawnedTown->Tags.Add(FName(*FString::FromInt(i)));
 	}
 
 }
@@ -87,8 +87,8 @@ void AMyTown::SpawnResource()
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(WoodActor, Location, Rotation, SpawnInfo);
 			//SpawnedResource->Tags.Add("Error");
 		}
-		//SpawnedResource->Tags.Add("Resource");
-		//ResourceEditer.Add(SpawnedResource);
+		SpawnedResource->Tags.Add("Resource");
+		ResourceEditer.Add(SpawnedResource);
 	}
 }
 

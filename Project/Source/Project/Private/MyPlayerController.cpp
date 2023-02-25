@@ -190,14 +190,13 @@ void AMyPlayerController::MoveToActor()
             if (hitActor->ActorHasTag("Citizen"))
             {
                 temped = true;
-                mouse_end_t = high_resolution_clock::now();
                 server_MouseInput->Citizens->Citizen_moving.location.x = DestLocation.X;
                 server_MouseInput->Citizens->Citizen_moving.location.y = DestLocation.Y;
                 server_MouseInput->Citizens->Citizen_moving.location.z = DestLocation.Z;
                 hitActor = NULL;
             }
         }
-        
+        mouse_end_t = high_resolution_clock::now();
     }
 }
 
@@ -218,7 +217,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     }
     
     mouse_start_t = high_resolution_clock::now();
-    if (temped && (mouse_cnt % 1000 == 0))
+    if (temped && (mouse_cnt % 100 == 0))
     {
         if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
         {
