@@ -106,6 +106,10 @@ public:
 	int count;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	Fthree_float location;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int CitizenCount = 0;
+
 };
 
 USTRUCT(Atomic, BlueprintType)

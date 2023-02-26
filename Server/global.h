@@ -73,6 +73,7 @@ typedef struct resource_actor
 	int type;		///////////////0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	int count;
 	TF location;
+	int CitizenCount = 0;
 }resource_actor;
 
 void FActor_TF_define(TF& a, TF& b)
@@ -209,7 +210,7 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 				}
 				if (resource_count >= 10)
 				{
-					
+
 					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
 					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
 				}
@@ -220,6 +221,14 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
 					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
 					citizens->job = 0;
+				}
+				for (int i = 0; i < 5; ++i)
+				{
+					if (citizens->job == 0 && citizens->resources[i] > 0)
+					{
+						a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
+						a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
+					}
 				}
 				if (location_distance(citizens->location, a.second->player_info.location) < 1550)
 				{
