@@ -85,6 +85,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool first_recv_send = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int CitizenNoJobCnt = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Citizen")
 		TSubclassOf<AActor>Citizen_Actor;
 

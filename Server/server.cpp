@@ -173,6 +173,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
 		mouse_input_checking(temp_citizen_moving, players_list, port);
 		retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
+		for (int i = 0; i < 10; ++i)
+		{
+			cout << players_list[port]->player_citizen[i]->job << " ";
+		}
+		cout << endl;
+
 	}
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
@@ -327,6 +333,7 @@ int main(int argc, char* argv[])
 		if (hThread == NULL) { closesocket(client_sock); }
 		else { CloseHandle(hThread); }
 	}
+	
 
 	// 소켓 닫기
 	closesocket(listen_sock);

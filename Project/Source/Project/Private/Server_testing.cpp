@@ -100,10 +100,7 @@ void AServer_testing::Tick(float DeltaTime)
 	{
 		for (int j = 0; j < 10; ++j)
 		{
-			recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FCitizen_sole), 0);
-
-			Citizens->TF_set(Citizens->My_Citizen[i].citizen_location_rotation[j].location, Citizens->temp_Actor.location);
-
+			recv(s_socket, (char*)&Citizens->My_Citizen[i].citizen_location_rotation[j], sizeof(FCitizen_sole), 0);
 		}
 	}
 	for (int i = 0; i < MAXPLAYER * 10; ++i)
@@ -135,7 +132,7 @@ void AServer_testing::Tick(float DeltaTime)
 	ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
 	send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
 
-
+	Citizens->CitizenNoJob(CitizenNoJobCnt);
 	Citizens->Citizen_Moving();
 	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 }

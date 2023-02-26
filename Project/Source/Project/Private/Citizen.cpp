@@ -96,3 +96,19 @@ void ACitizen::TF_set(Fthree_float& a, Fthree_float& b)
 	a.z = b.z;
 }
 
+void ACitizen::CitizenNoJob(int& cnt)
+{
+	int temp_cnt = 0;
+	for (auto& a : My_Citizen)
+	{
+		for (int i = 0; i < 10; ++i)
+		{
+			if (a.Value.citizen_location_rotation[i].job == 0)
+			{
+				temp_cnt++;
+			}
+		}
+	}
+	UE_LOG(LogTemp, Log, TEXT("%d %d %d %d %d %d %d %d %d %d"), My_Citizen[0].citizen_location_rotation[0].job, My_Citizen[0].citizen_location_rotation[1].job, My_Citizen[0].citizen_location_rotation[2].job, My_Citizen[0].citizen_location_rotation[3].job, My_Citizen[0].citizen_location_rotation[4].job, My_Citizen[0].citizen_location_rotation[5].job, My_Citizen[0].citizen_location_rotation[6].job, My_Citizen[0].citizen_location_rotation[7].job, My_Citizen[0].citizen_location_rotation[8].job, My_Citizen[0].citizen_location_rotation[9].job);
+	cnt = temp_cnt;
+}

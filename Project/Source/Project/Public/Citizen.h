@@ -56,4 +56,5 @@ public:
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
 
+	void CitizenNoJob(int& cnt);
 };
