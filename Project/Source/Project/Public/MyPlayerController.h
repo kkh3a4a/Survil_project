@@ -34,6 +34,9 @@ public:
 
 	bool temped;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool ResourceUI = false;
+
 protected:
 	long long int mouse_cnt = 0;
 

@@ -163,6 +163,14 @@ void AMyPlayerController::MoveToMouseCursor()
                 hitActor = NULL;
             }
         }
+        else if (hitActor->ActorHasTag("Resource"))
+        {
+            ResourceUI = true;
+        }
+        else
+        {
+            ResourceUI = false;
+        }
     }
 }
 
@@ -196,6 +204,12 @@ void AMyPlayerController::MoveToActor()
                 hitActor = NULL;
             }
         }
+        
+        
+        
+        ResourceUI = false;
+
+
         mouse_end_t = high_resolution_clock::now();
     }
 }

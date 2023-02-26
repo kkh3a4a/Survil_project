@@ -40,6 +40,7 @@ public:
 	int ret = 0;
 	int resources[5] = {};
 
+
 	//////////////UI때문에 여기있어야함
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int oil_count = 0;
