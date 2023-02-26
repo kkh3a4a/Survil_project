@@ -107,6 +107,7 @@ void AMyTown::UpdateResource(Fresources_actor& a, Fresources_actor& b, int i)
 {
 	a.count = b.count;
 	a.type = b.type;
+	a.CitizenCount = b.CitizenCount;
 	if (a.count == 0)
 	{
 		ResourceEditer[i]->SetActorHiddenInGame(true);

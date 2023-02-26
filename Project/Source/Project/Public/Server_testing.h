@@ -40,7 +40,10 @@ public:
 	const short SERVER_PORT = 9000;
 	int ret = 0;
 	int resources[5] = {};
-
+	bool Is_send_UI_input = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FUI_Input UI_Input;
 
 	//////////////UI때문에 여기있어야함
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")

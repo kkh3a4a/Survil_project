@@ -48,6 +48,9 @@ void AServer_testing::BeginPlay()
 	decal->Initiaize(TerrainMaterialInstance);
 	decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	
+	UI_Input.resouce_input.ResourceNum = -1;
+	UI_Input.resouce_input.CitizenCountAdd = false;
+	UI_Input.resouce_input.CitizenCountSub = false;
 	/*wcout.imbue(locale("korean"));*/
 	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
 	s_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -131,6 +134,28 @@ void AServer_testing::Tick(float DeltaTime)
 	//카메라 위치 및 입력보내버리기
 	ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
 	send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
+
+	//보냈는가 안보냈는가 확인
+	if (Is_send_UI_input == false)
+	{
+		if (UI_Input.resouce_input.CitizenCountAdd || UI_Input.resouce_input.CitizenCountSub)
+		{
+			Is_send_UI_input = true;
+		}
+	}
+	else if (Is_send_UI_input == true)
+	{
+		if (!UI_Input.resouce_input.CitizenCountAdd && !UI_Input.resouce_input.CitizenCountSub)
+		{
+			Is_send_UI_input = false;
+		}
+		UI_Input.resouce_input.CitizenCountAdd = false;
+		UI_Input.resouce_input.CitizenCountSub = false;
+	}
+	send(s_socket, (char*)&UI_Input, sizeof(FUI_Input), 0);
+
+	
+
 
 	Citizens->CitizenNoJob(CitizenNoJobCnt);
 	Citizens->Citizen_Moving();

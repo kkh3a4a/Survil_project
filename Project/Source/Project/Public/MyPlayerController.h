@@ -43,6 +43,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int ResourceCount = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool CitizenAdd = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool CitizenSub = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int CitizenCount=0;
+
+
 	AActor* ResourceActor;
 
 protected:

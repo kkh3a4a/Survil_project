@@ -123,8 +123,22 @@ public:
 	bool d;
 };
 
+USTRUCT(Atomic, BlueprintType)
+struct FUI_resource_Input {
+	GENERATED_USTRUCT_BODY()
+public:
+	int ResourceNum;
+	bool CitizenCountAdd;
+	bool CitizenCountSub;
+	
+};
 
-
+USTRUCT(Atomic, BlueprintType)
+struct FUI_Input {
+	GENERATED_USTRUCT_BODY()
+public:
+	FUI_resource_Input resouce_input;
+};
 
 
 

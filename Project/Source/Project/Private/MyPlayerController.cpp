@@ -168,7 +168,8 @@ void AMyPlayerController::MoveToMouseCursor()
         {
             ResourceActor = hitActor;
             ResourceUI = true;
-            //ResourceType = FCString::Atoi(*hitActor->Tags[1].ToString());
+            ResourceType = FCString::Atoi(*hitActor->Tags[1].ToString());
+            ResourceCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))].count;
         }
         else
         {
@@ -247,8 +248,17 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     if (ResourceActor != NULL)
     {
         ResourceCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))].count;
-    }
 
+        CitizenCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))].CitizenCount;
+
+        if (ResourceUI)
+        {
+                ServerClass->UI_Input.resouce_input.ResourceNum = FCString::Atoi(*ResourceActor->Tags[2].ToString());
+                ServerClass->UI_Input.resouce_input.CitizenCountAdd = CitizenAdd;
+                ServerClass->UI_Input.resouce_input.CitizenCountSub = CitizenSub;
+                UE_LOG(LogTemp, Log, TEXT("sub"));
+        }
+    }
 
 }
 

@@ -76,11 +76,31 @@ typedef struct resource_actor
 	int CitizenCount = 0;
 }resource_actor;
 
+typedef struct UI_resource_Input {
+public:
+	int ResourceNum;
+	bool CitizenCountAdd;
+	bool CitizenCountSub;
+
+}UI_resource_Input;
+
+typedef struct UI_Input {
+public:
+	UI_resource_Input resource_input;
+}UI_Input;
+
 void FActor_TF_define(TF& a, TF& b)
 {
 	a.x = b.x;
 	a.y = b.y;
 	a.z = b.z;
+}
+
+bool TF_Same(TF a, TF b)
+{
+	if (a.x == b.x && a.y == b.y)
+		return true;
+	return false;
 }
 
 float location_distance(TF& p1, TF& p2)
@@ -220,6 +240,7 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 				{
 					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
 					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
+					resources.second->CitizenCount = 0;
 					citizens->job = 0;
 				}
 				for (int i = 0; i < 5; ++i)
@@ -288,4 +309,42 @@ void mouse_input_checking(Citizen_moving& temp_citizen_moving, std::map<int, pla
 			players_list[port]->player_citizen[temp_citizen_moving.citizen_number]->Job_location.y = temp_citizen_moving.location.y;
 		}
 	}
+}
+
+void Citizen_Work_Add(std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port, int i)
+{
+	int j = 0;
+
+	for (auto& a : players_list[port]->player_citizen)
+	{
+		if (a->job == 0)
+		{
+			FActor_TF_define(a->Job_location, resource_create_landscape[i]->location);
+			FActor_TF_define(players_list[port]->player_citizen_arrival_location[j]->location, resource_create_landscape[i]->location);
+			resource_create_landscape[i]->CitizenCount++;
+			a->job = 1;
+			return;
+		}
+		j++;
+	}
+}
+
+void Citizen_Work_Sub(std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port, int i)
+{
+	int j = 0;
+	for (auto& a : players_list[port]->player_citizen)
+	{
+		if (a->job != 0)
+		{
+			if (TF_Same(a->Job_location, resource_create_landscape[i]->location))
+			{
+				a->job = 0;
+				FActor_TF_define(players_list[port]->player_citizen_arrival_location[j]->location, players_list[port]->player_info.location);
+				resource_create_landscape[i]->CitizenCount--;
+				return;
+			}
+		}
+		j++;
+	}
+
 }

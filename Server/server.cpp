@@ -36,6 +36,9 @@ char** temperature_map = terrain.get_temperature_map();
 volatile int player_cnt;
 volatile bool location_set = false;
 
+UI_Input UI_input;
+
+
 DWORD WINAPI terrain_change(LPVOID arg)
 {
 	//terrain.show_array(total_terrain, one_side_number);
@@ -69,6 +72,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
 	FActor testActor;
+	UI_Input UI_input;
 	game_start = true;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
@@ -173,11 +177,16 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
 		mouse_input_checking(temp_citizen_moving, players_list, port);
 		retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
-		for (int i = 0; i < 10; ++i)
+		retval = recv(client_sock, (char*)&(UI_input), (int)sizeof(UI_Input), 0);
+		if (UI_input.resource_input.CitizenCountAdd)
 		{
-			cout << players_list[port]->player_citizen[i]->job << " ";
+			Citizen_Work_Add(players_list, resource_create_landscape, port, UI_input.resource_input.ResourceNum);
 		}
-		cout << endl;
+		if (UI_input.resource_input.CitizenCountSub)
+		{
+			Citizen_Work_Sub(players_list, resource_create_landscape, port, UI_input.resource_input.ResourceNum);
+		}
+		
 
 	}
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
@@ -211,7 +220,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	while (1) {
 		auto sunangle_end_t = high_resolution_clock::now();
 		auto actor_move_end_t = high_resolution_clock::now();
-
+		
 		if (duration_cast<milliseconds>(sunangle_end_t - sunangle_start_t).count() > 50) 
 		{
 			sunangle_start_t = high_resolution_clock::now();
@@ -249,6 +258,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			actor_move_start_t = high_resolution_clock::now();
 			resource_collect(players_list, resource_create_landscape);
 		}
+
 	}
 	return 0;
 }
