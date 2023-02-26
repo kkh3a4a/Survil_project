@@ -23,12 +23,8 @@ public:
 
 	void InitializeMeshTerrain(UMaterialInstance* TerrainMaterial);
 	void UpdateMeshTerrain(int8(*Terrain2DArrayPtr)[MapSizeY]);
-	
-
-	UInstancedStaticMeshComponent* InstancedTerrain;
 
 	TArray<FVector> Vertices;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UProceduralMeshComponent* MeshTerrain;
 };

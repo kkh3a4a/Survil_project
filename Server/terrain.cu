@@ -353,7 +353,7 @@ void except_city_terrain_cuda(char** terrain_array_device, II* city_location_dev
 {
 	int x = blockIdx.x * blockDim.x + threadIdx.x;
 	int y = blockIdx.y * blockDim.y + threadIdx.y;
-	int inner_radius = 20;
+	int inner_radius = 50;
 	int outer_radius = inner_radius + 20;
 	II distance;
 
@@ -1167,8 +1167,8 @@ public:
 		if (iter > 4) {
 			cout << "Error: set_city_location, Bigger than array size" << endl;
 		}
-		city_location[iter].x = location.x;
-		city_location[iter].y = location.y;
+		city_location[iter].x = location.x / 100;
+		city_location[iter].y = location.y / 100;
 		cout << "city_location[" << iter << "] = " << city_location[iter].x << " " << city_location[iter].y << endl;
 	}
 
