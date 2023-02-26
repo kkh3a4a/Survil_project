@@ -37,6 +37,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool ResourceUI = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int ResourceType = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int ResourceCount = 0;
+
+	AActor* ResourceActor;
+
 protected:
 	long long int mouse_cnt = 0;
 

@@ -7,7 +7,7 @@
 
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
-AServer_testing* server_MouseInput;
+AServer_testing* ServerClass;
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -24,10 +24,10 @@ AMyPlayerController::AMyPlayerController()
         return;
     }
     server->GetWorld();
-    server_MouseInput = Cast<AServer_testing>(server);
-    //server_MouseInput = Cast<AServer_testing>(server->GetClass());
+    ServerClass = Cast<AServer_testing>(server);
+    //ServerClass = Cast<AServer_testing>(server->GetClass());
 
-    if (server_MouseInput == nullptr)
+    if (ServerClass == nullptr)
     {
         return;
     }
@@ -74,44 +74,44 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::InputUpPressed()
 {
-    server_MouseInput->my_key_input.w = true;
+    ServerClass->my_key_input.w = true;
 }
 
 void AMyPlayerController::InputDownPressed()
 {
-    server_MouseInput->my_key_input.s = true;
+    ServerClass->my_key_input.s = true;
 }
 
 void AMyPlayerController::InputLeftPressed()
 {
-    server_MouseInput->my_key_input.a = true;
+    ServerClass->my_key_input.a = true;
 }
 
 void AMyPlayerController::InputRightPressed()
 {
-    server_MouseInput->my_key_input.d = true;
+    ServerClass->my_key_input.d = true;
 }
 
 
 
 void AMyPlayerController::InputUpReleased()
 {
-    server_MouseInput->my_key_input.w = false;
+    ServerClass->my_key_input.w = false;
 }
 
 void AMyPlayerController::InputDownReleased()
 {
-    server_MouseInput->my_key_input.s = false;
+    ServerClass->my_key_input.s = false;
 }
 
 void AMyPlayerController::InputLeftReleased()
 {
-    server_MouseInput->my_key_input.a = false;
+    ServerClass->my_key_input.a = false;
 }
 
 void AMyPlayerController::InputRightReleased()
 {
-    server_MouseInput->my_key_input.d = false;
+    ServerClass->my_key_input.d = false;
 }
 
 
@@ -151,21 +151,24 @@ void AMyPlayerController::MoveToMouseCursor()
             UE_LOG(LogTemp, Log, TEXT("Citizen"));
             if (wcscmp(*hitActor->Tags[1].ToString(), L"0") == 0)
             {
-                server_MouseInput->Citizens->Citizen_moving.team = FCString::Atoi(*hitActor->Tags[1].ToString());
-                server_MouseInput->Citizens->Citizen_moving.citizen_number = FCString::Atoi(*hitActor->Tags[2].ToString());
-                server_MouseInput->Citizens->Citizen_moving.location.x = hitActor->GetActorLocation().X;
-                server_MouseInput->Citizens->Citizen_moving.location.y = hitActor->GetActorLocation().Y;
-                server_MouseInput->Citizens->Citizen_moving.location.z = hitActor->GetActorLocation().Z;
-                // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), server_MouseInput->Citizen_moving.team, server_MouseInput->Citizen_moving.citizen_number ,server_MouseInput->Citizen_moving.location.x, server_MouseInput->Citizen_moving.location.y);
+                ServerClass->Citizens->Citizen_moving.team = FCString::Atoi(*hitActor->Tags[1].ToString());
+                ServerClass->Citizens->Citizen_moving.citizen_number = FCString::Atoi(*hitActor->Tags[2].ToString());
+                ServerClass->Citizens->Citizen_moving.location.x = hitActor->GetActorLocation().X;
+                ServerClass->Citizens->Citizen_moving.location.y = hitActor->GetActorLocation().Y;
+                ServerClass->Citizens->Citizen_moving.location.z = hitActor->GetActorLocation().Z;
+                // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), ServerClass->Citizen_moving.team, ServerClass->Citizen_moving.citizen_number ,ServerClass->Citizen_moving.location.x, ServerClass->Citizen_moving.location.y);
             }
             else
             {
                 hitActor = NULL;
             }
+            ResourceUI = false;
         }
         else if (hitActor->ActorHasTag("Resource"))
         {
+            ResourceActor = hitActor;
             ResourceUI = true;
+            //ResourceType = FCString::Atoi(*hitActor->Tags[1].ToString());
         }
         else
         {
@@ -184,23 +187,23 @@ void AMyPlayerController::MoveToActor()
         DestLocation = Hit.ImpactPoint;
         if (Hit.GetActor()->ActorHasTag(L"Resource"))
         {
-            server_MouseInput->Citizens->Citizen_moving.citizen_job = 1;
+            ServerClass->Citizens->Citizen_moving.citizen_job = 1;
             DestLocation = Hit.GetActor()->GetActorLocation();
 
             UE_LOG(LogTemp, Log, TEXT("Resource"));
         }
         else
         {
-            server_MouseInput->Citizens->Citizen_moving.citizen_job = 0;
+            ServerClass->Citizens->Citizen_moving.citizen_job = 0;
         }
 
         if (hitActor) {
             if (hitActor->ActorHasTag("Citizen"))
             {
                 temped = true;
-                server_MouseInput->Citizens->Citizen_moving.location.x = DestLocation.X;
-                server_MouseInput->Citizens->Citizen_moving.location.y = DestLocation.Y;
-                server_MouseInput->Citizens->Citizen_moving.location.z = DestLocation.Z;
+                ServerClass->Citizens->Citizen_moving.location.x = DestLocation.X;
+                ServerClass->Citizens->Citizen_moving.location.y = DestLocation.Y;
+                ServerClass->Citizens->Citizen_moving.location.z = DestLocation.Z;
                 hitActor = NULL;
             }
         }
@@ -219,7 +222,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
 {
     Super::PlayerTick(DeltaTime);
     mouse_cnt++;
-    //UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"),  *(server_MouseInput->MouseInput.name), server_MouseInput->MouseInput.location.x, server_MouseInput->MouseInput.location.y);
+    //UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"),  *(ServerClass->MouseInput.name), ServerClass->MouseInput.location.x, ServerClass->MouseInput.location.y);
     //오른쪽 클릭 작업
     if (bLeftClickMouse)
     {
@@ -236,10 +239,14 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
         if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
         {
            
-            server_MouseInput->Citizens->Citizen_moving.team = -1;
+            ServerClass->Citizens->Citizen_moving.team = -1;
             temped = false;
 
         }
+    }
+    if (ResourceActor != NULL)
+    {
+        ResourceCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))].count;
     }
 
 

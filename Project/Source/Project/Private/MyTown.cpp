@@ -65,30 +65,51 @@ void AMyTown::SpawnResource()
 		if (resources_create_landscape[i].type == 0)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(OilActor, Location, Rotation, SpawnInfo);
+			SpawnedResource->Tags.Add("Resource");
+			SpawnedResource->Tags.Add("0");
 		}
 		else if (resources_create_landscape[i].type == 1)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(WaterActor, Location, Rotation, SpawnInfo);
+			SpawnedResource->Tags.Add("Resource");
+			SpawnedResource->Tags.Add("1");
 		}
 		else if (resources_create_landscape[i].type == 2)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(IronActor, Location, Rotation, SpawnInfo);
+			SpawnedResource->Tags.Add("Resource");
+			SpawnedResource->Tags.Add("2");
 		}
 		else if (resources_create_landscape[i].type == 3)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(FoodActor, Location, Rotation, SpawnInfo);
+			SpawnedResource->Tags.Add("Resource");
+			SpawnedResource->Tags.Add("3");
 		}
 		else if (resources_create_landscape[i].type == 4)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(WoodActor, Location, Rotation, SpawnInfo);
+			SpawnedResource->Tags.Add("Resource");
+			SpawnedResource->Tags.Add("4");
 		}
 		else
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(WoodActor, Location, Rotation, SpawnInfo);
-			//SpawnedResource->Tags.Add("Error");
+			SpawnedResource->Tags.Add("Resource");
+			SpawnedResource->Tags.Add("5");
 		}
-		SpawnedResource->Tags.Add("Resource");
+		SpawnedResource->Tags.Add(FName(*FString::FromInt(i)));
 		ResourceEditer.Add(SpawnedResource);
+	}
+}
+
+void AMyTown::UpdateResource(Fresources_actor& a, Fresources_actor& b, int i)
+{
+	a.count = b.count;
+	a.type = b.type;
+	if (a.count == 0)
+	{
+		ResourceEditer[i]->SetActorHiddenInGame(true);
 	}
 }
 

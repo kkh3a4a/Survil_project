@@ -110,7 +110,7 @@ void AServer_testing::Tick(float DeltaTime)
 		{
 			Fresources_actor temp_resource;
 			recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
-			resoure_set(MyTown->resources_create_landscape[i], temp_resource);
+			MyTown->UpdateResource(MyTown->resources_create_landscape[i], temp_resource , i);
 		}
 		recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
 		//자원 받기
@@ -155,5 +155,4 @@ void AServer_testing::resoure_set(Fresources_actor& a, Fresources_actor& b)
 {
 	a.count = b.count;
 	a.type = b.type;
-	TF_set(a.location, b.location);
 }
