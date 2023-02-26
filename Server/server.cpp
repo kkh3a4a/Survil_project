@@ -46,8 +46,8 @@ DWORD WINAPI terrain_change(LPVOID arg)
 	}*/
 	int i{};
 	while (1){
-		clock_t t_0 = clock();
-		cout << endl << i << "번째" << endl;
+		//clock_t t_0 = clock();
+		//cout << endl << i << "번째" << endl;
 		i++;
 		terrain.wind_blow({ 1, 0 }, 1);
 		//terrain.make_shadow_map(i * 5);
@@ -56,8 +56,8 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		//terrain.show_array(total_terrain, one_side_number);
 		//terrain.show_array(shadow_map, one_side_number);
 		//terrain.show_array(temperature_map, one_side_number);
-		clock_t t_1 = clock();
-		cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
+		//clock_t t_1 = clock();
+		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
 	}
 }
 

@@ -8,13 +8,14 @@
 #include <chrono>
 #include "global.h"
 #include "Windows/HideWindowsPlatformTypes.h"
-#include "MeshTerrain.h"
 #include "NetworkingThread.h"
 #include "CoreMinimal.h"
 #include "HAL/Runnable.h"
 #include "GameFramework/Actor.h"
 #include "Citizen.h"
 #include "MyTown.h"
+#include "MeshTerrain.h"
+#include "Temperature.h"
 #include "Server_testing.generated.h"
 
 using namespace std;
@@ -42,19 +43,19 @@ public:
 
 
 	//////////////UI때문에 여기있어야함
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
 		int oil_count = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
 		int water_count = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
 		int iron_count = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
 		int food_count = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
 		int wood_count = 0;
 
 
@@ -84,28 +85,28 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool first_recv_send = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Citizen")
 		TSubclassOf<AActor>Citizen_Actor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Citizen")
 		TSubclassOf<AActor>EnemyCitizenActor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 		TSubclassOf<AActor>WellPump;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 		TSubclassOf<AActor>OilActor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 		TSubclassOf<AActor>WaterActor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 		TSubclassOf<AActor>IronActor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 		TSubclassOf<AActor>FoodActor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 		TSubclassOf<AActor>WoodActor;
 	//citizen
 	ACitizen* Citizens;
@@ -118,7 +119,7 @@ public:
 	int8 Terrain2DArray[MapSizeX][MapSizeY];
 	int8 TerrainTemperature[MapSizeX][MapSizeY];
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terrain")
 		UMaterialInstance* TerrainMaterialInstance;
 
 	

@@ -43,6 +43,10 @@ void AServer_testing::BeginPlay()
 	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
+
+	ATemperature* decal = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	decal->Initiaize(TerrainMaterialInstance);
+	decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	
 	/*wcout.imbue(locale("korean"));*/
 	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
