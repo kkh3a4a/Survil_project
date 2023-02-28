@@ -16,8 +16,6 @@
 #include "MyTown.h"
 #include "MeshTerrain.h"
 #include "Temperature.h"
-#include "Camera/CameraActor.h"
-#include "Camera/CameraComponent.h"
 #include "Server_testing.generated.h"
 
 using namespace std;
@@ -136,9 +134,8 @@ public:
 	FRunnableThread* NetworkingThread;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Fthree_float CurrentLocation;
-	
-	ACameraActor* CameraActor;
+		Fthree_float my_camera_location;
+
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
 
