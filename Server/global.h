@@ -20,7 +20,6 @@ typedef struct FActor_location_rotation {
 	TCHAR name[30];
 	TF location;
 	TF rotation;
-	
 }FActor;
 
 typedef struct FCitizen_sole {
@@ -60,7 +59,8 @@ typedef struct keyboard_input {
 typedef struct players_profile {
 	int port;
 	FActor player_info;
-	//TF camera_location;
+	TF curr_location;
+	TF city_location;
 	keyboard_input my_keyinput;
 	std::vector<FCitizen_sole*> player_citizen;
 	std::vector<Citizen_moving*> player_citizen_arrival_location;
@@ -144,9 +144,9 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 			}
 		}
 
-		/*a.second->camera_location.x = a.second->player_info.location.x;
-		a.second->camera_location.y = a.second->player_info.location.y + 3000;
-		a.second->camera_location.z = a.second->player_info.location.z + 6000;*/
+		a.second->curr_location.x = a.second->player_info.location.x;
+		a.second->curr_location.y = a.second->player_info.location.y;
+		a.second->curr_location.z = a.second->player_info.location.z;
 		a.second->my_keyinput.w = false;
 		a.second->my_keyinput.s = false;
 		a.second->my_keyinput.a = false;
@@ -281,19 +281,19 @@ void camera_movement(std::map<int, players_profile*>& players_list)
 	{
 		if (a.second->my_keyinput.w)
 		{
-			a.second->player_info.location.y -= 100;
+			a.second->curr_location.y -= 100;
 		}
 		if (a.second->my_keyinput.s)
 		{
-			a.second->player_info.location.y += 100;
+			a.second->curr_location.y += 100;
 		}
 		if (a.second->my_keyinput.a)
 		{
-			a.second->player_info.location.x -= 100;
+			a.second->curr_location.x -= 100;
 		}
 		if (a.second->my_keyinput.d)
 		{
-			a.second->player_info.location.x += 100;
+			a.second->curr_location.x += 100;
 		}
 	}
 }

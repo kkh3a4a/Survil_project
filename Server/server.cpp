@@ -151,12 +151,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
 		}
 
-		retval = send(client_sock, (char*)&(players_list[port]->player_info.location), (int)sizeof(TF), 0);
+		retval = send(client_sock, (char*)&(players_list[port]->curr_location), (int)sizeof(TF), 0);
 		retval = send(client_sock, (char*)&(players_list[port]->resources), sizeof(int) * 5, 0);
 
 		//10배 축소해서 일단 테스트
 		//cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
-		II player_location{ (int)players_list[port]->player_info.location.x / 100, (int)players_list[port]->player_info.location.y / 100 };
+		II player_location{ (int)players_list[port]->curr_location.x / 100, (int)players_list[port]->curr_location.y / 100 };
 		terrain.copy_for_player_map(player_location);
 		for (int i = 0; i < player_sight_size.x; ++i) {
 			retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
