@@ -43,7 +43,9 @@ public:
 	int ret = 0;
 	int resources[5] = {};
 	bool Is_send_UI_input = false;
-	
+	bool IsConnect = false;
+	bool IsFirstSend = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FUI_Input UI_Input;
 
@@ -62,6 +64,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
 		int wood_count = 0;
+
+	volatile int maxplayer_cnt = 0;
+	volatile int trash_value = 0;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -144,5 +149,11 @@ public:
 
 	void resoure_set(Fresources_actor& a, Fresources_actor& b);
 
+	int connecting();
+
+	bool FirstSend();
 };
+
+
+
 
