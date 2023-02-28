@@ -122,6 +122,16 @@ void Move_Civil(TF& civil, TF& end_location) {
 	civil.y += ((end_location.y - civil.y) / distance) * 21;
 	civil.z += ((end_location.z - civil.z) / distance) * 21;
 }
+int CitizenResourceCount(int resource[5])
+{
+	int temp = 0;
+	for (int i = 0; i < 5; ++i)
+	{
+		temp += resource[i];
+	}
+
+	return temp;
+}
 
 void player_random_location(std::map<int, players_profile*>& players_list, std::map <int, Citizen_moving*>& citizen_Move)
 {
@@ -314,7 +324,40 @@ void mouse_input_checking(Citizen_moving& temp_citizen_moving, std::map<int, pla
 void Citizen_Work_Add(std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port, int i)
 {
 	int j = 0;
+	float proximate = 210'000'000;
+	float location = -210'000'000;
+	FCitizen_sole* findCitizen = NULL;
+	int count = 0;
+	for (auto& a : players_list[port]->player_citizen)
+	{
+		if (CitizenResourceCount(a->resources) == 0)
+		{
+			if (a->job == 0)
+			{
+				location = location_distance(a->location, resource_create_landscape[i]->location);
+				if (location < proximate)
+				{
+					proximate = location;
+					findCitizen = a;
+					count = j;
+				}
+			}
+		}
+		j++;
+	}
+	if (findCitizen != NULL)
+	{
 
+		FActor_TF_define(findCitizen->Job_location, resource_create_landscape[i]->location);
+		FActor_TF_define(players_list[port]->player_citizen_arrival_location[count]->location, resource_create_landscape[i]->location);
+		resource_create_landscape[i]->CitizenCount++;
+		findCitizen->job = 1;
+		return;
+	}
+
+	proximate = 210'000'000;
+	location = -210'000'000;
+	j = 0;
 	for (auto& a : players_list[port]->player_citizen)
 	{
 		if (a->job == 0)
@@ -324,8 +367,24 @@ void Citizen_Work_Add(std::map<int, players_profile*>& players_list, std::map<in
 			resource_create_landscape[i]->CitizenCount++;
 			a->job = 1;
 			return;
+			location = location_distance(a->location, resource_create_landscape[i]->location);
+			if (location < proximate)
+			{
+				proximate = location;
+				findCitizen = a;
+				count = j;
+			}
 		}
 		j++;
+	}
+
+	if (findCitizen != NULL)
+	{
+		FActor_TF_define(findCitizen->Job_location, resource_create_landscape[i]->location);
+		FActor_TF_define(players_list[port]->player_citizen_arrival_location[count]->location, resource_create_landscape[i]->location);
+		resource_create_landscape[i]->CitizenCount++;
+		findCitizen->job = 1;
+		return;
 	}
 }
 
