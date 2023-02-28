@@ -44,10 +44,12 @@ void AServer_testing::BeginPlay()
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
 
+	//Spawn Decal
 	ATemperature* decal = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	decal->Initiaize(TerrainMaterialInstance);
 	decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	
+
+
 	UI_Input.resouce_input.ResourceNum = -1;
 	UI_Input.resouce_input.CitizenCountAdd = false;
 	UI_Input.resouce_input.CitizenCountSub = false;
@@ -112,7 +114,7 @@ void AServer_testing::Tick(float DeltaTime)
 		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
 		MyTown->UpdateResource(MyTown->resources_create_landscape[i], temp_resource, i);
 	}
-	recv(s_socket, (char*)&my_camera_location, sizeof(Fthree_float), 0);
+	recv(s_socket, (char*)&CurrentLocation, sizeof(Fthree_float), 0);
 	//자원 받기
 	recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
 	oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
@@ -154,9 +156,7 @@ void AServer_testing::Tick(float DeltaTime)
 	}
 	send(s_socket, (char*)&UI_Input, sizeof(FUI_Input), 0);
 
-	
-
-
+	SetActorLocation(FVector(CurrentLocation.x - MapSizeX*100 / 2, CurrentLocation.y - MapSizeY*100 / 2, CurrentLocation.z));
 	Citizens->CitizenNoJob(CitizenNoJobCnt);
 	Citizens->Citizen_Moving();
 	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
