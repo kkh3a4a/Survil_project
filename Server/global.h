@@ -8,7 +8,7 @@
 #include<iostream>
 #define MAXPLAYER 1
 
-std::uniform_int_distribution <int>uid{ 0 + 1000 * 100, 16000 * 100 - 1000 * 100 };
+std::uniform_int_distribution <int>uid{ 0 + 100 * 100, 1600 * 100 - 100 * 100 };
 std::uniform_int_distribution <int>resource_uid{ -100, 100 };
 typedef struct three_float {
 	float x = 0.0f;

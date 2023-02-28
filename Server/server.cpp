@@ -86,9 +86,16 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int port = ntohs(clientaddr.sin_port);
 
 	player_cnt_lock.lock();
+	player_cnt++;
+	if (player_cnt > MAXPLAYER)
+	{
+		closesocket(client_sock);
+		return 0;
+	}
+	
 	players_profile* my_profile = new players_profile;
 	players_list[port] = my_profile;
-	player_cnt++;
+	
 	players_list[port]->port = port;
 	player_cnt_lock.unlock();
 	
@@ -99,11 +106,17 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	//player sight ÁÖ¼Ò°ª
 	char** player_sight_terrain = terrain.get_player_sight_map();
 	char** player_sight_temperature = terrain.get_player_temperature_map(); 
-
+	int maxplayer_cnt = 0;
+	int trash_value = 0;
 	while (1){
 		if (!location_set){
+			retval = send(client_sock, (char*)&maxplayer_cnt, sizeof(int), 0);
+			retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);
 			continue;
 		}
+		maxplayer_cnt = MAXPLAYER;
+		send(client_sock, (char*)&(maxplayer_cnt), sizeof(int), 0);
+		retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);
 		retval = send(client_sock, (char*)&(players_list[port]->player_info), (int)sizeof(FActor), 0);
 		for (int i = 0; i < 10; ++i){
 			cout << i << "//" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
