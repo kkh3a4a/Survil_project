@@ -86,9 +86,16 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int port = ntohs(clientaddr.sin_port);
 
 	player_cnt_lock.lock();
+	player_cnt++;
+	if (player_cnt > MAXPLAYER)
+	{
+		closesocket(client_sock);
+		return 0;
+	}
+	
 	players_profile* my_profile = new players_profile;
 	players_list[port] = my_profile;
-	player_cnt++;
+	
 	players_list[port]->port = port;
 	player_cnt_lock.unlock();
 	
