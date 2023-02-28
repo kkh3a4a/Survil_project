@@ -25,6 +25,6 @@ public:
 	void UpdateMeshTerrain(int8(*Terrain2DArrayPtr)[MapSizeY]);
 
 	TArray<FVector> Vertices;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UProceduralMeshComponent* MeshTerrain;
 };

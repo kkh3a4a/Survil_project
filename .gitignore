@@ -1,4 +1,7 @@
 ### UnrealEngine ###
+# Terrain Svae Files
+Server/TerrainFile/
+
 # Visual Studio 2015 user specific files
 .vs/
 x64/
