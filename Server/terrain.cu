@@ -21,12 +21,12 @@ typedef struct two_int {
 //const int one_side_number = 320;
 //II player_sight_size{ 200, 120 };
 //const int random_array_size = 500000;
-const int one_side_number = 16000;
-II player_sight_size{200, 120};
-const int random_array_size = 50000000;
-//const int one_side_number = 32000;
-//II player_sight_size{ 200, 120 };
-//const int random_array_size = 90000000;
+//const int one_side_number = 16000;
+//II player_sight_size{200, 120};
+//const int random_array_size = 50000000;
+const int one_side_number = 32000;
+II player_sight_size{ 200, 120 };
+const int random_array_size = 90000000;
 
 const int max_height = 8;
 const int base_floor = 1;
@@ -80,6 +80,40 @@ void make_random_array(II* random_array, bool& random_array_used)
 			Sleep(10);
 		}
 	}
+}
+
+void save_file_thread(string file_name, int num, int space, char** terrain_array_host)
+{
+	ofstream fout;
+	int task;
+	fout.open(file_name);
+	for (int i = num * space; i < (num + 1) * space; i++) {
+		for (int j = 0; j < one_side_number; j++) {
+			fout << (int)terrain_array_host[i][j] << " ";
+		}
+		fout << endl;
+		task++;
+		cout << (double)task / one_side_number * 100 << "%" << endl;
+	}
+	fout.close();
+}
+
+void load_file_thread(string file_name, int num, int space, char** array2d)
+{
+	ifstream fin;
+	fin.open(file_name);
+	int height;
+	int task;
+	for (int i = 0; i < space; i++) {
+		for (int j = 0; j < one_side_number; j++) {
+			fin >> height;
+			array2d[i][j] = height;
+		}
+		task++;
+		cout << (double)task / one_side_number * 100 << "%" << endl;
+	}
+	fin.close();
+	cout << "Terrain Loaded From File." << endl;
 }
 
 __global__
@@ -581,13 +615,8 @@ public:
 			shadow_map_host[i] = new char[one_side_number];
 			temperature_map_host[i] = new char[one_side_number];
 		}
-		for (int i = 0; i < one_side_number; i++) {
-			for (int j = 0; j < one_side_number; j++) {
-				terrain_array_host[i][j] = height_uid(dre);			//언덕 생성 안하고 랜덤으로 생성
-				shadow_map_host[i][j] = 0;
-				temperature_map_host[i][j] = 30;
-			}
-		}
+		load_terrain();
+		
 		cudaMalloc((void**)&terrain_array_device, one_side_number * sizeof(char*));
 		cudaMalloc((void**)&shadow_map_device, one_side_number * sizeof(char*));
 		cudaMalloc((void**)&temperature_map_device, one_side_number * sizeof(char*));
@@ -859,6 +888,15 @@ public:
 	
 	void except_city_terrain()
 	{
+		if (city_location[0].x == 0 && city_location[0].y == 0) {
+			for (int i = 0; i < one_side_number; i++) {
+				cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+			}
+			if (log) {
+				cout << "No exeption\n";
+			}
+			return;
+		}
 		clock_t t_0 = clock();
 		city_location_device = new II[5];
 		cudaMalloc((void**)&city_location_device, 5 * sizeof(II));
@@ -1177,4 +1215,80 @@ public:
 		log = true;
 	}
 
+	void save_terrain()
+	{
+		clock_t t_0 = clock();
+		
+		vector<string> filenames;
+		const int ROWS = one_side_number;
+		const int COLS = one_side_number;
+		const int CHUNK_SIZE = 1024;
+		// write chunks of the 2D array to separate binary files
+		for (int i = 0; i < ROWS; i += CHUNK_SIZE) {
+			for (int j = 0; j < COLS; j += CHUNK_SIZE) {
+				// create a filename for the chunk
+				string filename = "TerrainFile/data_" + to_string(i) + "_" + to_string(j) + ".bin";
+				filenames.push_back(filename);
+
+				// create a binary file for the chunk
+				ofstream file(filename, ios::out | ios::binary);
+
+				// write the chunk to the file
+				for (int k = i; k < min(i + CHUNK_SIZE, ROWS); k++) {
+					file.write(reinterpret_cast<char*>(terrain_array_host[k]) + j, (min(CHUNK_SIZE, COLS - j)));
+				}
+			}
+		}
+		clock_t t_1 = clock();
+		cout << "Save File: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+
+	}
+	
+	void load_terrain()
+	{
+		clock_t t_0 = clock();
+		ifstream fin;
+		fin.open("TerrainFile/data_0_0.bin");
+		if (fin) {			
+			fin.close();
+
+			const int ROWS = one_side_number;
+			const int COLS = one_side_number;
+			const int CHUNK_SIZE = 1024;
+			for (int i = 0; i < ROWS; i += CHUNK_SIZE) {
+				for (int j = 0; j < COLS; j += CHUNK_SIZE) {
+					// find the filename for the chunk
+					string filename = "TerrainFile/data_" + to_string(i) + "_" + to_string(j) + ".bin";
+
+					// open the binary file for the chunk
+					ifstream file(filename, ios::in | ios::binary);
+
+					// read the chunk from the file into the array
+					for (int k = i; k < min(i + CHUNK_SIZE, ROWS); k++) {
+						file.read(reinterpret_cast<char*>(terrain_array_host[k]) + j, (min(CHUNK_SIZE, COLS - j)));
+					}
+				}
+			}
+
+			for (int i = 0; i < one_side_number; i++) {
+				for (int j = 0; j < one_side_number; j++) {
+					shadow_map_host[i][j] = 0;
+					temperature_map_host[i][j] = 30;
+				}
+			}
+			cout << "Terrain Loaded From File" << endl;
+		}
+		else {
+			for (int i = 0; i < one_side_number; i++) {
+				for (int j = 0; j < one_side_number; j++) {
+					terrain_array_host[i][j] = height_uid(dre);			//언덕 생성 안하고 랜덤으로 생성
+					shadow_map_host[i][j] = 0;
+					temperature_map_host[i][j] = 30;
+				}
+			}
+			cout << "Terrain File Not Exist" << endl;
+		}
+		clock_t t_1 = clock();
+		cout << "Load File: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+	}
 };
