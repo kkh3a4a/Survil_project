@@ -3,6 +3,7 @@
 
 #include "Temperature.h"
 #include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ATemperature::ATemperature()
 {
@@ -12,32 +13,23 @@ ATemperature::ATemperature()
 	RootComponent = Root;
 }
 
-void ATemperature::Initiaize(UMaterialInstance* Material)
+void ATemperature::Initiaize(UMaterial* Material)
 {
-    const int32 numRows = 200;
-    const int32 numCols = 120;
-    const float decalWidth = 1.0f;
-    const float decalHeight = 1000.0f;
+    UMaterialInstanceDynamic* MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
+	MaterialInstance->SetVectorParameterValue(TEXT("Temperature"), FLinearColor(1, 0, 0, 1));
+    
+    const float Width = 1000;
+    const float Height = 5000;
 
-    for (int32 row = 0; row < numRows; row++)
+    for (int32 row = 0; row < 20; row++)
     {
-        for (int32 col = 0; col < numCols; col++)
+        for (int32 col = 0; col < 12; col++)
         {
-            // Calculate the spawn location for this decal
-            FVector spawnLocation = FVector(row * decalWidth, col * decalHeight, 0.0f);
-
-            // Spawn the decal at this location
-            TemperatureDecal = UGameplayStatics::SpawnDecalAtLocation(
-                GetWorld(),
-                Material,
-                FVector(decalWidth, decalHeight, 1.0f),
-                spawnLocation,
-                FRotator::ZeroRotator,
-                10
-            );
-            // Set other properties of the decal
-            /*TemperatureDecal->SetFadeOut(10, 1, 1, false);
-            TemperatureDecal->SetRelativeScale3D(FVector(1.0f, 1.0f, 1.0f));*/
+            DecalActor = GetWorld()->SpawnActor<ADecalActor>(FVector(Width * row + Width/2, Width * col + Width / 2, 0), FRotator(0,-90,0));
+			DecalActor->SetActorScale3D(FVector(Height, 3, 3));
+			DecalActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+			DecalActor->SetDecalMaterial(MaterialInstance);
+			DecalArray.Add(DecalActor);
         }
     }
 }
@@ -45,4 +37,5 @@ void ATemperature::Initiaize(UMaterialInstance* Material)
 void ATemperature::Update()
 {
 
+    
 }

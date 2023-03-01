@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Engine/DecalActor.h"
+#include "MeshTerrain.h"
 #include "Temperature.generated.h"
 
 UCLASS()
@@ -14,19 +15,21 @@ class PROJECT_API ATemperature : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ATemperature();
+	
 
 protected:
-	UDecalComponent* TemperatureDecal;
-	UMaterialInstance* Material1;
-	UMaterialInstance* Material2;
-	UMaterialInstance* Material3;
-	UMaterialInstance* Material4;
-	UMaterialInstance* Material5;
-	UMaterialInstance* Material6;
-	UMaterialInstance* Material7;
 
 public:	
-	void Initiaize(UMaterialInstance*);
+	void Initiaize(UMaterial*);
 	void Update();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDecalComponent* TemperatureDecal;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		ADecalActor* DecalActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<ADecalActor*> DecalArray;
 
 };

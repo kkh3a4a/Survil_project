@@ -23,9 +23,10 @@ AServer_testing::AServer_testing()
 void AServer_testing::BeginPlay()
 {
 	Super::BeginPlay();
-	//FSocketThread* SocketThread = new FSocketThread(FString("127.0.0.1"), 9000);
-	//bool connected = SocketThread->Init();
-	//UE_LOG(LogTemp, Warning, TEXT("Connected: %d"), connected);
+	
+	/*FSocketThread* SocketThread = new FSocketThread(FString("127.0.0.1"), 9000);
+	bool connected = SocketThread->Init();
+	UE_LOG(LogTemp, Warning, TEXT("Connected: %d"), connected);*/
 
 	//Citizen
 	FActorSpawnParameters SpawnInfo;
@@ -36,22 +37,20 @@ void AServer_testing::BeginPlay()
 	MyTown = GetWorld()->SpawnActor<AMyTown>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	MyTown->Initialize(WellPump, OilActor, WaterActor, IronActor, FoodActor, WoodActor);
 
-
 	//Init Mesh Terrain
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(FVector(0, 0, 0), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
-
 	//Spawn Decal
-	ATemperature* decal = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	decal->Initiaize(TerrainMaterialInstance);
+	decal = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	decal->Initiaize(TemperatureMaterial);
 	decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-
 
 	UI_Input.resouce_input.ResourceNum = -1;
 	UI_Input.resouce_input.CitizenCountAdd = false;
 	UI_Input.resouce_input.CitizenCountSub = false;
+	
 	/*wcout.imbue(locale("korean"));*/
 	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
 	s_socket = socket(AF_INET, SOCK_STREAM, 0);
