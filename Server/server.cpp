@@ -38,11 +38,10 @@ volatile bool location_set = false;
 
 UI_Input UI_input;
 
-
 DWORD WINAPI terrain_change(LPVOID arg)
 {
-	terrain.show_array(total_terrain, 320);
-	//terrain.log_on();
+	//terrain.show_array(total_terrain, 320);
+	terrain.log_on();
 	int i{};
 	while (1){
 		//clock_t t_0 = clock();
