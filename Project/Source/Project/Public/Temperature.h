@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DecalActor.h"
 #include "MeshTerrain.h"
+#include "Components/InstancedStaticMeshComponent.h"
 #include "Temperature.generated.h"
 
 UCLASS()
@@ -21,10 +22,8 @@ protected:
 
 public:	
 	void Initiaize(UMaterial*);
-	void Update();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UDecalComponent* TemperatureDecal;
+	void Update(int8(*TerrainTemperaturePtr)[MapSizeY]);
+	void CelsiusToRGB(double celsius, double& r, double& g, double& b);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		ADecalActor* DecalActor;
@@ -32,4 +31,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<ADecalActor*> DecalArray;
 
+	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
 };

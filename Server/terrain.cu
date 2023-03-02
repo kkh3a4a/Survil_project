@@ -27,7 +27,6 @@ typedef struct two_int {
 const int one_side_number = 32000;
 II player_sight_size{ 200, 120 };
 const int random_array_size = 90000000;
-//const int random_array_size = 150000000;
 
 const int min_height = 4;
 const int max_height = 8;
@@ -544,7 +543,6 @@ private:
 	char** terrain_array_device;
 	char* terrain_array_temp[one_side_number];
 
-	char** shadow_map_host = new char* [one_side_number];
 	char** shadow_map_device;
 	char* shadow_map_temp[one_side_number];
 	
@@ -580,7 +578,6 @@ public:
 		clock_t t_1 = clock();
 		for (int i = 0; i < one_side_number; i++) {
 			terrain_array_host[i] = new char[one_side_number];
-			shadow_map_host[i] = new char[one_side_number];
 			temperature_map_host[i] = new char[one_side_number];
 		}
 		load_terrain();
@@ -598,7 +595,7 @@ public:
 		cudaMemcpy(temperature_map_device, temperature_map_temp, one_side_number * sizeof(char*), cudaMemcpyHostToDevice);
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_temp[i], terrain_array_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
-			cudaMemcpy(shadow_map_temp[i], shadow_map_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
+			cudaMemset(shadow_map_temp[i], 1, one_side_number * sizeof(char));
 			cudaMemcpy(temperature_map_temp[i], temperature_map_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
 		}
 
@@ -632,14 +629,12 @@ public:
 	{
 		for (int i = 0; i < one_side_number; i++) {
 			delete[] terrain_array_host[i];
-			delete[] shadow_map_host[i];
 			delete[] temperature_map_host[i];
 		}
 		for (int i = 0; i < player_sight_size.x; i++) {
 			delete[] terrain_player_sight_host[i];
 		}
 		delete[] terrain_array_host;
-		delete[] shadow_map_host;
 		delete[] temperature_map_host;
 		delete[] terrain_player_sight_host;
 		
@@ -687,9 +682,7 @@ public:
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		make_shadow_map_cuda << <grid, block >> > (terrain_array_device, shadow_map_device, sun_angle);
-		for (int i = 0; i < one_side_number; i++) {
-			cudaMemcpy(shadow_map_host[i], shadow_map_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}
+		cudaDeviceSynchronize();
 		
 		clock_t t_1 = clock();
 		if (log) {
@@ -934,10 +927,6 @@ public:
 		return terrain_array_host;
 	}
 
-	char** get_shadow_map() {
-		return shadow_map_host;
-	}
-	
 	char** get_temperature_map()
 	{
 		return temperature_map_host;
@@ -1023,7 +1012,6 @@ public:
 
 			for (int i = 0; i < one_side_number; i++) {
 				for (int j = 0; j < one_side_number; j++) {
-					shadow_map_host[i][j] = 0;
 					temperature_map_host[i][j] = 30;
 				}
 			}
@@ -1033,7 +1021,6 @@ public:
 			for (int i = 0; i < one_side_number; i++) {
 				for (int j = 0; j < one_side_number; j++) {
 					terrain_array_host[i][j] = height_uid(dre);			//언덕 생성 안하고 랜덤으로 생성
-					shadow_map_host[i][j] = 0;
 					temperature_map_host[i][j] = 30;
 				}
 			}
