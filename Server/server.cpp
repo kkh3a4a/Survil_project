@@ -238,7 +238,36 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			{
 				sun_angle.y = -180.f;
 			}
-
+			for (auto& a : players_list)
+			{
+				float distance = 0.0f;
+				int cnt = 0;
+				for (auto& b : a.second->player_citizen)
+				{
+					if(b != NULL)
+					{
+						if (a.second->player_citizen_arrival_location[cnt]->team != -1)
+						{
+							if (location_distance(b->location, a.second->player_citizen_arrival_location[cnt]->location) > 10) {
+								Move_Civil(b->location, a.second->player_citizen_arrival_location[cnt]->location);
+							}
+						}
+					}
+					cnt++;
+				}
+				/*cout << a.second->port << " ";
+				for (int i = 0; i < 5;i++)
+				{
+					cout << a.second->resources[i] << " ";
+				}
+				cout << endl;*/
+			}
+			camera_movement(players_list);
+		}
+		else if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 1000)
+		{
+			actor_move_start_t = high_resolution_clock::now();
+			resource_collect(players_list, resource_create_landscape);
 		}
 		else
 		{
