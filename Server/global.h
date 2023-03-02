@@ -7,6 +7,8 @@
 #include<chrono>
 #include<iostream>
 #define MAXPLAYER 1
+#define MAXCITIZEN 200
+#define FIRSTSPAWN 10
 
 std::uniform_int_distribution <int>uid{ 0 + 100 * 100, 1600 * 100 - 100 * 100 };
 std::uniform_int_distribution <int>resource_uid{ -100, 100 };
@@ -58,7 +60,7 @@ typedef struct keyboard_input {
 
 typedef struct players_profile {
 	int port;
-	FActor player_info;
+	FActor* player_info;
 	TF curr_location;
 	TF city_location;
 	keyboard_input my_keyinput;
@@ -88,6 +90,15 @@ typedef struct UI_Input {
 public:
 	UI_resource_Input resource_input;
 }UI_Input;
+
+
+typedef struct FirstSendServer{
+public:
+	TF SunAngle = { 0,0,0 };
+	FActor player_info;
+	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
+	resource_actor resources[MAXPLAYER * 10];
+};
 
 void FActor_TF_define(TF& a, TF& b)
 {
@@ -140,35 +151,38 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 	for (auto& a : players_list)
 	{
 	retry:
-		_stprintf_s(a.second->player_info.name, _countof(a.second->player_info.name), _T("%d"), a.first);
-		a.second->player_info.location.x = uid(dre2);
-		a.second->player_info.location.y = uid(dre2);
+		a.second->player_info = new FActor;
+		_stprintf_s(a.second->player_info->name, _countof(a.second->player_info->name), _T("%d"), a.first);
+		a.second->player_info->location.x = uid(dre2);
+		a.second->player_info->location.y = uid(dre2);
 		for (auto& b : players_list)
 		{
 			if (a.first != b.first)
 			{
-				if (location_distance(a.second->player_info.location, b.second->player_info.location) < 7000)
+				if (location_distance(a.second->player_info->location, b.second->player_info->location) < 7000)
 				{
 					goto retry;
 				}
 			}
 		}
 
-		a.second->curr_location.x = a.second->player_info.location.x;
-		a.second->curr_location.y = a.second->player_info.location.y;
-		a.second->curr_location.z = a.second->player_info.location.z;
+		a.second->curr_location.x = a.second->player_info->location.x;
+		a.second->curr_location.y = a.second->player_info->location.y;
+		a.second->curr_location.z = a.second->player_info->location.z;
 		a.second->my_keyinput.w = false;
 		a.second->my_keyinput.s = false;
 		a.second->my_keyinput.a = false;
 		a.second->my_keyinput.d = false;
+		a.second->player_citizen.resize(MAXCITIZEN);
+		a.second->player_citizen_arrival_location.resize(MAXCITIZEN);
 		for (int i = 0; i < 2; ++i)
 		{
 			for (int j = 0; j < 5; ++j)
 			{
 				FCitizen_sole* temp = new FCitizen_sole;
 				Citizen_moving* temp_citizen_move = new Citizen_moving;
-				temp->location.x = a.second->player_info.location.x + i * 500 + 2000;
-				temp->location.y = a.second->player_info.location.y + j * 500 - 500;
+				temp->location.x = a.second->player_info->location.x + i * 500 + 2000;
+				temp->location.y = a.second->player_info->location.y + j * 500 - 500;
 				temp_citizen_move->location.x = temp->location.x;
 				temp_citizen_move->location.y = temp->location.y;
 				temp->resources[0] = 0;
@@ -177,8 +191,9 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 				temp->resources[3] = 0;
 				temp->resources[4] = 0;
 				temp->job = 0;
-				a.second->player_citizen.emplace_back(temp);
-				a.second->player_citizen_arrival_location.emplace_back(temp_citizen_move);
+				a.second->player_citizen[i * 5 +j] = temp;
+				a.second->player_citizen_arrival_location[i * 5 + j] = temp_citizen_move;
+				
 				std::cout << a.second->player_citizen[i * 5 + j]->location.x << ", " << a.second->player_citizen[i * 5 + j]->location.y << std::endl;
 			}
 		}
@@ -201,9 +216,9 @@ bool create_resource_location(std::map<int, players_profile*>& players_list, std
 			temp->type = i % 5;
 			do
 			{
-				temp->location.x = a.second->player_info.location.x + resource_uid(dre2) * 50;
-				temp->location.y = a.second->player_info.location.y + resource_uid(dre2) * 50;
-			} while (location_distance(a.second->player_info.location, temp->location) < 2000);
+				temp->location.x = a.second->player_info->location.x + resource_uid(dre2) * 50;
+				temp->location.y = a.second->player_info->location.y + resource_uid(dre2) * 50;
+			} while (location_distance(a.second->player_info->location, temp->location) < 2000);
 			resource_create_landscape.insert({ cnt * 10+ i,temp });
 
 		}
@@ -219,68 +234,71 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 		int cnt = 0;
 		for (auto& citizens : a.second->player_citizen)
 		{
-			for (auto& resources : resource_create_landscape)
+			if(citizens != NULL)
 			{
-				int resource_count = 0;
-				for (int i = 0; i < 5; ++i)
+				for (auto& resources : resource_create_landscape)
 				{
-					resource_count += citizens->resources[i];
-				}
-				if (location_distance(citizens->location, resources.second->location) < 10)
-				{
-					if (resources.second->count <= 0)
-					{
-						citizens->job = 0;
-					}
-					else if (resource_count < 10)
-					{
-						citizens->resources[resources.second->type]++;
-						resources.second->count--;
-					}
-				}
-				if (resource_count >= 10)
-				{
-
-					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
-					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
-				}
-				if (resources.second->count == 0 &&
-					citizens->Job_location.x == resources.second->location.x &&
-					citizens->Job_location.y == resources.second->location.y)
-				{
-					a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
-					a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
-					resources.second->CitizenCount = 0;
-					citizens->job = 0;
-				}
-				for (int i = 0; i < 5; ++i)
-				{
-					if (citizens->job == 0 && citizens->resources[i] > 0)
-					{
-						a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info.location.x;
-						a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info.location.y;
-					}
-				}
-				if (location_distance(citizens->location, a.second->player_info.location) < 1550)
-				{
+					int resource_count = 0;
 					for (int i = 0; i < 5; ++i)
 					{
-						a.second->resources[i] += citizens->resources[i];
-						citizens->resources[i] = 0;
+						resource_count += citizens->resources[i];
 					}
-					if (citizens->job != 0)
+					if (location_distance(citizens->location, resources.second->location) < 10)
 					{
-						a.second->player_citizen_arrival_location[cnt]->location.x = citizens->Job_location.x;
-						a.second->player_citizen_arrival_location[cnt]->location.y = citizens->Job_location.y;
+						if (resources.second->count <= 0)
+						{
+							citizens->job = 0;
+						}
+						else if (resource_count < 10)
+						{
+							citizens->resources[resources.second->type]++;
+							resources.second->count--;
+						}
 					}
-					else if (citizens->job == 0)
+					if (resource_count >= 10)
 					{
-						a.second->player_citizen_arrival_location[cnt]->location.x = citizens->location.x;
-						a.second->player_citizen_arrival_location[cnt]->location.y = citizens->location.y;
+
+						a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info->location.x;
+						a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info->location.y;
+					}
+					if (resources.second->count == 0 &&
+						citizens->Job_location.x == resources.second->location.x &&
+						citizens->Job_location.y == resources.second->location.y)
+					{
+						a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info->location.x;
+						a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info->location.y;
+						resources.second->CitizenCount = 0;
+						citizens->job = 0;
+					}
+					for (int i = 0; i < 5; ++i)
+					{
+						if (citizens->job == 0 && citizens->resources[i] > 0)
+						{
+							a.second->player_citizen_arrival_location[cnt]->location.x = a.second->player_info->location.x;
+							a.second->player_citizen_arrival_location[cnt]->location.y = a.second->player_info->location.y;
+						}
+					}
+					if (location_distance(citizens->location, a.second->player_info->location) < 1550)
+					{
+						for (int i = 0; i < 5; ++i)
+						{
+							a.second->resources[i] += citizens->resources[i];
+							citizens->resources[i] = 0;
+						}
+						if (citizens->job != 0)
+						{
+							a.second->player_citizen_arrival_location[cnt]->location.x = citizens->Job_location.x;
+							a.second->player_citizen_arrival_location[cnt]->location.y = citizens->Job_location.y;
+						}
+						else if (citizens->job == 0)
+						{
+							a.second->player_citizen_arrival_location[cnt]->location.x = citizens->location.x;
+							a.second->player_citizen_arrival_location[cnt]->location.y = citizens->location.y;
+						}
 					}
 				}
+				cnt++;
 			}
-			cnt++;
 		}
 	}
 }
@@ -398,7 +416,7 @@ void Citizen_Work_Sub(std::map<int, players_profile*>& players_list, std::map<in
 			if (TF_Same(a->Job_location, resource_create_landscape[i]->location))
 			{
 				a->job = 0;
-				FActor_TF_define(players_list[port]->player_citizen_arrival_location[j]->location, players_list[port]->player_info.location);
+				FActor_TF_define(players_list[port]->player_citizen_arrival_location[j]->location, players_list[port]->player_info->location);
 				resource_create_landscape[i]->CitizenCount--;
 				return;
 			}
@@ -406,4 +424,20 @@ void Citizen_Work_Sub(std::map<int, players_profile*>& players_list, std::map<in
 		j++;
 	}
 
+}
+
+void FirstInit(FirstSendServer& first_send_server, std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port) {
+	
+	memcpy(&first_send_server.player_info, players_list[port]->player_info, sizeof(FActor));
+	players_list[port]->player_info = &first_send_server.player_info;
+	for (int i = 0; i < FIRSTSPAWN; ++i)
+	{
+		memcpy(&first_send_server.player_citizen[0][i], players_list[port]->player_citizen[i], sizeof(FCitizen_sole));
+		players_list[port]->player_citizen[i] = &first_send_server.player_citizen[0][i];
+	}
+	for (int i = 0; i < MAXPLAYER * 10; ++i)
+	{
+		memcpy(&first_send_server.resources[i], resource_create_landscape[i], sizeof(resource_actor));
+		resource_create_landscape[i] = &first_send_server.resources[i];
+	}
 }

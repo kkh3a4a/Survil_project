@@ -35,7 +35,7 @@ void AMyTown::Initialize(TSubclassOf<AActor> well, TSubclassOf<AActor> oil, TSub
 	WoodActor = wood;
 }
 
-void AMyTown::SpawnTown(TMap<int, FActor_location_rotation>& player_list)
+void AMyTown::SpawnTown(TMap<int, FActor_location_rotation*>& player_list)
 {
 	AActor* SpawnedTown;
 	FVector Location(0.0f, 0.0f, 0.0f);
@@ -44,7 +44,7 @@ void AMyTown::SpawnTown(TMap<int, FActor_location_rotation>& player_list)
 
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
-		Location = { player_list[i].location.x,player_list[i].location.y,player_list[i].location.z};
+		Location = { player_list[i]->location.x,player_list[i]->location.y,player_list[i]->location.z};
 		SpawnedTown = GetWorld()->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
 		SpawnedTown->Tags.Add("WellPump");
 		SpawnedTown->Tags.Add(FName(*FString::FromInt(i)));
@@ -52,12 +52,13 @@ void AMyTown::SpawnTown(TMap<int, FActor_location_rotation>& player_list)
 
 }
 
-void AMyTown::SpawnResource()
+void AMyTown::SpawnResource(FFirstSendServer& FirstSendServer)
 {
 	AActor* SpawnedResource;
 	FVector Location(0.0f, 0.0f, 0.0f);
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
+	memcpy(&resources_create_landscape, &FirstSendServer.resources, sizeof(Fresources_actor) * MAXPLAYER * 10);
 	for (int i = 0; i < MAXPLAYER * 10; ++i)
 	{
 		Location = { resources_create_landscape[i].location.x,resources_create_landscape[i].location.y,resources_create_landscape[i].location.z };

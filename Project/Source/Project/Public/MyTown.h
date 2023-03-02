@@ -25,10 +25,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	
 		
-	TMap<int, Fresources_actor> resources_create_landscape;
+	Fresources_actor resources_create_landscape[MAXPLAYER * 10];
+
 	TArray<AActor*> ResourceEditer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -52,7 +52,7 @@ public:
 	int resources[5] = {};
 
 	void Initialize(TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>);
-	void SpawnTown(TMap<int, FActor_location_rotation>&);
-	void SpawnResource();
+	void SpawnTown(TMap<int, FActor_location_rotation*>&);
+	void SpawnResource(FFirstSendServer&);
 	void UpdateResource(Fresources_actor&, Fresources_actor&, int i);
 };

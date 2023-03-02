@@ -38,8 +38,10 @@ public:
 
 		FCitizen_sole temp_Actor;
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TMap<int, Fcitizen_struct> My_Citizen;
+		TMap<int, FCitizen_sole*> My_Citizen;
+
+
+		//int My_Citizen[MAXPLAYER][MAXCITIZEN];
 
 		TMap<int, TArray<AActor*>> Citizens_Editer;
 	
@@ -52,7 +54,7 @@ public:
 
 	void Citizen_Moving();
 
-	void citizen_set(int i, int j);
+	void citizen_set(FFirstSendServer&);
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
 

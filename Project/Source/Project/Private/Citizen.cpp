@@ -36,7 +36,7 @@ void ACitizen::Spawn_Citizen()
 		{
 			for (int i = 0; i < 10; ++i)
 			{
-				Location = { a.Value.citizen_location_rotation[i].location.x, a.Value.citizen_location_rotation[i].location.y, a.Value.citizen_location_rotation[i].location.z };
+				Location = { a.Value[i].location.x,a.Value[i].location.y,a.Value[i].location.z};
 				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(Citizen_Actor, Location, Rotation, SpawnInfo);
 				Spawned_Citizen->Tags.Add("Citizen");
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
@@ -49,7 +49,7 @@ void ACitizen::Spawn_Citizen()
 		{
 			for (int i = 0; i < 10; ++i)
 			{
-				Location = { a.Value.citizen_location_rotation[i].location.x, a.Value.citizen_location_rotation[i].location.y, a.Value.citizen_location_rotation[i].location.z };
+				Location = { a.Value[i].location.x, a.Value[i].location.y, a.Value[i].location.z };
 				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(EnemyCitizenActor, Location, Rotation, SpawnInfo);
 				Spawned_Citizen->Tags.Add("Citizen");
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
@@ -69,9 +69,10 @@ void ACitizen::Citizen_Moving()
 	FVector Location(0.0f, 0.0f, 0.0f);
 	for (auto& a : My_Citizen)
 	{
-		for (int i = 0; i < a.Value.citizen_location_rotation.Num(); ++i)
+		
+		for (int i = 0; i < 10; ++i)
 		{
-			Location = { a.Value.citizen_location_rotation[i].location.x,a.Value.citizen_location_rotation[i].location.y,a.Value.citizen_location_rotation[i].location.z };
+			Location = { a.Value[i].location.x,a.Value[i].location.y,a.Value[i].location.z };
 			Citizens_Editer[team][i]->SetActorLocation(Location);
 		}
 		team++;
@@ -79,12 +80,12 @@ void ACitizen::Citizen_Moving()
 
 }
 
-void ACitizen::citizen_set(int i, int j)
+void ACitizen::citizen_set(FFirstSendServer& FirstSendServer)
 {
-	FCitizen_sole citizentemp;
-	TF_set(citizentemp.location, temp_Actor.location);
-	My_Citizen[i].citizen_location_rotation.Add(citizentemp);
-	TF_set(My_Citizen[i].citizen_location_rotation[j].location, temp_Actor.location);
+	for (int i = 0; i < MAXPLAYER; ++i)
+	{
+		My_Citizen.Add(i, FirstSendServer.player_citizen[i]);
+	}
 }
 
 
@@ -103,7 +104,7 @@ void ACitizen::CitizenNoJob(int& cnt)
 	{
 		for (int i = 0; i < 10; ++i)
 		{
-			if (a.Value.citizen_location_rotation[i].job == 0)
+			if (a.Value[i].job == 0)
 			{
 				temp_cnt++;
 			}

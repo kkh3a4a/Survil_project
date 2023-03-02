@@ -79,7 +79,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n", addr, ntohs(clientaddr.sin_port));
 	auto start_t = high_resolution_clock::now();
-
+	FirstSendServer first_send_server;
 	FActor player_info;
 	//해당 클라이언트의 port번호 map에 저장
 	int port = ntohs(clientaddr.sin_port);
@@ -116,91 +116,88 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		maxplayer_cnt = MAXPLAYER;
 		send(client_sock, (char*)&(maxplayer_cnt), sizeof(int), 0);
 		retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);
-		retval = send(client_sock, (char*)&(players_list[port]->player_info), (int)sizeof(FActor), 0);
-		for (int i = 0; i < 10; ++i){
-			cout << i << "//" << players_list[port]->player_citizen[i]->location.x << ", " << players_list[port]->player_citizen[i]->location.y << endl;
-			retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
-		}
-		for (auto& a : players_list){
-			if (port != a.first){
-				retval = send(client_sock, (char*)&(a.second->player_info), (int)sizeof(FActor), 0);
-				for (int i = 0; i < 10; ++i){
-					retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
-				}
-			}
-		}
-		for (auto& a : resource_create_landscape) {
-			retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
-		}
+
+		
+		FirstInit(first_send_server, players_list, resource_create_landscape, port);
+
+		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
+		
 
 		break;
 	}
 	Citizen_moving temp_citizen_moving;
 
 	while (1) {
-		start_t = high_resolution_clock::now();
-
-		retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
-		if (retval == SOCKET_ERROR) {
-			err_display("send()");
-			break;
-		}
-		int playercnts = 0;
-		for (int i = 0; i < 10; ++i) {
-			retval = send(client_sock, (char*)&(*players_list[port]->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
-		}
-		playercnts = 0;
-		for (auto& a : players_list) {
-			if (a.second->port != port) {
-				for (int i = 0; i < 10; ++i) {
-					retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
-				}
-			}
-			playercnts++;
-		}
-
-		for (auto& a : resource_create_landscape) {
-			retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
-		}
-
-		retval = send(client_sock, (char*)&(players_list[port]->curr_location), (int)sizeof(TF), 0);
-		retval = send(client_sock, (char*)&(players_list[port]->resources), sizeof(int) * 5, 0);
-
-		//10배 축소해서 일단 테스트
-		//cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
-		II player_location{ (int)players_list[port]->curr_location.x / 100, (int)players_list[port]->curr_location.y / 100 };
-		terrain.copy_for_player_map(player_location);
-		for (int i = 0; i < player_sight_size.x; ++i) {
-			retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
-			if (retval == SOCKET_ERROR) {
-				err_display("send()");
-				break;
-			}
-		}
-		for (int i = 0; i < player_sight_size.x; ++i) {
-			retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
-			if (retval == SOCKET_ERROR) {
-				err_display("send()");
-				break;
-			}
-		}
-
-		//클라이언트로부터 카메라 위치 받아와야 함
-		retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
-		mouse_input_checking(temp_citizen_moving, players_list, port);
-		retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
-		retval = recv(client_sock, (char*)&(UI_input), (int)sizeof(UI_Input), 0);
-		if (UI_input.resource_input.CitizenCountAdd)
+		auto end_t = high_resolution_clock::now();
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
 		{
-			Citizen_Work_Add(players_list, resource_create_landscape, port, UI_input.resource_input.ResourceNum);
-		}
-		if (UI_input.resource_input.CitizenCountSub)
-		{
-			Citizen_Work_Sub(players_list, resource_create_landscape, port, UI_input.resource_input.ResourceNum);
-		}
-		
+			start_t = high_resolution_clock::now();
+			memcpy(&first_send_server.SunAngle, &sun_angle, sizeof(TF));
+			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
 
+			//retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
+			//if (retval == SOCKET_ERROR) {
+			//	err_display("send()");
+			//	break;
+			//}
+			//int playercnts = 0;
+			//
+			//playercnts = 0;
+			//for (auto& a : players_list) {
+			//	if (a.second->port != port) {
+			//		for (int i = 0; i < FIRSTSPAWN; ++i) {
+			//			retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
+			//		}
+			//	}
+			//	playercnts++;
+			//}
+
+			//for (auto& a : resource_create_landscape) {
+			//	retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
+			//}
+
+			//retval = send(client_sock, (char*)&(players_list[port]->curr_location), (int)sizeof(TF), 0);
+			//retval = send(client_sock, (char*)&(players_list[port]->resources), sizeof(int) * 5, 0);
+
+			////10배 축소해서 일단 테스트
+			////cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
+			//II player_location{ (int)players_list[port]->curr_location.x / 100, (int)players_list[port]->curr_location.y / 100 };
+			//terrain.copy_for_player_map(player_location);
+			//for (int i = 0; i < player_sight_size.x; ++i) {
+			//	retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
+			//	if (retval == SOCKET_ERROR) {
+			//		err_display("send()");
+			//		break;
+			//	}
+			//}
+			//for (int i = 0; i < player_sight_size.x; ++i) {
+			//retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
+			//	if (retval == SOCKET_ERROR) {
+			//		err_display("send()");
+			//		break;
+			//	}
+			//}
+
+			////클라이언트로부터 카메라 위치 받아와야 함
+			//retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
+			//mouse_input_checking(temp_citizen_moving, players_list, port);
+			//retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
+			//retval = recv(client_sock, (char*)&(UI_input), (int)sizeof(UI_Input), 0);
+			//if (UI_input.resource_input.CitizenCountAdd)
+			//{
+			//	Citizen_Work_Add(players_list, resource_create_landscape, port, UI_input.resource_input.ResourceNum);
+			//}
+			//if (UI_input.resource_input.CitizenCountSub)
+			//{
+			//	Citizen_Work_Sub(players_list, resource_create_landscape, port, UI_input.resource_input.ResourceNum);
+			//}
+		}
+		else
+		{
+			Sleep(1);
+		}
 	}
+
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
 	closesocket(client_sock);
@@ -217,9 +214,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	int player_list_iter{};
 	for (auto& a : players_list) 
 	{
-		terrain.set_city_location(a.second->player_info.location, player_list_iter);
+		terrain.set_city_location(a.second->player_info->location, player_list_iter);
 		player_list_iter++;
-		cout << "위치 : " << a.second->player_info.location.x << ", " << a.second->player_info.location.y << endl;
+		cout << "위치 : " << a.second->player_info->location.x << ", " << a.second->player_info->location.y << endl;
 	}
 
 	sun_angle.x = 0.0f;
@@ -233,7 +230,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		auto sunangle_end_t = high_resolution_clock::now();
 		auto actor_move_end_t = high_resolution_clock::now();
 		
-		if (duration_cast<milliseconds>(sunangle_end_t - sunangle_start_t).count() > 50) 
+		if (duration_cast<milliseconds>(sunangle_end_t - sunangle_start_t).count() > 50)
 		{
 			sunangle_start_t = high_resolution_clock::now();
 			sun_angle.y += 0.2f;
@@ -242,33 +239,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				sun_angle.y = -180.f;
 			}
 
-			for (auto& a : players_list) 
-			{
-				float distance = 0.0f;
-				int cnt = 0;
-				for (auto& b : a.second->player_citizen) 
-				{
-					if (a.second->player_citizen_arrival_location[cnt]->team != -1) 
-					{
-						if (location_distance(b->location, a.second->player_citizen_arrival_location[cnt]->location) > 10) {
-							Move_Civil(b->location, a.second->player_citizen_arrival_location[cnt]->location);
-						}
-					}
-					cnt++;
-				}/*
-				cout << a.second->port << " ";
-				for (int i = 0; i < 5;i++)
-				{
-					cout << a.second->resources[i] << " ";
-				}
-				cout << endl;*/
-			}
-			camera_movement(players_list);
 		}
-		if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 1000) 
+		else
 		{
-			actor_move_start_t = high_resolution_clock::now();
-			resource_collect(players_list, resource_create_landscape);
+			Sleep(1);
 		}
 
 	}

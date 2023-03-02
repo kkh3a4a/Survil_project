@@ -8,6 +8,8 @@
 #include"global.generated.h"
 
 #define MAXPLAYER 1
+#define MAXCITIZEN 200
+#define FIRSTSPAWN 10
 
 USTRUCT(Atomic, BlueprintType)
 struct Fthree_float {
@@ -138,6 +140,16 @@ struct FUI_Input {
 	GENERATED_USTRUCT_BODY()
 public:
 	FUI_resource_Input resouce_input;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct FFirstSendServer {
+	GENERATED_USTRUCT_BODY()
+public:
+	Fthree_float SunAngle;
+	FActor_location_rotation player_info;
+	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
+	Fresources_actor resources[MAXPLAYER * 10];
 };
 
 

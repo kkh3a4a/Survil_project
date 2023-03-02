@@ -69,8 +69,7 @@ public:
 	volatile int trash_value = 0;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<int, FActor_location_rotation> players_list;
+	TMap<int, FActor_location_rotation*> players_list;
 
 	
 
@@ -148,6 +147,8 @@ public:
 		Fthree_float CurrentLocation;
 	
 	ACameraActor* CameraActor;
+
+	FFirstSendServer FirstSendServer;
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
 

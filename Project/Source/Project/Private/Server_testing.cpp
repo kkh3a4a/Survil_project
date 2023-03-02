@@ -75,66 +75,68 @@ void AServer_testing::Tick(float DeltaTime)
 			IsFirstSend = true;
 	}
 	else {
-		ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
-		for (int i = 0; i < MAXPLAYER; ++i)
-		{
-			for (int j = 0; j < 10; ++j)
-			{
-				recv(s_socket, (char*)&Citizens->My_Citizen[i].citizen_location_rotation[j], sizeof(FCitizen_sole), 0);
-			}
-		}
-		for (int i = 0; i < MAXPLAYER * 10; ++i)
-		{
-			Fresources_actor temp_resource;
-			recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
-			MyTown->UpdateResource(MyTown->resources_create_landscape[i], temp_resource, i);
-		}
-		recv(s_socket, (char*)&CurrentLocation, sizeof(Fthree_float), 0);
-		//자원 받기
-		recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
-		oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
-		//Recv Terrain
-		for (int i = 0; i < MapSizeX; i++) {
-			ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
-			if (SOCKET_ERROR == ret) {
-				return;
-			}
-		}
-		//Recv Temperature
-		for (int i = 0; i < MapSizeX; i++) {
-			ret = recv(s_socket, (char*)&TerrainTemperature[i], sizeof(char) * MapSizeY, 0);
-			if (SOCKET_ERROR == ret) {
-				return;
-			}
-		}
+		recv(s_socket, (char*)&FirstSendServer, sizeof(FirstSendServer), 0);
+		//ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
+		//for (int i = 0; i < MAXPLAYER; ++i)
+		//{
+		//	for (int j = 0; j < 10; ++j)
+		//	{
+		//		recv(s_socket, (char*)&Citizens->My_Citizen[i][j], sizeof(FCitizen_sole), 0);
+		//	}
+		//}
+		//for (int i = 0; i < MAXPLAYER * 10; ++i)
+		//{
+		//	Fresources_actor temp_resource;
+		//	recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
+		//	MyTown->UpdateResource(MyTown->resources_create_landscape[i], temp_resource, i);
+		//}
+		//recv(s_socket, (char*)&CurrentLocation, sizeof(Fthree_float), 0);
+		////자원 받기
+		//recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
+		//oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
+		////Recv Terrain
+		//for (int i = 0; i < MapSizeX; i++) {
+		//	ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
+		//	if (SOCKET_ERROR == ret) {
+		//		return;
+		//	}
+		//}
+		////Recv Temperature
+		//for (int i = 0; i < MapSizeX; i++) {
+		//	ret = recv(s_socket, (char*)&TerrainTemperature[i], sizeof(char) * MapSizeY, 0);
+		//	if (SOCKET_ERROR == ret) {
+		//		return;
+		//	}
+		//}
 
-		//카메라 위치 및 입력보내버리기
-		ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
-		send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
+		////카메라 위치 및 입력보내버리기
+		//ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
+		//send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
 
-		//보냈는가 안보냈는가 확인
-		if (Is_send_UI_input == false)
-		{
-			if (UI_Input.resouce_input.CitizenCountAdd || UI_Input.resouce_input.CitizenCountSub)
-			{
-				Is_send_UI_input = true;
-			}
-		}
-		else if (Is_send_UI_input == true)
-		{
-			if (!UI_Input.resouce_input.CitizenCountAdd && !UI_Input.resouce_input.CitizenCountSub)
-			{
-				Is_send_UI_input = false;
-			}
-			UI_Input.resouce_input.CitizenCountAdd = false;
-			UI_Input.resouce_input.CitizenCountSub = false;
-		}
-		send(s_socket, (char*)&UI_Input, sizeof(FUI_Input), 0);
+		////보냈는가 안보냈는가 확인
+		//if (Is_send_UI_input == false)
+		//{
+		//	if (UI_Input.resouce_input.CitizenCountAdd || UI_Input.resouce_input.CitizenCountSub)
+		//	{
+		//		Is_send_UI_input = true;
+		//	}
+		//}
+		//else if (Is_send_UI_input == true)
+		//{
+		//	if (!UI_Input.resouce_input.CitizenCountAdd && !UI_Input.resouce_input.CitizenCountSub)
+		//	{
+		//		Is_send_UI_input = false;
+		//	}
+		//	UI_Input.resouce_input.CitizenCountAdd = false;
+		//	UI_Input.resouce_input.CitizenCountSub = false;
+		//}
+		//send(s_socket, (char*)&UI_Input, sizeof(FUI_Input), 0);
 
-		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
-		Citizens->CitizenNoJob(CitizenNoJobCnt);
+		
+		TF_set(CurrentLocation, players_list[0]->location);
+		TF_set(sunangle, FirstSendServer.SunAngle);
 		Citizens->Citizen_Moving();
-		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
+		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
 	}
 }
 
@@ -167,35 +169,26 @@ bool AServer_testing::FirstSend()
 		return 0;
 	}
 
+	
+
+	recv(s_socket, (char*)&FirstSendServer, sizeof(FirstSendServer), 0);
 
 	for (int i = 0; i < MAXPLAYER; ++i) {
-		Citizen_num++;
-		recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FActor_location_rotation), 0);
-		FActor_location_rotation tmp;
-		players_list.Add(i, tmp);
-		TF_set(players_list[i].location, Citizens->temp_Actor.location);
-		Fcitizen_struct temp;
-		Citizens->My_Citizen.Add(i, temp);
-		for (int j = 0; j < 10; ++j)
-		{
-			recv(s_socket, (char*)&Citizens->temp_Actor, sizeof(FCitizen_sole), 0);
-
-			Citizens->citizen_set(i, j);
-		}
+		players_list.Add(i, &(FirstSendServer.player_info));
 	}
+
+	Citizens->citizen_set(FirstSendServer);
 
 	Citizens->Spawn_Citizen();
-	for (int i = 0; i < MAXPLAYER * 10; ++i) {
-		Fresources_actor temp_resource;
-		recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
-		MyTown->resources_create_landscape.Add(i, temp_resource);
-	}
+
 	MyTown->SpawnTown(players_list);
-	MyTown->SpawnResource();
+
+	MyTown->SpawnResource(FirstSendServer);
 	first_recv_send = true;
 
 	UE_LOG(LogTemp, Log, TEXT("connected to server"));
 	start_t = high_resolution_clock::now();
 
+	Citizens->Citizen_Moving();
 	return 1;
 }
