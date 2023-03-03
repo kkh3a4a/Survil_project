@@ -31,7 +31,6 @@ map<int, resource_actor*> resource_create_landscape;
 
 Terrain* terrain = new Terrain();
 char** total_terrain = terrain->get_map();
-//char** shadow_map = terrain.get_shadow_map();
 char** temperature_map = terrain->get_temperature_map();
 volatile int player_cnt;
 volatile bool location_set = false;
@@ -40,20 +39,30 @@ UI_Input UI_input;
 
 DWORD WINAPI terrain_change(LPVOID arg)
 {
+	/*char** player_sight_terrain = terrain->get_player_sight_map();
+	char** player_sight_temperature = terrain->get_player_temperature_map();
+	terrain->set_city_location(TF{ 20000, 20000 }, 0);*/
+
 	//terrain->show_array(total_terrain, 320);
-	terrain->log_on();
-	//terrain->set_city_location(TF{100, 100}, 0);
+	//terrain->log_on();
 	int i{};
 	while (1){
+		sun_angle.y += 5;
 		//clock_t t_0 = clock();
-		cout << endl << i << "번째" << endl;
-		terrain->wind_blow({ 1, 0 }, 1);
+		//cout << endl << i << "번째" << endl;
+		terrain->wind_blow({ 1, 0 }, 10);
 		terrain->make_shadow_map(sun_angle.y);
 		terrain->make_tempertature_map(sun_angle.y);
 
-		//terrain->show_array(total_terrain, 320);
-		//terrain->show_array(shadow_map, one_side_number);
-		//terrain->show_array(temperature_map, one_side_number);
+		/*terrain->show_array(total_terrain, 320);
+		terrain->show_array(temperature_map, 320);
+
+
+		terrain->copy_for_player_map(II{ 200, 200 });
+		terrain->show_array(player_sight_terrain, 120);
+		terrain->show_array(player_sight_temperature, 120);*/
+
+		
 		//clock_t t_1 = clock();
 		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
 		if (i % 100 == 0 && i != 0) {
@@ -171,6 +180,10 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		//cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
 		II player_location{ (int)players_list[port]->curr_location.x / 100, (int)players_list[port]->curr_location.y / 100 };
 		terrain->copy_for_player_map(player_location);
+		/*terrain->show_array(player_sight_terrain, 200);
+		terrain->show_array(player_sight_temperature, 200);*/
+
+		
 		for (int i = 0; i < player_sight_size.x; ++i) {
 			retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
 			if (retval == SOCKET_ERROR) {

@@ -23,7 +23,7 @@ protected:
 public:	
 	void Initiaize(UMaterial*);
 	void Update(int8(*TerrainTemperaturePtr)[MapSizeY]);
-	void CelsiusToRGB(double celsius, double& r, double& g, double& b);
+	void TemperatureToRGB(double , double& , double& , double& );
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		ADecalActor* DecalActor;

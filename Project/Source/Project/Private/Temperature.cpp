@@ -40,25 +40,26 @@ void ATemperature::Update(int8(*TerrainTemperaturePtr)[MapSizeY])
 {
 	for (int32 i = 0; i < DecalArray.Num(); i++) {
         FVector RGB;
-        CelsiusToRGB(TerrainTemperaturePtr[i * 4 % (MapSizeX / 4)][i * 4 / (MapSizeX / 4)], RGB.X, RGB.Y, RGB.Z);
+        //UE_LOG(LogTemp, Log, TEXT("%d"), TerrainTemperaturePtr[i * 4 % (MapSizeX / 4)][i * 4 / (MapSizeX / 4)]);
+        TemperatureToRGB(TerrainTemperaturePtr[i * 4 % (MapSizeX / 4)][i * 4 / (MapSizeX / 4)], RGB.X, RGB.Y, RGB.Z);
         MaterialInstanceArray[i]->SetVectorParameterValue(TEXT("Temperature"), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
 		DecalActor->SetDecalMaterial(MaterialInstanceArray[i]);
 	}
 }
 
-void ATemperature::CelsiusToRGB(double celsius, double& r, double& g, double& b) {
-    // Scale the temperature value from 0 to 1
-    double t = std::min(std::max(celsius / 100.0, 0.0), 1.0);
+void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, double& b) {
+    double scaledTemperature = temperature / 100.0;
 
-    // Calculate the RGB values based on the temperature value
-    if (t <= 0.5) {
-        r = t * 2.0;
-        g = 0.0;
-        b = (1.0 - t) * 2.0;
-    }
-    else {
-        r = (1.0 - t) * 2.0;
-        g = (t - 0.5) * 2.0;
-        b = 0.0;
+    // Calculate the red, green, and blue components
+    r = std::max(0.0, std::min(1.0, 2.0 - scaledTemperature * 2.0));
+    g = std::max(0.0, std::min(1.0, scaledTemperature * 2.0));
+    b = std::max(0.0, std::min(1.0, 2.0 * (scaledTemperature - 0.5)));
+
+    // Normalize the RGB values so their sum is 1
+    double sum = r + g + b;
+    if (sum > 0) {
+        r /= sum;
+        g /= sum;
+        b /= sum;
     }
 }

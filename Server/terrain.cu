@@ -932,13 +932,14 @@ public:
 		return temperature_map_host;
 	}
 
-	char** get_player_sight_map() {
+	char** get_player_sight_map() 
+	{
 		return terrain_player_sight_host;
 	}
 	
 	char** get_player_temperature_map()
 	{
-		return temperature_map_host;
+		return temperature_player_sight;
 	}
 
 	void set_city_location(TF location, int iter) {
