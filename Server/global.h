@@ -61,13 +61,13 @@ typedef struct keyboard_input {
 typedef struct players_profile {
 	int port;
 	FActor* player_info;
-	TF curr_location;
+	TF* curr_location;
 	TF city_location;
 	keyboard_input my_keyinput;
 	std::vector<FCitizen_sole*> player_citizen;
 	std::vector<Citizen_moving*> player_citizen_arrival_location;
 	std::chrono::steady_clock::time_point resource_clcok;
-	int resources[5] = {};
+	int *resources[5] = {};
 }PP;
 
 typedef struct resource_actor
@@ -98,6 +98,8 @@ public:
 	FActor player_info;
 	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
 	resource_actor resources[MAXPLAYER * 10];
+	int MyResource[5];
+	TF currlocation = { 0,0,0 };
 };
 
 void FActor_TF_define(TF& a, TF& b)
@@ -165,14 +167,15 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 				}
 			}
 		}
-
-		a.second->curr_location.x = a.second->player_info->location.x;
-		a.second->curr_location.y = a.second->player_info->location.y;
-		a.second->curr_location.z = a.second->player_info->location.z;
+		a.second->curr_location = new TF;
+		a.second->curr_location->x = a.second->player_info->location.x;
+		a.second->curr_location->y = a.second->player_info->location.y;
+		a.second->curr_location->z = a.second->player_info->location.z;
 		a.second->my_keyinput.w = false;
 		a.second->my_keyinput.s = false;
 		a.second->my_keyinput.a = false;
 		a.second->my_keyinput.d = false;
+		std::cout << a.second->player_info->location.x << std::endl;
 		a.second->player_citizen.resize(MAXCITIZEN);
 		a.second->player_citizen_arrival_location.resize(MAXCITIZEN);
 		for (int i = 0; i < 2; ++i)
@@ -216,6 +219,7 @@ bool create_resource_location(std::map<int, players_profile*>& players_list, std
 			temp->type = i % 5;
 			do
 			{
+				std::cout << a.second->player_info->location.x << std::endl;
 				temp->location.x = a.second->player_info->location.x + resource_uid(dre2) * 50;
 				temp->location.y = a.second->player_info->location.y + resource_uid(dre2) * 50;
 			} while (location_distance(a.second->player_info->location, temp->location) < 2000);
@@ -282,7 +286,7 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 					{
 						for (int i = 0; i < 5; ++i)
 						{
-							a.second->resources[i] += citizens->resources[i];
+							*a.second->resources[i] += citizens->resources[i];
 							citizens->resources[i] = 0;
 						}
 						if (citizens->job != 0)
@@ -309,19 +313,19 @@ void camera_movement(std::map<int, players_profile*>& players_list)
 	{
 		if (a.second->my_keyinput.w)
 		{
-			a.second->curr_location.y -= 100;
+			a.second->curr_location->y -= 100;
 		}
 		if (a.second->my_keyinput.s)
 		{
-			a.second->curr_location.y += 100;
+			a.second->curr_location->y += 100;
 		}
 		if (a.second->my_keyinput.a)
 		{
-			a.second->curr_location.x -= 100;
+			a.second->curr_location->x -= 100;
 		}
 		if (a.second->my_keyinput.d)
 		{
-			a.second->curr_location.x += 100;
+			a.second->curr_location->x += 100;
 		}
 	}
 }
@@ -440,4 +444,14 @@ void FirstInit(FirstSendServer& first_send_server, std::map<int, players_profile
 		memcpy(&first_send_server.resources[i], resource_create_landscape[i], sizeof(resource_actor));
 		resource_create_landscape[i] = &first_send_server.resources[i];
 	}
+	for(int i=0; i<5 ;++i)
+	{
+		players_list[port]->resources[i] = new int;
+		memcpy(&first_send_server.MyResource[i], players_list[port]->resources[i], sizeof(int));
+		players_list[port]->resources[i] = &first_send_server.MyResource[0];
+	}
+	memcpy(&first_send_server.currlocation, players_list[port]->curr_location, sizeof(TF));
+	players_list[port]->curr_location = &first_send_server.currlocation;
+
+
 }

@@ -27,7 +27,7 @@ public:
 
 	
 		
-	Fresources_actor resources_create_landscape[MAXPLAYER * 10];
+	TArray<Fresources_actor*>resources_create_landscape;
 
 	TArray<AActor*> ResourceEditer;
 
@@ -49,7 +49,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>WoodActor;
 
-	int resources[5] = {};
 
 	void Initialize(TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>);
 	void SpawnTown(TMap<int, FActor_location_rotation*>&);

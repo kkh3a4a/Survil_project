@@ -132,7 +132,7 @@ void AServer_testing::Tick(float DeltaTime)
 		//}
 		//send(s_socket, (char*)&UI_Input, sizeof(FUI_Input), 0);
 
-		
+		oil_count = FirstSendServer.MyResource[0], water_count = FirstSendServer.MyResource[1], iron_count = FirstSendServer.MyResource[2], food_count = FirstSendServer.MyResource[3], wood_count = FirstSendServer.MyResource[4];
 		TF_set(CurrentLocation, players_list[0]->location);
 		TF_set(sunangle, FirstSendServer.SunAngle);
 		Citizens->Citizen_Moving();

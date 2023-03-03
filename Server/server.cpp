@@ -85,7 +85,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int port = ntohs(clientaddr.sin_port);
 
 	player_cnt_lock.lock();
-	player_cnt++;
+	
 	if (player_cnt > MAXPLAYER)
 	{
 		closesocket(client_sock);
@@ -96,6 +96,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	players_list[port] = my_profile;
 	
 	players_list[port]->port = port;
+	player_cnt++;
 	player_cnt_lock.unlock();
 	
 	//while (!player_location_set);
@@ -134,7 +135,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			start_t = high_resolution_clock::now();
 			memcpy(&first_send_server.SunAngle, &sun_angle, sizeof(TF));
 			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
-
 			//retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
 			//if (retval == SOCKET_ERROR) {
 			//	err_display("send()");

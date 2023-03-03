@@ -41,7 +41,7 @@ public:
 	const char* SERVER_ADDR = "127.0.0.1";
 	const short SERVER_PORT = 9000;
 	int ret = 0;
-	int resources[5] = {};
+
 	bool Is_send_UI_input = false;
 	bool IsConnect = false;
 	bool IsFirstSend = false;
