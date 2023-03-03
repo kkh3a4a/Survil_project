@@ -15,15 +15,13 @@ ATemperature::ATemperature()
 
 void ATemperature::Initiaize(UMaterial* Material)
 {
-    
-    
-    const float Width = 4 * 100;
+    const float Width = 100 * divide;
     const float Height = 5000;
 
-    for (int32 row = 0; row < MapSizeX / 4; row++){
-        for (int32 col = 0; col < MapSizeY / 4; col++){
-            DecalActor = GetWorld()->SpawnActor<ADecalActor>(FVector(Width * row + Width/2, Width * col + Width / 2, 0), FRotator(0,-90,0));
-			DecalActor->SetActorScale3D(FVector(Height, 2, 2));
+    for (int32 y = 0; y < MapSizeY / divide; y++){
+        for (int32 x = 0; x < MapSizeX / divide; x++){
+            ADecalActor* DecalActor = GetWorld()->SpawnActor<ADecalActor>(FVector(Width * x + Width/2, Width * y + Width / 2, 0), FRotator(0,-90,0));
+			DecalActor->SetActorScale3D(FVector(Height, divide, divide));
 			DecalActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
             
             UMaterialInstanceDynamic* MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
@@ -31,19 +29,17 @@ void ATemperature::Initiaize(UMaterial* Material)
             MaterialInstanceArray.Add(MaterialInstance);
 			
             DecalActor->SetDecalMaterial(MaterialInstance);
-			DecalArray.Add(DecalActor);
         }
     }
 }
 
 void ATemperature::Update(int8(*TerrainTemperaturePtr)[MapSizeY])
 {
-	for (int32 i = 0; i < DecalArray.Num(); i++) {
+	for (int32 i = 0; i < MapSizeX / divide * MapSizeY / divide; i++) {
         FVector RGB;
-        //UE_LOG(LogTemp, Log, TEXT("%d"), TerrainTemperaturePtr[i * 4 % (MapSizeX / 4)][i * 4 / (MapSizeX / 4)]);
-        TemperatureToRGB(TerrainTemperaturePtr[i * 4 % (MapSizeX / 4)][i * 4 / (MapSizeX / 4)], RGB.X, RGB.Y, RGB.Z);
+		//UE_LOG(LogTemp, Warning, TEXT("%d %d %d"), MaterialInstanceArray.Num(),(i * divide) % MapSizeX, (i * divide) / MapSizeX * divide);
+        TemperatureToRGB(TerrainTemperaturePtr[(i * divide) % MapSizeX][(i * divide) / MapSizeX * divide], RGB.X, RGB.Y, RGB.Z);
         MaterialInstanceArray[i]->SetVectorParameterValue(TEXT("Temperature"), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
-		DecalActor->SetDecalMaterial(MaterialInstanceArray[i]);
 	}
 }
 

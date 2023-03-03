@@ -20,16 +20,13 @@ public:
 
 protected:
 
+	int divide = 2;
+	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
+
 public:	
 	void Initiaize(UMaterial*);
 	void Update(int8(*TerrainTemperaturePtr)[MapSizeY]);
 	void TemperatureToRGB(double , double& , double& , double& );
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		ADecalActor* DecalActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<ADecalActor*> DecalArray;
-
-	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
+		
 };

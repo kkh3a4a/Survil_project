@@ -55,10 +55,10 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		terrain->make_tempertature_map(sun_angle.y);
 
 		/*terrain->show_array(total_terrain, 320);
-		terrain->show_array(temperature_map, 320);
+		terrain->show_array(temperature_map, 320);*/
 
 
-		terrain->copy_for_player_map(II{ 200, 200 });
+		/*terrain->copy_for_player_map(II{ 200, 200 });
 		terrain->show_array(player_sight_terrain, 120);
 		terrain->show_array(player_sight_temperature, 120);*/
 
@@ -180,9 +180,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		//cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
 		II player_location{ (int)players_list[port]->curr_location.x / 100, (int)players_list[port]->curr_location.y / 100 };
 		terrain->copy_for_player_map(player_location);
-		/*terrain->show_array(player_sight_terrain, 200);
-		terrain->show_array(player_sight_temperature, 200);*/
-
 		
 		for (int i = 0; i < player_sight_size.x; ++i) {
 			retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
