@@ -37,6 +37,8 @@ AMyPlayerController::AMyPlayerController()
     bEnableClickEvents = true;
     bEnableTouchEvents = true;
     bEnableMouseOverEvents = true;
+
+    
 }
 
 void AMyPlayerController::SetupInputComponent()
@@ -74,44 +76,44 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::InputUpPressed()
 {
-    ServerClass->my_key_input.w = true;
+    ServerClass->my_key_input->w = true;
 }
 
 void AMyPlayerController::InputDownPressed()
 {
-    ServerClass->my_key_input.s = true;
+    ServerClass->my_key_input->s = true;
 }
 
 void AMyPlayerController::InputLeftPressed()
 {
-    ServerClass->my_key_input.a = true;
+    ServerClass->my_key_input->a = true;
 }
 
 void AMyPlayerController::InputRightPressed()
 {
-    ServerClass->my_key_input.d = true;
+    ServerClass->my_key_input->d = true;
 }
 
 
 
 void AMyPlayerController::InputUpReleased()
 {
-    ServerClass->my_key_input.w = false;
+    ServerClass->my_key_input->w = false;
 }
 
 void AMyPlayerController::InputDownReleased()
 {
-    ServerClass->my_key_input.s = false;
+    ServerClass->my_key_input->s = false;
 }
 
 void AMyPlayerController::InputLeftReleased()
 {
-    ServerClass->my_key_input.a = false;
+    ServerClass->my_key_input->a = false;
 }
 
 void AMyPlayerController::InputRightReleased()
 {
-    ServerClass->my_key_input.d = false;
+    ServerClass->my_key_input->d = false;
 }
 
 
@@ -151,12 +153,12 @@ void AMyPlayerController::MoveToMouseCursor()
             UE_LOG(LogTemp, Log, TEXT("Citizen"));
             if (wcscmp(*hitActor->Tags[1].ToString(), L"0") == 0)
             {
-                ServerClass->Citizens->Citizen_moving.team = FCString::Atoi(*hitActor->Tags[1].ToString());
-                ServerClass->Citizens->Citizen_moving.citizen_number = FCString::Atoi(*hitActor->Tags[2].ToString());
-                ServerClass->Citizens->Citizen_moving.location.x = hitActor->GetActorLocation().X;
-                ServerClass->Citizens->Citizen_moving.location.y = hitActor->GetActorLocation().Y;
-                ServerClass->Citizens->Citizen_moving.location.z = hitActor->GetActorLocation().Z;
-                // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), ServerClass->Citizen_moving.team, ServerClass->Citizen_moving.citizen_number ,ServerClass->Citizen_moving.location.x, ServerClass->Citizen_moving.location.y);
+                ServerClass->Citizens->Citizen_moving->team = FCString::Atoi(*hitActor->Tags[1].ToString());
+                ServerClass->Citizens->Citizen_moving->citizen_number = FCString::Atoi(*hitActor->Tags[2].ToString());
+                ServerClass->Citizens->Citizen_moving->location.x = hitActor->GetActorLocation().X;
+                ServerClass->Citizens->Citizen_moving->location.y = hitActor->GetActorLocation().Y;
+                ServerClass->Citizens->Citizen_moving->location.z = hitActor->GetActorLocation().Z;
+                // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), ServerClass->Citizen_moving->team, ServerClass->Citizen_moving->citizen_number ,ServerClass->Citizen_moving->location.x, ServerClass->Citizen_moving->location.y);
             }
             else
             {
@@ -188,23 +190,23 @@ void AMyPlayerController::MoveToActor()
         DestLocation = Hit.ImpactPoint;
         if (Hit.GetActor()->ActorHasTag(L"Resource"))
         {
-            ServerClass->Citizens->Citizen_moving.citizen_job = 1;
+            ServerClass->Citizens->Citizen_moving->citizen_job = 1;
             DestLocation = Hit.GetActor()->GetActorLocation();
 
             UE_LOG(LogTemp, Log, TEXT("Resource"));
         }
         else
         {
-            ServerClass->Citizens->Citizen_moving.citizen_job = 0;
+            ServerClass->Citizens->Citizen_moving->citizen_job = 0;
         }
 
         if (hitActor) {
             if (hitActor->ActorHasTag("Citizen"))
             {
                 temped = true;
-                ServerClass->Citizens->Citizen_moving.location.x = DestLocation.X;
-                ServerClass->Citizens->Citizen_moving.location.y = DestLocation.Y;
-                ServerClass->Citizens->Citizen_moving.location.z = DestLocation.Z;
+                ServerClass->Citizens->Citizen_moving->location.x = DestLocation.X;
+                ServerClass->Citizens->Citizen_moving->location.y = DestLocation.Y;
+                ServerClass->Citizens->Citizen_moving->location.z = DestLocation.Z;
                 hitActor = NULL;
             }
         }
@@ -240,7 +242,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
         if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
         {
            
-            ServerClass->Citizens->Citizen_moving.team = -1;
+            ServerClass->Citizens->Citizen_moving->team = -1;
             temped = false;
 
         }

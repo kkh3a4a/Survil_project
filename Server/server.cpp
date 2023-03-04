@@ -36,7 +36,6 @@ char** temperature_map = terrain.get_temperature_map();
 volatile int player_cnt;
 volatile bool location_set = false;
 
-UI_Input UI_input;
 
 DWORD WINAPI terrain_change(LPVOID arg)
 {
@@ -71,7 +70,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
 	FActor testActor;
-	UI_Input UI_input;
 	game_start = true;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
@@ -80,6 +78,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n", addr, ntohs(clientaddr.sin_port));
 	auto start_t = high_resolution_clock::now();
 	FirstSendServer first_send_server;
+	FirstSendClient first_send_client;
 	FActor player_info;
 	//해당 클라이언트의 port번호 map에 저장
 	int port = ntohs(clientaddr.sin_port);
@@ -119,7 +118,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);
 
 		
-		FirstInit(first_send_server, players_list, resource_create_landscape, port);
+		FirstInit(first_send_server, first_send_client, players_list, resource_create_landscape, port);
 
 		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
 		
@@ -135,62 +134,40 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			start_t = high_resolution_clock::now();
 			memcpy(&first_send_server.SunAngle, &sun_angle, sizeof(TF));
 			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
-			//retval = send(client_sock, (char*)&sun_angle, (int)sizeof(TF), 0);
-			//if (retval == SOCKET_ERROR) {
-			//	err_display("send()");
-			//	break;
-			//}
-			//int playercnts = 0;
-			//
-			//playercnts = 0;
-			//for (auto& a : players_list) {
-			//	if (a.second->port != port) {
-			//		for (int i = 0; i < FIRSTSPAWN; ++i) {
-			//			retval = send(client_sock, (char*)&(*a.second->player_citizen[i]), (int)sizeof(FCitizen_sole), 0);
-			//		}
-			//	}
-			//	playercnts++;
-			//}
-
-			//for (auto& a : resource_create_landscape) {
-			//	retval = send(client_sock, (char*)&(*a.second), (int)sizeof(resource_actor), 0);
-			//}
-
-			//retval = send(client_sock, (char*)&(players_list[port]->curr_location), (int)sizeof(TF), 0);
-			//retval = send(client_sock, (char*)&(players_list[port]->resources), sizeof(int) * 5, 0);
-
+			
 			////10배 축소해서 일단 테스트
 			////cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
-			//II player_location{ (int)players_list[port]->curr_location.x / 100, (int)players_list[port]->curr_location.y / 100 };
+			//II player_location{ (int)players_list[port]->curr_location->x / 100, (int)players_list[port]->curr_location->y / 100 };
 			//terrain.copy_for_player_map(player_location);
-			//for (int i = 0; i < player_sight_size.x; ++i) {
-			//	retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
-			//	if (retval == SOCKET_ERROR) {
-			//		err_display("send()");
-			//		break;
-			//	}
-			//}
-			//for (int i = 0; i < player_sight_size.x; ++i) {
-			//retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
-			//	if (retval == SOCKET_ERROR) {
-			//		err_display("send()");
-			//		break;
-			//	}
-			//}
-
-			////클라이언트로부터 카메라 위치 받아와야 함
-			//retval = recv(client_sock, (char*)&temp_citizen_moving, (int)sizeof(Citizen_moving), 0);
-			//mouse_input_checking(temp_citizen_moving, players_list, port);
-			//retval = recv(client_sock, (char*)&(players_list[port]->my_keyinput), (int)sizeof(keyboard_input), 0);
-			//retval = recv(client_sock, (char*)&(UI_input), (int)sizeof(UI_Input), 0);
-			//if (UI_input.resource_input.CitizenCountAdd)
-			//{
-			//	Citizen_Work_Add(players_list, resource_create_landscape, port, UI_input.resource_input.ResourceNum);
-			//}
-			//if (UI_input.resource_input.CitizenCountSub)
-			//{
-			//	Citizen_Work_Sub(players_list, resource_create_landscape, port, UI_input.resource_input.ResourceNum);
-			//}
+			/*for (int i = 0; i < player_sight_size.x; ++i) {
+				retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
+				if (retval == SOCKET_ERROR) {
+					err_display("send()");
+					break;
+				}
+			}
+			for (int i = 0; i < player_sight_size.x; ++i) {
+			retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
+				if (retval == SOCKET_ERROR) {
+					err_display("send()");
+					break;
+				}
+			}*/
+			cout << players_list[port]->curr_location->x << endl;
+			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(FirstSendClient), 0);
+			if (tempsa == SOCKET_ERROR)
+			{
+				return 0;
+			}
+			mouse_input_checking(first_send_client.My_citizen_moving, players_list, port);
+			if (first_send_client.My_UI_input.resource_input.CitizenCountAdd)
+			{
+				Citizen_Work_Add(players_list, resource_create_landscape, port, first_send_client.My_UI_input.resource_input.ResourceNum);
+			}
+			if (first_send_client.My_UI_input.resource_input.CitizenCountSub)
+			{
+				Citizen_Work_Sub(players_list, resource_create_landscape, port, first_send_client.My_UI_input.resource_input.ResourceNum);
+			}
 		}
 		else
 		{

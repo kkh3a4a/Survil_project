@@ -119,10 +119,10 @@ struct Fkeyboard_input
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	bool w;
-	bool a;
-	bool s;
-	bool d;
+	int w;
+	int a;
+	int s;
+	int d;
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -130,9 +130,8 @@ struct FUI_resource_Input {
 	GENERATED_USTRUCT_BODY()
 public:
 	int ResourceNum;
-	bool CitizenCountAdd;
-	bool CitizenCountSub;
-	
+	int CitizenCountAdd;
+	int CitizenCountSub;
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -152,6 +151,15 @@ public:
 	Fresources_actor resources[MAXPLAYER * 10];
 	int MyResource[5];
 	Fthree_float currlocation;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct FFirstSendClient {
+	GENERATED_USTRUCT_BODY()
+public:
+	FCitizen_moving My_citizen_moving = {};
+	Fkeyboard_input My_keyboard_input = {};
+	FUI_Input My_UI_input = {};
 };
 
 

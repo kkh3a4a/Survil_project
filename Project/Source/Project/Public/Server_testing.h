@@ -71,7 +71,6 @@ public:
 
 	TMap<int, FActor_location_rotation*> players_list;
 
-	
 
 	steady_clock::time_point start_t;
 	WSADATA WSAData;
@@ -85,8 +84,7 @@ public:
 		UStaticMesh* My_Town;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Fkeyboard_input my_key_input;
+	Fkeyboard_input* my_key_input = new Fkeyboard_input;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Citizen_num = 0;
@@ -149,6 +147,8 @@ public:
 	ACameraActor* CameraActor;
 
 	FFirstSendServer FirstSendServer;
+
+	FFirstSendClient FirstSendClient;
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
 

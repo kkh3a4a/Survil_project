@@ -9,11 +9,11 @@ ACitizen::ACitizen()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
-	Citizen_moving.team = -1;
-	Citizen_moving.location = { 0, 0, 0 };
-	Citizen_moving.rotation = { 0, 0, 0 };
-	Citizen_moving.citizen_job = 0;
+	Citizen_moving = new FCitizen_moving;
+	Citizen_moving->team = -1;
+	Citizen_moving->location = { 0, 0, 0 };
+	Citizen_moving->rotation = { 0, 0, 0 };
+	Citizen_moving->citizen_job = 0;
 
 }
 void ACitizen::Initialize(TSubclassOf<AActor> C_Actor, TSubclassOf<AActor> E_Actor)

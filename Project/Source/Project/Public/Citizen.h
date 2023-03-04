@@ -32,7 +32,7 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		//FActor_location_rotation MouseInput;
 
-		FCitizen_moving Citizen_moving;
+		FCitizen_moving* Citizen_moving = new FCitizen_moving;
 
 		int citizen_cnt[MAXPLAYER];
 

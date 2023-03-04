@@ -27,7 +27,10 @@ void AServer_testing::BeginPlay()
 	/*FSocketThread* SocketThread = new FSocketThread(FString("127.0.0.1"), 9000);
 	bool connected = SocketThread->Init();
 	UE_LOG(LogTemp, Warning, TEXT("Connected: %d"), connected);*/
-
+	my_key_input->w = false;
+	my_key_input->a = false;
+	my_key_input->s = false;
+	my_key_input->d = false;
 	//Citizen
 	FActorSpawnParameters SpawnInfo;
 	Citizens = GetWorld()->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
@@ -109,31 +112,31 @@ void AServer_testing::Tick(float DeltaTime)
 		//	}
 		//}
 
-		////카메라 위치 및 입력보내버리기
-		//ret = send(s_socket, (char*)&Citizens->Citizen_moving, (int)sizeof(FCitizen_moving), 0);
-		//send(s_socket, (char*)&my_key_input, sizeof(Fkeyboard_input), 0);
 
-		////보냈는가 안보냈는가 확인
-		//if (Is_send_UI_input == false)
-		//{
-		//	if (UI_Input.resouce_input.CitizenCountAdd || UI_Input.resouce_input.CitizenCountSub)
-		//	{
-		//		Is_send_UI_input = true;
-		//	}
-		//}
-		//else if (Is_send_UI_input == true)
-		//{
-		//	if (!UI_Input.resouce_input.CitizenCountAdd && !UI_Input.resouce_input.CitizenCountSub)
-		//	{
-		//		Is_send_UI_input = false;
-		//	}
-		//	UI_Input.resouce_input.CitizenCountAdd = false;
-		//	UI_Input.resouce_input.CitizenCountSub = false;
-		//}
-		//send(s_socket, (char*)&UI_Input, sizeof(FUI_Input), 0);
+		send(s_socket, (char*)&FirstSendClient, sizeof(FFirstSendClient), 0);
+
+		if (Is_send_UI_input == false)
+		{
+			if (UI_Input.resouce_input.CitizenCountAdd || UI_Input.resouce_input.CitizenCountSub)
+			{
+				Is_send_UI_input = true;
+			}
+		}
+		else if (Is_send_UI_input == true)
+		{
+			if (!UI_Input.resouce_input.CitizenCountAdd && !UI_Input.resouce_input.CitizenCountSub)
+			{
+				Is_send_UI_input = false;
+			}
+			UI_Input.resouce_input.CitizenCountAdd = false;
+			UI_Input.resouce_input.CitizenCountSub = false;
+		}
+
+		
+		memcpy(&FirstSendClient.My_UI_input, &UI_Input.resouce_input, sizeof(FUI_Input));
 
 		oil_count = FirstSendServer.MyResource[0], water_count = FirstSendServer.MyResource[1], iron_count = FirstSendServer.MyResource[2], food_count = FirstSendServer.MyResource[3], wood_count = FirstSendServer.MyResource[4];
-		TF_set(CurrentLocation, players_list[0]->location);
+		TF_set(CurrentLocation, FirstSendServer.currlocation);
 		TF_set(sunangle, FirstSendServer.SunAngle);
 		Citizens->Citizen_Moving();
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
@@ -189,6 +192,16 @@ bool AServer_testing::FirstSend()
 	UE_LOG(LogTemp, Log, TEXT("connected to server"));
 	start_t = high_resolution_clock::now();
 
+	Citizens->Citizen_moving->team = -1;
+	Citizens->Citizen_moving->citizen_number = -1;
+
 	Citizens->Citizen_Moving();
+
+	memcpy(&FirstSendClient.My_citizen_moving, Citizens->Citizen_moving, sizeof(FCitizen_moving));
+
+	Citizens->Citizen_moving = &FirstSendClient.My_citizen_moving;
+	memcpy(&FirstSendClient.My_keyboard_input, my_key_input, sizeof(Fkeyboard_input));
+	my_key_input = &FirstSendClient.My_keyboard_input;
+
 	return 1;
 }

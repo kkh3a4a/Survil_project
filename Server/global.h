@@ -52,18 +52,18 @@ typedef struct Citizen_moving
 }Citizen_moving;
 
 typedef struct keyboard_input {
-	bool w;
-	bool a;
-	bool s;
-	bool d;
+	int w;
+	int a;
+	int s;
+	int d;
 }keyboard_input;
 
 typedef struct players_profile {
 	int port;
-	FActor* player_info;
-	TF* curr_location;
+	FActor* player_info = new FActor;
+	TF* curr_location = new TF;
 	TF city_location;
-	keyboard_input my_keyinput;
+	keyboard_input* my_keyinput = new keyboard_input;
 	std::vector<FCitizen_sole*> player_citizen;
 	std::vector<Citizen_moving*> player_citizen_arrival_location;
 	std::chrono::steady_clock::time_point resource_clcok;
@@ -81,8 +81,8 @@ typedef struct resource_actor
 typedef struct UI_resource_Input {
 public:
 	int ResourceNum;
-	bool CitizenCountAdd;
-	bool CitizenCountSub;
+	int CitizenCountAdd;
+	int CitizenCountSub;
 
 }UI_resource_Input;
 
@@ -100,6 +100,13 @@ public:
 	resource_actor resources[MAXPLAYER * 10];
 	int MyResource[5];
 	TF currlocation = { 0,0,0 };
+};
+
+typedef struct FirstSendClient {
+public:
+	Citizen_moving My_citizen_moving = {};
+	keyboard_input My_keyboard_input = {};
+	UI_Input My_UI_input = {};
 };
 
 void FActor_TF_define(TF& a, TF& b)
@@ -138,10 +145,10 @@ void Move_Civil(TF& civil, TF& end_location) {
 int CitizenResourceCount(int resource[5])
 {
 	int temp = 0;
-	for (int i = 0; i < 5; ++i)
+	/*for (int i = 0; i < 5; ++i)
 	{
 		temp += resource[i];
-	}
+	}*/
 
 	return temp;
 }
@@ -171,10 +178,10 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 		a.second->curr_location->x = a.second->player_info->location.x;
 		a.second->curr_location->y = a.second->player_info->location.y;
 		a.second->curr_location->z = a.second->player_info->location.z;
-		a.second->my_keyinput.w = false;
-		a.second->my_keyinput.s = false;
-		a.second->my_keyinput.a = false;
-		a.second->my_keyinput.d = false;
+		a.second->my_keyinput->w = false;
+		a.second->my_keyinput->s = false;
+		a.second->my_keyinput->a = false;
+		a.second->my_keyinput->d = false;
 		std::cout << a.second->player_info->location.x << std::endl;
 		a.second->player_citizen.resize(MAXCITIZEN);
 		a.second->player_citizen_arrival_location.resize(MAXCITIZEN);
@@ -311,19 +318,19 @@ void camera_movement(std::map<int, players_profile*>& players_list)
 {
 	for (auto& a : players_list)
 	{
-		if (a.second->my_keyinput.w)
+		if (a.second->my_keyinput->w)
 		{
 			a.second->curr_location->y -= 100;
 		}
-		if (a.second->my_keyinput.s)
+		if (a.second->my_keyinput->s)
 		{
 			a.second->curr_location->y += 100;
 		}
-		if (a.second->my_keyinput.a)
+		if (a.second->my_keyinput->a)
 		{
 			a.second->curr_location->x -= 100;
 		}
-		if (a.second->my_keyinput.d)
+		if (a.second->my_keyinput->d)
 		{
 			a.second->curr_location->x += 100;
 		}
@@ -352,20 +359,23 @@ void Citizen_Work_Add(std::map<int, players_profile*>& players_list, std::map<in
 	int count = 0;
 	for (auto& a : players_list[port]->player_citizen)
 	{
-		if (CitizenResourceCount(a->resources) == 0)
+		if(a != NULL)
 		{
-			if (a->job == 0)
+			if (CitizenResourceCount(a->resources) == 0)
 			{
-				location = location_distance(a->location, resource_create_landscape[i]->location);
-				if (location < proximate)
+				if (a->job == 0)
 				{
-					proximate = location;
-					findCitizen = a;
-					count = j;
+					location = location_distance(a->location, resource_create_landscape[i]->location);
+					if (location < proximate)
+					{
+						proximate = location;
+						findCitizen = a;
+						count = j;
+					}
 				}
 			}
+			j++;
 		}
-		j++;
 	}
 	if (findCitizen != NULL)
 	{
@@ -382,22 +392,25 @@ void Citizen_Work_Add(std::map<int, players_profile*>& players_list, std::map<in
 	j = 0;
 	for (auto& a : players_list[port]->player_citizen)
 	{
-		if (a->job == 0)
+		if (a != NULL)
 		{
-			FActor_TF_define(a->Job_location, resource_create_landscape[i]->location);
-			FActor_TF_define(players_list[port]->player_citizen_arrival_location[j]->location, resource_create_landscape[i]->location);
-			resource_create_landscape[i]->CitizenCount++;
-			a->job = 1;
-			return;
-			location = location_distance(a->location, resource_create_landscape[i]->location);
-			if (location < proximate)
+			if (a->job == 0)
 			{
-				proximate = location;
-				findCitizen = a;
-				count = j;
+				FActor_TF_define(a->Job_location, resource_create_landscape[i]->location);
+				FActor_TF_define(players_list[port]->player_citizen_arrival_location[j]->location, resource_create_landscape[i]->location);
+				resource_create_landscape[i]->CitizenCount++;
+				a->job = 1;
+				return;
+				location = location_distance(a->location, resource_create_landscape[i]->location);
+				if (location < proximate)
+				{
+					proximate = location;
+					findCitizen = a;
+					count = j;
+				}
 			}
+			j++;
 		}
-		j++;
 	}
 
 	if (findCitizen != NULL)
@@ -415,22 +428,25 @@ void Citizen_Work_Sub(std::map<int, players_profile*>& players_list, std::map<in
 	int j = 0;
 	for (auto& a : players_list[port]->player_citizen)
 	{
-		if (a->job != 0)
+		if (a != NULL)
 		{
-			if (TF_Same(a->Job_location, resource_create_landscape[i]->location))
+			if (a->job != 0)
 			{
-				a->job = 0;
-				FActor_TF_define(players_list[port]->player_citizen_arrival_location[j]->location, players_list[port]->player_info->location);
-				resource_create_landscape[i]->CitizenCount--;
-				return;
+				if (TF_Same(a->Job_location, resource_create_landscape[i]->location))
+				{
+					a->job = 0;
+					FActor_TF_define(players_list[port]->player_citizen_arrival_location[j]->location, players_list[port]->player_info->location);
+					resource_create_landscape[i]->CitizenCount--;
+					return;
+				}
 			}
+			j++;
 		}
-		j++;
 	}
 
 }
 
-void FirstInit(FirstSendServer& first_send_server, std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port) {
+void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_client, std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port) {
 	
 	memcpy(&first_send_server.player_info, players_list[port]->player_info, sizeof(FActor));
 	players_list[port]->player_info = &first_send_server.player_info;
@@ -453,5 +469,8 @@ void FirstInit(FirstSendServer& first_send_server, std::map<int, players_profile
 	memcpy(&first_send_server.currlocation, players_list[port]->curr_location, sizeof(TF));
 	players_list[port]->curr_location = &first_send_server.currlocation;
 
+	memcpy(&first_send_client.My_keyboard_input, players_list[port]->my_keyinput,sizeof(keyboard_input));
+	players_list[port]->my_keyinput = &first_send_client.My_keyboard_input;
+	
 
 }
