@@ -3,11 +3,13 @@
 #include "MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Server_testing.h"
-
+#include "GridManager.h"
 
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
 AServer_testing* ServerClass;
+AGridManager* GridManagerClass;
+TSubclassOf<AGridManager> GridManager;
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -262,5 +264,92 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
         }
     }
 
+    // building 관련
+    if (PlacementModeEnabled == true)
+    {
+        UpdatePlacement();
+    }
+}
+
+void AMyPlayerController::SetPlacementModeEnabled(bool IsEnabled)
+{
+    UE_LOG(LogTemp, Log, TEXT("Set"));
+
+    if (IsEnabled == PlacementModeEnabled)
+    {
+        return;
+    }
+    else
+    {
+        IsEnabled = PlacementModeEnabled;
+        if (IsEnabled == true)
+        {
+            FVector Location(0.0f, 0.0f, 0.0f);
+            FRotator Rotation(0.0f, 0.0f, 0.0f);
+            FActorSpawnParameters SpawnParams;
+
+            StartList = ServerClass->players_list;
+            for (int i = 0; i < MAXPLAYER; ++i)
+            {
+                Location = { StartList[i].location.x, StartList[i].location.y, StartList[i].location.z };
+                PlaceableActor = GetWorld()->SpawnActor<AActor>(PlaceableActorType, Location, Rotation, SpawnParams);
+            }
+
+            if (IsValid(PlaceableActor->GetComponentByClass(ClickableComponent)))
+            {
+                PlaceableActor->DestroyConstructedComponents();
+                
+                PlaceableActor->AddComponentByClass(PloppableComponent, true, PlaceableActor->GetActorTransform(), false);
+            }
+            else
+            {
+                PlaceableActor->AddComponentByClass(PloppableComponent, true, PlaceableActor->GetActorTransform(), false);
+            }
+        }
+        else
+        {
+            if (IsValid(PlaceableActor))
+            {
+                GetWorld()->DestroyActor(PlaceableActor);
+            }
+        }
+    }
+}
+
+void AMyPlayerController::UpdatePlacement()
+{
+    FHitResult Hit;
+    FCollisionQueryParams TraceParams;
+    FVector MouseLoc, MouseDir;
+    
+    DeprojectMousePositionToWorld(MouseLoc, MouseDir);
+
+    MouseDir *= 100000.0;
+    MouseDir += MouseLoc;
+
+    GetWorld()->LineTraceSingleByChannel(Hit, MouseLoc, MouseDir, ECC_Visibility, TraceParams);
+
+    if (Hit.bBlockingHit)
+    {
+        UGameplayStatics::GetActorOfClass(GetWorld(), GridManager);
+        
+        PlaceableActor->SetActorLocation(GridManagerClass->GetClossetGridPosition(Hit.Location));
+    }
+}
+
+void AMyPlayerController::SpawnBuilding()
+{
+    if (IsValid(PlaceableActor->GetComponentByClass(PloppableComponent)))
+    {
+        //if(PloppableComponent.Get(IsPlacementValid)
+        // Actor의 경우 
+
+        FActorSpawnParameters spawnParams;
+       
+        GetWorld()->SpawnActor<AActor>(PlaceableActorType, PlaceableActor->GetActorTransform(), spawnParams);
+        // 위 Transform()정보.
+        
+        SetPlacementModeEnabled(false);
+    }
 }
 

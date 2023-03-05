@@ -890,8 +890,8 @@ public:
 	
 	void show_array(char** terrain_array_host, int size)
 	{
-		for (int y = 0; y < size; y++) {
-			for (int x = 0; x < size; x++) {
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
 				if (terrain_array_host[x][y] > 9) {
 					printf("%d_", terrain_array_host[x][y] / 100);
 				}
