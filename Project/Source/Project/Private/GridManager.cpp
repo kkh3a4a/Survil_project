@@ -26,7 +26,8 @@ void AGridManager::PopulateGrid()
 {
 	GridArray = {};
 	FVector vector;
-	FTransform transform;
+	FTransform transform; 
+	FActorSpawnParameters SpawnParams;
 
 	// Calculate offset
 	WorldOffset = (GridSize * WorldGridSize * 0.5) - (WorldGridSize * 0.5);
@@ -42,7 +43,9 @@ void AGridManager::PopulateGrid()
 	
 	transform.SetLocation(vector);
 
-	GridArray.Add(GetWorld()->SpawnActor<AActor>(GridCell, transform));
+	GridArray.Add(GetWorld()->SpawnActor<AActor>(GridCell, transform, SpawnParams));
+
+
 }
 
 FVector AGridManager::GetClossetGridPosition(FVector InPosition)
