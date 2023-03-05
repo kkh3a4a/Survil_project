@@ -139,7 +139,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	while (1) {
 		auto end_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 0)
 		{
 			start_t = high_resolution_clock::now();
 			memcpy(&first_send_server.SunAngle, &sun_angle, sizeof(TF));

@@ -161,8 +161,6 @@ void AServer_testing::resoure_set(Fresources_actor& a, Fresources_actor& b)
 
 int AServer_testing::connecting()
 {
-
-	
 	return 1;
 }
 

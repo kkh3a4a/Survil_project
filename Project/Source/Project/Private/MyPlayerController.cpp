@@ -15,64 +15,49 @@ AMyPlayerController::AMyPlayerController()
 {
 
     UWorld* worldref = GetWorld();
-    if (worldref == nullptr)
-    {
+    if (worldref == nullptr){
         return;
     }
     UE_LOG(LogTemp, Log, TEXT("%s"), *worldref->GetName());
-    server = UGameplayStatics::GetActorOfClass(worldref, AServer_testing::StaticClass());
-    if (server == nullptr)
-    {
+    
+    AActor* actor = UGameplayStatics::GetActorOfClass(worldref, AServer_testing::StaticClass());
+    if (actor == nullptr){
         return;
     }
-    server->GetWorld();
-    ServerClass = Cast<AServer_testing>(server);
-    //ServerClass = Cast<AServer_testing>(server->GetClass());
-
-    if (ServerClass == nullptr)
-    {
+    actor->GetWorld();
+    ServerClass = Cast<AServer_testing>(actor);
+    if (ServerClass == nullptr){
         return;
     }
 
     bShowMouseCursor = true;
-    
     bEnableClickEvents = true;
     bEnableTouchEvents = true;
     bEnableMouseOverEvents = true;
-
-    
 }
 
 void AMyPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
     InputComponent->BindAction("RightClick", IE_Pressed, this, &AMyPlayerController::InputRightMoustButtonPressed);
-
     InputComponent->BindAction("RightClick", IE_Released, this, &AMyPlayerController::InputRightMoustButtonReleased);
 
     InputComponent->BindAction("LeftClick", IE_Pressed, this, &AMyPlayerController::InputLeftMoustButtonPressed);
-
     InputComponent->BindAction("LeftClick", IE_Released, this, &AMyPlayerController::InputLeftMoustButtonReleased);
 
-
-
-
-
     InputComponent->BindAction("Up", IE_Pressed, this, &AMyPlayerController::InputUpPressed);
-
     InputComponent->BindAction("Up", IE_Released, this, &AMyPlayerController::InputUpReleased);
 
     InputComponent->BindAction("Down", IE_Pressed, this, &AMyPlayerController::InputDownPressed);
-
     InputComponent->BindAction("Down", IE_Released, this, &AMyPlayerController::InputDownReleased);
 
     InputComponent->BindAction("Left", IE_Pressed, this, &AMyPlayerController::InputLeftPressed);
- 
     InputComponent->BindAction("Left", IE_Released, this, &AMyPlayerController::InputLeftReleased);
 
     InputComponent->BindAction("Right", IE_Pressed, this, &AMyPlayerController::InputRightPressed);
-
     InputComponent->BindAction("Right", IE_Released, this, &AMyPlayerController::InputRightReleased);
+
+	InputComponent->BindAction("Thermal", IE_Pressed, this, &AMyPlayerController::VisibilityTemperature);
 
 }
 
@@ -212,14 +197,24 @@ void AMyPlayerController::MoveToActor()
                 hitActor = NULL;
             }
         }
-        
-        
-        
         ResourceUI = false;
-
-
         mouse_end_t = high_resolution_clock::now();
     }
+}
+
+void AMyPlayerController::VisibilityTemperature()
+{
+    ATemperature* TemperatureClass = ServerClass->Temperature;
+
+    UE_LOG(LogTemp, Log, TEXT("Thermal"));
+
+    bool Hidden = TemperatureClass->GetIsHidden();
+    if (Hidden) {
+        TemperatureClass->Hide(false);
+	}
+    else{
+        TemperatureClass->Hide(true);
+	}
 }
 
 

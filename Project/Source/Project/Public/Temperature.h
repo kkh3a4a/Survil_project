@@ -21,12 +21,16 @@ public:
 protected:
 
 	int divide = 2;
+	ADecalActor* DecalActor;
 	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
+	TArray<ADecalActor*> DecalArray;
+	bool IsHidden = false;
 
 public:	
 	void Initiaize(UMaterial*);
 	void Update(int8(*TerrainTemperaturePtr)[MapSizeY]);
 	void TemperatureToRGB(double , double& , double& , double& );
 
-		
+	void Hide(bool);
+	bool GetIsHidden();
 };

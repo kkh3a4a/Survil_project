@@ -7,6 +7,7 @@
 #include "global.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Temperature.h"
 #include "MyPlayerController.generated.h"
 
 /**
@@ -26,8 +27,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FVector DestLocation;
 	AActor* hitActor;
-
-	AActor* server;
 
 	std::chrono::steady_clock::time_point mouse_start_t;
 	std::chrono::steady_clock::time_point mouse_end_t;
@@ -90,6 +89,8 @@ protected:
 	void MoveToMouseCursor();
 
 	void MoveToActor();
+
+	void VisibilityTemperature();
 
 	virtual void SetupInputComponent() override;
 

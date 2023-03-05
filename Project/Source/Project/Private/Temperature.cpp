@@ -20,7 +20,7 @@ void ATemperature::Initiaize(UMaterial* Material)
 
     for (int32 y = 0; y < MapSizeY / divide; y++){
         for (int32 x = 0; x < MapSizeX / divide; x++){
-            ADecalActor* DecalActor = GetWorld()->SpawnActor<ADecalActor>(FVector(Width * x + Width/2, Width * y + Width / 2, 0), FRotator(0,-90,0));
+            DecalActor = GetWorld()->SpawnActor<ADecalActor>(FVector(Width * x + Width/2, Width * y + Width / 2, 0), FRotator(0,-90,0));
 			DecalActor->SetActorScale3D(FVector(Height, divide, divide));
 			DecalActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
             
@@ -29,8 +29,10 @@ void ATemperature::Initiaize(UMaterial* Material)
             MaterialInstanceArray.Add(MaterialInstance);
 			
             DecalActor->SetDecalMaterial(MaterialInstance);
+			DecalArray.Add(DecalActor);
         }
     }
+	Hide(true);
 }
 
 void ATemperature::Update(int8(*TerrainTemperaturePtr)[MapSizeY])
@@ -58,4 +60,19 @@ void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, do
         g /= sum;
         b /= sum;
     }
+}
+
+void ATemperature::Hide(bool visibility)
+{
+	for (ADecalActor* Decal : DecalArray) {
+    //for (int32 i = 0; i < MapSizeX / divide * MapSizeY / divide; i++) {
+        Decal->SetActorHiddenInGame(visibility);
+	}
+	IsHidden = visibility;
+}
+
+
+bool ATemperature::GetIsHidden()
+{
+    return IsHidden;
 }
