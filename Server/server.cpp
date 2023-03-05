@@ -147,9 +147,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			
 			////10배 축소해서 일단 테스트
 			////cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
-			//II player_location{ (int)players_list[port]->curr_location->x / 100, (int)players_list[port]->curr_location->y / 100 };
-			//terrain.copy_for_player_map(player_location);
-			/*for (int i = 0; i < player_sight_size.x; ++i) {
+			II player_location{ (int)players_list[port]->curr_location->x / 100, (int)players_list[port]->curr_location->y / 100 };
+			terrain->copy_for_player_map(player_location);
+			for (int i = 0; i < player_sight_size.x; ++i) {
 				retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
 				if (retval == SOCKET_ERROR) {
 					err_display("send()");
@@ -157,15 +157,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				}
 			}
 			for (int i = 0; i < player_sight_size.x; ++i) {
-			}
-		}
-		for (int i = 0; i < player_sight_size.x; ++i) {
 			retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
 				if (retval == SOCKET_ERROR) {
 					err_display("send()");
 					break;
 				}
-			}*/
+			}
 
 			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(FirstSendClient), 0);
 			if (tempsa == SOCKET_ERROR)

@@ -98,19 +98,19 @@ void AServer_testing::Tick(float DeltaTime)
 		//recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
 		//oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
 		////Recv Terrain
-		//for (int i = 0; i < MapSizeX; i++) {
-		//ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
-		//	if (SOCKET_ERROR == ret) {
-		//		return;
-		//	}
-		//}
-		////Recv Temperature
-		//for (int i = 0; i < MapSizeX; i++) {
-		//	ret = recv(s_socket, (char*)&TerrainTemperature[i], sizeof(char) * MapSizeY, 0);
-		//	if (SOCKET_ERROR == ret) {
-		//		return;
-		//	}
-		//}
+		for (int i = 0; i < MapSizeX; i++) {
+		ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
+			if (SOCKET_ERROR == ret) {
+				return;
+			}
+		}
+		//Recv Temperature
+		for (int i = 0; i < MapSizeX; i++) {
+			ret = recv(s_socket, (char*)&TerrainTemperature[i], sizeof(char) * MapSizeY, 0);
+			if (SOCKET_ERROR == ret) {
+				return;
+			}
+		}
 
 
 		send(s_socket, (char*)&FirstSendClient, sizeof(FFirstSendClient), 0);
@@ -140,6 +140,7 @@ void AServer_testing::Tick(float DeltaTime)
 		TF_set(sunangle, FirstSendServer.SunAngle);
 		Citizens->CitizenNoJob(CitizenNoJobCnt);
 		Citizens->Citizen_Moving();
+		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
 	}
 }
