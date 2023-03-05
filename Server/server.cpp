@@ -204,7 +204,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	int player_list_iter{};
 	for (auto& a : players_list) 
 	{
-		terrain.set_city_location(a.second->player_info->location, player_list_iter);
+		terrain->set_city_location(a.second->player_info->location, player_list_iter);
 		player_list_iter++;
 		cout << "À§Ä¡ : " << a.second->player_info->location.x << ", " << a.second->player_info->location.y << endl;
 	}

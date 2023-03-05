@@ -106,8 +106,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor> PlaceableActorType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<int, FActor_location_rotation> StartList;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int, FActor_location_rotation*> StartList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UActorComponent> ClickableComponent;

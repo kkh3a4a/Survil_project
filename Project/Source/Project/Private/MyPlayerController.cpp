@@ -291,7 +291,7 @@ void AMyPlayerController::SetPlacementModeEnabled(bool IsEnabled)
             StartList = ServerClass->players_list;
             for (int i = 0; i < MAXPLAYER; ++i)
             {
-                Location = { StartList[i].location.x, StartList[i].location.y, StartList[i].location.z };
+                Location = { StartList[i]->location.x, StartList[i]->location.y, StartList[i]->location.z };
                 PlaceableActor = GetWorld()->SpawnActor<AActor>(PlaceableActorType, Location, Rotation, SpawnParams);
             }
 
