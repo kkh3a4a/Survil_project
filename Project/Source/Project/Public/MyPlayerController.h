@@ -96,19 +96,33 @@ protected:
 	virtual void PlayerTick(float DeltaTime) override;
 
 // grid and building ±¸ºÐ
-//protected:
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//	bool PlacementModeEnabled;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//	AActor* PlaceableActor;
-//
-//	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-//	TSubclassOf<AActor> PlaceableActorType;
-//
-//	void SetPlacementModeEnabled(bool IsEnabled);
-//
-//	void UpdatePlacement();
-//
-//	void SpawnBuilding();
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool PlacementModeEnabled;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* PlaceableActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AActor> PlaceableActorType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<int, FActor_location_rotation> StartList;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UActorComponent> ClickableComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UActorComponent> PloppableComponent;
+
+protected:
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void SetPlacementModeEnabled(bool IsEnabled);
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void UpdatePlacement();
+
+	UFUNCTION(BlueprintCallable, Category = "Building")
+	void SpawnBuilding();
+
 };
