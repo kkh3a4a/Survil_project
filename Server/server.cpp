@@ -118,7 +118,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);
 
 		
-		FirstInit(first_send_server, first_send_client, players_list, resource_create_landscape, port);
+		FirstInit(first_send_server, first_send_client, players_list, resource_create_landscape, player_sight_temperature, port);
 
 		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
 		
@@ -153,7 +153,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 					break;
 				}
 			}*/
-			cout << players_list[port]->curr_location->x << endl;
+
 			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(FirstSendClient), 0);
 			if (tempsa == SOCKET_ERROR)
 			{

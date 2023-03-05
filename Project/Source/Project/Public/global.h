@@ -10,6 +10,8 @@
 #define MAXPLAYER 1
 #define MAXCITIZEN 200
 #define FIRSTSPAWN 10
+#define MAPSIZEX 200
+#define MAPSIZEY 120
 
 USTRUCT(Atomic, BlueprintType)
 struct Fthree_float {
@@ -151,6 +153,7 @@ public:
 	Fresources_actor resources[MAXPLAYER * 10];
 	int MyResource[5];
 	Fthree_float currlocation;
+	//char send_sight_temperature[MAPSIZEX][MAPSIZEY];
 };
 
 USTRUCT(Atomic, BlueprintType)

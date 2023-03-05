@@ -25,7 +25,7 @@ typedef struct two_int {
 //II player_sight_size{200, 120};
 //const int random_array_size = 50000000;
 const int one_side_number = 32000;
-II player_sight_size{ 200, 120 };
+II player_sight_size{ SIGHT_X, SIGHT_X };
 const int random_array_size = 90000000;
 //const int random_array_size = 150000000;
 

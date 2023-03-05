@@ -99,7 +99,7 @@ void AServer_testing::Tick(float DeltaTime)
 		//oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
 		////Recv Terrain
 		//for (int i = 0; i < MapSizeX; i++) {
-		//	ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
+		//ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
 		//	if (SOCKET_ERROR == ret) {
 		//		return;
 		//	}
@@ -138,6 +138,7 @@ void AServer_testing::Tick(float DeltaTime)
 		oil_count = FirstSendServer.MyResource[0], water_count = FirstSendServer.MyResource[1], iron_count = FirstSendServer.MyResource[2], food_count = FirstSendServer.MyResource[3], wood_count = FirstSendServer.MyResource[4];
 		TF_set(CurrentLocation, FirstSendServer.currlocation);
 		TF_set(sunangle, FirstSendServer.SunAngle);
+		Citizens->CitizenNoJob(CitizenNoJobCnt);
 		Citizens->Citizen_Moving();
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
 	}

@@ -9,6 +9,10 @@
 #define MAXPLAYER 1
 #define MAXCITIZEN 200
 #define FIRSTSPAWN 10
+#define SIGHT_X 200
+#define SIGHT_Y 120
+
+
 
 std::uniform_int_distribution <int>uid{ 0 + 100 * 100, 1600 * 100 - 100 * 100 };
 std::uniform_int_distribution <int>resource_uid{ -100, 100 };
@@ -100,6 +104,7 @@ public:
 	resource_actor resources[MAXPLAYER * 10];
 	int MyResource[5];
 	TF currlocation = { 0,0,0 };
+	//char send_sight_temperature[SIGHT_X][SIGHT_Y];
 };
 
 typedef struct FirstSendClient {
@@ -446,7 +451,7 @@ void Citizen_Work_Sub(std::map<int, players_profile*>& players_list, std::map<in
 
 }
 
-void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_client, std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port) {
+void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_client, std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, char** player_sight_temperature, int port) {
 	
 	memcpy(&first_send_server.player_info, players_list[port]->player_info, sizeof(FActor));
 	players_list[port]->player_info = &first_send_server.player_info;
@@ -471,6 +476,6 @@ void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_c
 
 	memcpy(&first_send_client.My_keyboard_input, players_list[port]->my_keyinput,sizeof(keyboard_input));
 	players_list[port]->my_keyinput = &first_send_client.My_keyboard_input;
-	
+		
 
 }
