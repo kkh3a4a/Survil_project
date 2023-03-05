@@ -135,7 +135,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Temperature")
 		UMaterial* TemperatureMaterial;
 
-	ATemperature* decal;
+	ATemperature* Temperature;
 	
 	AMeshTerrain* TerrainActor;
 	FSocketThread* Networking;

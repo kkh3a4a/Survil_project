@@ -37,15 +37,11 @@ void AGridManager::PopulateGrid()
 		for (int j = 0; j < GridSize; ++j)
 		{
 			vector.X = j * WorldGridSize - WorldOffset;
+			vector.Y = i * WorldGridSize - WorldOffset;
+			transform.SetLocation(vector);
+			GridArray.Add(GetWorld()->SpawnActor<AActor>(GridCell, transform, SpawnParams));
 		}
-		vector.Y = i * WorldGridSize - WorldOffset;
 	}
-	
-	transform.SetLocation(vector);
-
-	GridArray.Add(GetWorld()->SpawnActor<AActor>(GridCell, transform, SpawnParams));
-
-
 }
 
 FVector AGridManager::GetClossetGridPosition(FVector InPosition)

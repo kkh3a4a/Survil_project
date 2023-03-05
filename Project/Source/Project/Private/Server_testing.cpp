@@ -46,9 +46,9 @@ void AServer_testing::BeginPlay()
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
 	//Spawn Decal
-	decal = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	decal->Initiaize(TemperatureMaterial);
-	decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	Temperature = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	Temperature->Initiaize(TemperatureMaterial);
+	Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	UI_Input.resouce_input.ResourceNum = -1;
 	UI_Input.resouce_input.CitizenCountAdd = false;
@@ -141,6 +141,7 @@ void AServer_testing::Tick(float DeltaTime)
 		Citizens->CitizenNoJob(CitizenNoJobCnt);
 		Citizens->Citizen_Moving();
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
+		Temperature->Update(TerrainTemperature);
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
 	}
 }
