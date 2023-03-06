@@ -219,19 +219,18 @@ void AMyPlayerController::VisibilityTemperature()
 
 void AMyPlayerController::MouseScrollUp()
 {
-    if (ServerClass->MyCamera->GetActorLocation().Z >= 10000)
+   if (ServerClass->MyCamera->GetActorLocation().Z <= 1500)
         return;
-	ServerClass->MyCamera->SetActorLocation(ServerClass->MyCamera->GetActorLocation() + FVector(0, 0, 500));
-	ServerClass->MyCamera->SetActorRotation(FRotator(ServerClass->MyCamera->GetActorRotation().Pitch - 2, ServerClass->MyCamera->GetActorRotation().Yaw, ServerClass->MyCamera->GetActorRotation().Roll));
-
+    ServerClass->MyCamera->SetActorLocation(ServerClass->MyCamera->GetActorLocation() - FVector(0, 100, 500));
+    ServerClass->MyCamera->SetActorRotation(FRotator(ServerClass->MyCamera->GetActorRotation().Pitch + 2, ServerClass->MyCamera->GetActorRotation().Yaw, ServerClass->MyCamera->GetActorRotation().Roll));
 }
 
 void AMyPlayerController::MouseScrollDown()
 {
-    if (ServerClass->MyCamera->GetActorLocation().Z <= 1000)
+    if (ServerClass->MyCamera->GetActorLocation().Z >= 8000)
         return;
-	ServerClass->MyCamera->SetActorLocation(ServerClass->MyCamera->GetActorLocation() - FVector(0, 0, 500));
-    ServerClass->MyCamera->SetActorRotation(FRotator(ServerClass->MyCamera->GetActorRotation().Pitch + 2, ServerClass->MyCamera->GetActorRotation().Yaw, ServerClass->MyCamera->GetActorRotation().Roll));
+    ServerClass->MyCamera->SetActorLocation(ServerClass->MyCamera->GetActorLocation() + FVector(0, 100, 500));
+    ServerClass->MyCamera->SetActorRotation(FRotator(ServerClass->MyCamera->GetActorRotation().Pitch - 2, ServerClass->MyCamera->GetActorRotation().Yaw, ServerClass->MyCamera->GetActorRotation().Roll));
 }
 
 void AMyPlayerController::PlayerTick(float DeltaTime)
