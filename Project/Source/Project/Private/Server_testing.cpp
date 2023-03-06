@@ -127,7 +127,6 @@ void AServer_testing::Tick(float DeltaTime)
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 		Temperature->Update(TerrainTemperature);
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
-		UE_LOG(LogTemp, Log, TEXT(" ////231////    %d"), temped);
 	}
 }
 

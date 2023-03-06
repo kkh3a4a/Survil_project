@@ -93,6 +93,10 @@ uint32_t FSocketThread::Run()
 
 			send(ServerClass_send_recv->s_socket, (char*)&ServerClass_send_recv->FirstSendClient, sizeof(FFirstSendClient), 0);
 		}
+		else
+		{
+			Sleep(1);
+		}
 	}
 	return 0;
 }
