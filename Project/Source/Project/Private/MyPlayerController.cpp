@@ -59,6 +59,8 @@ void AMyPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Thermal", IE_Pressed, this, &AMyPlayerController::VisibilityTemperature);
 
+    InputComponent->BindAction("MouseScrollUp", IE_Pressed, this, &AMyPlayerController::MouseScrollUp);
+    InputComponent->BindAction("MouseScrollDown", IE_Pressed, this, &AMyPlayerController::MouseScrollDown);
 }
 
 void AMyPlayerController::InputUpPressed()
@@ -105,7 +107,6 @@ void AMyPlayerController::InputRightReleased()
 
 
 
-
 void AMyPlayerController::InputRightMoustButtonPressed()
 {
     bRightClickMouse = true;
@@ -130,7 +131,6 @@ void AMyPlayerController::MoveToMouseCursor()
 {
     FHitResult Hit;
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-
 
     if (Hit.bBlockingHit)
     {
@@ -217,6 +217,22 @@ void AMyPlayerController::VisibilityTemperature()
 	}
 }
 
+void AMyPlayerController::MouseScrollUp()
+{
+    if (ServerClass->MyCamera->GetActorLocation().Z >= 10000)
+        return;
+	ServerClass->MyCamera->SetActorLocation(ServerClass->MyCamera->GetActorLocation() + FVector(0, 0, 500));
+	ServerClass->MyCamera->SetActorRotation(FRotator(ServerClass->MyCamera->GetActorRotation().Pitch - 2, ServerClass->MyCamera->GetActorRotation().Yaw, ServerClass->MyCamera->GetActorRotation().Roll));
+
+}
+
+void AMyPlayerController::MouseScrollDown()
+{
+    if (ServerClass->MyCamera->GetActorLocation().Z <= 1000)
+        return;
+	ServerClass->MyCamera->SetActorLocation(ServerClass->MyCamera->GetActorLocation() - FVector(0, 0, 500));
+    ServerClass->MyCamera->SetActorRotation(FRotator(ServerClass->MyCamera->GetActorRotation().Pitch + 2, ServerClass->MyCamera->GetActorRotation().Yaw, ServerClass->MyCamera->GetActorRotation().Roll));
+}
 
 void AMyPlayerController::PlayerTick(float DeltaTime)
 {

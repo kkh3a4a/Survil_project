@@ -8,6 +8,7 @@
 #include <chrono>
 #include "global.h"
 #include "Windows/HideWindowsPlatformTypes.h"
+#include "Kismet/GameplayStatics.h"
 #include "CoreMinimal.h"
 #include "HAL/Runnable.h"
 #include "GameFramework/Actor.h"
@@ -44,9 +45,6 @@ public:
 	bool Is_send_UI_input = false;
 	bool IsConnect = false;
 	bool IsFirstSend = false;
-
-	
-
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -122,16 +120,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 		TSubclassOf<AActor>WoodActor;
+
 	//citizen
 	ACitizen* Citizens;
 	AMyTown* MyTown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float sunangle;
-
-
-	int8 Terrain2DArray[MapSizeX][MapSizeY];
-	int8 TerrainTemperature[MapSizeX][MapSizeY];
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terrain")
 		UMaterialInstance* TerrainMaterialInstance;
@@ -139,25 +134,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Temperature")
 		UMaterial* TemperatureMaterial;
 
-	ATemperature* Temperature;
-	
+	int8 Terrain2DArray[MapSizeX][MapSizeY];
+	int8 TerrainTemperature[MapSizeX][MapSizeY];
+
 	AMeshTerrain* TerrainActor;
+	ATemperature* Temperature;
+
+	ACameraActor* MyCamera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float CurrentLocation;
 	
-	ACameraActor* CameraActor;
-
 	FFirstSendServer FirstSendServer;
-
 	FFirstSendClient FirstSendClient;
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
-
 	void resoure_set(Fresources_actor& a, Fresources_actor& b);
-
 	int connecting();
-
 	bool FirstSend();
 };
 
