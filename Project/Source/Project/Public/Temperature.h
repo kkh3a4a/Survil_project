@@ -20,7 +20,7 @@ public:
 
 protected:
 
-	int divide = 2;
+	int divide = 4;
 	ADecalActor* DecalActor;
 	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
 	TArray<ADecalActor*> DecalArray;

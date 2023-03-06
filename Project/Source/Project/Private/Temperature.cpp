@@ -37,6 +37,8 @@ void ATemperature::Initiaize(UMaterial* Material)
 
 void ATemperature::Update(int8(*TerrainTemperaturePtr)[MapSizeY])
 {
+	if (IsHidden)
+		return;
 	for (int32 i = 0; i < MapSizeX / divide * MapSizeY / divide; i++) {
         FVector RGB;
 		//UE_LOG(LogTemp, Warning, TEXT("%d %d %d"), MaterialInstanceArray.Num(),(i * divide) % MapSizeX, (i * divide) / MapSizeX * divide);
