@@ -108,14 +108,14 @@ void AMyTown::SpawnResource(FFirstSendServer& FirstSendServer)
 	}
 }
 
-void AMyTown::UpdateResource(Fresources_actor& a, Fresources_actor& b, int i)
+void AMyTown::UpdateResource()
 {
-	a.count = b.count;
-	a.type = b.type;
-	a.CitizenCount = b.CitizenCount;
-	if (a.count == 0)
+	for (int resource_checking = 0; resource_checking < MAXPLAYER * 10; ++resource_checking)
 	{
-		ResourceEditer[i]->SetActorHiddenInGame(true);
+		if (resources_create_landscape[resource_checking]->count == 0)
+		{
+					ResourceEditer[resource_checking]->SetActorHiddenInGame(true);
+					ResourceEditer[resource_checking]->SetActorEnableCollision(false);
+		}
 	}
 }
-

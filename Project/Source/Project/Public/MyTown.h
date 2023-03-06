@@ -53,5 +53,5 @@ public:
 	void Initialize(TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>);
 	void SpawnTown(TMap<int, FActor_location_rotation*>&);
 	void SpawnResource(FFirstSendServer&);
-	void UpdateResource(Fresources_actor&, Fresources_actor&, int i);
+	void UpdateResource();
 };

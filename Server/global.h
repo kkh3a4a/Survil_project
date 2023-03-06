@@ -468,6 +468,7 @@ void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_c
 	for(int i=0; i<5 ;++i)
 	{
 		players_list[port]->resources[i] = new int;
+		*players_list[port]->resources[i] = 0;
 		memcpy(&first_send_server.MyResource[i], players_list[port]->resources[i], sizeof(int));
 		players_list[port]->resources[i] = &first_send_server.MyResource[0];
 	}
