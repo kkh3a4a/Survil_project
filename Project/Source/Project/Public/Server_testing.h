@@ -8,7 +8,6 @@
 #include <chrono>
 #include "global.h"
 #include "Windows/HideWindowsPlatformTypes.h"
-#include "NetworkingThread.h"
 #include "CoreMinimal.h"
 #include "HAL/Runnable.h"
 #include "GameFramework/Actor.h"
@@ -46,6 +45,10 @@ public:
 	bool IsConnect = false;
 	bool IsFirstSend = false;
 
+	
+
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FUI_Input UI_Input;
 
@@ -71,7 +74,7 @@ public:
 
 	TMap<int, FActor_location_rotation*> players_list;
 
-
+	bool Isthreading_first_send = false;
 	steady_clock::time_point start_t;
 	WSADATA WSAData;
 	SOCKET s_socket;
@@ -83,6 +86,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UStaticMesh* My_Town;
 
+	int temped=0;
 
 	Fkeyboard_input* my_key_input = new Fkeyboard_input;
 
@@ -138,8 +142,6 @@ public:
 	ATemperature* Temperature;
 	
 	AMeshTerrain* TerrainActor;
-	FSocketThread* Networking;
-	FRunnableThread* NetworkingThread;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float CurrentLocation;

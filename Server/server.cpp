@@ -118,14 +118,14 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int maxplayer_cnt = 0;
 	int trash_value = 0;
 	while (1){
-		if (!location_set){
+		/*if (!location_set){
 			retval = send(client_sock, (char*)&maxplayer_cnt, sizeof(int), 0);
 			retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);
 			continue;
 		}
 		maxplayer_cnt = MAXPLAYER;
 		send(client_sock, (char*)&(maxplayer_cnt), sizeof(int), 0);
-		retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);
+		retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);*/
 
 		
 		FirstInit(first_send_server, first_send_client, players_list, resource_create_landscape, player_sight_temperature, port);

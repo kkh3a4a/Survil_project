@@ -6,13 +6,16 @@
 #include <future>
 #include <thread>
 #include <mutex>
+#include "NetworkingThread.h"
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
 #include "GenericPlatform/GenericPlatformProcess.h"
 #include "Components/InstancedStaticMeshComponent.h"
 
 //AMyPlayerController* my_controller;
-
+FSocketThread* MyRunnable;
+//멀티 쓰레딩
+FRunnableThread* MyThread;
 AServer_testing::AServer_testing()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -23,6 +26,8 @@ AServer_testing::AServer_testing()
 void AServer_testing::BeginPlay()
 {
 	Super::BeginPlay();
+	
+
 	
 	/*FSocketThread* SocketThread = new FSocketThread(FString("127.0.0.1"), 9000);
 	bool connected = SocketThread->Init();
@@ -64,56 +69,35 @@ void AServer_testing::BeginPlay()
 	ret = inet_pton(AF_INET, SERVER_ADDR, &server_addr.sin_addr);
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
-	
+
+	FirstSend();
 }
 
 // Called every frame
 void AServer_testing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
 	if (!IsFirstSend)
 	{
-		if (FirstSend())
+		UE_LOG(LogTemp, Log, TEXT("dsadsdas"));
+		if (Isthreading_first_send)
+		{
+
+			Citizens->citizen_set(FirstSendServer);
+
+			Citizens->Spawn_Citizen();
+
+			MyTown->SpawnTown(players_list);
+
+			MyTown->SpawnResource(FirstSendServer);
+
+			Citizens->Citizen_Moving();
+			UE_LOG(LogTemp, Log, TEXT(" ////231////"));
 			IsFirstSend = true;
+		}
 	}
 	else {
-		recv(s_socket, (char*)&FirstSendServer, sizeof(FirstSendServer), 0);
-		//ret = recv(s_socket, (char*)&sunangle, (int)sizeof(Fthree_float), 0);
-		//for (int i = 0; i < MAXPLAYER; ++i)
-		//{
-		//	for (int j = 0; j < 10; ++j)
-		//	{
-		//		recv(s_socket, (char*)&Citizens->My_Citizen[i][j], sizeof(FCitizen_sole), 0);
-		//	}
-		//}
-		//for (int i = 0; i < MAXPLAYER * 10; ++i)
-		//{
-		//	Fresources_actor temp_resource;
-		//	recv(s_socket, (char*)&temp_resource, sizeof(Fresources_actor), 0);
-		//	MyTown->UpdateResource(MyTown->resources_create_landscape[i], temp_resource, i);
-		//}
-		//recv(s_socket, (char*)&CurrentLocation, sizeof(Fthree_float), 0);
-		////자원 받기
-		//recv(s_socket, (char*)&resources, sizeof(int) * 5, 0);
-		//oil_count = resources[0], water_count = resources[1], iron_count = resources[2], food_count = resources[3], wood_count = resources[4];
-		////Recv Terrain
-		for (int i = 0; i < MapSizeX; i++) {
-		ret = recv(s_socket, (char*)&Terrain2DArray[i], sizeof(char) * MapSizeY, 0);
-			if (SOCKET_ERROR == ret) {
-				return;
-			}
-		}
-		//Recv Temperature
-		for (int i = 0; i < MapSizeX; i++) {
-			ret = recv(s_socket, (char*)&TerrainTemperature[i], sizeof(char) * MapSizeY, 0);
-			if (SOCKET_ERROR == ret) {
-				return;
-			}
-		}
-
-
-		send(s_socket, (char*)&FirstSendClient, sizeof(FFirstSendClient), 0);
+		
 
 		if (Is_send_UI_input == false)
 		{
@@ -143,6 +127,7 @@ void AServer_testing::Tick(float DeltaTime)
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 		Temperature->Update(TerrainTemperature);
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
+		UE_LOG(LogTemp, Log, TEXT(" ////231////    %d"), temped);
 	}
 }
 
@@ -166,43 +151,12 @@ int AServer_testing::connecting()
 
 bool AServer_testing::FirstSend()
 {
-	if (!(maxplayer_cnt == MAXPLAYER))
-	{
-		recv(s_socket, (char*)&maxplayer_cnt, sizeof(int), 0);
-		send(s_socket, (char*)&trash_value, sizeof(int), 0);
-		return 0;
-	}
-
 	
-
-	recv(s_socket, (char*)&FirstSendServer, sizeof(FirstSendServer), 0);
-
-	for (int i = 0; i < MAXPLAYER; ++i) {
-		players_list.Add(i, &(FirstSendServer.player_info));
-	}
-
-	Citizens->citizen_set(FirstSendServer);
-
-	Citizens->Spawn_Citizen();
-
-	MyTown->SpawnTown(players_list);
-
-	MyTown->SpawnResource(FirstSendServer);
-	first_recv_send = true;
-
-	UE_LOG(LogTemp, Log, TEXT("connected to server"));
-	start_t = high_resolution_clock::now();
-
-	Citizens->Citizen_moving->team = -1;
-	Citizens->Citizen_moving->citizen_number = -1;
-
-	Citizens->Citizen_Moving();
-
-	memcpy(&FirstSendClient.My_citizen_moving, Citizens->Citizen_moving, sizeof(FCitizen_moving));
-
-	Citizens->Citizen_moving = &FirstSendClient.My_citizen_moving;
 	memcpy(&FirstSendClient.My_keyboard_input, my_key_input, sizeof(Fkeyboard_input));
 	my_key_input = &FirstSendClient.My_keyboard_input;
+	MyRunnable = new FSocketThread(this);
+	MyThread = FRunnableThread::Create(MyRunnable, TEXT("MyThread"), 0, TPri_BelowNormal);
 
+	
 	return 1;
 }

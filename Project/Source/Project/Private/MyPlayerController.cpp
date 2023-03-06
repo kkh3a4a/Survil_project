@@ -255,7 +255,6 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
                 ServerClass->UI_Input.resouce_input.ResourceNum = FCString::Atoi(*ResourceActor->Tags[2].ToString());
                 ServerClass->UI_Input.resouce_input.CitizenCountAdd = CitizenAdd;
                 ServerClass->UI_Input.resouce_input.CitizenCountSub = CitizenSub;
-                UE_LOG(LogTemp, Log, TEXT("sub"));
         }
     }
 

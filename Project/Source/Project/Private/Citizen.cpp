@@ -34,26 +34,26 @@ void ACitizen::Spawn_Citizen()
 	{
 		if (Is_Mycitizen == 0)
 		{
-			for (int i = 0; i < 10; ++i)
+			for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 			{
-				Location = { a.Value[i].location.x,a.Value[i].location.y,a.Value[i].location.z};
+				Location = { a.Value[count_citizenNum].location.x,a.Value[count_citizenNum].location.y,a.Value[count_citizenNum].location.z};
 				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(Citizen_Actor, Location, Rotation, SpawnInfo);
 				Spawned_Citizen->Tags.Add("Citizen");
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
-				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(i)));
+				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(count_citizenNum)));
 				New_Actors.Add(Spawned_Citizen);
 			}
 			Citizens_Editer.Add(Is_Mycitizen, New_Actors);
 		}
 		else
 		{
-			for (int i = 0; i < 10; ++i)
+			for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 			{
-				Location = { a.Value[i].location.x, a.Value[i].location.y, a.Value[i].location.z };
+				Location = { a.Value[count_citizenNum].location.x, a.Value[count_citizenNum].location.y, a.Value[count_citizenNum].location.z };
 				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(EnemyCitizenActor, Location, Rotation, SpawnInfo);
 				Spawned_Citizen->Tags.Add("Citizen");
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
-				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(i)));
+				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(count_citizenNum)));
 				New_Actors.Add(Spawned_Citizen);
 			}
 			Citizens_Editer.Add(Is_Mycitizen, New_Actors);
@@ -70,10 +70,10 @@ void ACitizen::Citizen_Moving()
 	for (auto& a : My_Citizen)
 	{
 		
-		for (int i = 0; i < 10; ++i)
+		for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 		{
-			Location = { a.Value[i].location.x,a.Value[i].location.y,a.Value[i].location.z };
-			Citizens_Editer[team][i]->SetActorLocation(Location);
+			Location = { a.Value[count_citizenNum].location.x,a.Value[count_citizenNum].location.y,a.Value[count_citizenNum].location.z };
+			Citizens_Editer[team][count_citizenNum]->SetActorLocation(Location);
 		}
 		team++;
 	}
