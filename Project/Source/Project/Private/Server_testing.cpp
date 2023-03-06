@@ -27,8 +27,6 @@ void AServer_testing::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
-	
 	/*FSocketThread* SocketThread = new FSocketThread(FString("127.0.0.1"), 9000);
 	bool connected = SocketThread->Init();
 	UE_LOG(LogTemp, Warning, TEXT("Connected: %d"), connected);*/
@@ -59,6 +57,17 @@ void AServer_testing::BeginPlay()
 	UI_Input.resouce_input.CitizenCountAdd = false;
 	UI_Input.resouce_input.CitizenCountSub = false;
 	
+	//Get Camera
+	TArray<AActor*> CameraActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), CameraActors);
+	for (AActor* Camera : CameraActors) {
+		UE_LOG(LogTemp, Warning, TEXT("Actor name: %s"), *Camera->GetName());
+		if (Camera->GetName() == "CameraActor_1") {
+			MyCamera = Cast<ACameraActor>(Camera);
+			UE_LOG(LogTemp, Warning, TEXT("CameraActor_1"));
+		}
+	}
+	
 	/*wcout.imbue(locale("korean"));*/
 	ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
 	s_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -69,7 +78,7 @@ void AServer_testing::BeginPlay()
 	ret = inet_pton(AF_INET, SERVER_ADDR, &server_addr.sin_addr);
 	//connect();
 	ret = connect(s_socket, reinterpret_cast<sockaddr*> (&server_addr), sizeof(server_addr));
-
+	
 	FirstSend();
 }
 
@@ -77,56 +86,53 @@ void AServer_testing::BeginPlay()
 void AServer_testing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!IsFirstSend)
-	{
-		UE_LOG(LogTemp, Log, TEXT("dsadsdas"));
-		if (Isthreading_first_send)
-		{
 
+	if (!IsFirstSend){
+		if (Isthreading_first_send){
 			Citizens->citizen_set(FirstSendServer);
-
 			Citizens->Spawn_Citizen();
-
 			MyTown->SpawnTown(players_list);
-
 			MyTown->SpawnResource(FirstSendServer);
-
 			Citizens->Citizen_Moving();
-			UE_LOG(LogTemp, Log, TEXT(" ////231////"));
 			IsFirstSend = true;
 		}
 	}
 	else {
-		
-
-		if (Is_send_UI_input == false)
-		{
-			if (UI_Input.resouce_input.CitizenCountAdd || UI_Input.resouce_input.CitizenCountSub)
-			{
+		if (Is_send_UI_input == false){
+			if (UI_Input.resouce_input.CitizenCountAdd || UI_Input.resouce_input.CitizenCountSub){
 				Is_send_UI_input = true;
 			}
 		}
-		else if (Is_send_UI_input == true)
-		{
-			if (!UI_Input.resouce_input.CitizenCountAdd && !UI_Input.resouce_input.CitizenCountSub)
-			{
+		else if (Is_send_UI_input == true){
+			if (!UI_Input.resouce_input.CitizenCountAdd && !UI_Input.resouce_input.CitizenCountSub){
 				Is_send_UI_input = false;
 			}
 			UI_Input.resouce_input.CitizenCountAdd = false;
 			UI_Input.resouce_input.CitizenCountSub = false;
 		}
-
-		
 		memcpy(&FirstSendClient.My_UI_input, &UI_Input.resouce_input, sizeof(FUI_Input));
 
+		clock_t t_1 = clock();
 		oil_count = FirstSendServer.MyResource[0], water_count = FirstSendServer.MyResource[1], iron_count = FirstSendServer.MyResource[2], food_count = FirstSendServer.MyResource[3], wood_count = FirstSendServer.MyResource[4];
 		TF_set(CurrentLocation, FirstSendServer.currlocation);
 		TF_set(sunangle, FirstSendServer.SunAngle);
+		clock_t t_2 = clock();
+
 		Citizens->CitizenNoJob(CitizenNoJobCnt);
 		Citizens->Citizen_Moving();
+		clock_t t_3 = clock();
+
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
+		clock_t t_4 = clock();
+
 		Temperature->Update(TerrainTemperature);
+		clock_t t_5 = clock();
+
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
+		clock_t t_6 = clock();
+
+		//UE_LOG(LogTemp, Log, TEXT("%lf, %lf, %lf, %lf, %lf"), (double)(t_6-t_5) / CLOCKS_PER_SEC, (double)(t_5 - t_4) / CLOCKS_PER_SEC, (double)(t_4 - t_3) / CLOCKS_PER_SEC, (double)(t_3 - t_2) / CLOCKS_PER_SEC, (double)(t_2 - t_1) / CLOCKS_PER_SEC);
+
 	}
 }
 

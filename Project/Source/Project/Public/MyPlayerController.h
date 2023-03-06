@@ -57,43 +57,28 @@ protected:
 	long long int mouse_cnt = 0;
 
 	bool bRightClickMouse;
-
 	bool bLeftClickMouse;
 
 	void InputRightMoustButtonPressed();
-
 	void InputRightMoustButtonReleased();
-
 	void InputLeftMoustButtonPressed();
-
 	void InputLeftMoustButtonReleased();
-
 	void InputUpPressed();
-
 	void InputDownPressed();
-
 	void InputLeftPressed();
-
 	void InputRightPressed();
-
 	void InputUpReleased();
-
 	void InputDownReleased();
-
 	void InputLeftReleased();
-
 	void InputRightReleased();
-
 	//void SetNewDestination(const FVector DestLocation);
-
 	void MoveToMouseCursor();
-
 	void MoveToActor();
-
 	void VisibilityTemperature();
+	void MouseScrollUp();
+	void MouseScrollDown();
 
 	virtual void SetupInputComponent() override;
-
 	virtual void PlayerTick(float DeltaTime) override;
 
 // grid and building ±¸ºÐ
