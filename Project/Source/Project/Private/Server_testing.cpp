@@ -26,7 +26,6 @@ AServer_testing::~AServer_testing()
 	if (NetworkThread != nullptr)
 	{
 		Network->Stop();
-		NetworkThread->Kill();
 	}
 }
 
