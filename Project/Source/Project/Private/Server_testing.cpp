@@ -130,7 +130,7 @@ void AServer_testing::Tick(float DeltaTime)
 
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
 		clock_t t_6 = clock();
-
+		MyTown->UpdateResource();
 		//UE_LOG(LogTemp, Log, TEXT("%lf, %lf, %lf, %lf, %lf"), (double)(t_6-t_5) / CLOCKS_PER_SEC, (double)(t_5 - t_4) / CLOCKS_PER_SEC, (double)(t_4 - t_3) / CLOCKS_PER_SEC, (double)(t_3 - t_2) / CLOCKS_PER_SEC, (double)(t_2 - t_1) / CLOCKS_PER_SEC);
 
 	}
