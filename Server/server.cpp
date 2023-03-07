@@ -164,7 +164,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				}
 			}
 
-			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(FirstSendClient), 0);
+			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(FirstSendClient), MSG_WAITALL);
 			if (tempsa == SOCKET_ERROR)
 			{
 				return 0;
