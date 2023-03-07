@@ -64,14 +64,14 @@ uint32_t FSocketThread::Run()
 	steady_clock::time_point start_t = high_resolution_clock::now();
 	while (IsRunning) {
 		steady_clock::time_point end_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 50 && IsConnected){
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 0 && IsConnected){
 
 			start_t = high_resolution_clock::now();
 			MainClass->temped += 1;
 
 			//Recv Struct
 			if (IsConnected) {
-				IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct, sizeof(MainClass->ServerSendStruct), BytesReceived);
+				IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct, sizeof(MainClass->ServerSendStruct), BytesReceived, ESocketReceiveFlags::WaitAll);
 				if (BytesReceived != sizeof(MainClass->ServerSendStruct)) {
 					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!! ServerSendStruct %d %d"), sizeof(MainClass->ServerSendStruct), BytesReceived);
 					IsConnected = false;
@@ -81,7 +81,7 @@ uint32_t FSocketThread::Run()
 			//Recv Terrain
 			if (IsConnected) {
 				for (int thread_cnt_num = 0; thread_cnt_num < MapSizeX; thread_cnt_num++) {
-					IsConnected = Socket->Recv((uint8*)&MainClass->Terrain2DArray[thread_cnt_num], sizeof(char) * MapSizeY, BytesReceived);
+					IsConnected = Socket->Recv((uint8*)&MainClass->Terrain2DArray[thread_cnt_num], sizeof(char) * MapSizeY, BytesReceived, ESocketReceiveFlags::WaitAll);
 					if (BytesReceived != sizeof(char) * MapSizeY) {
 						UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!! Terrain2DArray %d %d"), sizeof(char) * MapSizeY, BytesReceived);
 						IsConnected = false;
@@ -92,7 +92,7 @@ uint32_t FSocketThread::Run()
 			//Recv Temperature
 			if (IsConnected) {
 				for (int thread_cnt_num = 0; thread_cnt_num < MapSizeX; thread_cnt_num++) {
-					IsConnected = Socket->Recv((uint8*)&MainClass->TerrainTemperature[thread_cnt_num], sizeof(char) * MapSizeY, BytesReceived);
+					IsConnected = Socket->Recv((uint8*)&MainClass->TerrainTemperature[thread_cnt_num], sizeof(char) * MapSizeY, BytesReceived, ESocketReceiveFlags::WaitAll);
 					if (BytesReceived != sizeof(char) * MapSizeY) {
 						UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!! TerrainTemperature %d %d"), sizeof(char) * MapSizeY, BytesReceived);
 						IsConnected = false;

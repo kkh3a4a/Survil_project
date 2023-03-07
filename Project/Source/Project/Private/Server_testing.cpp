@@ -123,6 +123,7 @@ void AServer_testing::Tick(float DeltaTime)
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
 		MyTown->UpdateResource();
 
+
 	}
 }
 
