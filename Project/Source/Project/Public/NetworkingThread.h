@@ -24,11 +24,13 @@ public:
     void Stop();
     virtual uint32_t Run() override;
 
+    bool IsRunning = true;
+	bool IsConnected = false;
+
 private: 
-    FString IPAddress = "127.0.0.1";
+    FString IPAddress = "192.168.0.8";
     int32 PortNumber = 9000;
     FSocket* Socket;
-    bool IsRunning = false;
     int32 BytesReceived;
     int32 BytesSent;
 

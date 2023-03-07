@@ -12,8 +12,8 @@
 #include "GenericPlatform/GenericPlatformProcess.h"
 #include "Components/InstancedStaticMeshComponent.h"
 
-FSocketThread* MyRunnable;
-FRunnableThread* MyThread;
+FSocketThread* Network;
+FRunnableThread* NetworkThread;
 
 AServer_testing::AServer_testing()
 {
@@ -23,7 +23,11 @@ AServer_testing::AServer_testing()
 
 AServer_testing::~AServer_testing()
 {
-	MyThread->Kill();
+	if (NetworkThread != nullptr)
+	{
+		Network->Stop();
+		NetworkThread->Kill();
+	}
 }
 
 // Called when the game starts or when spawned
@@ -71,8 +75,8 @@ void AServer_testing::BeginPlay()
 	
 	memcpy(&ClientSendStruct.My_keyboard_input, my_key_input, sizeof(Fkeyboard_input));
 	my_key_input = &ClientSendStruct.My_keyboard_input;
-	MyRunnable = new FSocketThread(this);
-	MyThread = FRunnableThread::Create(MyRunnable, TEXT("MyThread"), 0, TPri_BelowNormal);
+	Network = new FSocketThread(this);
+	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
 }
 
 // Called every frame
