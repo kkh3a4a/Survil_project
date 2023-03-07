@@ -23,6 +23,7 @@ AServer_testing::AServer_testing()
 
 AServer_testing::~AServer_testing()
 {
+	MyThread->Kill();
 }
 
 // Called when the game starts or when spawned
@@ -108,22 +109,15 @@ void AServer_testing::Tick(float DeltaTime)
 		oil_count = ServerSendStruct.MyResource[0], water_count = ServerSendStruct.MyResource[1], iron_count = ServerSendStruct.MyResource[2], food_count = ServerSendStruct.MyResource[3], wood_count = ServerSendStruct.MyResource[4];
 		TF_set(CurrentLocation, ServerSendStruct.currlocation);
 		TF_set(sunangle, ServerSendStruct.SunAngle);
-		clock_t t_2 = clock();
 
 		Citizens->CitizenNoJob(CitizenNoJobCnt);
 		Citizens->Citizen_Moving();
-		clock_t t_3 = clock();
 
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
-		clock_t t_4 = clock();
-
 		Temperature->Update(TerrainTemperature);
-		clock_t t_5 = clock();
 
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
-		clock_t t_6 = clock();
 		MyTown->UpdateResource();
-		//UE_LOG(LogTemp, Log, TEXT("%lf, %lf, %lf, %lf, %lf"), (double)(t_6-t_5) / CLOCKS_PER_SEC, (double)(t_5 - t_4) / CLOCKS_PER_SEC, (double)(t_4 - t_3) / CLOCKS_PER_SEC, (double)(t_3 - t_2) / CLOCKS_PER_SEC, (double)(t_2 - t_1) / CLOCKS_PER_SEC);
 
 	}
 }

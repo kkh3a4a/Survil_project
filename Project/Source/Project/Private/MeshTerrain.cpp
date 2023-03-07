@@ -4,29 +4,23 @@
 AMeshTerrain::AMeshTerrain()
 {
 	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-
 	// Set the root component as the root of the actor
 	RootComponent = Root;
-
 	// Set up the mesh component
 	MeshTerrain = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("MeshTerrain"));
 }
 
 void AMeshTerrain::InitializeMeshTerrain(UMaterialInstance* TerrainMaterial)
 {
-	for (int32 Y = 0; Y < MapSizeY; Y++)
-	{
-		for (int32 X = 0; X < MapSizeX; X++)
-		{
+	for (int32 Y = 0; Y < MapSizeY; Y++){
+		for (int32 X = 0; X < MapSizeX; X++){
 			FVector Vertex(100 * X, 100 * Y, 0);
 			Vertices.Add(Vertex);
 		}
 	}
 	TArray<int32> Triangles;
-	for (int32 Y = 0; Y < MapSizeY - 1; Y++)
-	{
-		for (int32 X = 0; X < MapSizeX - 1; X++)
-		{
+	for (int32 Y = 0; Y < MapSizeY - 1; Y++){
+		for (int32 X = 0; X < MapSizeX - 1; X++){
 			Triangles.Add(Y * MapSizeX + X);
 			Triangles.Add((Y + 1) * MapSizeX + X);
 			Triangles.Add(Y * MapSizeX + X + 1);

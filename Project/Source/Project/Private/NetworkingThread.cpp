@@ -30,8 +30,12 @@ FSocketThread::FSocketThread(AActor* temp_server_testing)
 	ServerAddress->SetIp(*IPAddress, bIsValid);
 	ServerAddress->SetPort(PortNumber);
 	IsRunning = Socket->Connect(*ServerAddress);
-	if(IsRunning)
+	if (IsRunning) {
 		UE_LOG(LogTemp, Warning, TEXT("Connected to Server!"));
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Not Connected to Server!"));
+	}
 }
 
 uint32_t FSocketThread::Run()
@@ -41,6 +45,11 @@ uint32_t FSocketThread::Run()
 
 	//Recv Struct
 	IsRunning = Socket->Recv((uint8*)&MainClass->ServerSendStruct, sizeof(MainClass->ServerSendStruct), BytesReceived);
+	if (BytesReceived != sizeof(MainClass->ServerSendStruct)) {
+		UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
+		IsRunning = false;
+	}
+
 	for (int thread_cnt_num = 0; thread_cnt_num < MAXPLAYER; ++thread_cnt_num) {
 		MainClass->players_list.Add(thread_cnt_num, &(MainClass->ServerSendStruct.player_info));
 	}
@@ -53,25 +62,43 @@ uint32_t FSocketThread::Run()
 	MainClass->Isthreading_first_send = true;
 
 	steady_clock::time_point start_t = high_resolution_clock::now();
-	while(IsRunning){
+	while (IsRunning) {
 		steady_clock::time_point end_t = high_resolution_clock::now();
 		if (duration_cast<milliseconds>(end_t - start_t).count() > 50){
+
 			start_t = high_resolution_clock::now();
 			MainClass->temped += 1;
-			IsRunning = Socket->Recv((uint8*)&MainClass->ServerSendStruct, sizeof((MainClass->ServerSendStruct)), BytesReceived);
+
+			//Recv Struct
+			IsRunning = Socket->Recv((uint8*)&MainClass->ServerSendStruct, sizeof(MainClass->ServerSendStruct), BytesReceived);
+			if (BytesReceived != sizeof(MainClass->ServerSendStruct)) {
+				UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!! ServerSendStruct"));
+				IsRunning = false;
+				return 0;
+			}
 
 			//Recv Terrain
 			for (int thread_cnt_num = 0; thread_cnt_num < MapSizeX; thread_cnt_num++) {
 				IsRunning = Socket->Recv((uint8*)&MainClass->Terrain2DArray[thread_cnt_num], sizeof(char) * MapSizeY, BytesReceived);
+				if (BytesReceived != sizeof(char) * MapSizeY) {
+					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!! Terrain2DArray"));
+					IsRunning = false;
+					return 0;
+				}
 			}
 
 			//Recv Temperature
 			for (int thread_cnt_num = 0; thread_cnt_num < MapSizeX; thread_cnt_num++) {
 				IsRunning = Socket->Recv((uint8*)&MainClass->TerrainTemperature[thread_cnt_num], sizeof(char) * MapSizeY, BytesReceived);
+				if (BytesReceived != sizeof(char) * MapSizeY) {
+					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!! TerrainTemperature"));
+					IsRunning = false;
+					return 0;
+				}
 			}
 
 			//Send Struct
-			IsRunning = Socket->Send((uint8*)&MainClass->ClientSendStruct, sizeof(FClientSendInfo), BytesReceived);
+			IsRunning = Socket->Send((uint8*)&MainClass->ClientSendStruct, sizeof(FClientSendInfo), BytesSent);
 		}
 		else{
 			Sleep(1);
