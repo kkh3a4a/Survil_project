@@ -3,7 +3,6 @@
 #pragma once
 #include "Windows/AllowWindowsPlatformTypes.h"
 // include header with included Windows.h
-#include<WS2tcpip.h>
 #include<iostream>
 #include <chrono>
 #include "global.h"
@@ -30,6 +29,7 @@ class PROJECT_API AServer_testing : public AActor
 public:
 	// Sets default values for this actor's properties
 	AServer_testing();
+	~AServer_testing();
 
 protected:
 	// Called when the game starts or when spawned
@@ -38,9 +38,7 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	const char* SERVER_ADDR = "127.0.0.1";
-	const short SERVER_PORT = 9000;
-	int ret = 0;
+
 
 	bool Is_send_UI_input = false;
 	bool IsConnect = false;
@@ -74,8 +72,7 @@ public:
 
 	bool Isthreading_first_send = false;
 	steady_clock::time_point start_t;
-	WSADATA WSAData;
-	SOCKET s_socket;
+	
 	HANDLE hThread;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -144,14 +141,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float CurrentLocation;
-	
-	FFirstSendServer FirstSendServer;
-	FFirstSendClient FirstSendClient;
+
+	FServerSendInfo ServerSendStruct;
+	FClientSendInfo ClientSendStruct;
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
 	void resoure_set(Fresources_actor& a, Fresources_actor& b);
-	int connecting();
-	bool FirstSend();
 };
 
 

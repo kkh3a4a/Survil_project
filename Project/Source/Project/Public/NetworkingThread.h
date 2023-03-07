@@ -2,17 +2,13 @@
 
 #pragma once
 
-
-
-
 #include "CoreMinimal.h"
 #include "HAL/Runnable.h"
 #include "Sockets.h"
 #include "MeshTerrain.h"
+#include "SocketSubsystem.h"
+#include<WS2tcpip.h>
 
-/**
- * 
- */
 class PROJECT_API NetworkingThread
 {
 public:
@@ -25,12 +21,14 @@ class FSocketThread : public FRunnable
 public:
     FSocketThread(AActor* temp_server_testing);
 
-    void ServerGetter();
-    //virtual bool Init() override;
+    void Stop();
     virtual uint32_t Run() override;
-    //virtual void Stop() override;
-    //AServer_testing* server_testing;
 
 private: 
-       
+    FString IPAddress = "192.168.0.8";
+    int32 PortNumber = 9000;
+    FSocket* Socket;
+    bool IsRunning = false;
+    int BytesReceived;
+
 };

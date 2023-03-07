@@ -144,7 +144,7 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FFirstSendServer {
+struct FServerSendInfo {
 	GENERATED_USTRUCT_BODY()
 public:
 	Fthree_float SunAngle;
@@ -157,7 +157,7 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FFirstSendClient {
+struct FClientSendInfo {
 	GENERATED_USTRUCT_BODY()
 public:
 	FCitizen_moving My_citizen_moving = {};

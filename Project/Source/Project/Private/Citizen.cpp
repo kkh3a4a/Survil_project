@@ -80,7 +80,7 @@ void ACitizen::Citizen_Moving()
 
 }
 
-void ACitizen::citizen_set(FFirstSendServer& FirstSendServer)
+void ACitizen::citizen_set(FServerSendInfo& FirstSendServer)
 {
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
