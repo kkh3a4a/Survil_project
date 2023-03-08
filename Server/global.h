@@ -9,8 +9,8 @@
 #define MAXPLAYER 1
 #define MAXCITIZEN 200
 #define FIRSTSPAWN 10
-#define SIGHT_X 200
-#define SIGHT_Y 120
+#define SIGHT_X 240
+#define SIGHT_Y 100
 
 
 
