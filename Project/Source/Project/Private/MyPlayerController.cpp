@@ -227,7 +227,7 @@ void AMyPlayerController::MouseScrollUp()
 
 void AMyPlayerController::MouseScrollDown()
 {
-    if (ServerClass->MyCamera->GetActorLocation().Z >= 8000)
+    if (ServerClass->MyCamera->GetActorLocation().Z >= 7000)
         return;
     ServerClass->MyCamera->SetActorLocation(ServerClass->MyCamera->GetActorLocation() + FVector(0, 100, 500));
     ServerClass->MyCamera->SetActorRotation(FRotator(ServerClass->MyCamera->GetActorRotation().Pitch - 2, ServerClass->MyCamera->GetActorRotation().Yaw, ServerClass->MyCamera->GetActorRotation().Roll));
