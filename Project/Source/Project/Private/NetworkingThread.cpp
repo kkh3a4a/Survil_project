@@ -44,19 +44,19 @@ uint32_t FSocketThread::Run()
 		return 0;
 
 	//Recv Struct
-	IsRunning = Socket->Recv((uint8*)&MainClass->ServerSendStruct, sizeof(MainClass->ServerSendStruct), BytesReceived, ESocketReceiveFlags::WaitAll);
-	if (BytesReceived != sizeof(MainClass->ServerSendStruct)) {
+	IsRunning = Socket->Recv((uint8*)&MainClass->ServerSendStruct1, sizeof(MainClass->ServerSendStruct1), BytesReceived, ESocketReceiveFlags::WaitAll);
+	if (BytesReceived != sizeof(MainClass->ServerSendStruct1)) {
 		UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 		IsRunning = false;
 	}
-	IsConnected = Socket->Recv((uint8*)&MainClass->SecondServerSend, sizeof(MainClass->SecondServerSend), BytesReceived, ESocketReceiveFlags::WaitAll);
+	IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct2, sizeof(MainClass->ServerSendStruct2), BytesReceived, ESocketReceiveFlags::WaitAll);
 	if (!IsConnected) {
 		UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 		IsConnected = false;
 		return 0;
 	}
 	for (int thread_cnt_num = 0; thread_cnt_num < MAXPLAYER; ++thread_cnt_num) {
-		MainClass->players_list.Add(thread_cnt_num, &(MainClass->ServerSendStruct.player_info));
+		MainClass->players_list.Add(thread_cnt_num, &(MainClass->ServerSendStruct1.player_info));
 	}
 	MainClass->first_recv_send = true;
 	MainClass->Citizens->Citizen_moving->team = -1;
@@ -76,7 +76,7 @@ uint32_t FSocketThread::Run()
 
 			//Recv Struct
 			if (IsConnected) {
-				IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct, sizeof(MainClass->ServerSendStruct), BytesReceived, ESocketReceiveFlags::WaitAll);
+				IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct1, sizeof(MainClass->ServerSendStruct1), BytesReceived, ESocketReceiveFlags::WaitAll);
 				if (!IsConnected) {
 					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 					IsConnected = false;
@@ -85,7 +85,7 @@ uint32_t FSocketThread::Run()
 			}
 
 			if (IsConnected) {
-				IsConnected = Socket->Recv((uint8*)&MainClass->SecondServerSend, sizeof(MainClass->SecondServerSend), BytesReceived, ESocketReceiveFlags::WaitAll);
+				IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct2, sizeof(MainClass->ServerSendStruct2), BytesReceived, ESocketReceiveFlags::WaitAll);
 				if (!IsConnected) {
 					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 					IsConnected = false;

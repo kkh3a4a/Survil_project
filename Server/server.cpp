@@ -23,7 +23,7 @@ bool game_start = false;
 int len = 0;
 
 std::mutex player_cnt_lock;
-TF sun_angle;
+float sun_angle;
 
 vector<SOCKET> player_list;
 map <int, Citizen_moving*>citizen_Move;
@@ -46,12 +46,11 @@ DWORD WINAPI terrain_change(LPVOID arg)
 	//terrain->log_on();
 	int i{};
 	while (1){
-		sun_angle.y += 5;
 		//clock_t t_0 = clock();
 		//cout << endl << i << "번째" << endl;
 		terrain->wind_blow({ 1, 0 }, 10);
-		terrain->make_shadow_map(sun_angle.y);
-		terrain->make_tempertature_map(sun_angle.y);
+		terrain->make_shadow_map(sun_angle);
+		terrain->make_tempertature_map(sun_angle);
 
 		/*terrain->show_array(total_terrain, 320);
 		terrain->show_array(temperature_map, 320);*/
@@ -203,35 +202,36 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		cout << "위치 : " << a.second->player_info->location.x << ", " << a.second->player_info->location.y << endl;
 	}
 
-	sun_angle.x = 0.0f;
-	sun_angle.y = 0.0f;
-	sun_angle.z = 0.0f;
-
-	auto sunangle_start_t = high_resolution_clock::now();
-	auto actor_move_start_t = high_resolution_clock::now();
+	sun_angle = 0.0f;
+	auto start_game = high_resolution_clock::now();
+	auto start_50 = start_game;
+	auto start_1000 = start_game;
 
 	while (1) {
-		auto sunangle_end_t = high_resolution_clock::now();
-		auto actor_move_end_t = high_resolution_clock::now();
+		auto end_time = high_resolution_clock::now();
 		
-		if (duration_cast<milliseconds>(sunangle_end_t - sunangle_start_t).count() > 50)
-		{
-			sunangle_start_t = high_resolution_clock::now();
-			sun_angle.y += 0.2f;
-			if (sun_angle.y >= 180.f) 
-			{
-				sun_angle.y = -180.f;
+		//50ms
+		if (duration_cast<milliseconds>(end_time - start_50).count() > 50){
+			auto cycle_time = duration_cast<milliseconds>(end_time - start_50).count();
+			start_50 = high_resolution_clock::now();
+			
+			//rotate sunangle
+			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
+			sun_angle += 2.f * cycle_time / 1000.f;
+			if (sun_angle >= 360.f) {
+				sun_angle -=360.f;
 			}
-			for (auto& a : players_list)
-			{
+			
+			//move camera
+			camera_movement(players_list);
+			
+			//move citizen
+			for (auto& a : players_list) {
 				float distance = 0.0f;
 				int cnt = 0;
-				for (auto& b : a.second->player_citizen)
-				{
-					if(b != NULL)
-					{
-						if (a.second->player_citizen_arrival_location[cnt]->team != -1)
-						{
+				for (auto& b : a.second->player_citizen) {
+					if (b != NULL) {
+						if (a.second->player_citizen_arrival_location[cnt]->team != -1) {
 							if (location_distance(b->location, a.second->player_citizen_arrival_location[cnt]->location) > 10) {
 								Move_Civil(b->location, a.second->player_citizen_arrival_location[cnt]->location);
 							}
@@ -239,22 +239,16 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					}
 					cnt++;
 				}
-				/*cout << a.second->port << " ";
-				for (int i = 0; i < 5;i++)
-				{
-					cout << a.second->resources[i] << " ";
-				}
-				cout << endl;*/
 			}
-			camera_movement(players_list);
 		}
-		else if (duration_cast<milliseconds>(actor_move_end_t - actor_move_start_t).count() > 1000)
-		{
-			actor_move_start_t = high_resolution_clock::now();
+		//1000ms
+		else if (duration_cast<milliseconds>(end_time - start_1000).count() > 1000){
+			start_1000 = high_resolution_clock::now();
+			
+			//set citizen destination
 			resource_collect(players_list, resource_create_landscape);
 		}
-		else
-		{
+		else{
 			Sleep(1);
 		}
 

@@ -85,10 +85,10 @@ void AServer_testing::Tick(float DeltaTime)
 
 	if (!IsFirstSend){
 		if (Isthreading_first_send){
-			Citizens->citizen_set(ServerSendStruct, SecondServerSend);
+			Citizens->citizen_set(ServerSendStruct1, ServerSendStruct2);
 			Citizens->Spawn_Citizen();
 			MyTown->SpawnTown(players_list);
-			MyTown->SpawnResource(ServerSendStruct, SecondServerSend);
+			MyTown->SpawnResource(ServerSendStruct1, ServerSendStruct2);
 			Citizens->Citizen_Moving();
 			IsFirstSend = true;
 		}
@@ -109,9 +109,9 @@ void AServer_testing::Tick(float DeltaTime)
 		memcpy(&ClientSendStruct.My_UI_input, &UI_Input.resouce_input, sizeof(FUI_Input));
 
 		clock_t t_1 = clock();
-		oil_count = ServerSendStruct.MyResource[0], water_count = ServerSendStruct.MyResource[1], iron_count = ServerSendStruct.MyResource[2], food_count = ServerSendStruct.MyResource[3], wood_count = ServerSendStruct.MyResource[4];
-		TF_set(CurrentLocation, ServerSendStruct.currlocation);
-		TF_set(sunangle, ServerSendStruct.SunAngle);
+		oil_count = ServerSendStruct1.MyResource[0], water_count = ServerSendStruct1.MyResource[1], iron_count = ServerSendStruct1.MyResource[2], food_count = ServerSendStruct1.MyResource[3], wood_count = ServerSendStruct1.MyResource[4];
+		TF_set(CurrentLocation, ServerSendStruct1.currlocation);
+		sunangle = ServerSendStruct1.SunAngle;
 
 		Citizens->CitizenNoJob(CitizenNoJobCnt);
 		Citizens->Citizen_Moving();

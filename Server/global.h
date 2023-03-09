@@ -12,10 +12,9 @@
 #define SIGHT_X 240
 #define SIGHT_Y 100
 
-
-
 std::uniform_int_distribution <int>uid{ 0 + 100 * 100, 1600 * 100 - 100 * 100 };
 std::uniform_int_distribution <int>resource_uid{ -100, 100 };
+
 typedef struct three_float {
 	float x = 0.0f;
 	float y = 0.0f;
@@ -98,7 +97,7 @@ public:
 
 typedef struct FirstSendServer{
 public:
-	TF SunAngle = { 0,0,0 };
+	float SunAngle = 0;
 	FActor player_info;
 	int MyResource[5];
 	TF currlocation = { 0,0,0 };

@@ -123,7 +123,7 @@ public:
 	AMyTown* MyTown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Fthree_float sunangle;
+		float sunangle;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terrain")
 		UMaterialInstance* TerrainMaterialInstance;
@@ -142,8 +142,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float CurrentLocation;
 
-	FServerSendInfo ServerSendStruct;
-	FSecondServerInfo SecondServerSend;
+	FServerSendInfo1 ServerSendStruct1;
+	FServerSendInfo2 ServerSendStruct2;
 	FClientSendInfo ClientSendStruct;
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
