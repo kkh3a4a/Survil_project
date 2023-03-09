@@ -52,7 +52,7 @@ void AMyTown::SpawnTown(TMap<int, FActor_location_rotation*>& player_list)
 
 }
 
-void AMyTown::SpawnResource(FServerSendInfo& FirstSendServer)
+void AMyTown::SpawnResource(FServerSendInfo& FirstSendServer, FSecondServerInfo& SecondSendServer)
 {
 	AActor* SpawnedResource;
 	FVector Location(0.0f, 0.0f, 0.0f);
@@ -64,7 +64,7 @@ void AMyTown::SpawnResource(FServerSendInfo& FirstSendServer)
 	for (int i = 0; i < MAXPLAYER * 10; ++i)
 	{
 		//resources_create_landscape[i] = &FirstSendServer.resources[i];
-		resources_create_landscape.Add(&FirstSendServer.resources[i]);
+		resources_create_landscape.Add(&SecondSendServer.resources[i]);
 		Location = { resources_create_landscape[i]->location.x,resources_create_landscape[i]->location.y,resources_create_landscape[i]->location.z };
 		
 		if (resources_create_landscape[i]->type == 0)

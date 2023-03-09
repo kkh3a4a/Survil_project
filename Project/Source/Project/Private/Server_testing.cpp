@@ -85,10 +85,10 @@ void AServer_testing::Tick(float DeltaTime)
 
 	if (!IsFirstSend){
 		if (Isthreading_first_send){
-			Citizens->citizen_set(ServerSendStruct);
+			Citizens->citizen_set(ServerSendStruct, SecondServerSend);
 			Citizens->Spawn_Citizen();
 			MyTown->SpawnTown(players_list);
-			MyTown->SpawnResource(ServerSendStruct);
+			MyTown->SpawnResource(ServerSendStruct, SecondServerSend);
 			Citizens->Citizen_Moving();
 			IsFirstSend = true;
 		}

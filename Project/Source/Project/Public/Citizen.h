@@ -54,7 +54,7 @@ public:
 
 	void Citizen_Moving();
 
-	void citizen_set(FServerSendInfo&);
+	void citizen_set(FServerSendInfo&, FSecondServerInfo&);
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
 

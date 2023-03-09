@@ -100,12 +100,18 @@ typedef struct FirstSendServer{
 public:
 	TF SunAngle = { 0,0,0 };
 	FActor player_info;
-	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
-	resource_actor resources[MAXPLAYER * 10];
 	int MyResource[5];
 	TF currlocation = { 0,0,0 };
 	//char send_sight_temperature[SIGHT_X][SIGHT_Y];
 };
+
+typedef struct SecondSendServer {
+public:
+	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
+	resource_actor resources[MAXPLAYER * 10];
+	//char send_sight_temperature[SIGHT_X][SIGHT_Y];
+};
+
 
 typedef struct FirstSendClient {
 public:
@@ -451,43 +457,17 @@ void Citizen_Work_Sub(std::map<int, players_profile*>& players_list, std::map<in
 
 }
 
-void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_client, std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, char** player_sight_temperature, int port) {
+void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_client, std::map<int, players_profile*>& players_list, char** player_sight_temperature, int port) {
 	
 	memcpy(&first_send_server.player_info, players_list[port]->player_info, sizeof(FActor));
 	players_list[port]->player_info = &first_send_server.player_info;
 
-	
-	for (int i = 0; i < FIRSTSPAWN; ++i)
-	{
-		memcpy(&first_send_server.player_citizen[0][i], players_list[port]->player_citizen[i], sizeof(FCitizen_sole));
-		players_list[port]->player_citizen[i] = &first_send_server.player_citizen[0][i];
-	}
-	int citizen_cnt = 1;
-	for(auto& a : players_list)
-	{
-		
-		if(a.first != port)
-		{
-			std::cout << a.first << ", " << port << std::endl;
-			for (int i = 0; i < FIRSTSPAWN; ++i)
-			{
-				memcpy(&first_send_server.player_citizen[citizen_cnt][i], players_list[a.first]->player_citizen[i], sizeof(FCitizen_sole));
-			}
-			citizen_cnt++;
-		}
-		
-	}
-	for (int i = 0; i < MAXPLAYER * 10; ++i)
-	{
-		memcpy(&first_send_server.resources[i], resource_create_landscape[i], sizeof(resource_actor));
-		resource_create_landscape[i] = &first_send_server.resources[i];
-	}
 	for(int i=0; i<5 ;++i)
 	{
 		players_list[port]->resources[i] = new int;
 		*players_list[port]->resources[i] = 0;
 		memcpy(&first_send_server.MyResource[i], players_list[port]->resources[i], sizeof(int));
-		players_list[port]->resources[i] = &first_send_server.MyResource[0];
+		players_list[port]->resources[i] = &first_send_server.MyResource[i];
 	}
 	memcpy(&first_send_server.currlocation, players_list[port]->curr_location, sizeof(TF));
 	players_list[port]->curr_location = &first_send_server.currlocation;
@@ -496,4 +476,31 @@ void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_c
 	players_list[port]->my_keyinput = &first_send_client.My_keyboard_input;
 		
 
+}
+
+void Secondmemcpy(SecondSendServer& second_send_server, std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port)
+{
+	for (int i = 0; i < FIRSTSPAWN; ++i)
+	{
+		memcpy(&second_send_server.player_citizen[0][i], players_list[port]->player_citizen[i], sizeof(FCitizen_sole));
+	}
+	int citizen_cnt = 1;
+	for (auto& a : players_list)
+	{
+
+		if (a.first != port)
+		{
+			std::cout << a.first << ", " << port << std::endl;
+			for (int i = 0; i < FIRSTSPAWN; ++i)
+			{
+				memcpy(&second_send_server.player_citizen[citizen_cnt][i], players_list[a.first]->player_citizen[i], sizeof(FCitizen_sole));
+			}
+			citizen_cnt++;
+		}
+
+	}
+	for (int i = 0; i < MAXPLAYER * 10; ++i)
+	{
+		memcpy(&second_send_server.resources[i], resource_create_landscape[i], sizeof(resource_actor));
+	}
 }

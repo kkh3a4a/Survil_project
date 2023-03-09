@@ -82,11 +82,11 @@ void ACitizen::Citizen_Moving()
 
 }
 
-void ACitizen::citizen_set(FServerSendInfo& FirstSendServer)
+void ACitizen::citizen_set(FServerSendInfo& FirstSendServer, FSecondServerInfo& SecondSendServer)
 {
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
-		My_Citizen.Add(i, FirstSendServer.player_citizen[i]);
+		My_Citizen.Add(i, SecondSendServer.player_citizen[i]);
 	}
 }
 

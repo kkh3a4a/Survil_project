@@ -88,6 +88,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n", addr, ntohs(clientaddr.sin_port));
 	auto start_t = high_resolution_clock::now();
 	FirstSendServer first_send_server;
+	SecondSendServer second_send_server;
 	FirstSendClient first_send_client;
 	FActor player_info;
 	//해당 클라이언트의 port번호 map에 저장
@@ -120,10 +121,10 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	while (!location_set);
 	while (1){
 
-		FirstInit(first_send_server, first_send_client, players_list, resource_create_landscape, player_sight_temperature, port);
-
+		FirstInit(first_send_server, first_send_client, players_list, player_sight_temperature, port);
+		Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
 		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
-	
+		retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(SecondSendServer), 0);
 		break;
 	}
 	Citizen_moving temp_citizen_moving;
@@ -132,25 +133,17 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		auto end_t = high_resolution_clock::now();
 		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
 		{
+			
 			start_t = high_resolution_clock::now();
 			memcpy(&first_send_server.SunAngle, &sun_angle, sizeof(TF));
+			Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
 			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
-			
+			retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(SecondSendServer), 0);
+
 			////10배 축소해서 일단 테스트
 			////cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
-			int player_count = 1;
-			for (auto& a : players_list)
-			{
-				if (a.first != port)
-				{
-					for (int i = 0; i < FIRSTSPAWN; ++i)
-					{
-						memcpy(&first_send_server.player_citizen[player_count][i], players_list[a.first]->player_citizen[i], sizeof(FCitizen_sole));
-					}
-					player_count++;
-				}
+			
 
-			}
 			II player_location{ (int)players_list[port]->curr_location->x / 100, (int)players_list[port]->curr_location->y / 100 };
 			terrain->copy_for_player_map(player_location);
 			for (int i = 0; i < player_sight_size.x; ++i) {

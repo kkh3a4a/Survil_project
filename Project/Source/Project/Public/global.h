@@ -149,12 +149,19 @@ struct FServerSendInfo {
 public:
 	Fthree_float SunAngle;
 	FActor_location_rotation player_info;
-	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
-	Fresources_actor resources[MAXPLAYER * 10];
 	int MyResource[5];
 	Fthree_float currlocation;
 	//char send_sight_temperature[MAPSIZEX][MAPSIZEY];
 };
+
+USTRUCT(Atomic, BlueprintType)
+struct FSecondServerInfo {
+	GENERATED_USTRUCT_BODY()
+public:
+	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
+	Fresources_actor resources[MAXPLAYER * 10];
+};
+
 
 USTRUCT(Atomic, BlueprintType)
 struct FClientSendInfo {

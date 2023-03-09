@@ -143,6 +143,7 @@ public:
 		Fthree_float CurrentLocation;
 
 	FServerSendInfo ServerSendStruct;
+	FSecondServerInfo SecondServerSend;
 	FClientSendInfo ClientSendStruct;
 
 	void TF_set(Fthree_float& a, Fthree_float& b);

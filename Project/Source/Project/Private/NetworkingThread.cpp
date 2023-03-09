@@ -49,7 +49,12 @@ uint32_t FSocketThread::Run()
 		UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 		IsRunning = false;
 	}
-
+	IsConnected = Socket->Recv((uint8*)&MainClass->SecondServerSend, sizeof(MainClass->SecondServerSend), BytesReceived, ESocketReceiveFlags::WaitAll);
+	if (!IsConnected) {
+		UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
+		IsConnected = false;
+		return 0;
+	}
 	for (int thread_cnt_num = 0; thread_cnt_num < MAXPLAYER; ++thread_cnt_num) {
 		MainClass->players_list.Add(thread_cnt_num, &(MainClass->ServerSendStruct.player_info));
 	}
@@ -72,6 +77,15 @@ uint32_t FSocketThread::Run()
 			//Recv Struct
 			if (IsConnected) {
 				IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct, sizeof(MainClass->ServerSendStruct), BytesReceived, ESocketReceiveFlags::WaitAll);
+				if (!IsConnected) {
+					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
+					IsConnected = false;
+					return 0;
+				}
+			}
+
+			if (IsConnected) {
+				IsConnected = Socket->Recv((uint8*)&MainClass->SecondServerSend, sizeof(MainClass->SecondServerSend), BytesReceived, ESocketReceiveFlags::WaitAll);
 				if (!IsConnected) {
 					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 					IsConnected = false;
