@@ -64,7 +64,7 @@ uint32_t FSocketThread::Run()
 	steady_clock::time_point start_t = high_resolution_clock::now();
 	while (IsRunning) {
 		steady_clock::time_point end_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 0 && IsConnected){
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 50 && IsConnected){
 
 			start_t = high_resolution_clock::now();
 			MainClass->temped += 1;
@@ -106,7 +106,7 @@ uint32_t FSocketThread::Run()
 			}
 		}
 		else{
-			Sleep(10);
+			Sleep(1);
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Network Thread End!!"));

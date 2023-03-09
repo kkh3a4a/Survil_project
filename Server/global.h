@@ -455,10 +455,27 @@ void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_c
 	
 	memcpy(&first_send_server.player_info, players_list[port]->player_info, sizeof(FActor));
 	players_list[port]->player_info = &first_send_server.player_info;
+
+	
 	for (int i = 0; i < FIRSTSPAWN; ++i)
 	{
 		memcpy(&first_send_server.player_citizen[0][i], players_list[port]->player_citizen[i], sizeof(FCitizen_sole));
 		players_list[port]->player_citizen[i] = &first_send_server.player_citizen[0][i];
+	}
+	int citizen_cnt = 1;
+	for(auto& a : players_list)
+	{
+		
+		if(a.first != port)
+		{
+			std::cout << a.first << ", " << port << std::endl;
+			for (int i = 0; i < FIRSTSPAWN; ++i)
+			{
+				memcpy(&first_send_server.player_citizen[citizen_cnt][i], players_list[a.first]->player_citizen[i], sizeof(FCitizen_sole));
+			}
+			citizen_cnt++;
+		}
+		
 	}
 	for (int i = 0; i < MAXPLAYER * 10; ++i)
 	{

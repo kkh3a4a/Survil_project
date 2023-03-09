@@ -34,6 +34,7 @@ void ACitizen::Spawn_Citizen()
 	{
 		if (Is_Mycitizen == 0)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("MY : %f %f %f"),a.Value[0].location.x , a.Value[0].location.y, a.Value[0].location.z);
 			for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 			{
 				Location = { a.Value[count_citizenNum].location.x,a.Value[count_citizenNum].location.y,a.Value[count_citizenNum].location.z};
@@ -47,6 +48,7 @@ void ACitizen::Spawn_Citizen()
 		}
 		else
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Enemy : %f %f %f"), a.Value[0].location.x, a.Value[0].location.y, a.Value[0].location.z);
 			for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 			{
 				Location = { a.Value[count_citizenNum].location.x, a.Value[count_citizenNum].location.y, a.Value[count_citizenNum].location.z };

@@ -105,7 +105,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	players_list[port] = my_profile;
 	
 	players_list[port]->port = port;
-	player_cnt++;
+	int temp = player_cnt++;
 	player_cnt_lock.unlock();
 	
 	//while (!player_location_set);
@@ -117,29 +117,20 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	char** player_sight_temperature = terrain->get_player_temperature_map();
 	int maxplayer_cnt = 0;
 	int trash_value = 0;
+	while (!location_set);
 	while (1){
-		/*if (!location_set){
-			retval = send(client_sock, (char*)&maxplayer_cnt, sizeof(int), 0);
-			retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);
-			continue;
-		}
-		maxplayer_cnt = MAXPLAYER;
-		send(client_sock, (char*)&(maxplayer_cnt), sizeof(int), 0);
-		retval = recv(client_sock, (char*)&trash_value, sizeof(int), 0);*/
 
-		
 		FirstInit(first_send_server, first_send_client, players_list, resource_create_landscape, player_sight_temperature, port);
 
 		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
-		
-
+	
 		break;
 	}
 	Citizen_moving temp_citizen_moving;
 
 	while (1) {
 		auto end_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 0)
+		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
 		{
 			start_t = high_resolution_clock::now();
 			memcpy(&first_send_server.SunAngle, &sun_angle, sizeof(TF));
@@ -147,6 +138,19 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			
 			////10배 축소해서 일단 테스트
 			////cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
+			int player_count = 1;
+			for (auto& a : players_list)
+			{
+				if (a.first != port)
+				{
+					for (int i = 0; i < FIRSTSPAWN; ++i)
+					{
+						memcpy(&first_send_server.player_citizen[player_count][i], players_list[a.first]->player_citizen[i], sizeof(FCitizen_sole));
+					}
+					player_count++;
+				}
+
+			}
 			II player_location{ (int)players_list[port]->curr_location->x / 100, (int)players_list[port]->curr_location->y / 100 };
 			terrain->copy_for_player_map(player_location);
 			for (int i = 0; i < player_sight_size.x; ++i) {
