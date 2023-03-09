@@ -490,7 +490,6 @@ void Secondmemcpy(SecondSendServer& second_send_server, std::map<int, players_pr
 
 		if (a.first != port)
 		{
-			std::cout << a.first << ", " << port << std::endl;
 			for (int i = 0; i < FIRSTSPAWN; ++i)
 			{
 				memcpy(&second_send_server.player_citizen[citizen_cnt][i], players_list[a.first]->player_citizen[i], sizeof(FCitizen_sole));
