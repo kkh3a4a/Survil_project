@@ -134,7 +134,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		{
 			
 			start_t = high_resolution_clock::now();
-			memcpy(&first_send_server.SunAngle, &sun_angle, sizeof(TF));
+			/////////////////////////
+			first_send_server.SunAngle = sun_angle;
+
 			Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
 			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
 			retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(SecondSendServer), 0);
