@@ -86,9 +86,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n", addr, ntohs(clientaddr.sin_port));
 	auto start_t = high_resolution_clock::now();
-	FirstSendServer first_send_server;
-	SecondSendServer second_send_server;
-	FirstSendClient first_send_client;
+	ServerStruct1 first_send_server;
+	ServerStruct2 second_send_server;
+	ClientStruct1 first_send_client;
 	FActor player_info;
 	//해당 클라이언트의 port번호 map에 저장
 	int port = ntohs(clientaddr.sin_port);
@@ -122,8 +122,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 		FirstInit(first_send_server, first_send_client, players_list, player_sight_temperature, port);
 		Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
-		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
-		retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(SecondSendServer), 0);
+		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(ServerStruct1), 0);
+		retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(ServerStruct2), 0);
 		break;
 	}
 	Citizen_moving temp_citizen_moving;
@@ -138,8 +138,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			first_send_server.SunAngle = sun_angle;
 
 			Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
-			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
-			retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(SecondSendServer), 0);
+			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(ServerStruct1), 0);
+			retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(ServerStruct2), 0);
 
 			////10배 축소해서 일단 테스트
 			////cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
@@ -162,7 +162,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				}
 			}
 
-			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(FirstSendClient), MSG_WAITALL);
+			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(ClientStruct1), MSG_WAITALL);
 			if (tempsa == SOCKET_ERROR)
 			{
 				return 0;

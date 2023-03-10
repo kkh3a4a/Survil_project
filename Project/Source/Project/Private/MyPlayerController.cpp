@@ -65,44 +65,44 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::InputUpPressed()
 {
-    ServerClass->my_key_input->w = true;
+    ServerClass->KeyInput->w = true;
 }
 
 void AMyPlayerController::InputDownPressed()
 {
-    ServerClass->my_key_input->s = true;
+    ServerClass->KeyInput->s = true;
 }
 
 void AMyPlayerController::InputLeftPressed()
 {
-    ServerClass->my_key_input->a = true;
+    ServerClass->KeyInput->a = true;
 }
 
 void AMyPlayerController::InputRightPressed()
 {
-    ServerClass->my_key_input->d = true;
+    ServerClass->KeyInput->d = true;
 }
 
 
 
 void AMyPlayerController::InputUpReleased()
 {
-    ServerClass->my_key_input->w = false;
+    ServerClass->KeyInput->w = false;
 }
 
 void AMyPlayerController::InputDownReleased()
 {
-    ServerClass->my_key_input->s = false;
+    ServerClass->KeyInput->s = false;
 }
 
 void AMyPlayerController::InputLeftReleased()
 {
-    ServerClass->my_key_input->a = false;
+    ServerClass->KeyInput->a = false;
 }
 
 void AMyPlayerController::InputRightReleased()
 {
-    ServerClass->my_key_input->d = false;
+    ServerClass->KeyInput->d = false;
 }
 
 

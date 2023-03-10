@@ -52,7 +52,7 @@ void AMyTown::SpawnTown(TMap<int, FActor_location_rotation*>& player_list)
 
 }
 
-void AMyTown::SpawnResource(FServerSendInfo1& FirstSendServer, FServerSendInfo2& SecondSendServer)
+void AMyTown::SpawnResource(FServerStruct1& FirstSendServer, FServerStruct2& SecondSendServer)
 {
 	AActor* SpawnedResource;
 	FVector Location(0.0f, 0.0f, 0.0f);

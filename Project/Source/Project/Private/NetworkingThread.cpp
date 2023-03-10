@@ -44,27 +44,26 @@ uint32_t FSocketThread::Run()
 		return 0;
 
 	//Recv Struct
-	IsRunning = Socket->Recv((uint8*)&MainClass->ServerSendStruct1, sizeof(MainClass->ServerSendStruct1), BytesReceived, ESocketReceiveFlags::WaitAll);
-	if (BytesReceived != sizeof(MainClass->ServerSendStruct1)) {
+	IsRunning = Socket->Recv((uint8*)&MainClass->ServerStruct1, sizeof(MainClass->ServerStruct1), BytesReceived, ESocketReceiveFlags::WaitAll);
+	if (BytesReceived != sizeof(MainClass->ServerStruct1)) {
 		UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 		IsRunning = false;
 	}
-	IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct2, sizeof(MainClass->ServerSendStruct2), BytesReceived, ESocketReceiveFlags::WaitAll);
+	IsConnected = Socket->Recv((uint8*)&MainClass->ServerStruct2, sizeof(MainClass->ServerStruct2), BytesReceived, ESocketReceiveFlags::WaitAll);
 	if (!IsConnected) {
 		UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 		IsConnected = false;
 		return 0;
 	}
 	for (int thread_cnt_num = 0; thread_cnt_num < MAXPLAYER; ++thread_cnt_num) {
-		MainClass->players_list.Add(thread_cnt_num, &(MainClass->ServerSendStruct1.player_info));
+		MainClass->players_list.Add(thread_cnt_num, &(MainClass->ServerStruct1.player_info));
 	}
-	MainClass->first_recv_send = true;
 	MainClass->Citizens->Citizen_moving->team = -1;
 	MainClass->Citizens->Citizen_moving->citizen_number = -1;
 
-	memcpy(&MainClass->ClientSendStruct.My_citizen_moving, MainClass->Citizens->Citizen_moving, sizeof(FCitizen_moving));
-	MainClass->Citizens->Citizen_moving = &MainClass->ClientSendStruct.My_citizen_moving;
-	MainClass->Isthreading_first_send = true;
+	memcpy(&MainClass->ClientStruct1.My_citizen_moving, MainClass->Citizens->Citizen_moving, sizeof(FCitizen_moving));
+	MainClass->Citizens->Citizen_moving = &MainClass->ClientStruct1.My_citizen_moving;
+	MainClass->ThreadInitSendRecv = true;
 
 	steady_clock::time_point start_t = high_resolution_clock::now();
 	while (IsRunning) {
@@ -72,11 +71,10 @@ uint32_t FSocketThread::Run()
 		if (duration_cast<milliseconds>(end_t - start_t).count() > 50 && IsConnected){
 
 			start_t = high_resolution_clock::now();
-			MainClass->temped += 1;
 
 			//Recv Struct
 			if (IsConnected) {
-				IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct1, sizeof(MainClass->ServerSendStruct1), BytesReceived, ESocketReceiveFlags::WaitAll);
+				IsConnected = Socket->Recv((uint8*)&MainClass->ServerStruct1, sizeof(MainClass->ServerStruct1), BytesReceived, ESocketReceiveFlags::WaitAll);
 				if (!IsConnected) {
 					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 					IsConnected = false;
@@ -85,7 +83,7 @@ uint32_t FSocketThread::Run()
 			}
 
 			if (IsConnected) {
-				IsConnected = Socket->Recv((uint8*)&MainClass->ServerSendStruct2, sizeof(MainClass->ServerSendStruct2), BytesReceived, ESocketReceiveFlags::WaitAll);
+				IsConnected = Socket->Recv((uint8*)&MainClass->ServerStruct2, sizeof(MainClass->ServerStruct2), BytesReceived, ESocketReceiveFlags::WaitAll);
 				if (!IsConnected) {
 					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 					IsConnected = false;
@@ -116,7 +114,7 @@ uint32_t FSocketThread::Run()
 			}
 			//Send Struct
 			if (IsConnected) {
-				IsConnected = Socket->Send((uint8*)&MainClass->ClientSendStruct, sizeof(FClientSendInfo), BytesSent);
+				IsConnected = Socket->Send((uint8*)&MainClass->ClientStruct1, sizeof(FClientStruct1), BytesSent);
 			}
 		}
 		else{
