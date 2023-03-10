@@ -7,6 +7,7 @@
 #include<string>
 #include<map>
 #include <chrono>
+#include<shared_mutex>
 #include "terrain.cu"
 
 #define SERVERPORT 9000
@@ -23,6 +24,7 @@ bool game_start = false;
 int len = 0;
 
 std::mutex player_cnt_lock;
+shared_mutex player_list_lock;
 float sun_angle;
 
 vector<SOCKET> player_list;
@@ -34,7 +36,7 @@ char** total_terrain = terrain->get_map();
 char** temperature_map = terrain->get_temperature_map();
 volatile int player_cnt;
 volatile bool location_set = false;
-
+int ingame_play = false;
 
 DWORD WINAPI terrain_change(LPVOID arg)
 {
@@ -60,7 +62,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		terrain->show_array(player_sight_terrain, 120);
 		terrain->show_array(player_sight_temperature, 120);*/
 
-		
+
 		//clock_t t_1 = clock();
 		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
 		if (i % 100 == 0 && i != 0) {
@@ -132,14 +134,23 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		auto end_t = high_resolution_clock::now();
 		if (duration_cast<milliseconds>(end_t - start_t).count() > 50)
 		{
-			
+			shared_lock<shared_mutex> lock(player_list_lock);
 			start_t = high_resolution_clock::now();
-			/////////////////////////
 			first_send_server.SunAngle = sun_angle;
 
 			Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
 			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
+			if (retval == SOCKET_ERROR) {
+				shared_lock<shared_mutex> unlock(player_list_lock);
+				err_display("send()");
+				break;
+			}
 			retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(SecondSendServer), 0);
+			if (retval == SOCKET_ERROR) {
+				shared_lock<shared_mutex> unlock(player_list_lock);
+				err_display("send()");
+				break;
+			}
 
 			////10배 축소해서 일단 테스트
 			////cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
@@ -150,23 +161,35 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			for (int i = 0; i < player_sight_size.x; ++i) {
 				retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
 				if (retval == SOCKET_ERROR) {
+					shared_lock<shared_mutex> unlock(player_list_lock);
 					err_display("send()");
 					break;
 				}
+			}
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+				break;
 			}
 			for (int i = 0; i < player_sight_size.x; ++i) {
 			retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
 				if (retval == SOCKET_ERROR) {
+					shared_lock<shared_mutex> unlock(player_list_lock);
 					err_display("send()");
 					break;
 				}
 			}
-
-			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(FirstSendClient), MSG_WAITALL);
-			if (tempsa == SOCKET_ERROR)
-			{
-				return 0;
+			if (retval == SOCKET_ERROR) {
+				err_display("send()");
+				break;
 			}
+			retval = recv(client_sock, (char*)&(first_send_client), (int)sizeof(FirstSendClient), MSG_WAITALL);
+			if (retval == SOCKET_ERROR) {
+				shared_lock<shared_mutex> unlock(player_list_lock);
+				err_display("send()");
+				break;
+			}
+			if (first_send_client.connecting == -1)
+				break;
 			mouse_input_checking(first_send_client.My_citizen_moving, players_list, port);
 			if (first_send_client.My_UI_input.resource_input.CitizenCountAdd)
 			{
@@ -176,15 +199,20 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			{
 				Citizen_Work_Sub(players_list, resource_create_landscape, port, first_send_client.My_UI_input.resource_input.ResourceNum);
 			}
+			shared_lock<shared_mutex> unlock(player_list_lock);
 		}
 		else
 		{
 			Sleep(1);
 		}
-	}
 
+		//cout << " ? " << endl;
+	}
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
+	unique_lock<shared_mutex> lock(player_list_lock);
+	cout << "erase" << endl;
+
 	closesocket(client_sock);
 	return 0;
 }
@@ -211,7 +239,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 	while (1) {
 		auto end_time = high_resolution_clock::now();
-		
 		//50ms
 		if (duration_cast<milliseconds>(end_time - start_50).count() > 50){
 			auto cycle_time = duration_cast<milliseconds>(end_time - start_50).count();
@@ -225,11 +252,14 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			}
 			
 			//move camera
+			shared_lock<shared_mutex> lock(player_list_lock);
 			camera_movement(players_list);
 			
+			int connecting_player_count = 0;
 			//move citizen
 			for (auto& a : players_list) {
 				float distance = 0.0f;
+				connecting_player_count++;
 				int cnt = 0;
 				for (auto& b : a.second->player_citizen) {
 					if (b != NULL) {
@@ -242,19 +272,38 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					cnt++;
 				}
 			}
+			shared_lock<shared_mutex> unlock(player_list_lock);
+			if (connecting_player_count == 0)
+			{
+				cout << connecting_player_count << endl;
+				player_cnt = 0;
+				ingame_play = false;
+				return 0;
+			}
 		}
 		//1000ms
 		else if (duration_cast<milliseconds>(end_time - start_1000).count() > 1000){
 			start_1000 = high_resolution_clock::now();
 			
 			//set citizen destination
+			shared_lock<shared_mutex> lock(player_list_lock);
 			resource_collect(players_list, resource_create_landscape);
+			shared_lock<shared_mutex> unlock(player_list_lock);
 		}
 		else{
 			Sleep(1);
 		}
 
 	}
+
+
+
+	 
+
+
+
+
+
 	return 0;
 }
 
@@ -289,6 +338,8 @@ int main(int argc, char* argv[])
 	int addrlen;
 	HANDLE hThread;
 	hThread = CreateThread(NULL, 0, ingame_thread,0, 0, NULL);
+	ingame_play = true;
+
 	hThread = CreateThread(NULL, 0, terrain_change,0, 0, NULL);
 
 	while (1) {
@@ -300,6 +351,14 @@ int main(int argc, char* argv[])
 			err_display("accept()");
 			break;
 		}
+		//ingame thread가 사라졌을때 다시 생성
+		if(ingame_play == false)
+		{
+			cout << "Create_ingame_thread" << endl;
+			hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
+			ingame_play = true;
+		}
+
 
 		// 접속한 클라이언트 정보 출력
 		char addr[INET_ADDRSTRLEN];

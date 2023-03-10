@@ -117,6 +117,7 @@ public:
 	Citizen_moving My_citizen_moving = {};
 	keyboard_input My_keyboard_input = {};
 	UI_Input My_UI_input = {};
+	int connecting = 1;
 };
 
 void FActor_TF_define(TF& a, TF& b)
@@ -155,10 +156,10 @@ void Move_Civil(TF& civil, TF& end_location) {
 int CitizenResourceCount(int resource[5])
 {
 	int temp = 0;
-	/*for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		temp += resource[i];
-	}*/
+	}
 
 	return temp;
 }

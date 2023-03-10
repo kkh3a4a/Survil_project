@@ -170,6 +170,7 @@ public:
 	FCitizen_moving My_citizen_moving = {};
 	Fkeyboard_input My_keyboard_input = {};
 	FUI_Input My_UI_input = {};
+	int connecting = 1;
 };
 
 

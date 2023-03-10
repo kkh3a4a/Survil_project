@@ -124,6 +124,8 @@ uint32_t FSocketThread::Run()
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Network Thread End!!"));
+	MainClass->ClientSendStruct.connecting = -1;
+	IsConnected = Socket->Send((uint8*)&MainClass->ClientSendStruct, sizeof(FClientSendInfo), BytesSent);
 	return 0;
 }
 
