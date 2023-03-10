@@ -34,14 +34,14 @@ void AServer_testing::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	my_key_input->w = false;
-	my_key_input->a = false;
-	my_key_input->s = false;
-	my_key_input->d = false;
+	KeyInput->w = false;
+	KeyInput->a = false;
+	KeyInput->s = false;
+	KeyInput->d = false;
 	//Citizen
 	FActorSpawnParameters SpawnInfo;
 	Citizens = GetWorld()->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	Citizens->Initialize(Citizen_Actor, EnemyCitizenActor);
+	Citizens->Initialize(CitizenActor, EnemyCitizenActor);
 
 	//resource
 	MyTown = GetWorld()->SpawnActor<AMyTown>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
@@ -72,8 +72,8 @@ void AServer_testing::BeginPlay()
 		}
 	}
 	
-	memcpy(&ClientSendStruct.My_keyboard_input, my_key_input, sizeof(Fkeyboard_input));
-	my_key_input = &ClientSendStruct.My_keyboard_input;
+	memcpy(&ClientStruct1.My_keyboard_input, KeyInput, sizeof(Fkeyboard_input));
+	KeyInput = &ClientStruct1.My_keyboard_input;
 	Network = new FSocketThread(this);
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
 }
@@ -83,35 +83,35 @@ void AServer_testing::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!IsFirstSend){
-		if (Isthreading_first_send){
-			Citizens->citizen_set(ServerSendStruct1, ServerSendStruct2);
+	if (!RecvedFirstData){
+		if (ThreadInitSendRecv){
+			Citizens->citizen_set(ServerStruct1, ServerStruct2);
 			Citizens->Spawn_Citizen();
 			MyTown->SpawnTown(players_list);
-			MyTown->SpawnResource(ServerSendStruct1, ServerSendStruct2);
+			MyTown->SpawnResource(ServerStruct1, ServerStruct2);
 			Citizens->Citizen_Moving();
-			IsFirstSend = true;
+			RecvedFirstData = true;
 		}
 	}
 	else {
-		if (Is_send_UI_input == false){
+		if (RecvedUIInput == false){
 			if (UI_Input.resouce_input.CitizenCountAdd || UI_Input.resouce_input.CitizenCountSub){
-				Is_send_UI_input = true;
+				RecvedUIInput = true;
 			}
 		}
-		else if (Is_send_UI_input == true){
+		else if (RecvedUIInput == true){
 			if (!UI_Input.resouce_input.CitizenCountAdd && !UI_Input.resouce_input.CitizenCountSub){
-				Is_send_UI_input = false;
+				RecvedUIInput = false;
 			}
 			UI_Input.resouce_input.CitizenCountAdd = false;
 			UI_Input.resouce_input.CitizenCountSub = false;
 		}
-		memcpy(&ClientSendStruct.My_UI_input, &UI_Input.resouce_input, sizeof(FUI_Input));
+		memcpy(&ClientStruct1.My_UI_input, &UI_Input.resouce_input, sizeof(FUI_Input));
 
 		clock_t t_1 = clock();
-		oil_count = ServerSendStruct1.MyResource[0], water_count = ServerSendStruct1.MyResource[1], iron_count = ServerSendStruct1.MyResource[2], food_count = ServerSendStruct1.MyResource[3], wood_count = ServerSendStruct1.MyResource[4];
-		TF_set(CurrentLocation, ServerSendStruct1.currlocation);
-		sunangle = ServerSendStruct1.SunAngle;
+		oil_count = ServerStruct1.MyResource[0], water_count = ServerStruct1.MyResource[1], iron_count = ServerStruct1.MyResource[2], food_count = ServerStruct1.MyResource[3], wood_count = ServerStruct1.MyResource[4];
+		TF_set(CurrentLocation, ServerStruct1.currlocation);
+		SunAngle = ServerStruct1.SunAngle;
 
 		Citizens->CitizenNoJob(CitizenNoJobCnt);
 		Citizens->Citizen_Moving();
@@ -121,8 +121,6 @@ void AServer_testing::Tick(float DeltaTime)
 
 		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
 		MyTown->UpdateResource();
-
-
 	}
 }
 

@@ -95,7 +95,7 @@ public:
 }UI_Input;
 
 
-typedef struct FirstSendServer{
+typedef struct ServerStruct1{
 public:
 	float SunAngle = 0;
 	FActor player_info;
@@ -104,7 +104,7 @@ public:
 	//char send_sight_temperature[SIGHT_X][SIGHT_Y];
 };
 
-typedef struct SecondSendServer {
+typedef struct ServerStruct2 {
 public:
 	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
 	resource_actor resources[MAXPLAYER * 10];
@@ -112,7 +112,7 @@ public:
 };
 
 
-typedef struct FirstSendClient {
+typedef struct ClientStruct1 {
 public:
 	Citizen_moving My_citizen_moving = {};
 	keyboard_input My_keyboard_input = {};
@@ -457,7 +457,7 @@ void Citizen_Work_Sub(std::map<int, players_profile*>& players_list, std::map<in
 
 }
 
-void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_client, std::map<int, players_profile*>& players_list, char** player_sight_temperature, int port) {
+void FirstInit(ServerStruct1& first_send_server, ClientStruct1& first_send_client, std::map<int, players_profile*>& players_list, char** player_sight_temperature, int port) {
 	
 	memcpy(&first_send_server.player_info, players_list[port]->player_info, sizeof(FActor));
 	players_list[port]->player_info = &first_send_server.player_info;
@@ -478,7 +478,7 @@ void FirstInit(FirstSendServer& first_send_server, FirstSendClient& first_send_c
 
 }
 
-void Secondmemcpy(SecondSendServer& second_send_server, std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port)
+void Secondmemcpy(ServerStruct2& second_send_server, std::map<int, players_profile*>& players_list, std::map<int, resource_actor*>& resource_create_landscape, int port)
 {
 	for (int i = 0; i < FIRSTSPAWN; ++i)
 	{

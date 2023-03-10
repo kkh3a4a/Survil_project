@@ -88,9 +88,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n", addr, ntohs(clientaddr.sin_port));
 	auto start_t = high_resolution_clock::now();
-	FirstSendServer first_send_server;
-	SecondSendServer second_send_server;
-	FirstSendClient first_send_client;
+	ServerStruct1 first_send_server;
+	ServerStruct2 second_send_server;
+	ClientStruct1 first_send_client;
 	FActor player_info;
 	//해당 클라이언트의 port번호 map에 저장
 	int port = ntohs(clientaddr.sin_port);
@@ -124,8 +124,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 		FirstInit(first_send_server, first_send_client, players_list, player_sight_temperature, port);
 		Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
-		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
-		retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(SecondSendServer), 0);
+		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(ServerStruct1), 0);
+		retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(ServerStruct2), 0);
 		break;
 	}
 	Citizen_moving temp_citizen_moving;
@@ -139,18 +139,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			first_send_server.SunAngle = sun_angle;
 
 			Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
-			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(FirstSendServer), 0);
-			if (retval == SOCKET_ERROR) {
-				shared_lock<shared_mutex> unlock(player_list_lock);
-				err_display("send()");
-				break;
-			}
-			retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(SecondSendServer), 0);
-			if (retval == SOCKET_ERROR) {
-				shared_lock<shared_mutex> unlock(player_list_lock);
-				err_display("send()");
-				break;
-			}
+			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(ServerStruct1), 0);
+			retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(ServerStruct2), 0);
 
 			////10배 축소해서 일단 테스트
 			////cout <<"CAM: " <<  (int)players_list[port]->camera_location.x << ", " << (int)players_list[port]->camera_location.y << endl;
@@ -160,36 +150,22 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			terrain->copy_for_player_map(player_location);
 			for (int i = 0; i < player_sight_size.x; ++i) {
 				retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
-				if (retval == SOCKET_ERROR) {
-					shared_lock<shared_mutex> unlock(player_list_lock);
-					err_display("send()");
-					break;
-				}
-			}
-			if (retval == SOCKET_ERROR) {
-				err_display("send()");
-				break;
 			}
 			for (int i = 0; i < player_sight_size.x; ++i) {
 			retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
-				if (retval == SOCKET_ERROR) {
-					shared_lock<shared_mutex> unlock(player_list_lock);
-					err_display("send()");
-					break;
-				}
+				
 			}
-			if (retval == SOCKET_ERROR) {
-				err_display("send()");
-				break;
-			}
-			retval = recv(client_sock, (char*)&(first_send_client), (int)sizeof(FirstSendClient), MSG_WAITALL);
-			if (retval == SOCKET_ERROR) {
-				shared_lock<shared_mutex> unlock(player_list_lock);
-				err_display("send()");
-				break;
+
+			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(ClientStruct1), MSG_WAITALL);
+			if (tempsa == SOCKET_ERROR)
+			{
+				return 0;
 			}
 			if (first_send_client.connecting == -1)
+			{
+				shared_lock<shared_mutex> unlock(player_list_lock);
 				break;
+			}
 			mouse_input_checking(first_send_client.My_citizen_moving, players_list, port);
 			if (first_send_client.My_UI_input.resource_input.CitizenCountAdd)
 			{
@@ -206,13 +182,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			Sleep(1);
 		}
 
-		//cout << " ? " << endl;
 	}
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
 	unique_lock<shared_mutex> lock(player_list_lock);
 	cout << "erase" << endl;
-
+	players_list.erase(port);
 	closesocket(client_sock);
 	return 0;
 }
@@ -275,9 +250,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			shared_lock<shared_mutex> unlock(player_list_lock);
 			if (connecting_player_count == 0)
 			{
-				cout << connecting_player_count << endl;
 				player_cnt = 0;
 				ingame_play = false;
+				resource_create_landscape.clear();
 				return 0;
 			}
 		}

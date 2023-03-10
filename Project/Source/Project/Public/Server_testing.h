@@ -39,11 +39,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
-	bool Is_send_UI_input = false;
-	bool IsConnect = false;
-	bool IsFirstSend = false;
-
+	bool RecvedUIInput = false;
+	bool IsConnected = false;
+	bool RecvedFirstData = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FUI_Input UI_Input;
@@ -64,38 +62,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
 		int wood_count = 0;
 
-	volatile int maxplayer_cnt = 0;
-	volatile int trash_value = 0;
-
-
 	TMap<int, FActor_location_rotation*> players_list;
 
-	bool Isthreading_first_send = false;
-	steady_clock::time_point start_t;
+	bool ThreadInitSendRecv = false;
 	
-	HANDLE hThread;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int max_player_cnt = MAXPLAYER;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UStaticMesh* My_Town;
-
-	int temped=0;
-
-	Fkeyboard_input* my_key_input = new Fkeyboard_input;
+	Fkeyboard_input* KeyInput = new Fkeyboard_input;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Citizen_num = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool first_recv_send = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int CitizenNoJobCnt = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Citizen")
-		TSubclassOf<AActor>Citizen_Actor;
+		TSubclassOf<AActor>CitizenActor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Citizen")
 		TSubclassOf<AActor>EnemyCitizenActor;
@@ -123,7 +103,7 @@ public:
 	AMyTown* MyTown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float sunangle;
+		float SunAngle;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terrain")
 		UMaterialInstance* TerrainMaterialInstance;
@@ -142,9 +122,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		Fthree_float CurrentLocation;
 
-	FServerSendInfo1 ServerSendStruct1;
-	FServerSendInfo2 ServerSendStruct2;
-	FClientSendInfo ClientSendStruct;
+	FServerStruct1 ServerStruct1;
+	FServerStruct2 ServerStruct2;
+	FClientStruct1 ClientStruct1;
 
 	void TF_set(Fthree_float& a, Fthree_float& b);
 	void resoure_set(Fresources_actor& a, Fresources_actor& b);

@@ -144,7 +144,7 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FServerSendInfo1 {
+struct FServerStruct1 {
 	GENERATED_USTRUCT_BODY()
 public:
 	float SunAngle;
@@ -155,7 +155,7 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FServerSendInfo2 {
+struct FServerStruct2 {
 	GENERATED_USTRUCT_BODY()
 public:
 	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
@@ -164,7 +164,7 @@ public:
 
 
 USTRUCT(Atomic, BlueprintType)
-struct FClientSendInfo {
+struct FClientStruct1 {
 	GENERATED_USTRUCT_BODY()
 public:
 	FCitizen_moving My_citizen_moving = {};
