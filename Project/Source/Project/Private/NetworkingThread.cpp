@@ -113,10 +113,33 @@ uint32_t FSocketThread::Run()
 					}
 				}
 			}
+			
+
+			//º¸³Â´ÂÁö ¾Èº¸³Â´ÂÁö È®ÀÎÇØÁà¾ßÇÔ
+			if (MainClass->RecvedUIInput == false) {
+				if (MainClass->UI_Input.ResourceInput.CitizenCountAdd || MainClass->UI_Input.ResourceInput.CitizenCountSub) {
+					{
+						MainClass->RecvedUIInput = true;
+					}
+				}
+			}
+			else if (MainClass->RecvedUIInput == true) {
+				if (MainClass->CitizenRelaese)
+				{
+					MainClass->RecvedUIInput = false;
+				}
+				MainClass->UI_Input.ResourceInput.CitizenCountAdd = false;
+				MainClass->UI_Input.ResourceInput.CitizenCountSub = false;
+			}
+
 			//Send Struct
 			if (IsConnected) {
 				IsConnected = Socket->Send((uint8*)&MainClass->ClientStruct1, sizeof(FClientStruct1), BytesSent);
 			}
+
+			
+
+
 		}
 		else{
 			Sleep(1);

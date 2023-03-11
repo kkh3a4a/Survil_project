@@ -94,18 +94,7 @@ void AServer_testing::Tick(float DeltaTime)
 		}
 	}
 	else {
-		if (RecvedUIInput == false){
-			if (UI_Input.ResourceInput.CitizenCountAdd || UI_Input.ResourceInput.CitizenCountSub){
-				RecvedUIInput = true;
-			}
-		}
-		else if (RecvedUIInput == true){
-			if (!UI_Input.ResourceInput.CitizenCountAdd && !UI_Input.ResourceInput.CitizenCountSub){
-				RecvedUIInput = false;
-			}
-			UI_Input.ResourceInput.CitizenCountAdd = false;
-			UI_Input.ResourceInput.CitizenCountSub = false;
-		}
+		
 		memcpy(&ClientStruct1.UIInput, &UI_Input.ResourceInput, sizeof(FUI_Input));
 
 		clock_t t_1 = clock();

@@ -46,6 +46,9 @@ public:
 		bool CitizenAdd = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool CitizenSub = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool CitizenRelease = false;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int CitizenCount=0;

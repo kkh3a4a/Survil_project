@@ -267,9 +267,23 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
 
         if (ResourceUI)
         {
+            if (ServerClass->RecvedUIInput == true)
+            {
+                ServerClass->UI_Input.ResourceInput.CitizenCountAdd = false;
+                ServerClass->UI_Input.ResourceInput.CitizenCountSub = false;
+                if (CitizenRelease)
+                {
+                    ServerClass->CitizenRelaese = CitizenRelease;
+                    CitizenRelease = false;
+                }
+            }
+            else
+            {                
                 ServerClass->UI_Input.ResourceInput.ResourceNum = FCString::Atoi(*ResourceActor->Tags[2].ToString());
                 ServerClass->UI_Input.ResourceInput.CitizenCountAdd = CitizenAdd;
                 ServerClass->UI_Input.ResourceInput.CitizenCountSub = CitizenSub;
+                ServerClass->CitizenRelaese = CitizenRelease;
+            }
         }
     }
 

@@ -29,7 +29,8 @@ public:
     int32 CycleTime{};
 
 private: 
-    FString IPAddress = "192.168.0.8";
+   // FString IPAddress = "192.168.0.8";
+    FString IPAddress = "127.0.0.1";
     int32 PortNumber = 9000;
     FSocket* Socket;
     int32 BytesReceived;

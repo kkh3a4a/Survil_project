@@ -39,7 +39,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	bool RecvedUIInput = false;
+	bool RecvedUIInput = true;
 	bool IsConnected = false;
 	bool RecvedFirstData = false;
 
@@ -65,6 +65,8 @@ public:
 	TMap<int, FActorTransform*> players_list;
 
 	bool ThreadInitSendRecv = false;
+
+	bool CitizenRelaese = false;
 	
 	FKeyInput* KeyInput = new FKeyInput;
 
