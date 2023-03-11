@@ -140,11 +140,11 @@ void AMyPlayerController::MoveToMouseCursor()
             UE_LOG(LogTemp, Log, TEXT("Citizen"));
             if (wcscmp(*hitActor->Tags[1].ToString(), L"0") == 0)
             {
-                ServerClass->Citizens->Citizen_moving->team = FCString::Atoi(*hitActor->Tags[1].ToString());
-                ServerClass->Citizens->Citizen_moving->citizen_number = FCString::Atoi(*hitActor->Tags[2].ToString());
-                ServerClass->Citizens->Citizen_moving->location.x = hitActor->GetActorLocation().X;
-                ServerClass->Citizens->Citizen_moving->location.y = hitActor->GetActorLocation().Y;
-                ServerClass->Citizens->Citizen_moving->location.z = hitActor->GetActorLocation().Z;
+                ServerClass->Citizens->Citizen_moving->Team = FCString::Atoi(*hitActor->Tags[1].ToString());
+                ServerClass->Citizens->Citizen_moving->CitizenNumber = FCString::Atoi(*hitActor->Tags[2].ToString());
+                ServerClass->Citizens->Citizen_moving->Location.x = hitActor->GetActorLocation().X;
+                ServerClass->Citizens->Citizen_moving->Location.y = hitActor->GetActorLocation().Y;
+                ServerClass->Citizens->Citizen_moving->Location.z = hitActor->GetActorLocation().Z;
                 // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), ServerClass->Citizen_moving->team, ServerClass->Citizen_moving->citizen_number ,ServerClass->Citizen_moving->location.x, ServerClass->Citizen_moving->location.y);
             }
             else
@@ -158,7 +158,7 @@ void AMyPlayerController::MoveToMouseCursor()
             ResourceActor = hitActor;
             ResourceUI = true;
             ResourceType = FCString::Atoi(*hitActor->Tags[1].ToString());
-            ResourceCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->count;
+            ResourceCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
         }
         else
         {
@@ -177,23 +177,23 @@ void AMyPlayerController::MoveToActor()
         DestLocation = Hit.ImpactPoint;
         if (Hit.GetActor()->ActorHasTag(L"Resource"))
         {
-            ServerClass->Citizens->Citizen_moving->citizen_job = 1;
+            ServerClass->Citizens->Citizen_moving->Job = 1;
             DestLocation = Hit.GetActor()->GetActorLocation();
 
             UE_LOG(LogTemp, Log, TEXT("Resource"));
         }
         else
         {
-            ServerClass->Citizens->Citizen_moving->citizen_job = 0;
+            ServerClass->Citizens->Citizen_moving->Job = 0;
         }
 
         if (hitActor) {
             if (hitActor->ActorHasTag("Citizen"))
             {
                 temped = true;
-                ServerClass->Citizens->Citizen_moving->location.x = DestLocation.X;
-                ServerClass->Citizens->Citizen_moving->location.y = DestLocation.Y;
-                ServerClass->Citizens->Citizen_moving->location.z = DestLocation.Z;
+                ServerClass->Citizens->Citizen_moving->Location.x = DestLocation.X;
+                ServerClass->Citizens->Citizen_moving->Location.y = DestLocation.Y;
+                ServerClass->Citizens->Citizen_moving->Location.z = DestLocation.Z;
                 hitActor = NULL;
             }
         }
@@ -254,22 +254,22 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
         if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
         {
            
-            ServerClass->Citizens->Citizen_moving->team = -1;
+            ServerClass->Citizens->Citizen_moving->Team = -1;
             temped = false;
 
         }
     }
     if (ResourceActor != NULL)
     {
-        ResourceCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->count;
+        ResourceCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
 
         CitizenCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->CitizenCount;
 
         if (ResourceUI)
         {
-                ServerClass->UI_Input.resouce_input.ResourceNum = FCString::Atoi(*ResourceActor->Tags[2].ToString());
-                ServerClass->UI_Input.resouce_input.CitizenCountAdd = CitizenAdd;
-                ServerClass->UI_Input.resouce_input.CitizenCountSub = CitizenSub;
+                ServerClass->UI_Input.ResourceInput.ResourceNum = FCString::Atoi(*ResourceActor->Tags[2].ToString());
+                ServerClass->UI_Input.ResourceInput.CitizenCountAdd = CitizenAdd;
+                ServerClass->UI_Input.ResourceInput.CitizenCountSub = CitizenSub;
         }
     }
 

@@ -56,20 +56,21 @@ uint32_t FSocketThread::Run()
 		return 0;
 	}
 	for (int thread_cnt_num = 0; thread_cnt_num < MAXPLAYER; ++thread_cnt_num) {
-		MainClass->players_list.Add(thread_cnt_num, &(MainClass->ServerStruct1.player_info));
+		MainClass->players_list.Add(thread_cnt_num, &(MainClass->ServerStruct1.PlayerInfo));
 	}
-	MainClass->Citizens->Citizen_moving->team = -1;
-	MainClass->Citizens->Citizen_moving->citizen_number = -1;
+	MainClass->Citizens->Citizen_moving->Team = -1;
+	MainClass->Citizens->Citizen_moving->CitizenNumber = -1;
 
-	memcpy(&MainClass->ClientStruct1.My_citizen_moving, MainClass->Citizens->Citizen_moving, sizeof(FCitizen_moving));
-	MainClass->Citizens->Citizen_moving = &MainClass->ClientStruct1.My_citizen_moving;
+	memcpy(&MainClass->ClientStruct1.MyCitizenMoving, MainClass->Citizens->Citizen_moving, sizeof(FCitizenMoving));
+	MainClass->Citizens->Citizen_moving = &MainClass->ClientStruct1.MyCitizenMoving;
 	MainClass->ThreadInitSendRecv = true;
 
 	steady_clock::time_point start_t = high_resolution_clock::now();
 	while (IsRunning) {
 		steady_clock::time_point end_t = high_resolution_clock::now();
-		if (duration_cast<milliseconds>(end_t - start_t).count() > 50 && IsConnected){
+		CycleTime = duration_cast<milliseconds>(end_t - start_t).count();
 
+		if (CycleTime > 50 && IsConnected){
 			start_t = high_resolution_clock::now();
 
 			//Recv Struct

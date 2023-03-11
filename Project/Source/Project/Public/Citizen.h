@@ -32,13 +32,13 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		//FActor_location_rotation MouseInput;
 
-		FCitizen_moving* Citizen_moving = new FCitizen_moving;
+		FCitizenMoving* Citizen_moving = new FCitizenMoving;
 
 		int citizen_cnt[MAXPLAYER];
 
-		FCitizen_sole temp_Actor;
+		FCitizenSole temp_Actor;
 
-		TMap<int, FCitizen_sole*> My_Citizen;
+		TMap<int, FCitizenSole*> My_Citizen;
 
 
 		//int My_Citizen[MAXPLAYER][MAXCITIZEN];
@@ -56,7 +56,7 @@ public:
 
 	void citizen_set(FServerStruct1&, FServerStruct2&);
 
-	void TF_set(Fthree_float& a, Fthree_float& b);
+	void TF_set(FThreeFloat& a, FThreeFloat& b);
 
 	void CitizenNoJob(int& cnt);
 };

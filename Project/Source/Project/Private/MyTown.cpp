@@ -35,7 +35,7 @@ void AMyTown::Initialize(TSubclassOf<AActor> well, TSubclassOf<AActor> oil, TSub
 	WoodActor = wood;
 }
 
-void AMyTown::SpawnTown(TMap<int, FActor_location_rotation*>& player_list)
+void AMyTown::SpawnTown(TMap<int, FActorTransform*>& player_list)
 {
 	AActor* SpawnedTown;
 	FVector Location(0.0f, 0.0f, 0.0f);
@@ -64,34 +64,34 @@ void AMyTown::SpawnResource(FServerStruct1& FirstSendServer, FServerStruct2& Sec
 	for (int i = 0; i < MAXPLAYER * 10; ++i)
 	{
 		//resources_create_landscape[i] = &FirstSendServer.resources[i];
-		resources_create_landscape.Add(&SecondSendServer.resources[i]);
-		Location = { resources_create_landscape[i]->location.x,resources_create_landscape[i]->location.y,resources_create_landscape[i]->location.z };
+		resources_create_landscape.Add(&SecondSendServer.Resources[i]);
+		Location = { resources_create_landscape[i]->Loaction.x,resources_create_landscape[i]->Loaction.y,resources_create_landscape[i]->Loaction.z };
 		
-		if (resources_create_landscape[i]->type == 0)
+		if (resources_create_landscape[i]->Type == 0)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(OilActor, Location, Rotation, SpawnInfo);
 			SpawnedResource->Tags.Add("Resource");
 			SpawnedResource->Tags.Add("0");
 		}
-		else if (resources_create_landscape[i]->type == 1)
+		else if (resources_create_landscape[i]->Type == 1)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(WaterActor, Location, Rotation, SpawnInfo);
 			SpawnedResource->Tags.Add("Resource");
 			SpawnedResource->Tags.Add("1");
 		}
-		else if (resources_create_landscape[i]->type == 2)
+		else if (resources_create_landscape[i]->Type == 2)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(IronActor, Location, Rotation, SpawnInfo);
 			SpawnedResource->Tags.Add("Resource");
 			SpawnedResource->Tags.Add("2");
 		}
-		else if (resources_create_landscape[i]->type == 3)
+		else if (resources_create_landscape[i]->Type == 3)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(FoodActor, Location, Rotation, SpawnInfo);
 			SpawnedResource->Tags.Add("Resource");
 			SpawnedResource->Tags.Add("3");
 		}
-		else if (resources_create_landscape[i]->type == 4)
+		else if (resources_create_landscape[i]->Type == 4)
 		{
 			SpawnedResource = GetWorld()->SpawnActor<AActor>(WoodActor, Location, Rotation, SpawnInfo);
 			SpawnedResource->Tags.Add("Resource");
@@ -112,7 +112,7 @@ void AMyTown::UpdateResource()
 {
 	for (int resource_checking = 0; resource_checking < MAXPLAYER * 10; ++resource_checking)
 	{
-		if (resources_create_landscape[resource_checking]->count == 0)
+		if (resources_create_landscape[resource_checking]->Count == 0)
 		{
 					ResourceEditer[resource_checking]->SetActorHiddenInGame(true);
 					ResourceEditer[resource_checking]->SetActorEnableCollision(false);

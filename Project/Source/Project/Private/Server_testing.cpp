@@ -57,9 +57,9 @@ void AServer_testing::BeginPlay()
 	Temperature->Initiaize(TemperatureMaterial);
 	Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
-	UI_Input.resouce_input.ResourceNum = -1;
-	UI_Input.resouce_input.CitizenCountAdd = false;
-	UI_Input.resouce_input.CitizenCountSub = false;
+	UI_Input.ResourceInput.ResourceNum = -1;
+	UI_Input.ResourceInput.CitizenCountAdd = false;
+	UI_Input.ResourceInput.CitizenCountSub = false;
 	
 	//Get Camera
 	TArray<AActor*> CameraActors;
@@ -72,8 +72,8 @@ void AServer_testing::BeginPlay()
 		}
 	}
 	
-	memcpy(&ClientStruct1.My_keyboard_input, KeyInput, sizeof(Fkeyboard_input));
-	KeyInput = &ClientStruct1.My_keyboard_input;
+	memcpy(&ClientStruct1.KeyInput, KeyInput, sizeof(FKeyInput));
+	KeyInput = &ClientStruct1.KeyInput;
 	Network = new FSocketThread(this);
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
 }
@@ -95,22 +95,22 @@ void AServer_testing::Tick(float DeltaTime)
 	}
 	else {
 		if (RecvedUIInput == false){
-			if (UI_Input.resouce_input.CitizenCountAdd || UI_Input.resouce_input.CitizenCountSub){
+			if (UI_Input.ResourceInput.CitizenCountAdd || UI_Input.ResourceInput.CitizenCountSub){
 				RecvedUIInput = true;
 			}
 		}
 		else if (RecvedUIInput == true){
-			if (!UI_Input.resouce_input.CitizenCountAdd && !UI_Input.resouce_input.CitizenCountSub){
+			if (!UI_Input.ResourceInput.CitizenCountAdd && !UI_Input.ResourceInput.CitizenCountSub){
 				RecvedUIInput = false;
 			}
-			UI_Input.resouce_input.CitizenCountAdd = false;
-			UI_Input.resouce_input.CitizenCountSub = false;
+			UI_Input.ResourceInput.CitizenCountAdd = false;
+			UI_Input.ResourceInput.CitizenCountSub = false;
 		}
-		memcpy(&ClientStruct1.My_UI_input, &UI_Input.resouce_input, sizeof(FUI_Input));
+		memcpy(&ClientStruct1.UIInput, &UI_Input.ResourceInput, sizeof(FUI_Input));
 
 		clock_t t_1 = clock();
 		oil_count = ServerStruct1.MyResource[0], water_count = ServerStruct1.MyResource[1], iron_count = ServerStruct1.MyResource[2], food_count = ServerStruct1.MyResource[3], wood_count = ServerStruct1.MyResource[4];
-		TF_set(CurrentLocation, ServerStruct1.currlocation);
+		TF_set(CurrentLocation, ServerStruct1.CurrentLocation);
 		SunAngle = ServerStruct1.SunAngle;
 
 		Citizens->CitizenNoJob(CitizenNoJobCnt);
@@ -119,12 +119,14 @@ void AServer_testing::Tick(float DeltaTime)
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 		Temperature->Update(TerrainTemperature);
 
-		SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
+		//SetActorLocation(FVector(CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
+		SetActorLocation(FVector(ServerStruct1.CurrentLocation.x - MapSizeX * 100 / 2, CurrentLocation.y - MapSizeY * 100 / 2, CurrentLocation.z));
+
 		MyTown->UpdateResource();
 	}
 }
 
-void AServer_testing::TF_set(Fthree_float& a, Fthree_float& b)
+void AServer_testing::TF_set(FThreeFloat& a, FThreeFloat& b)
 {
 	a.x = b.x;
 	a.y = b.y;
@@ -133,6 +135,11 @@ void AServer_testing::TF_set(Fthree_float& a, Fthree_float& b)
 
 void AServer_testing::resoure_set(Fresources_actor& a, Fresources_actor& b)
 {
-	a.count = b.count;
-	a.type = b.type;
+	a.Count = b.Count;
+	a.Type = b.Type;
+}
+
+void AServer_testing::LocationInterpolate()
+{
+	
 }

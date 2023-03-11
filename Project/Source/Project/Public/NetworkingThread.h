@@ -26,13 +26,13 @@ public:
 
     bool IsRunning = true;
 	bool IsConnected = false;
+    int32 CycleTime{};
 
 private: 
-    FString IPAddress = "127.0.0.1";
+    FString IPAddress = "192.168.0.8";
     int32 PortNumber = 9000;
     FSocket* Socket;
     int32 BytesReceived;
     int32 BytesSent;
-
 
 };

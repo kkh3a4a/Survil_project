@@ -9,11 +9,11 @@ ACitizen::ACitizen()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Citizen_moving = new FCitizen_moving;
-	Citizen_moving->team = -1;
-	Citizen_moving->location = { 0, 0, 0 };
-	Citizen_moving->rotation = { 0, 0, 0 };
-	Citizen_moving->citizen_job = 0;
+	Citizen_moving = new FCitizenMoving;
+	Citizen_moving->Team = -1;
+	Citizen_moving->Location = { 0, 0, 0 };
+	Citizen_moving->Rotation = { 0, 0, 0 };
+	Citizen_moving->Job = 0;
 
 }
 void ACitizen::Initialize(TSubclassOf<AActor> C_Actor, TSubclassOf<AActor> E_Actor)
@@ -34,10 +34,10 @@ void ACitizen::Spawn_Citizen()
 	{
 		if (Is_Mycitizen == 0)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("MY : %f %f %f"),a.Value[0].location.x , a.Value[0].location.y, a.Value[0].location.z);
+			UE_LOG(LogTemp, Warning, TEXT("MY : %f %f %f"),a.Value[0].Location.x , a.Value[0].Location.y, a.Value[0].Location.z);
 			for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 			{
-				Location = { a.Value[count_citizenNum].location.x,a.Value[count_citizenNum].location.y,a.Value[count_citizenNum].location.z};
+				Location = { a.Value[count_citizenNum].Location.x,a.Value[count_citizenNum].Location.y,a.Value[count_citizenNum].Location.z};
 				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(Citizen_Actor, Location, Rotation, SpawnInfo);
 				Spawned_Citizen->Tags.Add("Citizen");
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
@@ -48,10 +48,10 @@ void ACitizen::Spawn_Citizen()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Enemy : %f %f %f"), a.Value[0].location.x, a.Value[0].location.y, a.Value[0].location.z);
+			UE_LOG(LogTemp, Warning, TEXT("Enemy : %f %f %f"), a.Value[0].Location.x, a.Value[0].Location.y, a.Value[0].Location.z);
 			for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 			{
-				Location = { a.Value[count_citizenNum].location.x, a.Value[count_citizenNum].location.y, a.Value[count_citizenNum].location.z };
+				Location = { a.Value[count_citizenNum].Location.x, a.Value[count_citizenNum].Location.y, a.Value[count_citizenNum].Location.z };
 				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(EnemyCitizenActor, Location, Rotation, SpawnInfo);
 				Spawned_Citizen->Tags.Add("Citizen");
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
@@ -74,7 +74,7 @@ void ACitizen::Citizen_Moving()
 		
 		for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 		{
-			Location = { a.Value[count_citizenNum].location.x,a.Value[count_citizenNum].location.y,a.Value[count_citizenNum].location.z };
+			Location = { a.Value[count_citizenNum].Location.x,a.Value[count_citizenNum].Location.y,a.Value[count_citizenNum].Location.z };
 			Citizens_Editer[team][count_citizenNum]->SetActorLocation(Location);
 		}
 		team++;
@@ -86,13 +86,13 @@ void ACitizen::citizen_set(FServerStruct1& FirstSendServer, FServerStruct2& Seco
 {
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
-		My_Citizen.Add(i, SecondSendServer.player_citizen[i]);
+		My_Citizen.Add(i, SecondSendServer.PlayerCitizen[i]);
 	}
 }
 
 
 
-void ACitizen::TF_set(Fthree_float& a, Fthree_float& b)
+void ACitizen::TF_set(FThreeFloat& a, FThreeFloat& b)
 {
 	a.x = b.x;
 	a.y = b.y;
@@ -106,7 +106,7 @@ void ACitizen::CitizenNoJob(int& cnt)
 	{
 		for (int i = 0; i < 10; ++i)
 		{
-			if (a.Value[i].job == 0)
+			if (a.Value[i].Job == 0)
 			{
 				temp_cnt++;
 			}

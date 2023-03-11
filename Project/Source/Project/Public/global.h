@@ -7,14 +7,14 @@
 #include <string>
 #include"global.generated.h"
 
-#define MAXPLAYER 2
+#define MAXPLAYER 1
 #define MAXCITIZEN 200
 #define FIRSTSPAWN 10
 #define MAPSIZEX 200
 #define MAPSIZEY 120
 
 USTRUCT(Atomic, BlueprintType)
-struct Fthree_float {
+struct FThreeFloat {
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -26,77 +26,55 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FActor_location_rotation {
+struct FActorTransform {
 	GENERATED_USTRUCT_BODY()
 public:
 	TCHAR name[30];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Fthree_float location;
+		FThreeFloat location;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Fthree_float rotation;
+		FThreeFloat rotation;
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FCitizen_sole {
+struct FCitizenSole {
 	GENERATED_USTRUCT_BODY()
 public:
-	TCHAR name[30];
+	TCHAR Name[30];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Fthree_float location;
+		FThreeFloat Location;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		Fthree_float rotation;
+		FThreeFloat rotation;
 
-	int resources[5];
+	int Resources[5];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int HP;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int job;
+	int Job;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int isJob;
+	int IsJob;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	Fthree_float Job_location;
-};
-
-
-USTRUCT(Atomic, BlueprintType)
-struct Fcitizen_struct {
-	GENERATED_USTRUCT_BODY()
-public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<FCitizen_sole> citizen_location_rotation;
-
+	FThreeFloat Job_location;
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FAActor_struct {
-	GENERATED_USTRUCT_BODY()
-public:
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TArray<AActor*> citizen_AActor;
-
-};
-
-
-USTRUCT(Atomic, BlueprintType)
-struct FCitizen_moving
+struct FCitizenMoving
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	int team;
-	int citizen_number;
-	Fthree_float location;
-	Fthree_float rotation;
-	int citizen_job; //////////////// 0 : 무직, 1 : 자원 채취
+	int Team;
+	int CitizenNumber;
+	FThreeFloat Location;
+	FThreeFloat Rotation;
+	int Job; //////////////// 0 : 무직, 1 : 자원 채취
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -105,11 +83,11 @@ struct Fresources_actor
 	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int type;		///////////////0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
+	int Type;		///////////////0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int count;
+	int Count;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	Fthree_float location;
+	FThreeFloat Loaction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int CitizenCount = 0;
@@ -117,7 +95,7 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct Fkeyboard_input
+struct FKeyInput
 {
 	GENERATED_USTRUCT_BODY()
 public:
@@ -140,7 +118,7 @@ USTRUCT(Atomic, BlueprintType)
 struct FUI_Input {
 	GENERATED_USTRUCT_BODY()
 public:
-	FUI_resource_Input resouce_input;
+	FUI_resource_Input ResourceInput;
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -148,9 +126,9 @@ struct FServerStruct1 {
 	GENERATED_USTRUCT_BODY()
 public:
 	float SunAngle;
-	FActor_location_rotation player_info;
+	FActorTransform PlayerInfo;
 	int MyResource[5];
-	Fthree_float currlocation;
+	FThreeFloat CurrentLocation;
 	//char send_sight_temperature[MAPSIZEX][MAPSIZEY];
 };
 
@@ -158,8 +136,8 @@ USTRUCT(Atomic, BlueprintType)
 struct FServerStruct2 {
 	GENERATED_USTRUCT_BODY()
 public:
-	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
-	Fresources_actor resources[MAXPLAYER * 10];
+	FCitizenSole PlayerCitizen[MAXPLAYER][MAXCITIZEN];
+	Fresources_actor Resources[MAXPLAYER * 10];
 };
 
 
@@ -167,9 +145,9 @@ USTRUCT(Atomic, BlueprintType)
 struct FClientStruct1 {
 	GENERATED_USTRUCT_BODY()
 public:
-	FCitizen_moving My_citizen_moving = {};
-	Fkeyboard_input My_keyboard_input = {};
-	FUI_Input My_UI_input = {};
+	FCitizenMoving MyCitizenMoving = {};
+	FKeyInput KeyInput = {};
+	FUI_Input UIInput = {};
 	int connecting = 1;
 };
 
