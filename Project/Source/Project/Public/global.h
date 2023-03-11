@@ -7,7 +7,7 @@
 #include <string>
 #include"global.generated.h"
 
-#define MAXPLAYER 1
+#define MAXPLAYER 2
 #define MAXCITIZEN 200
 #define FIRSTSPAWN 10
 #define MAPSIZEX 200

@@ -163,7 +163,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			}
 			if (first_send_client.connecting == -1)
 			{
-				shared_lock<shared_mutex> unlock(player_list_lock);
 				break;
 			}
 			mouse_input_checking(first_send_client.My_citizen_moving, players_list, port);
@@ -175,7 +174,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			{
 				Citizen_Work_Sub(players_list, resource_create_landscape, port, first_send_client.My_UI_input.resource_input.ResourceNum);
 			}
-			shared_lock<shared_mutex> unlock(player_list_lock);
 		}
 		else
 		{
@@ -185,9 +183,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	}
 	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",addr, ntohs(clientaddr.sin_port));
 	// 소켓 닫기
-	unique_lock<shared_mutex> lock(player_list_lock);
-	cout << "erase" << endl;
-	players_list.erase(port);
+	{
+		unique_lock<shared_mutex> lock(player_list_lock);
+		cout << "erase" << endl;
+		players_list.erase(port);
+	}
+
 	closesocket(client_sock);
 	return 0;
 }
@@ -253,6 +254,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				player_cnt = 0;
 				ingame_play = false;
 				resource_create_landscape.clear();
+				location_set = false;
+				cout << "End_ingame_thread" << endl;
 				return 0;
 			}
 		}
@@ -263,21 +266,12 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			//set citizen destination
 			shared_lock<shared_mutex> lock(player_list_lock);
 			resource_collect(players_list, resource_create_landscape);
-			shared_lock<shared_mutex> unlock(player_list_lock);
 		}
 		else{
 			Sleep(1);
 		}
 
 	}
-
-
-
-	 
-
-
-
-
 
 	return 0;
 }
