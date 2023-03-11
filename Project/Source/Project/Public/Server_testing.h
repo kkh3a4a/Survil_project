@@ -17,6 +17,7 @@
 #include "Temperature.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
+#include "Math/UnrealMathUtility.h"
 #include "Server_testing.generated.h"
 
 using namespace std;
@@ -121,13 +122,16 @@ public:
 
 	ACameraActor* MyCamera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FThreeFloat CurrentLocation;
-
 	FServerStruct1 ServerStruct1;
 	FServerStruct2 ServerStruct2;
 	FClientStruct1 ClientStruct1;
 
+	FThreeFloat OldLocation;
+	FThreeFloat FutureLocation;
+	FVector InterpolatedLocation;
+	FVector OldInterpolatedLocation;
+	double CycleTime{};
+	int CycleNum{};
 	void TF_set(FThreeFloat& a, FThreeFloat& b);
 	void resoure_set(Fresources_actor& a, Fresources_actor& b);
 	void LocationInterpolate();

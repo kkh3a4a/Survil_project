@@ -66,10 +66,10 @@ uint32_t FSocketThread::Run()
 	MainClass->ThreadInitSendRecv = true;
 
 	steady_clock::time_point start_t = high_resolution_clock::now();
+
 	while (IsRunning) {
 		steady_clock::time_point end_t = high_resolution_clock::now();
 		CycleTime = duration_cast<milliseconds>(end_t - start_t).count();
-
 		if (CycleTime > 50 && IsConnected){
 			start_t = high_resolution_clock::now();
 
@@ -82,7 +82,6 @@ uint32_t FSocketThread::Run()
 					return 0;
 				}
 			}
-
 			if (IsConnected) {
 				IsConnected = Socket->Recv((uint8*)&MainClass->ServerStruct2, sizeof(MainClass->ServerStruct2), BytesReceived, ESocketReceiveFlags::WaitAll);
 				if (!IsConnected) {
@@ -90,6 +89,7 @@ uint32_t FSocketThread::Run()
 					IsConnected = false;
 					return 0;
 				}
+				MainClass->CycleNum = 0;
 			}
 			//Recv Terrain
 			if (IsConnected) {

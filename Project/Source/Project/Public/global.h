@@ -129,7 +129,6 @@ public:
 	FActorTransform PlayerInfo;
 	int MyResource[5];
 	FThreeFloat CurrentLocation;
-	//char send_sight_temperature[MAPSIZEX][MAPSIZEY];
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -150,8 +149,6 @@ public:
 	FUI_Input UIInput = {};
 	int connecting = 1;
 };
-
-
 
 class PROJECT_API global
 {
