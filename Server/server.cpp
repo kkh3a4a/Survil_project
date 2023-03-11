@@ -97,7 +97,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	player_cnt_lock.lock();
 	
-	if (player_cnt > MAXPLAYER)
+	if (player_cnt >= MAXPLAYER)
 	{
 		closesocket(client_sock);
 		return 0;
