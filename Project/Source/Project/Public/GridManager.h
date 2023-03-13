@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "GridCellTest.h"
 #include "GridManager.generated.h"
 
 UCLASS()
