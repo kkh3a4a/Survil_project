@@ -104,6 +104,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<UActorComponent> PloppableComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsPlacementValid;
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Building")
 	void SetPlacementModeEnabled(bool IsEnabled);

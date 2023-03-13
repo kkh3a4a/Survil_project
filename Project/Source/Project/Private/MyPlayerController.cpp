@@ -4,7 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Server_testing.h"
 #include "GridManager.h"
-
+#include "PloppableComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
 AServer_testing* ServerClass;
@@ -304,7 +304,7 @@ void AMyPlayerController::SetPlacementModeEnabled(bool IsEnabled)
     }
     else
     {
-        IsEnabled = PlacementModeEnabled;
+        PlacementModeEnabled = IsEnabled;
         if (IsEnabled == true)
         {
             FVector Location(0.0f, 0.0f, 0.0f);
@@ -314,14 +314,14 @@ void AMyPlayerController::SetPlacementModeEnabled(bool IsEnabled)
             StartList = ServerClass->players_list;
             for (int i = 0; i < MAXPLAYER; ++i)
             {
-                Location = { StartList[i]->location.x, StartList[i]->location.y, StartList[i]->location.z };
+                //Location = { StartList[i]->location.x, StartList[i]->location.y, StartList[i]->location.z };
                 PlaceableActor = GetWorld()->SpawnActor<AActor>(PlaceableActorType, Location, Rotation, SpawnParams);
             }
 
             if (IsValid(PlaceableActor->GetComponentByClass(ClickableComponent)))
             {
                 PlaceableActor->DestroyConstructedComponents();
-                
+
                 PlaceableActor->AddComponentByClass(PloppableComponent, true, PlaceableActor->GetActorTransform(), false);
             }
             else
@@ -354,9 +354,10 @@ void AMyPlayerController::UpdatePlacement()
 
     if (Hit.bBlockingHit)
     {
-        UGameplayStatics::GetActorOfClass(GetWorld(), GridManager);
-        
-        PlaceableActor->SetActorLocation(GridManagerClass->GetClossetGridPosition(Hit.Location));
+        PlaceableActor->SetActorLocation(Hit.Location);
+        // UGameplaySdtatics::GetActorOfClass(GetWorld(), GridManager);
+
+        //PlaceableActor->SetActorLocation(GridManagerClass->GetClossetGridPosition(Hit.Location));    
     }
 }
 
@@ -364,14 +365,15 @@ void AMyPlayerController::SpawnBuilding()
 {
     if (IsValid(PlaceableActor->GetComponentByClass(PloppableComponent)))
     {
-        //if(PloppableComponent.Get(IsPlacementValid)
+        //if (ploppableComponent->IsPlacementValid)
+        
         // Actor의 경우 
 
         FActorSpawnParameters spawnParams;
-       
+
         GetWorld()->SpawnActor<AActor>(PlaceableActorType, PlaceableActor->GetActorTransform(), spawnParams);
         // 위 Transform()정보.
-        
+
         SetPlacementModeEnabled(false);
     }
 }

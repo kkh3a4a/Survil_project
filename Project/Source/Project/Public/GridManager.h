@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GridCellTest.h"
 #include "GridManager.generated.h"
 
 UCLASS()
@@ -29,10 +30,15 @@ protected:
 	float WorldOffset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<AActor*> GridArray;
+	TSubclassOf<AActor> GridCell;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AActor> GridCell;
+	AActor* Grid;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor*> GridArray;
+
+	
 
 	UFUNCTION(BlueprintCallable, Category = "Grid")
 	void PopulateGrid();
