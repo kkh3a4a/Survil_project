@@ -35,33 +35,38 @@ void ATemperature::Initiaize(UMaterial* Material)
 	Hide(true);
 }
 
-void ATemperature::Update(__int8(*TerrainTemperaturePtr)[MapSizeY])
+void ATemperature::Update(uint8(*TerrainTemperaturePtr)[MapSizeY])
 {
 	if (IsHidden)
 		return;
 	for (int32 i = 0; i < MapSizeX / divide * MapSizeY / divide; i++) {
         FVector RGB;
-		//UE_LOG(LogTemp, Warning, TEXT("%d %d %d"), MaterialInstanceArray.Num(),(i * divide) % MapSizeX, (i * divide) / MapSizeX * divide);
+		//UE_LOG(LogTemp, Warning, TEXT("%d %d %d"), TerrainTemperaturePtr[(i * divide) % MapSizeX][(i * divide) / MapSizeX * divide],(i * divide) % MapSizeX, (i * divide) / MapSizeX * divide);
         TemperatureToRGB(TerrainTemperaturePtr[(i * divide) % MapSizeX][(i * divide) / MapSizeX * divide], RGB.X, RGB.Y, RGB.Z);
         MaterialInstanceArray[i]->SetVectorParameterValue(TEXT("Temperature"), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
 	}
 }
 
 void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, double& b) {
-    double scaledTemperature = temperature / 100.0;
+    double scaledTemperature = temperature / TemperatureDivide - 20; //20 ~ 60 -> 0 ~ 40
 
-    // Calculate the red, green, and blue components
-    r = std::max(0.0, std::min(1.0, 2.0 - scaledTemperature * 2.0));
-    g = std::max(0.0, std::min(1.0, scaledTemperature * 2.0));
-    b = std::max(0.0, std::min(1.0, 2.0 * (scaledTemperature - 0.5)));
-
-    // Normalize the RGB values so their sum is 1
-    double sum = r + g + b;
-    if (sum > 0) {
-        r /= sum;
-        g /= sum;
-        b /= sum;
+    // rgbÃÑÇÕ 20
+    if (scaledTemperature > 20) {
+		r = 40 - scaledTemperature;
+        g = 20 - r;
+        b = 0;
     }
+    else {
+        r = 0;
+        b = scaledTemperature;
+		g = 20 - b;
+    }
+
+    r /= 20;
+	g /= 20;
+	b /= 20;
+
+    //UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), r, g, b);
 }
 
 void ATemperature::Hide(bool visibility)

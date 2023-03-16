@@ -22,17 +22,18 @@ typedef struct two_int {
 //const int one_side_number = 320;
 //II player_sight_size{ 200, 120 };
 //const int random_array_size = 500000;
-const int one_side_number = 16000;
+//const int one_side_number = 16000;
 //II player_sight_size{200, 120};
-const int random_array_size = 50000000;
-//const int one_side_number = 32000;
+//const int random_array_size = 50000000;
+const int one_side_number = 32000;
 II player_sight_size{ SIGHT_X, SIGHT_Y };
-//const int random_array_size = 90000000;
+const int random_array_size = 90000000;
 //const int random_array_size = 150000000;
 
 const int min_height = 4;
 const int max_height = 8;
 const int base_floor = 1;
+const int temperature_divide = 4;
 
 typedef struct two_char {
 	int x;
@@ -471,7 +472,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 			}
 			//각도차 90도 이하로 햇빛 영향 있음
 			else {
-				int temperature = (90 - angle_difference) / 10 / 2;
+				int temperature = (90 - angle_difference) / 10;
 				//printf("%d %d\n", angle_difference, temperature);
 				temperature_map_device[coo.x][coo.y] += temperature;
 			}
@@ -485,8 +486,9 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 	else {
 		temperature_map_device[coo.x][coo.y] -= 1;
 	}
-	temperature_map_device[coo.x][coo.y] = max(temperature_map_device[coo.x][coo.y], 20 * 4);
-	temperature_map_device[coo.x][coo.y] = min(temperature_map_device[coo.x][coo.y], 60 * 4);
+	
+	temperature_map_device[coo.x][coo.y] = max(temperature_map_device[coo.x][coo.y], 20 * temperature_divide);
+	temperature_map_device[coo.x][coo.y] = min(temperature_map_device[coo.x][coo.y], 60 * temperature_divide);
 }
 
 __global__
@@ -690,8 +692,8 @@ public:
 	CC get_highest_lowest(unsigned char** array_host)
 	{
 		clock_t t_0 = clock();
-		char highest = array_host[0][0];
-		char lowest = array_host[0][0];
+		unsigned char highest = array_host[0][0];
+		unsigned char lowest = array_host[0][0];
 		for (int i = 0; i < one_side_number; i++) {
 			for (int j = 0; j < one_side_number; j++) {
 				if (array_host[i][j] > highest) {
@@ -1054,7 +1056,7 @@ public:
 			for (int i = 0; i < one_side_number; i++) {
 				for (int j = 0; j < one_side_number; j++) {
 					shadow_map_host[i][j] = 0;
-					temperature_map_host[i][j] = 30;
+					temperature_map_host[i][j] = 30 * temperature_divide;
 				}
 			}
 			cout << "Terrain Loaded From File" << endl;
@@ -1064,7 +1066,7 @@ public:
 				for (int j = 0; j < one_side_number; j++) {
 					terrain_array_host[i][j] = height_uid(dre);			//언덕 생성 안하고 랜덤으로 생성
 					shadow_map_host[i][j] = 0;
-					temperature_map_host[i][j] = 30;
+					temperature_map_host[i][j] = 30 * temperature_divide;
 				}
 			}
 			cout << "Terrain File Not Exist" << endl;

@@ -58,11 +58,11 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		terrain->make_tempertature_map(sun_angle);
 		CC retval = terrain->get_highest_lowest(temperature_map);
 
-		if (sun_angle > 360)
+		/*if (sun_angle > 360)
 			sun_angle = 0;
-		sun_angle += 6;
+		sun_angle += 6;*/
 		cout << "sun_angle : " << sun_angle << endl;
-		cout << "Temperature Highest: " << retval.x << ", Lowest" << retval.y << endl;
+		cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
 
 		//terrain->show_array(total_terrain, 320);
 		//terrain->show_array(shadow_map, 320);
@@ -163,8 +163,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				retval = send(client_sock, (char*)player_sight_terrain[i], (int)(sizeof(char) * player_sight_size.y), 0);
 			}
 			for (int i = 0; i < player_sight_size.x; ++i) {
-			retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
-				
+				retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
 			}
 
 			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(ClientStruct1), MSG_WAITALL);
