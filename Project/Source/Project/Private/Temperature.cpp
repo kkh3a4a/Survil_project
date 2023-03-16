@@ -35,7 +35,7 @@ void ATemperature::Initiaize(UMaterial* Material)
 	Hide(true);
 }
 
-void ATemperature::Update(int8(*TerrainTemperaturePtr)[MapSizeY])
+void ATemperature::Update(__int8(*TerrainTemperaturePtr)[MapSizeY])
 {
 	if (IsHidden)
 		return;

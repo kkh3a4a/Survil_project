@@ -28,7 +28,7 @@ protected:
 
 public:	
 	void Initiaize(UMaterial*);
-	void Update(int8(*TerrainTemperaturePtr)[MapSizeY]);
+	void Update(__int8(*TerrainTemperaturePtr)[MapSizeY]);
 	void TemperatureToRGB(double , double& , double& , double& );
 
 	void Hide(bool);

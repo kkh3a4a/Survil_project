@@ -427,7 +427,7 @@ void make_shadow_map_cuda(char** terrain_array_device, char** shadow_map_device,
 }
 
 __global__
-void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_device, char** temperature_map_device, int sun_angle)
+void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_device, unsigned char** temperature_map_device, int sun_angle)
 {
 	II coo;
 	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
@@ -448,7 +448,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 	else {
 		height[2] = terrain_array_device[coo.x + 1][coo.y];
 	}
-
+	//온도 unsigned char로 해서 256까진데 0.25단위로 클라랑 차이내서 클라에서 받으면 곱하기 0.25해서 받을거임 그래서 최대 온도 64임
 	//낮일 때
 	if (sun_angle >= 0 && sun_angle <= 180){
 		//햇빛 드는 곳
@@ -463,34 +463,34 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 			else {
 				ground_angle = 90;
 			}
-			// 온도 변환식 제대로 만들어야 함.
-			// sun angle 업데이트할때마다 온도 업데이트 못함 온도 업데이트 시간이 오래걸림
-			//시간이 완전히 같지 않아서 온도가 늘쑥날쑥할수있음 해결하기 위해서 무엇?
 			int angle_difference = abs(ground_angle - sun_angle);	//0 ~ 180 
 
 			//각도차 90도 넘어서 햇빛 영향 없음
 			if (angle_difference >= 90) {
-				temperature_map_device[coo.x][coo.y] -= 1;
-				return;
+				//temperature_map_device[coo.x][coo.y] -= 1;
 			}
-
-			int temperature = (90 - angle_difference) / 10 / 2;
-			//printf("%d %d\n", angle_difference, temperature);
-			temperature_map_device[coo.x][coo.y] += temperature;
+			//각도차 90도 이하로 햇빛 영향 있음
+			else {
+				int temperature = (90 - angle_difference) / 10 / 2;
+				//printf("%d %d\n", angle_difference, temperature);
+				temperature_map_device[coo.x][coo.y] += temperature;
+			}
 		}
 		//햇빛 안드는 곳
 		else {
-			temperature_map_device[coo.x][coo.y] -= 1;
+			//temperature_map_device[coo.x][coo.y] -= 1;
 		}
 	}
 	//밤일 때
 	else {
 		temperature_map_device[coo.x][coo.y] -= 1;
 	}
+	temperature_map_device[coo.x][coo.y] = max(temperature_map_device[coo.x][coo.y], 20 * 4);
+	temperature_map_device[coo.x][coo.y] = min(temperature_map_device[coo.x][coo.y], 60 * 4);
 }
 
 __global__
-void heat_conduction_cuda(char** temperature_map_device)
+void heat_conduction_cuda(unsigned char** temperature_map_device)
 {
 	II coo;
 	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
@@ -562,9 +562,9 @@ private:
 	char** shadow_map_device;
 	char* shadow_map_temp[one_side_number];
 	
-	char** temperature_map_host = new char* [one_side_number];
-	char** temperature_map_device;
-	char* temperature_map_temp[one_side_number];
+	unsigned char** temperature_map_host = new unsigned char* [one_side_number];
+	unsigned char** temperature_map_device;
+	unsigned char* temperature_map_temp[one_side_number];
 	
 	char** terrain_player_sight_host = new char* [player_sight_size.x];
 	char** temperature_player_sight = new char* [player_sight_size.x];
@@ -595,7 +595,7 @@ public:
 		for (int i = 0; i < one_side_number; i++) {
 			terrain_array_host[i] = new char[one_side_number];
 			shadow_map_host[i] = new char[one_side_number];
-			temperature_map_host[i] = new char[one_side_number];
+			temperature_map_host[i] = new unsigned char[one_side_number];
 		}
 		load_terrain();
 		
@@ -667,6 +667,27 @@ public:
 	}
 	
 	CC get_highest_lowest(char** array_host)
+	{
+		clock_t t_0 = clock();
+		char highest = array_host[0][0];
+		char lowest = array_host[0][0];
+		for (int i = 0; i < one_side_number; i++) {
+			for (int j = 0; j < one_side_number; j++) {
+				if (array_host[i][j] > highest) {
+					highest = array_host[i][j];
+				}
+				else if (array_host[i][j] < lowest) {
+					lowest = array_host[i][j];
+				}
+			}
+		}
+		CC value{ highest, lowest };
+		clock_t t_1 = clock();
+		cout << "Get Highest : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		return value;
+	}
+	
+	CC get_highest_lowest(unsigned char** array_host)
 	{
 		clock_t t_0 = clock();
 		char highest = array_host[0][0];
@@ -947,7 +968,7 @@ public:
 		return shadow_map_host;
 	}
 	
-	char** get_temperature_map()
+	unsigned char** get_temperature_map()
 	{
 		return temperature_map_host;
 	}

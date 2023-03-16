@@ -34,7 +34,7 @@ map<int, resource_actor*> resource_create_landscape;
 Terrain* terrain = new Terrain();
 char** total_terrain = terrain->get_map();
 char** shadow_map = terrain->get_shadow_map();
-char** temperature_map = terrain->get_temperature_map();
+unsigned char** temperature_map = terrain->get_temperature_map();
 volatile int player_cnt;
 volatile bool location_set = false;
 int ingame_play = false;
@@ -58,6 +58,8 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		terrain->make_tempertature_map(sun_angle);
 		CC retval = terrain->get_highest_lowest(temperature_map);
 
+		if (sun_angle > 360)
+			sun_angle = 0;
 		sun_angle += 6;
 		cout << "sun_angle : " << sun_angle << endl;
 		cout << "Temperature Highest: " << retval.x << ", Lowest" << retval.y << endl;
