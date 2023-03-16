@@ -22,12 +22,12 @@ typedef struct two_int {
 //const int one_side_number = 320;
 //II player_sight_size{ 200, 120 };
 //const int random_array_size = 500000;
-//const int one_side_number = 16000;
+const int one_side_number = 16000;
 //II player_sight_size{200, 120};
-//const int random_array_size = 50000000;
-const int one_side_number = 32000;
+const int random_array_size = 50000000;
+//const int one_side_number = 32000;
 II player_sight_size{ SIGHT_X, SIGHT_Y };
-const int random_array_size = 90000000;
+//const int random_array_size = 90000000;
 //const int random_array_size = 150000000;
 
 const int min_height = 4;
