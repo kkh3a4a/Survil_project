@@ -33,6 +33,7 @@ map<int, resource_actor*> resource_create_landscape;
 
 Terrain* terrain = new Terrain();
 char** total_terrain = terrain->get_map();
+char** shadow_map = terrain->get_shadow_map();
 char** temperature_map = terrain->get_temperature_map();
 volatile int player_cnt;
 volatile bool location_set = false;
@@ -45,17 +46,25 @@ DWORD WINAPI terrain_change(LPVOID arg)
 	terrain->set_city_location(TF{ 20000, 20000 }, 0);*/
 
 	//terrain->show_array(total_terrain, 320);
-	//terrain->log_on();
+	terrain->log_on();
 	int i{};
 	while (1){
 		//clock_t t_0 = clock();
-		//cout << endl << i << "번째" << endl;
-		terrain->wind_blow({ 1, 0 }, 10);
+		cout << endl << i << "번째" << endl;
+		
+
+		terrain->wind_blow({ 1, 0 }, 1);
 		terrain->make_shadow_map(sun_angle);
 		terrain->make_tempertature_map(sun_angle);
+		CC retval = terrain->get_highest_lowest(temperature_map);
 
-		/*terrain->show_array(total_terrain, 320);
-		terrain->show_array(temperature_map, 320);*/
+		sun_angle += 6;
+		cout << "sun_angle : " << sun_angle << endl;
+		cout << "Temperature Highest: " << retval.x << ", Lowest" << retval.y << endl;
+
+		//terrain->show_array(total_terrain, 320);
+		//terrain->show_array(shadow_map, 320);
+		//terrain->show_array(temperature_map, 320);
 
 
 		/*terrain->copy_for_player_map(II{ 200, 200 });

@@ -11,6 +11,7 @@
 #include "device_launch_parameters.h"
 #include "global.h"
 #define PI 3.1415926
+
 using namespace std;
 
 typedef struct two_int {
@@ -441,37 +442,50 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 	else {
 		height[0] = terrain_array_device[coo.x - 1][coo.y];
 	}
-	if (coo.x + 1 >= one_side_number)
-	{
+	if (coo.x + 1 >= one_side_number) {
 		height[2] = height[1];
 	}
 	else {
 		height[2] = terrain_array_device[coo.x + 1][coo.y];
 	}
 
-	if (shadow_map_device[coo.x][coo.y] == 1) {
-		int ground_angle{};
-		if (height[0] > height[2]) {
-			ground_angle = (atanf(abs(height[0] - height[2])) * 180 / PI);
-		}
-		else if (height[0] < height[2]) {
-			ground_angle = (atanf(abs(height[0] - height[2])) * 180 / PI) + 90;
-		}
-		else {
-			ground_angle = 90;
-		}
-		// 온도 변환식 제대로 만들어야 함.
-		// sun angle 업데이트할때마다 온도 업데이트 못함 온도 업데이트 시간이 오래걸림
-		// 하루 3분에 맞게 sunangle 업데이트 해야함
-		int angle_difference = (180 - abs(ground_angle - sun_angle));
-		int temperature = angle_difference / 10;
-		temperature_map_device[coo.x][coo.y] += angle_difference;
-		if (angle_difference > 0) {
+	//낮일 때
+	if (sun_angle >= 0 && sun_angle <= 180){
+		//햇빛 드는 곳
+		if (shadow_map_device[coo.x][coo.y] == 1) {
+			int ground_angle{};
+			if (height[0] > height[2]) {
+				ground_angle = (atanf(abs(height[0] - height[2])) * 180 / PI);
+			}
+			else if (height[0] < height[2]) {
+				ground_angle = (atanf(abs(height[0] - height[2])) * 180 / PI) + 90;
+			}
+			else {
+				ground_angle = 90;
+			}
+			// 온도 변환식 제대로 만들어야 함.
+			// sun angle 업데이트할때마다 온도 업데이트 못함 온도 업데이트 시간이 오래걸림
+			//시간이 완전히 같지 않아서 온도가 늘쑥날쑥할수있음 해결하기 위해서 무엇?
+			int angle_difference = abs(ground_angle - sun_angle);	//0 ~ 180 
+
+			//각도차 90도 넘어서 햇빛 영향 없음
+			if (angle_difference >= 90) {
+				temperature_map_device[coo.x][coo.y] -= 1;
+				return;
+			}
+
+			int temperature = (90 - angle_difference) / 10 / 2;
 			//printf("%d %d\n", angle_difference, temperature);
+			temperature_map_device[coo.x][coo.y] += temperature;
+		}
+		//햇빛 안드는 곳
+		else {
+			temperature_map_device[coo.x][coo.y] -= 1;
 		}
 	}
-	else if (shadow_map_device[coo.x][coo.y] == 0) {
-		//temperature_map_device[coo.x][coo.y] -= 1;
+	//밤일 때
+	else {
+		temperature_map_device[coo.x][coo.y] -= 1;
 	}
 }
 
@@ -652,18 +666,18 @@ public:
 		cudaFree(temperature_map_device);
 	}
 	
-	CC get_highest_lowest()
+	CC get_highest_lowest(char** array_host)
 	{
 		clock_t t_0 = clock();
-		char highest = terrain_array_host[0][0];
-		char lowest = terrain_array_host[0][0];
+		char highest = array_host[0][0];
+		char lowest = array_host[0][0];
 		for (int i = 0; i < one_side_number; i++) {
 			for (int j = 0; j < one_side_number; j++) {
-				if (terrain_array_host[i][j] > highest) {
-					highest = terrain_array_host[i][j];
+				if (array_host[i][j] > highest) {
+					highest = array_host[i][j];
 				}
-				else if (terrain_array_host[i][j] < lowest) {
-					lowest = terrain_array_host[i][j];
+				else if (array_host[i][j] < lowest) {
+					lowest = array_host[i][j];
 				}
 			}
 		}
@@ -676,20 +690,22 @@ public:
 	void make_shadow_map(int sun_angle) {
 		clock_t t_0 = clock();
 		
+		if (sun_angle <= 0 || sun_angle >= 180) {
+			cout << "Shadow Sun Angle is not valid: " << sun_angle << endl;
+			return;
+		}
+		
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemset(shadow_map_temp[i], 1, one_side_number * sizeof(char));
 		}
 		
-		if (sun_angle < 0 || sun_angle > 180) {
-			cout << "Sun Angle is not valid: " << sun_angle << endl;
-			return;
-		}
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		make_shadow_map_cuda << <grid, block >> > (terrain_array_device, shadow_map_device, sun_angle);
-		for (int i = 0; i < one_side_number; i++) {
+		cudaDeviceSynchronize();
+		/*for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(shadow_map_host[i], shadow_map_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}
+		}*/
 		
 		clock_t t_1 = clock();
 		if (log) {
@@ -702,13 +718,6 @@ public:
 	{
 		clock_t t_0 = clock();
 			
-		/*for (int i = 0; i < one_side_number; i++) {
-			cudaMemset(temperature_map_temp[i], 0, one_side_number * sizeof(char));
-		}*/
-		if (sun_angle < 0 || sun_angle > 180) {
-			cout << "Sun Angle is not valid: " << sun_angle << endl;
-			return;
-		}
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		make_temperature_map_cuda << <grid, block >> > (terrain_array_device, shadow_map_device, temperature_map_device, sun_angle);
@@ -724,7 +733,7 @@ public:
 	void terrain_corrosion()
 	{
 		clock_t t_0 = clock();
-		CC hi_low = get_highest_lowest();
+		CC hi_low = get_highest_lowest(terrain_array_host);
 		cout << hi_low.x << " " << hi_low.y << endl;
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
@@ -890,13 +899,13 @@ public:
 	
 	void show_array(char** terrain_array_host, int size)
 	{
-		for (int x = 0; x < size; x++) {
-			for (int y = 0; y < size; y++) {
+		for (int y = 0; y < size; y++) {
+			for (int x = 0; x < size; x++) {
 				if (terrain_array_host[x][y] > 9) {
-					printf("%d_", terrain_array_host[x][y] / 100);
+					printf("%d_", terrain_array_host[x][y] / 10);
 				}
 				else if (terrain_array_host[x][y] < 0) {
-					printf("%d-", abs(terrain_array_host[x][y]) / 100);
+					printf("%d-", abs(terrain_array_host[x][y]) / 10);
 				}
 				else
 					//printf("%4d", terrain_array_host[x][y]);
