@@ -11,8 +11,18 @@
 #define FIRSTSPAWN 10
 #define SIGHT_X 240
 #define SIGHT_Y 100
+#define UNIT 100
 
-std::uniform_int_distribution <int>uid{ 0 + 100 * 100, 1600 * 100 - 100 * 100 };
+typedef struct two_int {
+	int x;
+	int y;
+} II;
+
+const int one_side_number = 32000;
+II player_sight_size{ SIGHT_X, SIGHT_Y };
+const int random_array_size = 90000000;
+
+std::uniform_int_distribution <int>uid{ 0 + 1000, one_side_number - 1000 };
 std::uniform_int_distribution <int>resource_uid{ -100, 100 };
 
 typedef struct three_float {
@@ -43,7 +53,6 @@ typedef struct location_rotation
 	TF location;
 	TF rotation;
 }location_rotation;
-
 
 typedef struct Citizen_moving
 {
@@ -94,7 +103,6 @@ public:
 	UI_resource_Input resource_input;
 }UI_Input;
 
-
 typedef struct ServerStruct1{
 public:
 	float SunAngle = 0;
@@ -110,7 +118,6 @@ public:
 	resource_actor resources[MAXPLAYER * 10];
 	//char send_sight_temperature[SIGHT_X][SIGHT_Y];
 };
-
 
 typedef struct ClientStruct1 {
 public:
@@ -173,8 +180,8 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 	retry:
 		a.second->player_info = new FActor;
 		_stprintf_s(a.second->player_info->name, _countof(a.second->player_info->name), _T("%d"), a.first);
-		a.second->player_info->location.x = uid(dre2);
-		a.second->player_info->location.y = uid(dre2);
+		a.second->player_info->location.x = uid(dre2) * UNIT;
+		a.second->player_info->location.y = uid(dre2) * UNIT;
 		for (auto& b : players_list)
 		{
 			if (a.first != b.first)
@@ -327,23 +334,24 @@ void resource_collect(std::map<int, players_profile*>& players_list, std::map<in
 
 void camera_movement(std::map<int, players_profile*>& players_list)
 {
+	int movement = 100;
 	for (auto& a : players_list)
 	{
-		if (a.second->my_keyinput->w)
+		if (a.second->my_keyinput->w && a.second->curr_location->y - movement > SIGHT_Y * UNIT)
 		{
-			a.second->curr_location->y -= 100;
+			a.second->curr_location->y -= movement;
 		}
-		if (a.second->my_keyinput->s)
+		if (a.second->my_keyinput->s && a.second->curr_location->y + movement < (one_side_number - SIGHT_Y) * UNIT)
 		{
-			a.second->curr_location->y += 100;
+			a.second->curr_location->y += movement;
 		}
-		if (a.second->my_keyinput->a)
+		if (a.second->my_keyinput->a && a.second->curr_location->x - movement > SIGHT_X * UNIT)
 		{
-			a.second->curr_location->x -= 100;
+			a.second->curr_location->x -= movement;
 		}
-		if (a.second->my_keyinput->d)
+		if (a.second->my_keyinput->d && a.second->curr_location->x + movement < (one_side_number - SIGHT_X) * UNIT)
 		{
-			a.second->curr_location->x += 100;
+			a.second->curr_location->x += movement;
 		}
 	}
 }
