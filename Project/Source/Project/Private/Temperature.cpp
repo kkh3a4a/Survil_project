@@ -52,14 +52,14 @@ void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, do
 
     // rgbÃÑÇÕ 20
     if (scaledTemperature > 20) {
-		r = 40 - scaledTemperature;
+		r = scaledTemperature - 20;
         g = 20 - r;
         b = 0;
     }
     else {
         r = 0;
-        b = scaledTemperature;
-		g = 20 - b;
+        g = scaledTemperature;
+        b = 20 - g;
     }
 
     r /= 20;
