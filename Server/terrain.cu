@@ -484,9 +484,10 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 	}
 	//밤일 때
 	else {
-		temperature_map_device[coo.x][coo.y] -= 1;
+		temperature_map_device[coo.x][coo.y] -= temperature_divide * 1;
 	}
 	
+	//최고 최저 온도 설정
 	temperature_map_device[coo.x][coo.y] = max(temperature_map_device[coo.x][coo.y], 20 * temperature_divide);
 	temperature_map_device[coo.x][coo.y] = min(temperature_map_device[coo.x][coo.y], 60 * temperature_divide);
 }
@@ -498,6 +499,9 @@ void heat_conduction_cuda(unsigned char** temperature_map_device)
 	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
 	coo.y = blockIdx.x * blockDim.x + threadIdx.x;
 
+	// 0 1 2
+	// 3 4 5
+	// 6 7 8
 	char temperature[9];
 	temperature[4] = temperature_map_device[coo.x][coo.y];	//중심
 	if (coo.x - 1 >= 0) {
@@ -548,6 +552,9 @@ void heat_conduction_cuda(unsigned char** temperature_map_device)
 	for (int i = 0; i < 9; i++) {
 		sum += temperature[i];
 	}
+	int average = sum / 9;
+	temperature_map_device[coo.x][coo.y] = average;
+	//9개 평균내면 온도가 안올라감
 	//printf("%d\n", sum);
 
 	//temperature_map_device[coo.x][coo.y] = sum / 9;
@@ -744,7 +751,8 @@ public:
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		make_temperature_map_cuda << <grid, block >> > (terrain_array_device, shadow_map_device, temperature_map_device, sun_angle);
-		heat_conduction_cuda << <grid, block >> > (temperature_map_device);
+		/*cudaDeviceSynchronize();
+		heat_conduction_cuda << <grid, block >> > (temperature_map_device);*/
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}
