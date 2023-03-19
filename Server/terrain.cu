@@ -343,7 +343,7 @@ void except_city_terrain_cuda(char** terrain_array_device, II* city_location_dev
 {
 	int x = blockIdx.x * blockDim.x + threadIdx.x;
 	int y = blockIdx.y * blockDim.y + threadIdx.y;
-	int inner_radius = 50;
+	int inner_radius = city_size / 2;
 	int outer_radius = inner_radius + 20;
 	II distance;
 
