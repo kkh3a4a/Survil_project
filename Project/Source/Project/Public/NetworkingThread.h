@@ -19,7 +19,7 @@ public:
 class FSocketThread : public FRunnable
 {
 public:
-    FSocketThread(AActor* temp_server_testing);
+    FSocketThread(AActor*);
 
     void Stop();
     virtual uint32_t Run() override;

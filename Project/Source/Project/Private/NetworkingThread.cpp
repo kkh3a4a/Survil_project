@@ -2,12 +2,12 @@
 
 
 #include "NetworkingThread.h"
-#include "Server_testing.h"
+#include "Main.h"
 #include "Kismet/GameplayStatics.h"
 
 using namespace chrono;
 using namespace std;
-AServer_testing* MainClass;
+AMain* MainClass;
 
 NetworkingThread::NetworkingThread()
 {
@@ -19,9 +19,9 @@ NetworkingThread::~NetworkingThread()
 	
 }
 
-FSocketThread::FSocketThread(AActor* temp_server_testing)
+FSocketThread::FSocketThread(AActor* main)
 {
-	MainClass = Cast<AServer_testing>(temp_server_testing);
+	MainClass = Cast<AMain>(main);
 	Socket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), false);
 
 	// Connect to the server
@@ -30,7 +30,7 @@ FSocketThread::FSocketThread(AActor* temp_server_testing)
 	ServerAddress->SetIp(*IPAddress, bIsValid);
 	ServerAddress->SetPort(PortNumber);
 	IsConnected = Socket->Connect(*ServerAddress);
-	if (IsRunning) {
+	if (IsConnected) {
 		UE_LOG(LogTemp, Warning, TEXT("Connected to Server!"));
 	}
 	else {

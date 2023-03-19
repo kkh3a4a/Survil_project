@@ -2,10 +2,10 @@
 
 #include "MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Server_testing.h"
+#include "Main.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
-AServer_testing* ServerClass;
+AMain* ServerClass;
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -16,12 +16,12 @@ AMyPlayerController::AMyPlayerController()
     }
     UE_LOG(LogTemp, Log, TEXT("%s"), *worldref->GetName());
     
-    AActor* actor = UGameplayStatics::GetActorOfClass(worldref, AServer_testing::StaticClass());
+    AActor* actor = UGameplayStatics::GetActorOfClass(worldref, AMain::StaticClass());
     if (actor == nullptr){
         return;
     }
     actor->GetWorld();
-    ServerClass = Cast<AServer_testing>(actor);
+    ServerClass = Cast<AMain>(actor);
     if (ServerClass == nullptr){
         return;
     }
