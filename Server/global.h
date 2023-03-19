@@ -21,6 +21,7 @@ typedef struct two_int {
 const int one_side_number = 32000;
 II player_sight_size{ SIGHT_X, SIGHT_Y };
 const int random_array_size = 90000000;
+const int city_size = 100;
 
 std::uniform_int_distribution <int>uid{ 0 + 1000, one_side_number - 1000 };
 std::uniform_int_distribution <int>resource_uid{ -100, 100 };
