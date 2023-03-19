@@ -81,37 +81,5 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void PlayerTick(float DeltaTime) override;
 
-// grid and building ±¸ºÐ
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool PlacementModeEnabled;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* PlaceableActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AActor> PlaceableActorType;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<int, FActorTransform*> StartList;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UActorComponent> ClickableComponent;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<UActorComponent> PloppableComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool IsPlacementValid;
-
-protected:
-	UFUNCTION(BlueprintCallable, Category = "Building")
-	void SetPlacementModeEnabled(bool IsEnabled);
-
-	UFUNCTION(BlueprintCallable, Category = "Building")
-	void UpdatePlacement();
-
-	UFUNCTION(BlueprintCallable, Category = "Building")
-	void SpawnBuilding();
 
 };
