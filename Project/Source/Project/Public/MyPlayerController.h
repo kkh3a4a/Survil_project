@@ -71,10 +71,11 @@ protected:
 	void InputDownReleased();
 	void InputLeftReleased();
 	void InputRightReleased();
-	//void SetNewDestination(const FVector DestLocation);
 	void MoveToMouseCursor();
 	void MoveToActor();
 	void VisibilityTemperature();
+	void BuildMode();
+	void Build();
 	void MouseScrollUp();
 	void MouseScrollDown();
 

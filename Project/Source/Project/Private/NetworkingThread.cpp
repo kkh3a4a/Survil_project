@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "NetworkingThread.h"
 #include "Main.h"
 #include "Kismet/GameplayStatics.h"
@@ -40,20 +39,19 @@ FSocketThread::FSocketThread(AActor* main)
 
 uint32_t FSocketThread::Run()
 {
-	if (!IsRunning)
+	if (!IsRunning || !IsConnected)
 		return 0;
 
 	//Recv Struct
-	IsRunning = Socket->Recv((uint8*)&MainClass->ServerStruct1, sizeof(MainClass->ServerStruct1), BytesReceived, ESocketReceiveFlags::WaitAll);
+	IsConnected = Socket->Recv((uint8*)&MainClass->ServerStruct1, sizeof(MainClass->ServerStruct1), BytesReceived, ESocketReceiveFlags::WaitAll);
 	if (BytesReceived != sizeof(MainClass->ServerStruct1)) {
 		UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
-		IsRunning = false;
+		IsConnected = false;
 	}
 	IsConnected = Socket->Recv((uint8*)&MainClass->ServerStruct2, sizeof(MainClass->ServerStruct2), BytesReceived, ESocketReceiveFlags::WaitAll);
 	if (!IsConnected) {
 		UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 		IsConnected = false;
-		return 0;
 	}
 	for (int thread_cnt_num = 0; thread_cnt_num < MAXPLAYER; ++thread_cnt_num) {
 		MainClass->players_list.Add(thread_cnt_num, &(MainClass->ServerStruct1.PlayerInfo));
@@ -67,7 +65,7 @@ uint32_t FSocketThread::Run()
 
 	steady_clock::time_point start_t = high_resolution_clock::now();
 
-	while (IsRunning) {
+	while (IsConnected && IsRunning) {
 		steady_clock::time_point end_t = high_resolution_clock::now();
 		CycleTime = duration_cast<milliseconds>(end_t - start_t).count();
 		if (CycleTime > 50 && IsConnected){
@@ -136,10 +134,6 @@ uint32_t FSocketThread::Run()
 			if (IsConnected) {
 				IsConnected = Socket->Send((uint8*)&MainClass->ClientStruct1, sizeof(FClientStruct1), BytesSent);
 			}
-
-			
-
-
 		}
 		else{
 			Sleep(1);

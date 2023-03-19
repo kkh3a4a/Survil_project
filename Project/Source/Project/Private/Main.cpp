@@ -57,6 +57,10 @@ void AMain::BeginPlay()
 	Temperature->Initiaize(TemperatureMaterial);
 	Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
+	//Spawn Building
+	Building = GetWorld()->SpawnActor<ABuilding>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	Building->Initialize(BuildingGridMaterial);
+
 	UI_Input.ResourceInput.ResourceNum = -1;
 	UI_Input.ResourceInput.CitizenCountAdd = false;
 	UI_Input.ResourceInput.CitizenCountSub = false;
@@ -106,6 +110,7 @@ void AMain::Tick(float DeltaTime)
 		Citizens->Citizen_Moving();
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 		Temperature->Update(TerrainTemperature);
+		Building->update();
 		MyTown->UpdateResource();
 
 		LocationInterpolate();

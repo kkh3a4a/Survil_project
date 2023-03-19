@@ -15,6 +15,7 @@
 #include "MyTown.h"
 #include "MeshTerrain.h"
 #include "Temperature.h"
+#include "Building.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Math/UnrealMathUtility.h"
@@ -132,6 +133,12 @@ public:
 	FVector OldInterpolatedLocation;
 	double CycleTime{};
 	int CycleNum{};
+
+	ABuilding* Building;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+		UMaterial* BuildingGridMaterial;
+
+
 	void TF_set(FThreeFloat& a, FThreeFloat& b);
 	void resoure_set(Fresources_actor& a, Fresources_actor& b);
 	void LocationInterpolate();

@@ -5,7 +5,7 @@
 #include "Main.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
-AMain* ServerClass;
+AMain* Main_Class;
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -21,9 +21,9 @@ AMyPlayerController::AMyPlayerController()
         return;
     }
     actor->GetWorld();
-    ServerClass = Cast<AMain>(actor);
-    if (ServerClass == nullptr){
-        return;
+    Main_Class = Cast<AMain>(actor);
+    if (Main_Class == nullptr){
+        return; 
     }
 
     bShowMouseCursor = true;
@@ -55,72 +55,84 @@ void AMyPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Thermal", IE_Pressed, this, &AMyPlayerController::VisibilityTemperature);
 
+    InputComponent->BindAction("Build", IE_Pressed, this, &AMyPlayerController::BuildMode);
+
     InputComponent->BindAction("MouseScrollUp", IE_Pressed, this, &AMyPlayerController::MouseScrollUp);
     InputComponent->BindAction("MouseScrollDown", IE_Pressed, this, &AMyPlayerController::MouseScrollDown);
 }
 
 void AMyPlayerController::InputUpPressed()
 {
-    ServerClass->KeyInput->w = true;
+    Main_Class->KeyInput->w = true;
 }
 
 void AMyPlayerController::InputDownPressed()
 {
-    ServerClass->KeyInput->s = true;
+    Main_Class->KeyInput->s = true;
 }
 
 void AMyPlayerController::InputLeftPressed()
 {
-    ServerClass->KeyInput->a = true;
+    Main_Class->KeyInput->a = true;
 }
 
 void AMyPlayerController::InputRightPressed()
 {
-    ServerClass->KeyInput->d = true;
+    Main_Class->KeyInput->d = true;
 }
 
 
 
 void AMyPlayerController::InputUpReleased()
 {
-    ServerClass->KeyInput->w = false;
+    Main_Class->KeyInput->w = false;
 }
 
 void AMyPlayerController::InputDownReleased()
 {
-    ServerClass->KeyInput->s = false;
+    Main_Class->KeyInput->s = false;
 }
 
 void AMyPlayerController::InputLeftReleased()
 {
-    ServerClass->KeyInput->a = false;
+    Main_Class->KeyInput->a = false;
 }
 
 void AMyPlayerController::InputRightReleased()
 {
-    ServerClass->KeyInput->d = false;
+    Main_Class->KeyInput->d = false;
 }
 
 
 
 void AMyPlayerController::InputRightMoustButtonPressed()
 {
-    bRightClickMouse = true;
+    if (!Main_Class->Building->BuildMode) {
+        bRightClickMouse = true;
+    }
 }
 
 void AMyPlayerController::InputRightMoustButtonReleased()
 {
-    bRightClickMouse = false;
+    if (!Main_Class->Building->BuildMode) {
+        bRightClickMouse = false;
+    }
 }
 
 void AMyPlayerController::InputLeftMoustButtonPressed()
 {
-    bLeftClickMouse = true;
+    if (!Main_Class->Building->BuildMode) {
+        bLeftClickMouse = true;
+    }
+    else {
+    }
 }
 
 void AMyPlayerController::InputLeftMoustButtonReleased()
 {
-    bLeftClickMouse = false;
+    if (!Main_Class->Building->BuildMode) {
+        bLeftClickMouse = false;
+    }
 }
 
 void AMyPlayerController::MoveToMouseCursor()
@@ -136,11 +148,11 @@ void AMyPlayerController::MoveToMouseCursor()
             UE_LOG(LogTemp, Log, TEXT("Citizen"));
             if (wcscmp(*hitActor->Tags[1].ToString(), L"0") == 0)
             {
-                ServerClass->Citizens->Citizen_moving->Team = FCString::Atoi(*hitActor->Tags[1].ToString());
-                ServerClass->Citizens->Citizen_moving->CitizenNumber = FCString::Atoi(*hitActor->Tags[2].ToString());
-                ServerClass->Citizens->Citizen_moving->Location.x = hitActor->GetActorLocation().X;
-                ServerClass->Citizens->Citizen_moving->Location.y = hitActor->GetActorLocation().Y;
-                ServerClass->Citizens->Citizen_moving->Location.z = hitActor->GetActorLocation().Z;
+                Main_Class->Citizens->Citizen_moving->Team = FCString::Atoi(*hitActor->Tags[1].ToString());
+                Main_Class->Citizens->Citizen_moving->CitizenNumber = FCString::Atoi(*hitActor->Tags[2].ToString());
+                Main_Class->Citizens->Citizen_moving->Location.x = hitActor->GetActorLocation().X;
+                Main_Class->Citizens->Citizen_moving->Location.y = hitActor->GetActorLocation().Y;
+                Main_Class->Citizens->Citizen_moving->Location.z = hitActor->GetActorLocation().Z;
                 // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), ServerClass->Citizen_moving->team, ServerClass->Citizen_moving->citizen_number ,ServerClass->Citizen_moving->location.x, ServerClass->Citizen_moving->location.y);
             }
             else
@@ -154,7 +166,7 @@ void AMyPlayerController::MoveToMouseCursor()
             ResourceActor = hitActor;
             ResourceUI = true;
             ResourceType = FCString::Atoi(*hitActor->Tags[1].ToString());
-            ResourceCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
+            ResourceCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
         }
         else
         {
@@ -173,23 +185,23 @@ void AMyPlayerController::MoveToActor()
         DestLocation = Hit.ImpactPoint;
         if (Hit.GetActor()->ActorHasTag(L"Resource"))
         {
-            ServerClass->Citizens->Citizen_moving->Job = 1;
+            Main_Class->Citizens->Citizen_moving->Job = 1;
             DestLocation = Hit.GetActor()->GetActorLocation();
 
             UE_LOG(LogTemp, Log, TEXT("Resource"));
         }
         else
         {
-            ServerClass->Citizens->Citizen_moving->Job = 0;
+            Main_Class->Citizens->Citizen_moving->Job = 0;
         }
 
         if (hitActor) {
             if (hitActor->ActorHasTag("Citizen"))
             {
                 temped = true;
-                ServerClass->Citizens->Citizen_moving->Location.x = DestLocation.X;
-                ServerClass->Citizens->Citizen_moving->Location.y = DestLocation.Y;
-                ServerClass->Citizens->Citizen_moving->Location.z = DestLocation.Z;
+                Main_Class->Citizens->Citizen_moving->Location.x = DestLocation.X;
+                Main_Class->Citizens->Citizen_moving->Location.y = DestLocation.Y;
+                Main_Class->Citizens->Citizen_moving->Location.z = DestLocation.Z;
                 hitActor = NULL;
             }
         }
@@ -200,7 +212,7 @@ void AMyPlayerController::MoveToActor()
 
 void AMyPlayerController::VisibilityTemperature()
 {
-    ATemperature* TemperatureClass = ServerClass->Temperature;
+    ATemperature* TemperatureClass = Main_Class->Temperature;
 
     UE_LOG(LogTemp, Log, TEXT("Thermal"));
 
@@ -213,25 +225,63 @@ void AMyPlayerController::VisibilityTemperature()
 	}
 }
 
+void AMyPlayerController::BuildMode()
+{
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->BuildMode = false;
+        UE_LOG(LogTemp, Log, TEXT("BuildMode Off"));
+    }
+    else {
+        Main_Class->Building->BuildMode = true;
+        UE_LOG(LogTemp, Log, TEXT("BuildMode On"));
+    }
+}
+
+void AMyPlayerController::Build()
+{
+    FHitResult Hit;
+    GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+    if (Hit.bBlockingHit)
+    {
+        FVector CalculatedLocation;
+        CalculatedLocation.X = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.x + CITYSIZE * 100 / 2, (int64)Hit.ImpactPoint.X);
+        CalculatedLocation.X = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.x - CITYSIZE * 100 / 2, (int64)CalculatedLocation.X);
+        CalculatedLocation.Y = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.y + CITYSIZE * 100 / 2, (int64)Hit.ImpactPoint.Y);
+        CalculatedLocation.Y = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.y - CITYSIZE * 100 / 2, (int64)CalculatedLocation.Y);
+
+        CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000, (uint64)CalculatedLocation.Y / 1000 * 1000, (uint64)Hit.ImpactPoint.Z);
+        UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, (uint64)CalculatedLocation.Z);
+        Main_Class->Building->DecalLocation = CalculatedLocation;
+
+        /*if (Main_Class->ServerStruct1.PlayerInfo.location.x - CITYSIZE * 100 / 2 < Hit.ImpactPoint.X && Main_Class->ServerStruct1.PlayerInfo.location.x + CITYSIZE * 100 / 2 > Hit.ImpactPoint.X && Main_Class->ServerStruct1.PlayerInfo.location.y - CITYSIZE * 100 / 2 < Hit.ImpactPoint.Y && Main_Class->ServerStruct1.PlayerInfo.location.y + CITYSIZE * 100 / 2 > Hit.ImpactPoint.Y) {
+            FVector CalculatedLocation = FVector((uint64)Hit.ImpactPoint.X / 1000 * 1000, (uint64)Hit.ImpactPoint.Y / 1000 * 1000, (uint64)Hit.ImpactPoint.Z);
+            UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, (uint64)CalculatedLocation.Z);
+
+            Main_Class->Building->DecalLocation = CalculatedLocation;
+        }*/
+    }
+}
+
 void AMyPlayerController::MouseScrollUp()
 {
-   if (ServerClass->MyCamera->GetActorLocation().Z <= 1500)
+   if (Main_Class->MyCamera->GetActorLocation().Z <= 1500)
         return;
-    ServerClass->MyCamera->SetActorLocation(ServerClass->MyCamera->GetActorLocation() - FVector(0, 100, 500));
-    ServerClass->MyCamera->SetActorRotation(FRotator(ServerClass->MyCamera->GetActorRotation().Pitch + 2, ServerClass->MyCamera->GetActorRotation().Yaw, ServerClass->MyCamera->GetActorRotation().Roll));
+    Main_Class->MyCamera->SetActorLocation(Main_Class->MyCamera->GetActorLocation() - FVector(0, 100, 500));
+    Main_Class->MyCamera->SetActorRotation(FRotator(Main_Class->MyCamera->GetActorRotation().Pitch + 2, Main_Class->MyCamera->GetActorRotation().Yaw, Main_Class->MyCamera->GetActorRotation().Roll));
 }
 
 void AMyPlayerController::MouseScrollDown()
 {
-    if (ServerClass->MyCamera->GetActorLocation().Z >= 7000)
+    if (Main_Class->MyCamera->GetActorLocation().Z >= 7000)
         return;
-    ServerClass->MyCamera->SetActorLocation(ServerClass->MyCamera->GetActorLocation() + FVector(0, 100, 500));
-    ServerClass->MyCamera->SetActorRotation(FRotator(ServerClass->MyCamera->GetActorRotation().Pitch - 2, ServerClass->MyCamera->GetActorRotation().Yaw, ServerClass->MyCamera->GetActorRotation().Roll));
+    Main_Class->MyCamera->SetActorLocation(Main_Class->MyCamera->GetActorLocation() + FVector(0, 100, 500));
+    Main_Class->MyCamera->SetActorRotation(FRotator(Main_Class->MyCamera->GetActorRotation().Pitch - 2, Main_Class->MyCamera->GetActorRotation().Yaw, Main_Class->MyCamera->GetActorRotation().Roll));
 }
 
 void AMyPlayerController::PlayerTick(float DeltaTime)
 {
     Super::PlayerTick(DeltaTime);
+
     mouse_cnt++;
     //UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"),  *(ServerClass->MouseInput.name), ServerClass->MouseInput.location.x, ServerClass->MouseInput.location.y);
     //오른쪽 클릭 작업
@@ -249,38 +299,37 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     {
         if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
         {
-           
-            ServerClass->Citizens->Citizen_moving->Team = -1;
+            Main_Class->Citizens->Citizen_moving->Team = -1;
             temped = false;
-
         }
     }
     if (ResourceActor != NULL)
     {
-        ResourceCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
-
-        CitizenCount = ServerClass->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->CitizenCount;
+        ResourceCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
+        CitizenCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->CitizenCount;
 
         if (ResourceUI)
         {
-            if (ServerClass->RecvedUIInput == true)
+            if (Main_Class->RecvedUIInput == true)
             {
-                ServerClass->UI_Input.ResourceInput.CitizenCountAdd = false;
-                ServerClass->UI_Input.ResourceInput.CitizenCountSub = false;
+                Main_Class->UI_Input.ResourceInput.CitizenCountAdd = false;
+                Main_Class->UI_Input.ResourceInput.CitizenCountSub = false;
                 if (CitizenRelease)
                 {
-                    ServerClass->CitizenRelaese = CitizenRelease;
+                    Main_Class->CitizenRelaese = CitizenRelease;
                     CitizenRelease = false;
                 }
             }
             else
             {                
-                ServerClass->UI_Input.ResourceInput.ResourceNum = FCString::Atoi(*ResourceActor->Tags[2].ToString());
-                ServerClass->UI_Input.ResourceInput.CitizenCountAdd = CitizenAdd;
-                ServerClass->UI_Input.ResourceInput.CitizenCountSub = CitizenSub;
-                ServerClass->CitizenRelaese = CitizenRelease;
+                Main_Class->UI_Input.ResourceInput.ResourceNum = FCString::Atoi(*ResourceActor->Tags[2].ToString());
+                Main_Class->UI_Input.ResourceInput.CitizenCountAdd = CitizenAdd;
+                Main_Class->UI_Input.ResourceInput.CitizenCountSub = CitizenSub;
+                Main_Class->CitizenRelaese = CitizenRelease;
             }
         }
     }
-
+    if (Main_Class->Building->BuildMode) {
+        Build();
+    }
 }

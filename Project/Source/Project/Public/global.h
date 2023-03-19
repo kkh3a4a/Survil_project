@@ -12,6 +12,7 @@
 #define FIRSTSPAWN 10
 #define MAPSIZEX 200
 #define MAPSIZEY 120
+#define CITYSIZE 100
 
 USTRUCT(Atomic, BlueprintType)
 struct FThreeFloat {
