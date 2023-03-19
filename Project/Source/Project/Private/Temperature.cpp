@@ -72,7 +72,6 @@ void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, do
 void ATemperature::Hide(bool visibility)
 {
 	for (ADecalActor* Decal : DecalArray) {
-    //for (int32 i = 0; i < MapSizeX / divide * MapSizeY / divide; i++) {
         Decal->SetActorHiddenInGame(visibility);
 	}
 	IsHidden = visibility;

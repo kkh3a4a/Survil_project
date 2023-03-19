@@ -24,5 +24,6 @@ public:
 	FVector DecalLocation;
 	
 	void Initialize(UMaterial*);
-	void update();
+	void Update();
+	void DecalVisibility();
 };

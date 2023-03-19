@@ -110,7 +110,7 @@ void AMain::Tick(float DeltaTime)
 		Citizens->Citizen_Moving();
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 		Temperature->Update(TerrainTemperature);
-		Building->update();
+		Building->Update();
 		MyTown->UpdateResource();
 
 		LocationInterpolate();

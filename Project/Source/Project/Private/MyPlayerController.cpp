@@ -235,6 +235,7 @@ void AMyPlayerController::BuildMode()
         Main_Class->Building->BuildMode = true;
         UE_LOG(LogTemp, Log, TEXT("BuildMode On"));
     }
+    Main_Class->Building->DecalVisibility();
 }
 
 void AMyPlayerController::Build()

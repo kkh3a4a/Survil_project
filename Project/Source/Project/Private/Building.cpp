@@ -21,7 +21,15 @@ void ABuilding::Initialize(UMaterial* Material)
 	DecalActor->SetDecalMaterial(MaterialInstance);
 }
 
-void ABuilding::update()
+void ABuilding::DecalVisibility()
+{
+	if (BuildMode)
+		DecalActor->SetActorHiddenInGame(false);
+	else
+		DecalActor->SetActorHiddenInGame(true);
+}
+
+void ABuilding::Update()
 {
 	DecalActor->SetActorLocation(DecalLocation);
 }
