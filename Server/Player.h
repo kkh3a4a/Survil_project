@@ -13,13 +13,12 @@ public:
 	
 private:
 	int Port;
-	/*II CurrentLocation;
-	II CityLocation;*/
+	II CurrentLocation;
+	II CityLocation;
 	
 	Resource* ResourceList[30];
 	Building* BuildingList[30];
-	Citizen* CitizenList[30];
+	Citizen* CitizenList[100];
 
-	
-	//keyboard_input* my_keyinput = new keyboard_input;
+	K KeyInput;
 };

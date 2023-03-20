@@ -1,4 +1,5 @@
 #pragma once
+#include "NewGlobal.h"
 
 class Citizen
 {
@@ -6,6 +7,9 @@ public:
 	Citizen();
 	~Citizen();
 
-	//II Location;
+	II Location;
+	char Job;
+	char HP;
+
 };
 

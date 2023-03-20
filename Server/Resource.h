@@ -1,4 +1,5 @@
 #pragma once
+#include "NewGlobal.h"
 
 class Resource
 {
@@ -7,6 +8,6 @@ public:
 	~Resource();
 
 	char Kind;
-	//II Location;
+	II Location;
 };
 
