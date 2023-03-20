@@ -7,8 +7,11 @@ public:
 	Building();
 	~Building();
 	
-	char Kind{};
+	char Type{};
 	II Location;
+	char HP{};
+	char Level{};
+	char IncludeCitizen[10];
 	
 };
 

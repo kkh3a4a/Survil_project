@@ -7,7 +7,11 @@ public:
 	Resource();
 	~Resource();
 
-	char Kind;
-	II Location;
+	char Type{};
+	II Location{};
+	int Amount{};
+	int MaxAmount{};
+	int CitizenCount{};
+
 };
 
