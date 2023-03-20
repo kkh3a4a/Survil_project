@@ -96,6 +96,17 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
+struct FBuildingInfo
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	int Kind{};
+	int Level{};
+	int HP{};
+	int IncludeCitizen{};
+};
+
+USTRUCT(Atomic, BlueprintType)
 struct FKeyInput
 {
 	GENERATED_USTRUCT_BODY()

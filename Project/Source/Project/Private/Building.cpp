@@ -19,6 +19,7 @@ void ABuilding::Initialize(UMaterial* Material)
 	UMaterialInstanceDynamic* MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
 
 	DecalActor->SetDecalMaterial(MaterialInstance);
+	DecalActor->SetActorHiddenInGame(true);
 }
 
 void ABuilding::DecalVisibility()
