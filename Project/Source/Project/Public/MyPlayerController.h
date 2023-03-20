@@ -75,7 +75,7 @@ protected:
 	void MoveToActor();
 	void VisibilityTemperature();
 	void BuildMode();
-	void Build();
+	void OnBuildMode();
 	void MouseScrollUp();
 	void MouseScrollDown();
 

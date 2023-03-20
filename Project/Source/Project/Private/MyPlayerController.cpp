@@ -238,28 +238,23 @@ void AMyPlayerController::BuildMode()
     Main_Class->Building->DecalVisibility();
 }
 
-void AMyPlayerController::Build()
+void AMyPlayerController::OnBuildMode()
 {
     FHitResult Hit;
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
     if (Hit.bBlockingHit)
     {
         FVector CalculatedLocation;
-        CalculatedLocation.X = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.x + CITYSIZE * 100 / 2, (int64)Hit.ImpactPoint.X);
-        CalculatedLocation.X = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.x - CITYSIZE * 100 / 2, (int64)CalculatedLocation.X);
-        CalculatedLocation.Y = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.y + CITYSIZE * 100 / 2, (int64)Hit.ImpactPoint.Y);
-        CalculatedLocation.Y = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.y - CITYSIZE * 100 / 2, (int64)CalculatedLocation.Y);
-
-        CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000, (uint64)CalculatedLocation.Y / 1000 * 1000, (uint64)Hit.ImpactPoint.Z);
-        UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, (uint64)CalculatedLocation.Z);
+        CalculatedLocation.X = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.X);
+        CalculatedLocation.X = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.X);
+        CalculatedLocation.Y = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.Y);
+        CalculatedLocation.Y = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.Y);
+        CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000 + 500, (uint64)CalculatedLocation.Y / 1000 * 1000 + 500, 0);
+        /*UE_LOG(LogTemp, Log, TEXT("LOC: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x, (int64)Main_Class->ServerStruct1.PlayerInfo.location.y);
+        UE_LOG(LogTemp, Log, TEXT("X: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2));
+        UE_LOG(LogTemp, Log, TEXT("Y: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2));
+        UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, 0);*/
         Main_Class->Building->DecalLocation = CalculatedLocation;
-
-        /*if (Main_Class->ServerStruct1.PlayerInfo.location.x - CITYSIZE * 100 / 2 < Hit.ImpactPoint.X && Main_Class->ServerStruct1.PlayerInfo.location.x + CITYSIZE * 100 / 2 > Hit.ImpactPoint.X && Main_Class->ServerStruct1.PlayerInfo.location.y - CITYSIZE * 100 / 2 < Hit.ImpactPoint.Y && Main_Class->ServerStruct1.PlayerInfo.location.y + CITYSIZE * 100 / 2 > Hit.ImpactPoint.Y) {
-            FVector CalculatedLocation = FVector((uint64)Hit.ImpactPoint.X / 1000 * 1000, (uint64)Hit.ImpactPoint.Y / 1000 * 1000, (uint64)Hit.ImpactPoint.Z);
-            UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, (uint64)CalculatedLocation.Z);
-
-            Main_Class->Building->DecalLocation = CalculatedLocation;
-        }*/
     }
 }
 
@@ -331,6 +326,6 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
         }
     }
     if (Main_Class->Building->BuildMode) {
-        Build();
+        OnBuildMode();
     }
 }
