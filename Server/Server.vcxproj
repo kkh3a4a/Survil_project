@@ -142,14 +142,24 @@
     <CudaCompile Include="server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Building.h" />
+    <ClInclude Include="Citizen.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="device_atomic_functions.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="terrain.cu">
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Building.cpp" />
+    <ClCompile Include="Citizen.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Resource.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
