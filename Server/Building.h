@@ -1,5 +1,5 @@
 #pragma once
-#include "global.h"
+#include "Citizen.h"
 
 class Building
 {
@@ -8,7 +8,7 @@ public:
 	~Building();
 	
 	char Kind{};
-	II Location;
+	//II Location;
 	
 };
 

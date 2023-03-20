@@ -1,5 +1,4 @@
 #include "Common.h"
-#include"global.h"
 #include <iostream>
 #include <fstream>
 #include<vector>
@@ -9,6 +8,7 @@
 #include <chrono>
 #include<shared_mutex>
 #include "terrain.cu"
+#include"global.h"
 
 #define SERVERPORT 9000
 #define BUFSIZE    4096

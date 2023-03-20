@@ -180,7 +180,7 @@ void player_random_location(std::map<int, players_profile*>& players_list, std::
 	{
 	retry:
 		a.second->player_info = new FActor;
-		_stprintf_s(a.second->player_info->name, _countof(a.second->player_info->name), _T("%d"), a.first);
+		//_stprintf_s(a.second->player_info->name, _countof(a.second->player_info->name), _T("%d"), a.first);
 		a.second->player_info->location.x = uid(dre2) * UNIT;
 		a.second->player_info->location.y = uid(dre2) * UNIT;
 		for (auto& b : players_list)

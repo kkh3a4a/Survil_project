@@ -1,5 +1,4 @@
 #pragma once
-#include "global.h"
 
 class Resource
 {
@@ -8,6 +7,6 @@ public:
 	~Resource();
 
 	char Kind;
-	II Location;
+	//II Location;
 };
 

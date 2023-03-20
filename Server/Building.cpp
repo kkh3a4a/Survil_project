@@ -8,6 +8,3 @@ Building::~Building()
 {
 }
 
-void Building::Build()
-{
-}
