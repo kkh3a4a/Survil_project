@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CudaCompile Include="server.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source\Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Citizen.cpp">
+      <Filter>Source\Object\Citizen</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Source\Object\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Source\Object\Building</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="device_atomic_functions.h" />
+    <ClInclude Include="global.h" />
+    <ClInclude Include="NewGlobal.h" />
+    <ClInclude Include="Object.h">
+      <Filter>Source\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Source\Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Citizen.h">
+      <Filter>Source\Object\Citizen</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Source\Object\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Source\Object\Building</Filter>
+    </ClInclude>
+    <ClInclude Include="protocol.h">
+      <Filter>Source\Protocol</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="terrain.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{82f94cad-85bc-4ff4-b238-a23705f55246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object">
+      <UniqueIdentifier>{7e6fd090-80d0-45ef-b2bc-7f48bb7c422a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object\Player">
+      <UniqueIdentifier>{938baa9c-656c-4b74-9d06-c7dea6f6a1b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object\Citizen">
+      <UniqueIdentifier>{392dd03e-5154-48ac-8701-ebf246758d25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object\Resource">
+      <UniqueIdentifier>{b645fb82-117b-42a6-9c47-d245a2a91ea2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object\Building">
+      <UniqueIdentifier>{9402fc74-5557-4322-ab95-5bf5a512a482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Protocol">
+      <UniqueIdentifier>{6692f3ab-98a3-4dfe-9781-7172916f8b6c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
