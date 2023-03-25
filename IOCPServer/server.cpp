@@ -101,9 +101,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	printf("[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n", addr, ntohs(clientaddr.sin_port));
 	auto start_t = high_resolution_clock::now();
 	
-	ServerStruct1 first_send_server;
-	ServerStruct2 second_send_server;
-	ClientStruct1 first_send_client;
+	sc_sendpacket sc_send;
+	cs_sendpacket sc_send;
 	FActor player_info;
 	//해당 클라이언트의 port번호 map에 저장
 	int port = ntohs(clientaddr.sin_port);
@@ -133,14 +132,11 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int maxplayer_cnt = 0;
 	int trash_value = 0;
 	while (!location_set);
-	while (1){
 
-		FirstInit(first_send_server, first_send_client, players_list, player_sight_temperature, port);
-		Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
-		retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(ServerStruct1), 0);
-		retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(ServerStruct2), 0);
-		break;
-	}
+	FirstInit(sc_send, players_list, port);
+	WSABUF wsabuf[6];
+	retval = WSASend(client_sock, wsabuf, 6, 0, 0, 0, NULL);
+	
 	Citizen_moving temp_citizen_moving;
 
 	while (1) {
@@ -149,10 +145,10 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		{
 			shared_lock<shared_mutex> lock(player_list_lock);
 			start_t = high_resolution_clock::now();
-			first_send_server.SunAngle = sun_angle;
+			sc_send.SunAngle = sun_angle;
 
 			Secondmemcpy(second_send_server, players_list, resource_create_landscape, port);
-			retval = send(client_sock, (char*)&(first_send_server), (int)sizeof(ServerStruct1), 0);
+			retval = send(client_sock, (char*)&(sc_send), (int)sizeof(sc_sendpacket), 0);
 			retval = send(client_sock, (char*)&(second_send_server), (int)sizeof(ServerStruct2), 0);
 
 			////10배 축소해서 일단 테스트
@@ -168,23 +164,23 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
 			}
 
-			int tempsa = recv(client_sock, (char*)&(first_send_client), (int)sizeof(ClientStruct1), MSG_WAITALL);
+			int tempsa = recv(client_sock, (char*)&(sc_send), (int)sizeof(cs_sendpacket), MSG_WAITALL);
 			if (tempsa == SOCKET_ERROR)
 			{
 				return 0;
 			}
-			if (first_send_client.connecting == -1)
+			if (sc_send.connecting == -1)
 			{
 				break;
 			}
-			mouse_input_checking(first_send_client.My_citizen_moving, players_list, port);
-			if (first_send_client.My_UI_input.resource_input.CitizenCountAdd)
+			mouse_input_checking(sc_send.My_citizen_moving, players_list, port);
+			if (sc_send.My_UI_input.resource_input.CitizenCountAdd)
 			{
-				Citizen_Work_Add(players_list, resource_create_landscape, port, first_send_client.My_UI_input.resource_input.ResourceNum);
+				Citizen_Work_Add(players_list, resource_create_landscape, port, sc_send.My_UI_input.resource_input.ResourceNum);
 			}
-			if (first_send_client.My_UI_input.resource_input.CitizenCountSub)
+			if (sc_send.My_UI_input.resource_input.CitizenCountSub)
 			{
-				Citizen_Work_Sub(players_list, resource_create_landscape, port, first_send_client.My_UI_input.resource_input.ResourceNum);
+				Citizen_Work_Sub(players_list, resource_create_landscape, port, sc_send.My_UI_input.resource_input.ResourceNum);
 			}
 		}
 		else

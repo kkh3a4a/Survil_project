@@ -7,7 +7,9 @@
 #include "Sockets.h"
 #include "MeshTerrain.h"
 #include "SocketSubsystem.h"
-#include<WS2tcpip.h>
+#include <WS2tcpip.h>
+
+#pragma comment (lib, "WS2_32.LIB")
 
 class PROJECT_API NetworkingThread
 {
@@ -30,10 +32,12 @@ public:
 
 private: 
    // FString IPAddress = "192.168.0.8";
-    FString IPAddress = "127.0.0.1";
-    int32 PortNumber = 9000;
-    FSocket* Socket;
+    char IPAddress[20] = "127.0.0.1";
+    int32 SERVER_PORT = 9000;
+    SOCKET s_socket;
     int32 BytesReceived;
     int32 BytesSent;
+    
+    void error_display(const char* msg, int err_no);
 
 };
