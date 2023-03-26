@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CudaCompile Include="server.cpp" />
+    <CudaCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Object.cpp">
@@ -19,9 +19,11 @@
     <ClCompile Include="Building.cpp">
       <Filter>Source\Object\Building</Filter>
     </ClCompile>
+    <ClCompile Include="Network.cpp">
+      <Filter>Source\NetWork</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common.h" />
     <ClInclude Include="device_atomic_functions.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="NewGlobal.h" />
@@ -42,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="protocol.h">
       <Filter>Source\Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>Source\NetWork</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +73,9 @@
     </Filter>
     <Filter Include="Source\Protocol">
       <UniqueIdentifier>{6692f3ab-98a3-4dfe-9781-7172916f8b6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\NetWork">
+      <UniqueIdentifier>{614e4f1c-84a3-4199-814b-0443dd9825ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

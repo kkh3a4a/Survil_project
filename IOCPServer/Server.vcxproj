@@ -139,14 +139,14 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="server.cpp" />
+    <CudaCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Building.h" />
     <ClInclude Include="Citizen.h" />
-    <ClInclude Include="Common.h" />
     <ClInclude Include="device_atomic_functions.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="Network.h" />
     <ClInclude Include="NewGlobal.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="Citizen.cpp" />
+    <ClCompile Include="Network.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Resource.cpp" />

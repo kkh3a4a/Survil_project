@@ -1,5 +1,4 @@
 #pragma once
-#include "NewGlobal.h"
 
 class Resource
 {
@@ -8,7 +7,6 @@ public:
 	~Resource();
 
 	char Type{};
-	II Location{};
 	int Amount{};
 	int MaxAmount{};
 	int CitizenCount{};
