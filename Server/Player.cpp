@@ -2,7 +2,6 @@
 
 Player::Player()
 {
-
 	std::random_device rd;
 	std::default_random_engine dre{ rd() };
 	std::uniform_int_distribution <int>TotalMapRandomLocation{ 0 + 1000, one_side_number - 1000 };

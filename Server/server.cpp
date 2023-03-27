@@ -408,7 +408,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		/*if (sun_angle > 360)
 			sun_angle = 0;
 		sun_angle += 6;*/
-		cout << "sun_angle : " << game->SunAngle << endl;
+		//cout << "sun_angle : " << game->SunAngle << endl;
 		cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
 
 		//terrain->show_array(total_terrain, 320);
@@ -539,7 +539,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			//수신한 패킷 뜯기
 			memcpy(&ThisPlayer->UI, RecvBuffer, sizeof(UII));
 			memcpy(&ThisPlayer->KeyInput, RecvBuffer + sizeof(UII), sizeof(K));
-			cout << "KeyInput: " << ThisPlayer->KeyInput.W << ", " << ThisPlayer->KeyInput.A << ", " << ThisPlayer->KeyInput.S << ", " << ThisPlayer->KeyInput.D << endl;
 			
 			//mouse_input_checking(first_send_client.My_citizen_moving, players_list, port);
 			//if (first_send_client.My_UI_input.resource_input.CitizenCountAdd)
@@ -570,11 +569,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
-	while (game->CurrentPlayerNum != MAXPLAYER) {}
+	while (game->CurrentPlayerNum != MAXPLAYER) {
+		Sleep(1000);
+	}
 
 	int player_list_iter{};
-	for (auto& a : game->players)
-	{
+	for (auto& a : game->players){
 		terrain->set_city_location(a.second->CityLocation, player_list_iter);
 		player_list_iter++;
 		cout << "위치 : " << a.second->CityLocation.x << ", " << a.second->CityLocation.y << endl;
@@ -598,6 +598,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			if (game->SunAngle >= 360.f) {
 				game->SunAngle -= 360.f;
 			}
+			//cout << "sun_angle : " << game->SunAngle << endl;
 
 			//move camera
 			shared_lock<shared_mutex> lock(player_list_lock);

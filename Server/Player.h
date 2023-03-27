@@ -4,15 +4,15 @@
 class Player
 {
 public:
-	II CityLocation;
-	II CurrentLocation;
+	II CityLocation{};
+	II CurrentLocation{};
 	Resource Resources[5];
 	Building Buildings[20];
 	Citizen Citizens[100];
 	
-	int Port;
-	K KeyInput;
-	UII UI;
+	int Port{};
+	K KeyInput{};
+	UII UI{};
 	
 public:
 	Player();
