@@ -95,6 +95,7 @@ uint32_t FSocketThread::Run()
 			}
 
 			MainClass->ThreadInitSendRecv = true;
+			MainClass->CycleNum = 0;
 
 			//Recv Terrain
 			if (IsConnected) {
@@ -107,7 +108,6 @@ uint32_t FSocketThread::Run()
 					}
 				}
 			}
-			UE_LOG(LogTemp, Warning, TEXT("Recv terrain!! "));
 
 			//Recv Temperature
 			if (IsConnected) {
@@ -130,8 +130,7 @@ uint32_t FSocketThread::Run()
 				}
 			}
 			else if (MainClass->RecvedUIInput == true) {
-				if (MainClass->CitizenRelaese)
-				{
+				if (MainClass->CitizenRelaese) {
 					MainClass->RecvedUIInput = false;
 				}
 				MainClass->UI_Input.ResourceInput.CitizenCountAdd = false;
@@ -157,8 +156,6 @@ uint32_t FSocketThread::Run()
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Network Thread End!!"));
-	//MainClass->ClientStruct1.connecting = -1;
-	//IsConnected = Socket->Send((uint8*)&MainClass->ClientStruct1, sizeof(FClientStruct1), BytesSent);
 	return 0;
 }
 

@@ -145,7 +145,7 @@ void AMain::LocationInterpolate()
 		FutureLocation.y = CurrentLocation.y;
 
 		OldInterpolatedLocation = InterpolatedLocation;
-		InterpolatedLocation = FVector(OldLocation.x, OldLocation.y, OldLocation.z);
+		InterpolatedLocation = FVector(OldLocation.x, OldLocation.y, 0);
 	}
 	else {
 		CycleNum++;
@@ -162,8 +162,10 @@ void AMain::LocationInterpolate()
 		UE_LOG(LogTemp, Warning, TEXT("InterDiff :[%lf, %lf]"), abs(InterpolatedLocation.X - OldInterpolatedLocation.X), abs(InterpolatedLocation.Y - OldInterpolatedLocation.Y));
 		UE_LOG(LogTemp, Warning, TEXT("Inter :[%lf, %lf]"), InterpolatedLocation.X, InterpolatedLocation.Y);
 	}*/
-	UE_LOG(LogTemp, Warning, TEXT("InterDiff :[%lf, %lf]"), abs(InterpolatedLocation.X - OldInterpolatedLocation.X), abs(InterpolatedLocation.Y - OldInterpolatedLocation.Y));
+	//UE_LOG(LogTemp, Warning, TEXT("InterDiff :[%lf, %lf]"), abs(InterpolatedLocation.X - OldInterpolatedLocation.X), abs(InterpolatedLocation.Y - OldInterpolatedLocation.Y));
 
 	SetActorLocation(FVector((int)InterpolatedLocation.X - MapSizeX * 100 / 2, (int)InterpolatedLocation.Y - MapSizeY * 100 / 2, 0));
+	//SetActorLocation(FVector((int)CurrentLocation.x - MapSizeX * 100 / 2, (int)CurrentLocation.y - MapSizeY * 100 / 2, 0));
+
 }
 

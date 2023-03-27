@@ -128,8 +128,8 @@ public:
 	FClientStruct1 ClientStruct1;*/
 	FTwoInt CurrentLocation{};
 
-	FThreeFloat OldLocation;
-	FThreeFloat FutureLocation;
+	FTwoInt OldLocation;
+	FTwoInt FutureLocation;
 	FVector InterpolatedLocation;
 	FVector OldInterpolatedLocation;
 	double CycleTime{};
