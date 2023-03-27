@@ -63,76 +63,66 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::InputUpPressed()
 {
-    Main_Class->KeyInput->w = true;
+    Main_Class->KeyInput.w = true;
 }
 
 void AMyPlayerController::InputDownPressed()
 {
-    Main_Class->KeyInput->s = true;
+    Main_Class->KeyInput.s = true;
 }
 
 void AMyPlayerController::InputLeftPressed()
 {
-    Main_Class->KeyInput->a = true;
+    Main_Class->KeyInput.a = true;
 }
 
 void AMyPlayerController::InputRightPressed()
 {
-    Main_Class->KeyInput->d = true;
+    Main_Class->KeyInput.d = true;
 }
 
 
 
 void AMyPlayerController::InputUpReleased()
 {
-    Main_Class->KeyInput->w = false;
+    Main_Class->KeyInput.w = false;
 }
 
 void AMyPlayerController::InputDownReleased()
 {
-    Main_Class->KeyInput->s = false;
+    Main_Class->KeyInput.s = false;
 }
 
 void AMyPlayerController::InputLeftReleased()
 {
-    Main_Class->KeyInput->a = false;
+    Main_Class->KeyInput.a = false;
 }
 
 void AMyPlayerController::InputRightReleased()
 {
-    Main_Class->KeyInput->d = false;
+    Main_Class->KeyInput.d = false;
 }
 
 
 
 void AMyPlayerController::InputRightMoustButtonPressed()
 {
-    if (!Main_Class->Building->BuildMode) {
-        bRightClickMouse = true;
-    }
+    bRightClickMouse = true;
 }
 
 void AMyPlayerController::InputRightMoustButtonReleased()
 {
-    if (!Main_Class->Building->BuildMode) {
-        bRightClickMouse = false;
-    }
+    bRightClickMouse = false;
 }
 
 void AMyPlayerController::InputLeftMoustButtonPressed()
 {
-    if (!Main_Class->Building->BuildMode) {
-        bLeftClickMouse = true;
-    }
-    else {
-    }
+    bLeftClickMouse = true;
 }
 
 void AMyPlayerController::InputLeftMoustButtonReleased()
 {
-    if (!Main_Class->Building->BuildMode) {
-        bLeftClickMouse = false;
-    }
+    bLeftClickMouse = false;
 }
 
 void AMyPlayerController::MoveToMouseCursor()
@@ -245,16 +235,20 @@ void AMyPlayerController::OnBuildMode()
     if (Hit.bBlockingHit)
     {
         FVector CalculatedLocation;
-        CalculatedLocation.X = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.X);
-        CalculatedLocation.X = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.X);
-        CalculatedLocation.Y = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.Y);
-        CalculatedLocation.Y = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.Y);
+        CalculatedLocation.X = min((int64)Main_Class->Players[0]->CityLocation.x + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.X);
+        CalculatedLocation.X = max((int64)Main_Class->Players[0]->CityLocation.x - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.X);
+        CalculatedLocation.Y = min((int64)Main_Class->Players[0]->CityLocation.y + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.Y);
+        CalculatedLocation.Y = max((int64)Main_Class->Players[0]->CityLocation.y - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.Y);
         CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000 + 500, (uint64)CalculatedLocation.Y / 1000 * 1000 + 500, 0);
         /*UE_LOG(LogTemp, Log, TEXT("LOC: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x, (int64)Main_Class->ServerStruct1.PlayerInfo.location.y);
         UE_LOG(LogTemp, Log, TEXT("X: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2));
         UE_LOG(LogTemp, Log, TEXT("Y: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2));
         UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, 0);*/
         Main_Class->Building->DecalLocation = CalculatedLocation;
+
+        if (bLeftClickMouse) {
+            UE_LOG(LogTemp, Log, TEXT("click on build mode"));
+        }
     }
 }
 
@@ -280,13 +274,14 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
 
     mouse_cnt++;
     //UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"),  *(ServerClass->MouseInput.name), ServerClass->MouseInput.location.x, ServerClass->MouseInput.location.y);
-    //오른쪽 클릭 작업
-    if (bLeftClickMouse)
-    {
+    
+    if (Main_Class->Building->BuildMode) {
+        OnBuildMode();
+    }
+    else if (bLeftClickMouse) {     //왼쪽 마우스 클릭 작업
         MoveToMouseCursor();
     }
-    else if (bRightClickMouse)
-    {
+    else if (bRightClickMouse) {    //오른쪽 마우스 클릭 작업
         MoveToActor();
     }
     
@@ -325,7 +320,5 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
             }
         }
     }
-    if (Main_Class->Building->BuildMode) {
-        OnBuildMode();
-    }
+    
 }

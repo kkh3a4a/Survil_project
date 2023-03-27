@@ -15,6 +15,15 @@
 #define CITYSIZE 100
 
 USTRUCT(Atomic, BlueprintType)
+struct FTwoInt {
+	GENERATED_USTRUCT_BODY()
+public:
+	int x{};
+	int y{};
+
+};
+
+USTRUCT(Atomic, BlueprintType)
 struct FThreeFloat {
 	GENERATED_USTRUCT_BODY()
 public:
@@ -27,43 +36,17 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FActorTransform {
-	GENERATED_USTRUCT_BODY()
-public:
-	TCHAR name[30];
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FThreeFloat location;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FThreeFloat rotation;
-};
-
-USTRUCT(Atomic, BlueprintType)
 struct FCitizenSole {
 	GENERATED_USTRUCT_BODY()
 public:
 	TCHAR Name[30];
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FThreeFloat Location;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		FThreeFloat rotation;
-
-	int Resources[5];
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int HP;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Job;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int IsJob;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FThreeFloat Job_location;
+	FTwoInt Location{};
+	int Rotation{};
+	char Resources[5];
+	char HP{};
+	char Job{};
+	char IsJob{};
+	FTwoInt JobLocation{};
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -79,20 +62,14 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct Fresources_actor
+struct FResource
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Type;		///////////////0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Count;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FThreeFloat Loaction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int CitizenCount = 0;
-
+	int Type{};		///////////////0 : 석유c,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
+	int Count{};
+	FTwoInt Location{};
+	int CitizenCount{};
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -100,10 +77,11 @@ struct FBuildingInfo
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	int Kind{};
-	int Level{};
-	int HP{};
-	int IncludeCitizen{};
+	char Type{};
+	char Level{};
+	FTwoInt Location{};
+	char HP{};
+	char IncludeCitizen{};
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -111,10 +89,10 @@ struct FKeyInput
 {
 	GENERATED_USTRUCT_BODY()
 public:
-	int w;
-	int a;
-	int s;
-	int d;
+	bool w;
+	bool a;
+	bool s;
+	bool d;
 };
 
 USTRUCT(Atomic, BlueprintType)
@@ -134,32 +112,13 @@ public:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FServerStruct1 {
+struct FPlayerInfo {
 	GENERATED_USTRUCT_BODY()
 public:
-	float SunAngle;
-	FActorTransform PlayerInfo;
-	int MyResource[5];
-	FThreeFloat CurrentLocation;
-};
-
-USTRUCT(Atomic, BlueprintType)
-struct FServerStruct2 {
-	GENERATED_USTRUCT_BODY()
-public:
-	FCitizenSole PlayerCitizen[MAXPLAYER][MAXCITIZEN];
-	Fresources_actor Resources[MAXPLAYER * 10];
-};
-
-
-USTRUCT(Atomic, BlueprintType)
-struct FClientStruct1 {
-	GENERATED_USTRUCT_BODY()
-public:
-	FCitizenMoving MyCitizenMoving = {};
-	FKeyInput KeyInput = {};
-	FUI_Input UIInput = {};
-	int connecting = 1;
+	FTwoInt CityLocation{};
+	FCitizenSole Citizen[100]{};
+	FResource Resource[5]{};
+	FBuildingInfo Building[20]{};
 };
 
 class PROJECT_API global

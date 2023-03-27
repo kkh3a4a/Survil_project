@@ -28,35 +28,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AActor>EnemyCitizenActor;
 
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		//FActor_location_rotation MouseInput;
-
-		FCitizenMoving* Citizen_moving = new FCitizenMoving;
-
-		int citizen_cnt[MAXPLAYER];
-
-		FCitizenSole temp_Actor;
-
-		TMap<int, FCitizenSole*> My_Citizen;
-
-
-		//int My_Citizen[MAXPLAYER][MAXCITIZEN];
-
-		TMap<int, TArray<AActor*>> Citizens_Editer;
+	FCitizenMoving* Citizen_moving = new FCitizenMoving;
+	int citizen_cnt[MAXPLAYER];
+	TMap<int, FCitizenSole*> My_Citizen;
+	TMap<int, TArray<AActor*>> Citizens_Editer;
 	
-
-
 	int My_Citizen_Num = 0;
-
-
 	void Spawn_Citizen();
-
 	void Citizen_Moving();
-
-	void citizen_set(FServerStruct1&, FServerStruct2&);
-
+	void CitizenSet(FCitizenSole(*Citizens));
 	void TF_set(FThreeFloat& a, FThreeFloat& b);
-
 	void CitizenNoJob(int& cnt);
 };

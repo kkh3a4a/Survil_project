@@ -34,10 +34,10 @@ void AMain::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	KeyInput->w = false;
-	KeyInput->a = false;
-	KeyInput->s = false;
-	KeyInput->d = false;
+	KeyInput.w = false;
+	KeyInput.a = false;
+	KeyInput.s = false;
+	KeyInput.d = false;
 	//Citizen
 	FActorSpawnParameters SpawnInfo;
 	Citizens = GetWorld()->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
@@ -76,8 +76,9 @@ void AMain::BeginPlay()
 		}
 	}
 	
-	memcpy(&ClientStruct1.KeyInput, KeyInput, sizeof(FKeyInput));
-	KeyInput = &ClientStruct1.KeyInput;
+	/*memcpy(&ClientStruct1.KeyInput, KeyInput, sizeof(FKeyInput));
+	KeyInput = &ClientStruct1.KeyInput;*/
+
 	Network = new FSocketThread(this);
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
 }
@@ -91,21 +92,20 @@ void AMain::Tick(float DeltaTime)
 	steady_clock::time_point EndTime = StartTime;
 	if (!RecvedFirstData){
 		if (ThreadInitSendRecv){
-			Citizens->citizen_set(ServerStruct1, ServerStruct2);
+			Citizens->CitizenSet(Players[0]->Citizen);
 			Citizens->Spawn_Citizen();
-			MyTown->SpawnTown(players_list);
-			MyTown->SpawnResource(ServerStruct1, ServerStruct2);
+			MyTown->SpawnTown(Players);
+			MyTown->SpawnResource(Players);
 			Citizens->Citizen_Moving();
 			RecvedFirstData = true;
 		}
 	}
 	else {
 		
-		memcpy(&ClientStruct1.UIInput, &UI_Input.ResourceInput, sizeof(FUI_Input));
+		/*memcpy(&ClientStruct1.UIInput, &UI_Input.ResourceInput, sizeof(FUI_Input));*/
 
 		clock_t t_1 = clock();
-		oil_count = ServerStruct1.MyResource[0], water_count = ServerStruct1.MyResource[1], iron_count = ServerStruct1.MyResource[2], food_count = ServerStruct1.MyResource[3], wood_count = ServerStruct1.MyResource[4];
-		SunAngle = ServerStruct1.SunAngle;
+		//oil_count = Players[0]->Resource[0], water_count = ServerStruct1.MyResource[1], iron_count = ServerStruct1.MyResource[2], food_count = ServerStruct1.MyResource[3], wood_count = ServerStruct1.MyResource[4];
 		Citizens->CitizenNoJob(CitizenNoJobCnt);
 		Citizens->Citizen_Moving();
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
@@ -127,7 +127,7 @@ void AMain::TF_set(FThreeFloat& a, FThreeFloat& b)
 	a.z = b.z;
 }
 
-void AMain::resoure_set(Fresources_actor& a, Fresources_actor& b)
+void AMain::resoure_set(FResource& a, FResource& b)
 {
 	a.Count = b.Count;
 	a.Type = b.Type;
@@ -141,7 +141,9 @@ void AMain::LocationInterpolate()
 	if (CycleNum == 0) {
 		CycleNum++;
 		OldLocation = FutureLocation;
-		FutureLocation = ServerStruct1.CurrentLocation;
+		FutureLocation.x = CurrentLocation.x;
+		FutureLocation.y = CurrentLocation.y;
+
 		OldInterpolatedLocation = InterpolatedLocation;
 		InterpolatedLocation = FVector(OldLocation.x, OldLocation.y, OldLocation.z);
 	}

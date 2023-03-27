@@ -35,7 +35,7 @@ void AMyTown::Initialize(TSubclassOf<AActor> well, TSubclassOf<AActor> oil, TSub
 	WoodActor = wood;
 }
 
-void AMyTown::SpawnTown(TMap<int, FActorTransform*>& player_list)
+void AMyTown::SpawnTown(TMap<int, FPlayerInfo*>& Players)
 {
 	AActor* SpawnedTown;
 	FVector Location(0.0f, 0.0f, 0.0f);
@@ -44,28 +44,24 @@ void AMyTown::SpawnTown(TMap<int, FActorTransform*>& player_list)
 
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
-		Location = { player_list[i]->location.x,player_list[i]->location.y,player_list[i]->location.z};
+		Location = { (double)Players[i]->CityLocation.x, (double)Players[i]->CityLocation.y, 0.f};
 		SpawnedTown = GetWorld()->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
 		SpawnedTown->Tags.Add("WellPump");
 		SpawnedTown->Tags.Add(FName(*FString::FromInt(i)));
 	}
-
 }
 
-void AMyTown::SpawnResource(FServerStruct1& FirstSendServer, FServerStruct2& SecondSendServer)
+void AMyTown::SpawnResource(TMap<int, FPlayerInfo*>& Players)
 {
 	AActor* SpawnedResource;
 	FVector Location(0.0f, 0.0f, 0.0f);
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
 
-	//memcpy(&resources_create_landscape, &FirstSendServer.resources, sizeof(Fresources_actor) * MAXPLAYER * 10);
-	
-	for (int i = 0; i < MAXPLAYER * 10; ++i)
+	for (int i = 0; i < MAXPLAYER * 5; ++i)
 	{
-		//resources_create_landscape[i] = &FirstSendServer.resources[i];
-		resources_create_landscape.Add(&SecondSendServer.Resources[i]);
-		Location = { resources_create_landscape[i]->Loaction.x,resources_create_landscape[i]->Loaction.y,resources_create_landscape[i]->Loaction.z };
+		resources_create_landscape.Add(&Players[0]->Resource[i]);
+		Location = { (double)resources_create_landscape[i]->Location.x,  (double)resources_create_landscape[i]->Location.y, 0 };
 		
 		if (resources_create_landscape[i]->Type == 0)
 		{
@@ -110,7 +106,7 @@ void AMyTown::SpawnResource(FServerStruct1& FirstSendServer, FServerStruct2& Sec
 
 void AMyTown::UpdateResource()
 {
-	for (int resource_checking = 0; resource_checking < MAXPLAYER * 10; ++resource_checking)
+	for (int resource_checking = 0; resource_checking < MAXPLAYER * 5; ++resource_checking)
 	{
 		if (resources_create_landscape[resource_checking]->Count == 0)
 		{

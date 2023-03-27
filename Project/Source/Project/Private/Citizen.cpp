@@ -37,7 +37,7 @@ void ACitizen::Spawn_Citizen()
 			//UE_LOG(LogTemp, Warning, TEXT("MY : %f %f %f"),a.Value[0].Location.x , a.Value[0].Location.y, a.Value[0].Location.z);
 			for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 			{
-				Location = { a.Value[count_citizenNum].Location.x,a.Value[count_citizenNum].Location.y,a.Value[count_citizenNum].Location.z};
+				Location = { (double)a.Value[count_citizenNum].Location.x, (double)a.Value[count_citizenNum].Location.y, 0};
 				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(Citizen_Actor, Location, Rotation, SpawnInfo);
 				Spawned_Citizen->Tags.Add("Citizen");
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
@@ -51,7 +51,7 @@ void ACitizen::Spawn_Citizen()
 			//UE_LOG(LogTemp, Warning, TEXT("Enemy : %f %f %f"), a.Value[0].Location.x, a.Value[0].Location.y, a.Value[0].Location.z);
 			for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 			{
-				Location = { a.Value[count_citizenNum].Location.x, a.Value[count_citizenNum].Location.y, a.Value[count_citizenNum].Location.z };
+				Location = { (double)a.Value[count_citizenNum].Location.x, (double)a.Value[count_citizenNum].Location.y, 0 };
 				Spawned_Citizen = GetWorld()->SpawnActor<AActor>(EnemyCitizenActor, Location, Rotation, SpawnInfo);
 				Spawned_Citizen->Tags.Add("Citizen");
 				Spawned_Citizen->Tags.Add(FName(*FString::FromInt(Is_Mycitizen)));
@@ -74,7 +74,7 @@ void ACitizen::Citizen_Moving()
 		
 		for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
 		{
-			Location = { a.Value[count_citizenNum].Location.x,a.Value[count_citizenNum].Location.y,a.Value[count_citizenNum].Location.z };
+			Location = { (double)a.Value[count_citizenNum].Location.x, (double)a.Value[count_citizenNum].Location.y,0 };
 			Citizens_Editer[team][count_citizenNum]->SetActorLocation(Location);
 		}
 		team++;
@@ -82,15 +82,12 @@ void ACitizen::Citizen_Moving()
 
 }
 
-void ACitizen::citizen_set(FServerStruct1& FirstSendServer, FServerStruct2& SecondSendServer)
+void ACitizen::CitizenSet(FCitizenSole(*Citizens))
 {
-	for (int i = 0; i < MAXPLAYER; ++i)
-	{
-		My_Citizen.Add(i, SecondSendServer.PlayerCitizen[i]);
+	for (int i = 0; i < 100; ++i) {
+		My_Citizen.Add(i, &Citizens[i]);
 	}
 }
-
-
 
 void ACitizen::TF_set(FThreeFloat& a, FThreeFloat& b)
 {

@@ -64,13 +64,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
 		int wood_count = 0;
 
-	TMap<int, FActorTransform*> players_list;
+	TMap<int, FPlayerInfo*> Players;
 
 	bool ThreadInitSendRecv = false;
 
 	bool CitizenRelaese = false;
 	
-	FKeyInput* KeyInput = new FKeyInput;
+	FKeyInput KeyInput;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int Citizen_num = 0;
@@ -123,9 +123,10 @@ public:
 
 	ACameraActor* MyCamera;
 
-	FServerStruct1 ServerStruct1;
+	/*FServerStruct1 ServerStruct1;
 	FServerStruct2 ServerStruct2;
-	FClientStruct1 ClientStruct1;
+	FClientStruct1 ClientStruct1;*/
+	FTwoInt CurrentLocation{};
 
 	FThreeFloat OldLocation;
 	FThreeFloat FutureLocation;
@@ -140,7 +141,7 @@ public:
 
 
 	void TF_set(FThreeFloat& a, FThreeFloat& b);
-	void resoure_set(Fresources_actor& a, Fresources_actor& b);
+	void resoure_set(FResource& a, FResource& b);
 	void LocationInterpolate();
 };
 

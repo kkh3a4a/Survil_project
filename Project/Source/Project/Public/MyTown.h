@@ -27,7 +27,7 @@ public:
 
 	
 		
-	TArray<Fresources_actor*>resources_create_landscape;
+	TArray<FResource*>resources_create_landscape;
 
 	TArray<AActor*> ResourceEditer;
 
@@ -51,7 +51,7 @@ public:
 
 
 	void Initialize(TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>);
-	void SpawnTown(TMap<int, FActorTransform*>&);
-	void SpawnResource(FServerStruct1&, FServerStruct2&);
+	void SpawnTown(TMap<int, FPlayerInfo*>&);
+	void SpawnResource(TMap<int, FPlayerInfo*>&);
 	void UpdateResource();
 };
