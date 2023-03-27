@@ -162,7 +162,7 @@ void AMain::LocationInterpolate()
 		UE_LOG(LogTemp, Warning, TEXT("InterDiff :[%lf, %lf]"), abs(InterpolatedLocation.X - OldInterpolatedLocation.X), abs(InterpolatedLocation.Y - OldInterpolatedLocation.Y));
 		UE_LOG(LogTemp, Warning, TEXT("Inter :[%lf, %lf]"), InterpolatedLocation.X, InterpolatedLocation.Y);
 	}*/
-	//UE_LOG(LogTemp, Warning, TEXT("InterDiff :[%lf, %lf]"), abs(InterpolatedLocation.X - OldInterpolatedLocation.X), abs(InterpolatedLocation.Y - OldInterpolatedLocation.Y));
+	UE_LOG(LogTemp, Warning, TEXT("InterDiff :[%lf, %lf]"), abs(InterpolatedLocation.X - OldInterpolatedLocation.X), abs(InterpolatedLocation.Y - OldInterpolatedLocation.Y));
 
 	SetActorLocation(FVector((int)InterpolatedLocation.X - MapSizeX * 100 / 2, (int)InterpolatedLocation.Y - MapSizeY * 100 / 2, 0));
 }

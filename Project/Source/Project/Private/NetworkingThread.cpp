@@ -65,6 +65,7 @@ uint32_t FSocketThread::Run()
 			start_t = high_resolution_clock::now();
 
 			if (IsConnected) {
+				ZeroMemory(RecvBuffer, RecvBufferSize);
 				IsConnected = Socket->Recv((uint8*)RecvBuffer, RecvBufferSize, BytesReceived, ESocketReceiveFlags::WaitAll);
 				if (!IsConnected) {
 					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
@@ -92,7 +93,6 @@ uint32_t FSocketThread::Run()
 				if (CopyAddress != RecvBufferSize)
 					UE_LOG(LogTemp, Warning, TEXT("FATAL ERROR!!!! RECV FAIL %d, %d"), CopyAddress, RecvBufferSize);
 			}
-			UE_LOG(LogTemp, Warning, TEXT("Recv Success!!"));
 
 			MainClass->ThreadInitSendRecv = true;
 
@@ -105,7 +105,6 @@ uint32_t FSocketThread::Run()
 						IsConnected = false;
 						return 0;
 					}
-
 				}
 			}
 			UE_LOG(LogTemp, Warning, TEXT("Recv terrain!! "));
@@ -119,12 +118,9 @@ uint32_t FSocketThread::Run()
 						IsConnected = false;
 						return 0;
 					}
-
 				}
 			}
 			
-			UE_LOG(LogTemp, Warning, TEXT("Recv temnperature!!"));
-
 			//보냈는지 안보냈는지 확인해줘야함
 			if (MainClass->RecvedUIInput == false) {
 				if (MainClass->UI_Input.ResourceInput.CitizenCountAdd || MainClass->UI_Input.ResourceInput.CitizenCountSub) {
@@ -145,17 +141,16 @@ uint32_t FSocketThread::Run()
 			//Send Struct
 			if (IsConnected) {
 				//보낼 패킷 포장
+				ZeroMemory(SendBuffer, SendBufferSize);
 				memcpy(SendBuffer, &MainClass->UI_Input, sizeof(FUI_Input));
 				memcpy(SendBuffer + sizeof(FUI_Input), &MainClass->KeyInput, sizeof(FKeyInput));
-				IsConnected = Socket->Send((uint8*)&SendBuffer, SendBufferSize, BytesSent);
+				IsConnected = Socket->Send((uint8*)SendBuffer, SendBufferSize, BytesSent);
 				if (BytesSent != SendBufferSize) {
 					UE_LOG(LogTemp, Warning, TEXT("send Fatal error"));
+					IsConnected = false;
+					return 0; 
 				}
 			}
-			UE_LOG(LogTemp, Warning, TEXT("%d %d %d %d"), MainClass->KeyInput.w, MainClass->KeyInput.s, MainClass->KeyInput.d, MainClass->KeyInput.d);
-
-			UE_LOG(LogTemp, Warning, TEXT("send Success!!"));
-
 		}
 		else{
 			Sleep(1);
