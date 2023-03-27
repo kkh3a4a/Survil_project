@@ -16,12 +16,12 @@ public:
 	char _name[MAXNAMESIZE + 1]{};
 	char _packet_buf[BUFSIZE]{};
 
-	float _cameraX, _cameraY, _cameraZ;
+	float _currentX, _currentY, _currentZ;
 
 
 	Player(STATE state = STATE::ST_FREE);
 	~Player();
 
-	void send_packet();
+	void send_packet(void * packet);
 	void set_player_location(float x, float y, float z);
 };

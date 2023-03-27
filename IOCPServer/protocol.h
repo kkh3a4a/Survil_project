@@ -26,7 +26,7 @@ struct cs_packet_login
 	char name[MAXNAMESIZE];
 };
 
-struct cs_packet_PlayerKeyInput
+struct cs_packet_move
 {
 	unsigned char size;
 	unsigned char type;
@@ -46,8 +46,8 @@ struct sc_packet_login
 	unsigned char type;
 	float x, y, z;
 	float rx, ry, rz;
-	float cameraX, cameraY, cameraZ;
-	float cameraRX, cameraRY, cameraRZ;
+	float currentX, currentY, currentZ;
+	float currentRX, currentRY, currentRZ;
 };
 
 

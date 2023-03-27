@@ -35,7 +35,7 @@ Terrain* terrain = new Terrain();
 char** total_terrain = terrain->get_map();
 char** shadow_map = terrain->get_shadow_map();
 unsigned char** temperature_map = terrain->get_temperature_map();
-volatile int player_cnt;
+volatile int player_cnt = 0;
 volatile bool location_set = false;
 int ingame_play = false;
 
@@ -120,15 +120,12 @@ int main(int argc, char* argv[])
 	bind(s_socket, reinterpret_cast<sockaddr*>(&s_address), sizeof(s_address));
 	listen(s_socket, SOMAXCONN);
 
-	SOCKADDR_IN c_address;
-	ZeroMemory(&c_address, sizeof(c_address));
-	int c_addr_size = sizeof(c_address);
-
 	h_iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, 0);
 	CreateIoCompletionPort(reinterpret_cast<HANDLE>(s_socket), h_iocp, 99999, 0);
 	SOCKET c_socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
-	WSA_OVER_EX accept_over(IOCPOP::OP_ACCEPT,0,0);
-
+	WSA_OVER_EX accept_over;
+	ZeroMemory(&accept_over, sizeof(accept_over));
+	accept_over.set_accept_over();
 
 	// accept()
 	AcceptEx(s_socket, c_socket, accept_over.getbuf(), NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.getWsaOver());
@@ -152,7 +149,6 @@ int main(int argc, char* argv[])
 		{
 			if (location_distance(objects[j]->_x, objects[j]->_y, x, y) < 7000)
 			{
-				cout << "retry" << endl;
 				goto retry;
 			}
 		}
@@ -160,12 +156,74 @@ int main(int argc, char* argv[])
 	}
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
-		cout << objects[i]->_x << ", " << objects[i]->_y << endl;
+		Player* n_player = reinterpret_cast<Player*>(objects[i]);
+		cout << n_player->_x << ", " << n_player->_y << endl;
 	}
 
-
+	int user_id = 0;
 
 	while (1) {
+
+		DWORD io_byte;
+		ULONG_PTR key;
+		WSAOVERLAPPED* over;
+		GetQueuedCompletionStatus(h_iocp, &io_byte, &key, &over, INFINITE);
+
+		WSA_OVER_EX* wsa_over_ex = reinterpret_cast<WSA_OVER_EX*>(over);
+		user_id = static_cast<int>(key);
+		
+		Player* player;
+
+		if (user_id < MAXPLAYER)
+		{
+			player = reinterpret_cast<Player*>(objects[user_id]);
+		}
+		else
+		{
+			cout << "undefined Object" << endl;
+		} 
+		switch (wsa_over_ex->_iocpop)
+		{
+		case OP_RECV:
+		{
+			DWORD flags = 0;
+			player->_wsa_recv_over.processpacket(user_id, wsa_over_ex->_buf);
+			ZeroMemory(&player->_wsa_recv_over._wsaover, sizeof(player->_wsa_recv_over._wsaover));
+			WSARecv(player->_socket, &player->_wsa_recv_over._wsabuf, 1, NULL, &flags, &player->_wsa_recv_over._wsaover, NULL);
+			break;
+		}
+		case OP_SEND:
+		{
+			delete wsa_over_ex;
+			break;
+		}
+		case OP_ACCEPT:
+		{
+			user_id = player_cnt++;
+			CreateIoCompletionPort(reinterpret_cast<HANDLE>(c_socket), h_iocp, user_id, 0);
+			Player* n_player = reinterpret_cast<Player*>(objects[user_id]);
+			ZeroMemory(&n_player->_wsa_recv_over, sizeof(n_player->_wsa_recv_over));
+			n_player->_socket = c_socket;
+			n_player->_wsa_recv_over._iocpop = OP_RECV;
+			n_player->_prev_size = 0;
+			n_player->_id = user_id;
+			n_player->_wsa_recv_over._wsabuf.buf = reinterpret_cast<char*>(n_player->_wsa_recv_over._buf);
+			n_player->_wsa_recv_over._wsabuf.len = BUFSIZE;
+
+			DWORD flags = 0;
+			WSARecv(c_socket, &n_player->_wsa_recv_over._wsabuf, 1, NULL, &flags, &n_player->_wsa_recv_over._wsaover, NULL);
+
+			c_socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
+			ZeroMemory(&accept_over, sizeof(accept_over));
+			accept_over.set_accept_over();
+
+			AcceptEx(s_socket, c_socket, accept_over.getbuf(), NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.getWsaOver());
+
+			break;
+		}
+		default:
+			break;
+		}
 
 	}
 	

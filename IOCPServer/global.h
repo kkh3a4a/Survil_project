@@ -85,7 +85,7 @@
 //	float SunAngle = 0;
 //	int MyResource[5];
 //	TF player_location = { 0,0,0 };
-//	TF Camera_location = { 0,0,0 };
+//	TF current_location = { 0,0,0 };
 //	FCitizen_sole player_citizen[MAXPLAYER][MAXCITIZEN];
 //	resource_actor resources[MAXPLAYER * 10];
 //};
@@ -302,7 +302,7 @@
 //	}
 //}
 //
-//void camera_movement(std::map<int, players_profile*>& players_list)
+//void current_movement(std::map<int, players_profile*>& players_list)
 //{
 //	int movement = 100;
 //	for (auto& a : players_list)
