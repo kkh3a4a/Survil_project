@@ -42,6 +42,7 @@ uint32_t FSocketThread::Run()
 	if (!IsRunning || !IsConnected)
 		return 0;
 
+	//버퍼 사이즈와 버퍼 지정
 	const int RecvBufferSize = sizeof(float) + sizeof(FTwoInt) + (sizeof(char) + sizeof(FTwoInt) + sizeof(FCitizenSole) * 100 + sizeof(FResource) * 5 + sizeof(FBuildingInfo) * 20) * MAXPLAYER;
 	char* RecvBuffer = new char[RecvBufferSize];
 	const int SendBufferSize = sizeof(FKeyInput) + sizeof(FUI_Input);
@@ -64,14 +65,12 @@ uint32_t FSocketThread::Run()
 			start_t = high_resolution_clock::now();
 
 			if (IsConnected) {
-				UE_LOG(LogTemp, Warning, TEXT("Recv ready!!"));
 				IsConnected = Socket->Recv((uint8*)RecvBuffer, RecvBufferSize, BytesReceived, ESocketReceiveFlags::WaitAll);
-				UE_LOG(LogTemp, Warning, TEXT("%d"), BytesReceived);
-
 				if (!IsConnected) {
 					UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 					IsConnected = false;
 				}
+				// 받은 패킷 뜯기
 				char Identity{};
 				int CopyAddress{};
 				memcpy(&MainClass->SunAngle, RecvBuffer + CopyAddress, sizeof(float));
@@ -145,6 +144,7 @@ uint32_t FSocketThread::Run()
 
 			//Send Struct
 			if (IsConnected) {
+				//보낼 패킷 포장
 				memcpy(SendBuffer, &MainClass->UI_Input, sizeof(FUI_Input));
 				memcpy(SendBuffer + sizeof(FUI_Input), &MainClass->KeyInput, sizeof(FKeyInput));
 				IsConnected = Socket->Send((uint8*)&SendBuffer, SendBufferSize, BytesSent);
