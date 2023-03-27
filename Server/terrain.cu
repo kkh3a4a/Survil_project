@@ -9,12 +9,10 @@
 #include <cuda_runtime.h>
 #include <cooperative_groups.h>
 #include "device_launch_parameters.h"
-#include "global.h"
+#include "Game.h"
 #define PI 3.1415926
 
 using namespace std;
-
-
 
 const int min_height = 4;
 const int max_height = 8;
@@ -42,6 +40,10 @@ typedef struct compare_block {
 	II left;
 	II right;
 }CB;
+
+II player_sight_size{ SIGHT_X, SIGHT_Y };
+const int random_array_size = 90000000;
+const int city_size = 100;
 
 random_device rd;
 default_random_engine dre(rd());
@@ -979,6 +981,15 @@ public:
 	}
 
 	void set_city_location(TF location, int iter) {
+		if (iter > 4) {
+			cout << "Error: set_city_location, Bigger than array size" << endl;
+		}
+		city_location[iter].x = location.x / 100;
+		city_location[iter].y = location.y / 100;
+		cout << "city_location[" << iter << "] = " << city_location[iter].x << " " << city_location[iter].y << endl;
+	}
+	
+	void set_city_location(II location, int iter) {
 		if (iter > 4) {
 			cout << "Error: set_city_location, Bigger than array size" << endl;
 		}

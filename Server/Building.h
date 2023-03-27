@@ -4,14 +4,14 @@
 class Building
 {
 public:
-	Building();
-	~Building();
-	
 	char Type{};
+	char Level{};
 	II Location;
 	char HP{};
-	char Level{};
-	char IncludeCitizen[10];
+	char IncludeCitizen{};
+	
+	Building();
+	~Building();
 	
 };
 

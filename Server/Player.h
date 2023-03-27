@@ -1,24 +1,23 @@
 #pragma once
-#include "Building.h"
 #include "Citizen.h"
-#include "Resource.h"
 
 class Player
 {
 public:
+	II CityLocation;
+	II CurrentLocation;
+	Resource Resources[5];
+	Building Buildings[20];
+	Citizen Citizens[100];
+	
+	int Port;
+	K KeyInput;
+	UII UI;
+	
+public:
 	Player();
 	~Player();
 	
-	void Move();
-	
 private:
-	int Port;
-	II CurrentLocation;
-	II CityLocation;
 	
-	Resource* ResourceList[30];
-	Building* BuildingList[30];
-	Citizen* CitizenList[100];
-
-	K KeyInput;
 };
