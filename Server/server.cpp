@@ -458,6 +458,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	char** player_sight_temperature = terrain->get_player_temperature_map();
 
 	//전송 데이터: sunangle, curr location, city location, resource, citizen, building
+	//버퍼 사이즈와 버퍼 지정
 	const int SendBufferSize = sizeof(float) + sizeof(II) + (sizeof(char) + sizeof(II) + sizeof(Citizen) * 100 + sizeof(Resource) * 5 + sizeof(Building) * 20) * MAXPLAYER;
 	char SendBuffer[SendBufferSize];
 	const int RecvBufferSize = sizeof(K) + sizeof(UII);
@@ -473,6 +474,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			shared_lock<shared_mutex> lock(player_list_lock);
 			start_t = high_resolution_clock::now();
 			
+			//패킷 포장
 			char Identity = 1;
 			char My = 0;
 			int CopyAddress{};
@@ -480,14 +482,15 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			CopyAddress += sizeof(float);
 			memcpy(SendBufferPtr + CopyAddress, &ThisPlayer->CurrentLocation, sizeof(II));
 			CopyAddress += sizeof(II);
-
 			cout << "curr location: " << (int)ThisPlayer->CurrentLocation.x << ", " << (int)ThisPlayer->CurrentLocation.y << endl;
 			for (auto& player : game->players) {
+				//해당 클라이언트의 정보면 id 0을 넣어줌. 나머지는 1234
 				if (player.first == port) {
 					memcpy(SendBufferPtr + CopyAddress, &My, sizeof(char));
 				}
 				else {
 					memcpy(SendBufferPtr + CopyAddress, &Identity, sizeof(char));
+					Identity++;
 				}
 				CopyAddress += sizeof(char);
 				memcpy(SendBufferPtr + CopyAddress, &player.second->CityLocation, sizeof(II));
@@ -498,7 +501,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				CopyAddress += sizeof(Resource) * 5;
 				memcpy(SendBufferPtr + CopyAddress, player.second->Buildings, sizeof(Building) * 20);
 				CopyAddress += sizeof(Building) * 20;
-				Identity++;
 			}
 			if (CopyAddress != SendBufferSize)
 				cout << "SendBufferSize Error" << endl;
@@ -507,7 +509,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				cout << "Send Error" << endl;
 				return 0;
 			}
-			
 
 			//지형 전송
 			II player_location{ (int)game->players[port]->CurrentLocation.x / 100, (int)game->players[port]->CurrentLocation.y / 100 };
@@ -535,11 +536,10 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 				cout << "recv Error" << endl;
 				return 0;
 			}
-
+			//수신한 패킷 뜯기
 			memcpy(&ThisPlayer->UI, RecvBuffer, sizeof(UII));
 			memcpy(&ThisPlayer->KeyInput, RecvBuffer + sizeof(UII), sizeof(K));
 			cout << "KeyInput: " << ThisPlayer->KeyInput.W << ", " << ThisPlayer->KeyInput.A << ", " << ThisPlayer->KeyInput.S << ", " << ThisPlayer->KeyInput.D << endl;
-
 			
 			//mouse_input_checking(first_send_client.My_citizen_moving, players_list, port);
 			//if (first_send_client.My_UI_input.resource_input.CitizenCountAdd)
