@@ -123,10 +123,6 @@ public:
 
 	ACameraActor* MyCamera;
 
-	FServerStruct1 ServerStruct1;
-	FServerStruct2 ServerStruct2;
-	FClientStruct1 ClientStruct1;
-
 	FThreeFloat OldLocation;
 	FThreeFloat FutureLocation;
 	FVector InterpolatedLocation;
@@ -142,5 +138,13 @@ public:
 	void TF_set(FThreeFloat& a, FThreeFloat& b);
 	void resoure_set(Fresources_actor& a, Fresources_actor& b);
 	void LocationInterpolate();
+
+
+	//////////////////////////////////////////
+	class FSocketThread* Network;
+	float Player_x, Player_y, Player_z;
+	void SetPlayerLocation(float x, float y, float z);
+	void SetCurrentLocation(float x, float y, float z);
+
 };
 

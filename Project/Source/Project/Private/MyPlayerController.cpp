@@ -3,9 +3,13 @@
 #include "MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Main.h"
+#include "NetworkingThread.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
 AMain* Main_Class;
+
+
+
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -30,6 +34,11 @@ AMyPlayerController::AMyPlayerController()
     bEnableClickEvents = true;
     bEnableTouchEvents = true;
     bEnableMouseOverEvents = true;
+    Network = nullptr;
+    Key_w = false;
+    Key_a = false;
+    Key_s = false;
+    Key_d = false;
 }
 
 void AMyPlayerController::SetupInputComponent()
@@ -63,44 +72,52 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::InputUpPressed()
 {
-    Main_Class->KeyInput->w = true;
+    Key_w = true;
+    SendMovePacket();
 }
 
 void AMyPlayerController::InputDownPressed()
 {
-    Main_Class->KeyInput->s = true;
+    Key_s = true;
+    SendMovePacket();
 }
 
 void AMyPlayerController::InputLeftPressed()
 {
-    Main_Class->KeyInput->a = true;
+    Key_a = true;
+    SendMovePacket();
 }
 
 void AMyPlayerController::InputRightPressed()
 {
-    Main_Class->KeyInput->d = true;
+    Key_d = true;
+    SendMovePacket();
 }
 
 
 
 void AMyPlayerController::InputUpReleased()
 {
-    Main_Class->KeyInput->w = false;
+    Key_w = false;
+    SendMovePacket();
 }
 
 void AMyPlayerController::InputDownReleased()
 {
-    Main_Class->KeyInput->s = false;
+    Key_s = false;
+    SendMovePacket();
 }
 
 void AMyPlayerController::InputLeftReleased()
 {
-    Main_Class->KeyInput->a = false;
+    Key_a = false;
+    SendMovePacket();
 }
 
 void AMyPlayerController::InputRightReleased()
 {
-    Main_Class->KeyInput->d = false;
+    Key_d = false;
+    SendMovePacket();
 }
 
 
@@ -244,17 +261,17 @@ void AMyPlayerController::OnBuildMode()
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
     if (Hit.bBlockingHit)
     {
-        FVector CalculatedLocation;
-        CalculatedLocation.X = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.X);
-        CalculatedLocation.X = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.X);
-        CalculatedLocation.Y = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.Y);
-        CalculatedLocation.Y = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.Y);
-        CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000 + 500, (uint64)CalculatedLocation.Y / 1000 * 1000 + 500, 0);
-        /*UE_LOG(LogTemp, Log, TEXT("LOC: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x, (int64)Main_Class->ServerStruct1.PlayerInfo.location.y);
-        UE_LOG(LogTemp, Log, TEXT("X: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2));
-        UE_LOG(LogTemp, Log, TEXT("Y: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2));
-        UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, 0);*/
-        Main_Class->Building->DecalLocation = CalculatedLocation;
+        //FVector CalculatedLocation;
+        //CalculatedLocation.X = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.X);
+        //CalculatedLocation.X = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.X);
+        //CalculatedLocation.Y = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.Y);
+        //CalculatedLocation.Y = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.Y);
+        //CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000 + 500, (uint64)CalculatedLocation.Y / 1000 * 1000 + 500, 0);
+        ///*UE_LOG(LogTemp, Log, TEXT("LOC: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x, (int64)Main_Class->ServerStruct1.PlayerInfo.location.y);
+        //UE_LOG(LogTemp, Log, TEXT("X: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2));
+        //UE_LOG(LogTemp, Log, TEXT("Y: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2));
+        //UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, 0);*/
+        //Main_Class->Building->DecalLocation = CalculatedLocation;
     }
 }
 
@@ -277,6 +294,11 @@ void AMyPlayerController::MouseScrollDown()
 void AMyPlayerController::PlayerTick(float DeltaTime)
 {
     Super::PlayerTick(DeltaTime);
+
+    if(Network == nullptr)
+    {
+        Network = reinterpret_cast<FSocketThread*>(Main_Class->Network);
+    }
 
     mouse_cnt++;
     //UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"),  *(ServerClass->MouseInput.name), ServerClass->MouseInput.location.x, ServerClass->MouseInput.location.y);
@@ -328,4 +350,18 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     if (Main_Class->Building->BuildMode) {
         OnBuildMode();
     }
+}
+
+void AMyPlayerController::SendMovePacket()
+{
+    cs_packet_move packet;
+    packet.w = Key_w;
+    packet.a = Key_a;
+    packet.s = Key_s;
+    packet.d = Key_d;
+    packet.size = sizeof(cs_packet_move);
+    packet.type = CS_PACKET_MOVE;
+    
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }

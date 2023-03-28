@@ -8,7 +8,8 @@
 #define MAXOBJECT		5000
 
 #define MAXPLAYER		5
-
+#define CITIZENSTART	MAXPLAYER
+#define MAXCITIZEN		200
 
 
 
@@ -23,7 +24,6 @@ struct cs_packet_login
 {
 	unsigned char size;
 	unsigned char type;
-	char name[MAXNAMESIZE];
 };
 
 struct cs_packet_move
@@ -46,9 +46,14 @@ struct sc_packet_login
 	unsigned char type;
 	float x, y, z;
 	float rx, ry, rz;
+};
+
+struct sc_packet_move
+{
+	unsigned char size;
+	unsigned char type;
 	float currentX, currentY, currentZ;
 	float currentRX, currentRY, currentRZ;
 };
-
 
 

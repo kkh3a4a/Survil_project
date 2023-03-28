@@ -12,7 +12,7 @@
 #include "GenericPlatform/GenericPlatformProcess.h"
 #include "Components/InstancedStaticMeshComponent.h"
 
-FSocketThread* Network;
+
 FRunnableThread* NetworkThread;
 
 AMain::AMain()
@@ -75,10 +75,8 @@ void AMain::BeginPlay()
 			UE_LOG(LogTemp, Warning, TEXT("CameraActor_1"));
 		}
 	}
-	
-	memcpy(&ClientStruct1.KeyInput, KeyInput, sizeof(FKeyInput));
-	KeyInput = &ClientStruct1.KeyInput;
-	Network = new FSocketThread(this);
+	Network = new FSocketThread();
+	Network->_MainClass = this;
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
 }
 
@@ -87,71 +85,59 @@ void AMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	steady_clock::time_point StartTime = high_resolution_clock::now();
-	steady_clock::time_point EndTime = StartTime;
-	if (!RecvedFirstData){
-		if (ThreadInitSendRecv){
-			Citizens->citizen_set(ServerStruct1, ServerStruct2);
-			Citizens->Spawn_Citizen();
-			MyTown->SpawnTown(players_list);
-			MyTown->SpawnResource(ServerStruct1, ServerStruct2);
-			Citizens->Citizen_Moving();
-			RecvedFirstData = true;
-		}
-	}
-	else {
-		
-		memcpy(&ClientStruct1.UIInput, &UI_Input.ResourceInput, sizeof(FUI_Input));
+	//steady_clock::time_point StartTime = high_resolution_clock::now();
+	//steady_clock::time_point EndTime = StartTime;
+	//if (!RecvedFirstData){
+	//	if (ThreadInitSendRecv){
+	//		Citizens->citizen_set(ServerStruct1, ServerStruct2);
+	//		Citizens->Spawn_Citizen();
+	//		MyTown->SpawnTown(players_list);
+	//		MyTown->SpawnResource(ServerStruct1, ServerStruct2);
+	//		Citizens->Citizen_Moving();
+	//		RecvedFirstData = true;
+	//	}
+	//}
+	//else {
+	//	
+	//	memcpy(&ClientStruct1.UIInput, &UI_Input.ResourceInput, sizeof(FUI_Input));
 
-		clock_t t_1 = clock();
-		oil_count = ServerStruct1.MyResource[0], water_count = ServerStruct1.MyResource[1], iron_count = ServerStruct1.MyResource[2], food_count = ServerStruct1.MyResource[3], wood_count = ServerStruct1.MyResource[4];
-		SunAngle = ServerStruct1.SunAngle;
-		Citizens->CitizenNoJob(CitizenNoJobCnt);
-		Citizens->Citizen_Moving();
-		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
-		Temperature->Update(TerrainTemperature);
-		Building->Update();
-		MyTown->UpdateResource();
+	//	clock_t t_1 = clock();
+	//	oil_count = ServerStruct1.MyResource[0], water_count = ServerStruct1.MyResource[1], iron_count = ServerStruct1.MyResource[2], food_count = ServerStruct1.MyResource[3], wood_count = ServerStruct1.MyResource[4];
+	//	SunAngle = ServerStruct1.SunAngle;
+	//	Citizens->CitizenNoJob(CitizenNoJobCnt);
+	//	Citizens->Citizen_Moving();
+	//	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
+	//	Temperature->Update(TerrainTemperature);
+	//	Building->Update();
+	//	MyTown->UpdateResource();
 
-		LocationInterpolate();
-		//SetActorLocation(FVector(ServerStruct1.CurrentLocation.x - MapSizeX * 100 / 2, ServerStruct1.CurrentLocation.y - MapSizeY * 100 / 2, ServerStruct1.CurrentLocation.z));
-	}
-	EndTime = high_resolution_clock::now();
-	CycleTime = duration_cast<milliseconds>(EndTime - StartTime).count();
+	//	LocationInterpolate();
+	//	//SetActorLocation(FVector(ServerStruct1.CurrentLocation.x - MapSizeX * 100 / 2, ServerStruct1.CurrentLocation.y - MapSizeY * 100 / 2, ServerStruct1.CurrentLocation.z));
+	//}
+	//EndTime = high_resolution_clock::now();
+	//CycleTime = duration_cast<milliseconds>(EndTime - StartTime).count();
 }
 
-void AMain::TF_set(FThreeFloat& a, FThreeFloat& b)
-{
-	a.x = b.x;
-	a.y = b.y;
-	a.z = b.z;
-}
-
-void AMain::resoure_set(Fresources_actor& a, Fresources_actor& b)
-{
-	a.Count = b.Count;
-	a.Type = b.Type;
-}
 
 void AMain::LocationInterpolate()
 {
-	double Alpha;
+	//double Alpha;
 
-	//updateµÆÀ»¶§
-	if (CycleNum == 0) {
-		CycleNum++;
-		OldLocation = FutureLocation;
-		FutureLocation = ServerStruct1.CurrentLocation;
-		OldInterpolatedLocation = InterpolatedLocation;
-		InterpolatedLocation = FVector(OldLocation.x, OldLocation.y, OldLocation.z);
-	}
-	else {
-		CycleNum++;
-		Alpha = CycleTime * (CycleNum) / Network->CycleTime;
-		OldInterpolatedLocation = InterpolatedLocation;
-		InterpolatedLocation = FMath::Lerp(FVector(OldLocation.x, OldLocation.y, 0), FVector(FutureLocation.x, FutureLocation.y, 0), min(Alpha, (double)0.9f));
-	}
-	
+	////updateµÆÀ»¶§
+	//if (CycleNum == 0) {
+	//	CycleNum++;
+	//	OldLocation = FutureLocation;
+	//	FutureLocation = ServerStruct1.CurrentLocation;
+	//	OldInterpolatedLocation = InterpolatedLocation;
+	//	InterpolatedLocation = FVector(OldLocation.x, OldLocation.y, OldLocation.z);
+	//}
+	//else {
+	//	CycleNum++;
+	//	Alpha = CycleTime * (CycleNum) / Network->CycleTime;
+	//	OldInterpolatedLocation = InterpolatedLocation;
+	//	InterpolatedLocation = FMath::Lerp(FVector(OldLocation.x, OldLocation.y, 0), FVector(FutureLocation.x, FutureLocation.y, 0), min(Alpha, (double)0.9f));
+	//}
+	//
 	/*if (abs(InterpolatedLocation.X - OldInterpolatedLocation.X) > 100) {
 		UE_LOG(LogTemp, Warning, TEXT("CycleTime: %lf, NetCycle: %lf, CycleNum: %d, Alpha: %lf"), CycleTime, Network->CycleTime, CycleNum, Alpha);
 		UE_LOG(LogTemp, Warning, TEXT("Curr  : %f, %f"), ServerStruct1.CurrentLocation.x, ServerStruct1.CurrentLocation.y);
@@ -163,5 +149,24 @@ void AMain::LocationInterpolate()
 	//UE_LOG(LogTemp, Warning, TEXT("InterDiff :[%lf, %lf]"), abs(InterpolatedLocation.X - OldInterpolatedLocation.X), abs(InterpolatedLocation.Y - OldInterpolatedLocation.Y));
 
 	SetActorLocation(FVector((int)InterpolatedLocation.X - MapSizeX * 100 / 2, (int)InterpolatedLocation.Y - MapSizeY * 100 / 2, 0));
+}
+
+void AMain::SetPlayerLocation(float x, float y, float z)
+{
+	Player_x = x; 
+	Player_y = y;
+	Player_z = z;
+	FVector Location(Player_x + MapSizeX * 100 / 2, Player_y + MapSizeY * 100 / 2, Player_z);
+	FRotator Rotation(0.0f, 0.0f, 0.0f);
+	FActorSpawnParameters SpawnInfo;
+
+	GetWorld()->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
+
+	SetActorLocation(FVector(x, y, z));
+}
+
+void AMain::SetCurrentLocation(float current_x, float current_y, float current_z)
+{
+	SetActorLocation(FVector(Player_x + current_x, Player_y + current_y, Player_z + current_z));
 }
 

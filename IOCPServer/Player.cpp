@@ -9,6 +9,8 @@ Player::Player(STATE state)
 	_type = OBJTYPE::PLAYER;
 	_state = state;
 	_currentX = 0; _currentY = 0; _currentZ = 0;
+	w = false, a = false, s = false, d = false;
+	isconnect = false;
 }
 
 Player::~Player()
@@ -20,12 +22,7 @@ void Player::send_packet(void* packet)
 {
 	char* buf = reinterpret_cast<char*>(packet);
 
-	WSA_OVER_EX* _wsa_send_over = new WSA_OVER_EX;
-	ZeroMemory(&_wsa_send_over->_wsaover, sizeof(_wsa_send_over->_wsaover));
-	_wsa_send_over->_iocpop = OP_SEND;
-	_wsa_send_over->_wsabuf.buf = _wsa_send_over->_buf;
-	_wsa_send_over->_wsabuf.len = buf[0];
-	memcpy(_wsa_send_over->_buf, buf, buf[0]);
+	WSA_OVER_EX* _wsa_send_over = new WSA_OVER_EX(OP_SEND, buf[0], packet);
 
 	WSASend(_socket, &_wsa_send_over->_wsabuf, 1, NULL, 0, &_wsa_send_over->_wsaover, NULL);
 }
@@ -35,8 +32,47 @@ void Player::set_player_location(float x, float y, float z)
 	_x = x;
 	_y = y;
 	_z = 0;
-	_currentX = x;
-	_currentY = y;
+	_currentX = 0;
+	_currentY = 0;
 	_currentZ = 0;
+}
+
+void Player::keyinput()
+{
+	bool keyinput = false;
+	if (w)
+	{
+		keyinput = true;
+		_currentY -= 20;
+	}
+	if (a)
+	{
+		keyinput = true;
+		
+		_currentX -= 20;
+	}
+	if (s)
+	{
+		keyinput = true;
+		_currentY += 20;
+	}
+	if (d)
+	{
+		keyinput = true;
+		_currentX += 20;
+	}
+
+
+	if (keyinput)
+	{
+		sc_packet_move sc_packet_move;
+		sc_packet_move.currentX = _currentX;
+		sc_packet_move.currentY = _currentY;
+		sc_packet_move.currentZ = _currentZ;
+		sc_packet_move.size = sizeof(sc_packet_move);
+		sc_packet_move.type = SC_PACKET_MOVE;
+		send_packet(&sc_packet_move);
+
+	}
 }
 

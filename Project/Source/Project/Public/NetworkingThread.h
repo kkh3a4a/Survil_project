@@ -2,14 +2,25 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "HAL/Runnable.h"
-#include "Sockets.h"
-#include "MeshTerrain.h"
-#include "SocketSubsystem.h"
+#include<iostream>
 #include <WS2tcpip.h>
+#include <MSWSock.h>
+#include"../../../../IOCPServer/protocol.h"
+#include "HAL/Runnable.h"
+#include "MeshTerrain.h"
+#include "CoreMinimal.h"
 
+#pragma comment (lib,"MSWSock.lib")
 #pragma comment (lib, "WS2_32.LIB")
+void CALLBACK send_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED send_over, DWORD flag);
+void CALLBACK recv_callback(DWORD err, DWORD num_bytes, LPWSAOVERLAPPED recv_over, DWORD flag);
+
+enum IOCPOP
+{
+	OP_RECV,
+	OP_SEND,
+	OP_ACCEPT
+};
 
 class PROJECT_API NetworkingThread
 {
@@ -18,23 +29,38 @@ public:
 	~NetworkingThread();
 };
 
+class WSA_OVER_EX {
+public:
+	WSAOVERLAPPED	_wsaover;
+	IOCPOP			_iocpop;
+	WSABUF			_wsabuf;
+	char	_buf[BUFSIZE];
+
+public:
+	WSA_OVER_EX();
+	WSA_OVER_EX(IOCPOP iocpop, char byte, void* buf);
+	WSAOVERLAPPED& getWsaOver() { return _wsaover; };
+	char* getbuf() { return _buf; };
+};
+
 class FSocketThread : public FRunnable
 {
 public:
-    FSocketThread(AActor*);
+    FSocketThread();
 
     void Stop();
     virtual uint32_t Run() override;
-
+	class AMain* _MainClass;
+	class AMyPlayerController* _MyController;
     bool IsRunning = true;
 	bool IsConnected = false;
     double CycleTime{};
-
+	WSA_OVER_EX _recv_over_ex;
+	SOCKET s_socket;
 private: 
    // FString IPAddress = "192.168.0.8";
     char IPAddress[20] = "127.0.0.1";
-    int32 SERVER_PORT = 9000;
-    SOCKET s_socket;
+
     int32 BytesReceived;
     int32 BytesSent;
     

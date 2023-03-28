@@ -65,54 +65,54 @@ void ACitizen::Spawn_Citizen()
 	}
 }
 
-void ACitizen::Citizen_Moving()
-{
-	int team = 0;
-	FVector Location(0.0f, 0.0f, 0.0f);
-	for (auto& a : My_Citizen)
-	{
-		
-		for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
-		{
-			Location = { a.Value[count_citizenNum].Location.x,a.Value[count_citizenNum].Location.y,a.Value[count_citizenNum].Location.z };
-			Citizens_Editer[team][count_citizenNum]->SetActorLocation(Location);
-		}
-		team++;
-	}
-
-}
-
-void ACitizen::citizen_set(FServerStruct1& FirstSendServer, FServerStruct2& SecondSendServer)
-{
-	for (int i = 0; i < MAXPLAYER; ++i)
-	{
-		My_Citizen.Add(i, SecondSendServer.PlayerCitizen[i]);
-	}
-}
-
-
-
-void ACitizen::TF_set(FThreeFloat& a, FThreeFloat& b)
-{
-	a.x = b.x;
-	a.y = b.y;
-	a.z = b.z;
-}
-
-void ACitizen::CitizenNoJob(int& cnt)
-{
-	int temp_cnt = 0;
-	for (auto& a : My_Citizen)
-	{
-		for (int i = 0; i < 10; ++i)
-		{
-			if (a.Value[i].Job == 0)
-			{
-				temp_cnt++;
-			}
-		}
-		break;
-	}
-	
-	cnt = temp_cnt;
-}
+//void ACitizen::Citizen_Moving()
+//{
+//	int team = 0;
+//	FVector Location(0.0f, 0.0f, 0.0f);
+//	for (auto& a : My_Citizen)
+//	{
+//		
+//		for (int count_citizenNum = 0; count_citizenNum < 10; ++count_citizenNum)
+//		{
+//			Location = { a.Value[count_citizenNum].Location.x,a.Value[count_citizenNum].Location.y,a.Value[count_citizenNum].Location.z };
+//			Citizens_Editer[team][count_citizenNum]->SetActorLocation(Location);
+//		}
+//		team++;
+//	}
+//
+//}
+//
+//void ACitizen::citizen_set(FServerStruct1& FirstSendServer, FServerStruct2& SecondSendServer)
+//{
+//	for (int i = 0; i < MAXPLAYER; ++i)
+//	{
+//		My_Citizen.Add(i, SecondSendServer.PlayerCitizen[i]);
+//	}
+//}
+//
+//
+//
+//void ACitizen::TF_set(FThreeFloat& a, FThreeFloat& b)
+//{
+//	a.x = b.x;
+//	a.y = b.y;
+//	a.z = b.z;
+//}
+//
+//void ACitizen::CitizenNoJob(int& cnt)
+//{
+//	int temp_cnt = 0;
+//	for (auto& a : My_Citizen)
+//	{
+//		for (int i = 0; i < 10; ++i)
+//		{
+//			if (a.Value[i].Job == 0)
+//			{
+//				temp_cnt++;
+//			}
+//		}
+//		break;
+//	}
+//	
+//	cnt = temp_cnt;
+//}

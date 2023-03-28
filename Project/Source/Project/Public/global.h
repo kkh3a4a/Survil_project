@@ -7,8 +7,6 @@
 #include <string>
 #include"global.generated.h"
 
-#define MAXPLAYER 1
-#define MAXCITIZEN 200
 #define FIRSTSPAWN 10
 #define MAPSIZEX 200
 #define MAPSIZEY 120
@@ -133,34 +131,6 @@ public:
 	FUI_resource_Input ResourceInput;
 };
 
-USTRUCT(Atomic, BlueprintType)
-struct FServerStruct1 {
-	GENERATED_USTRUCT_BODY()
-public:
-	float SunAngle;
-	FActorTransform PlayerInfo;
-	int MyResource[5];
-	FThreeFloat CurrentLocation;
-};
-
-USTRUCT(Atomic, BlueprintType)
-struct FServerStruct2 {
-	GENERATED_USTRUCT_BODY()
-public:
-	FCitizenSole PlayerCitizen[MAXPLAYER][MAXCITIZEN];
-	Fresources_actor Resources[MAXPLAYER * 10];
-};
-
-
-USTRUCT(Atomic, BlueprintType)
-struct FClientStruct1 {
-	GENERATED_USTRUCT_BODY()
-public:
-	FCitizenMoving MyCitizenMoving = {};
-	FKeyInput KeyInput = {};
-	FUI_Input UIInput = {};
-	int connecting = 1;
-};
 
 class PROJECT_API global
 {

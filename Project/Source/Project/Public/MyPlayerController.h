@@ -81,6 +81,11 @@ protected:
 
 	virtual void SetupInputComponent() override;
 	virtual void PlayerTick(float DeltaTime) override;
+	
 
+	//////////////////////
+	class FSocketThread* Network;
+	char Key_w, Key_a, Key_s, Key_d;
 
+	void SendMovePacket();
 };

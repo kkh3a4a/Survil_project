@@ -30,59 +30,69 @@ int len = 0;
 std::mutex player_cnt_lock;
 shared_mutex player_list_lock;
 float sun_angle;
-
-Terrain* terrain = new Terrain();
-char** total_terrain = terrain->get_map();
-char** shadow_map = terrain->get_shadow_map();
-unsigned char** temperature_map = terrain->get_temperature_map();
 volatile int player_cnt = 0;
-volatile bool location_set = false;
-int ingame_play = false;
-
-DWORD WINAPI terrain_change(LPVOID arg)
-{
-	/*char** player_sight_terrain = terrain->get_player_sight_map();
-	char** player_sight_temperature = terrain->get_player_temperature_map();
-	terrain->set_city_location(TF{ 20000, 20000 }, 0);*/
-
-	//terrain->show_array(total_terrain, 320);
-	terrain->log_on();
-	int i{};
-	while (1){
-		//clock_t t_0 = clock();
-		cout << endl << i << "번째" << endl;
-		
-
-		terrain->wind_blow({ 1, 0 }, 1);
-		terrain->make_shadow_map(sun_angle);
-		terrain->make_tempertature_map(sun_angle);
-		CC retval = terrain->get_highest_lowest(temperature_map);
-
-		/*if (sun_angle > 360)
-			sun_angle = 0;
-		sun_angle += 6;*/
-		cout << "sun_angle : " << sun_angle << endl;
-		cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
-
-		//terrain->show_array(total_terrain, 320);
-		//terrain->show_array(shadow_map, 320);
-		//terrain->show_array(temperature_map, 320);
 
 
-		/*terrain->copy_for_player_map(II{ 200, 200 });
-		terrain->show_array(player_sight_terrain, 120);
-		terrain->show_array(player_sight_temperature, 120);*/
+/////////////////////////////////
 
 
-		//clock_t t_1 = clock();
-		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
-		if (i % 100 == 0 && i != 0) {
-			terrain->save_terrain();
-			cout << "SAVED!!!" << endl;
-		}
-		i++;
-	}
-}
+
+
+
+
+
+//Terrain* terrain = new Terrain();
+//char** total_terrain = terrain->get_map();
+//char** shadow_map = terrain->get_shadow_map();
+//unsigned char** temperature_map = terrain->get_temperature_map();
+//
+//volatile bool location_set = false;
+//int ingame_play = false;
+//
+//DWORD WINAPI terrain_change(LPVOID arg)
+//{
+//	/*char** player_sight_terrain = terrain->get_player_sight_map();
+//	char** player_sight_temperature = terrain->get_player_temperature_map();
+//	terrain->set_city_location(TF{ 20000, 20000 }, 0);*/
+//
+//	//terrain->show_array(total_terrain, 320);
+//	terrain->log_on();
+//	int i{};
+//	while (1){
+//		//clock_t t_0 = clock();
+//		cout << endl << i << "번째" << endl;
+//		
+//
+//		terrain->wind_blow({ 1, 0 }, 1);
+//		terrain->make_shadow_map(sun_angle);
+//		terrain->make_tempertature_map(sun_angle);
+//		CC retval = terrain->get_highest_lowest(temperature_map);
+//
+//		/*if (sun_angle > 360)
+//			sun_angle = 0;
+//		sun_angle += 6;*/
+//		cout << "sun_angle : " << sun_angle << endl;
+//		cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
+//
+//		//terrain->show_array(total_terrain, 320);
+//		//terrain->show_array(shadow_map, 320);
+//		//terrain->show_array(temperature_map, 320);
+//
+//
+//		/*terrain->copy_for_player_map(II{ 200, 200 });
+//		terrain->show_array(player_sight_terrain, 120);
+//		terrain->show_array(player_sight_temperature, 120);*/
+//
+//
+//		//clock_t t_1 = clock();
+//		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
+//		if (i % 100 == 0 && i != 0) {
+//			terrain->save_terrain();
+//			cout << "SAVED!!!" << endl;
+//		}
+//		i++;
+//	}
+//}
 
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
@@ -97,6 +107,27 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
+	auto Move_Timer_End = std::chrono::system_clock::now();
+	while(1)
+	{
+		auto Move_Timer_Start = std::chrono::system_clock::now();
+
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(Move_Timer_Start - Move_Timer_End).count() > 10)
+		{
+			Move_Timer_End = std::chrono::system_clock::now();
+			for (int i = 0; i < MAXPLAYER; ++i)
+			{
+				Player* player = reinterpret_cast<Player*>(objects[i]);
+				if (player->isconnect)
+				{
+					player->keyinput();
+				}
+			}
+
+		}
+	}
+
+
 	return 0;
 }
 
@@ -105,7 +136,7 @@ int main(int argc, char* argv[])
 	cout << fixed;
 	HANDLE hThread;
 	//hThread = CreateThread(NULL, 0, terrain_change, 0, 0, NULL);
-
+	hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
 	// 윈속 초기화
 	WSADATA wsa;
 	int ret = WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -167,21 +198,36 @@ int main(int argc, char* argv[])
 		DWORD io_byte;
 		ULONG_PTR key;
 		WSAOVERLAPPED* over;
-		GetQueuedCompletionStatus(h_iocp, &io_byte, &key, &over, INFINITE);
-
+		ret = GetQueuedCompletionStatus(h_iocp, &io_byte, &key, &over, INFINITE);
 		WSA_OVER_EX* wsa_over_ex = reinterpret_cast<WSA_OVER_EX*>(over);
+		if (ret == FALSE)
+		{
+			if (wsa_over_ex->_iocpop == OP_ACCEPT) cout << "Accept Error";
+			else {
+				cout << "GQCS Error on client [" << key << "]\n";
+				//disconnect(static_cast<int>(key));
+				//if (ex_over->_comp_type == OP_SEND) delete ex_over;
+				continue;
+			}
+		}
+
 		user_id = static_cast<int>(key);
-		
 		Player* player;
 
 		if (user_id < MAXPLAYER)
 		{
 			player = reinterpret_cast<Player*>(objects[user_id]);
 		}
+		else if (user_id == 99999)
+		{
+			cout << "NEW ACEPT" << endl;
+		}
 		else
 		{
-			cout << "undefined Object" << endl;
-		} 
+			cout << " ACCEPT ERROR " << endl;
+			DebugBreak();
+		}
+
 		switch (wsa_over_ex->_iocpop)
 		{
 		case OP_RECV:
@@ -199,6 +245,7 @@ int main(int argc, char* argv[])
 		}
 		case OP_ACCEPT:
 		{
+			cout << "ACCEPT!" << endl;
 			user_id = player_cnt++;
 			CreateIoCompletionPort(reinterpret_cast<HANDLE>(c_socket), h_iocp, user_id, 0);
 			Player* n_player = reinterpret_cast<Player*>(objects[user_id]);
@@ -209,7 +256,7 @@ int main(int argc, char* argv[])
 			n_player->_id = user_id;
 			n_player->_wsa_recv_over._wsabuf.buf = reinterpret_cast<char*>(n_player->_wsa_recv_over._buf);
 			n_player->_wsa_recv_over._wsabuf.len = BUFSIZE;
-
+			n_player->isconnect = true;
 			DWORD flags = 0;
 			WSARecv(c_socket, &n_player->_wsa_recv_over._wsabuf, 1, NULL, &flags, &n_player->_wsa_recv_over._wsaover, NULL);
 

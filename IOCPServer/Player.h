@@ -13,8 +13,9 @@ public:
 	SOCKET _socket;
 	WSA_OVER_EX _wsa_recv_over;
 	int _prev_size{};
-	char _name[MAXNAMESIZE + 1]{};
 	char _packet_buf[BUFSIZE]{};
+	char isconnect;
+	char w, a, s, d;
 
 	float _currentX, _currentY, _currentZ;
 
@@ -24,4 +25,5 @@ public:
 
 	void send_packet(void * packet);
 	void set_player_location(float x, float y, float z);
+	void keyinput();
 };

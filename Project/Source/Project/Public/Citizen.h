@@ -34,7 +34,6 @@ public:
 
 		FCitizenMoving* Citizen_moving = new FCitizenMoving;
 
-		int citizen_cnt[MAXPLAYER];
 
 		FCitizenSole temp_Actor;
 
@@ -54,7 +53,7 @@ public:
 
 	void Citizen_Moving();
 
-	void citizen_set(FServerStruct1&, FServerStruct2&);
+	//void citizen_set(FServerStruct1&, FServerStruct2&);
 
 	void TF_set(FThreeFloat& a, FThreeFloat& b);
 

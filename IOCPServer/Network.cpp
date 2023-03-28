@@ -29,15 +29,18 @@ void WSA_OVER_EX::processpacket(int client_id, char* pk)
 	{
 		cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(pk);
 		Player* player = reinterpret_cast<Player*>(object);
-		strcpy(player->_name, packet->name);
-		player->_name[MAXNAMESIZE] = NULL;
 		send_login_ok_packet(client_id);
 		break;
 	}
 
 	case CS_PACKET_MOVE:
 	{
-
+		cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(pk);
+		Player* player = reinterpret_cast<Player*>(object);
+		player->w = packet->w;
+		player->a = packet->a;
+		player->s = packet->s;
+		player->d = packet->d;
 		break;
 	}
 	default:
@@ -56,10 +59,6 @@ void WSA_OVER_EX::send_login_ok_packet(int client_id)
 	packet.x = player->_x;
 	packet.y = player->_y;
 	packet.z = player->_z;
-
-	packet.currentX = player->_currentX;
-	packet.currentY = player->_currentY;
-	packet.currentZ = player->_currentZ;
 	
 	packet.size = sizeof(packet);
 	packet.type = SC_PACKET_LOGIN;
