@@ -14,7 +14,6 @@ ACitizen::ACitizen()
 	Citizen_moving->Location = { 0, 0, 0 };
 	Citizen_moving->Rotation = { 0, 0, 0 };
 	Citizen_moving->Job = 0;
-
 }
 void ACitizen::Initialize(TSubclassOf<AActor> C_Actor, TSubclassOf<AActor> E_Actor)
 {

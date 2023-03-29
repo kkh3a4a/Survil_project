@@ -11,6 +11,7 @@
 #include "Components/SceneComponent.h"
 #include "GenericPlatform/GenericPlatformProcess.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Components/DirectionalLightComponent.h"
 
 FSocketThread* Network;
 FRunnableThread* NetworkThread;
@@ -26,6 +27,7 @@ AMain::~AMain()
 	if (NetworkThread != nullptr)
 	{
 		Network->Stop();
+		NetworkThread->Kill();
 	}
 }
 
@@ -69,15 +71,25 @@ void AMain::BeginPlay()
 	TArray<AActor*> CameraActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), CameraActors);
 	for (AActor* Camera : CameraActors) {
-		UE_LOG(LogTemp, Warning, TEXT("Actor name: %s"), *Camera->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("Actor name: %s"), *Camera->GetName());
 		if (Camera->GetName() == "CameraActor_1") {
 			MyCamera = Cast<ACameraActor>(Camera);
-			UE_LOG(LogTemp, Warning, TEXT("CameraActor_1"));
+			UE_LOG(LogTemp, Warning, TEXT("FOUND CAMERA"));
+			break;
 		}
 	}
-	
-	/*memcpy(&ClientStruct1.KeyInput, KeyInput, sizeof(FKeyInput));
-	KeyInput = &ClientStruct1.KeyInput;*/
+	//Get Sun
+	TArray<AActor*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), Actors);
+	for (AActor* Actor : Actors) {
+		//UE_LOG(LogTemp, Warning, TEXT("Actor name: %s"), *Actor->GetName());
+		if (Actor->GetName() == "SunManager_C_1") {
+			SunManager = Actor;
+			UE_LOG(LogTemp, Warning, TEXT("FOUND SUN MANAGER"));
+			break;
+		}
+	}
+
 
 	Network = new FSocketThread(this);
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
@@ -112,7 +124,7 @@ void AMain::Tick(float DeltaTime)
 		Temperature->Update(TerrainTemperature);
 		Building->Update();
 		MyTown->UpdateResource();
-
+		SunManager->SetActorRotation(FRotator(SunAngle, 0.f, 0.f));
 		LocationInterpolate();
 		//SetActorLocation(FVector(ServerStruct1.CurrentLocation.x - MapSizeX * 100 / 2, ServerStruct1.CurrentLocation.y - MapSizeY * 100 / 2, ServerStruct1.CurrentLocation.z));
 	}

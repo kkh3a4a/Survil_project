@@ -122,6 +122,7 @@ public:
 	ATemperature* Temperature;
 
 	ACameraActor* MyCamera;
+	AActor* SunManager;
 
 	/*FServerStruct1 ServerStruct1;
 	FServerStruct2 ServerStruct2;

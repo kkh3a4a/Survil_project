@@ -162,4 +162,5 @@ uint32_t FSocketThread::Run()
 void FSocketThread::Stop()
 {
 	IsRunning = false;
+	IsConnected = false;
 }
