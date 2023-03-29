@@ -34,13 +34,12 @@ public:
 	WSAOVERLAPPED	_wsaover;
 	IOCPOP			_iocpop;
 	WSABUF			_wsabuf;
-	char	_buf[BUFSIZE];
+	unsigned char	_buf[BUFSIZE];
 
 public:
 	WSA_OVER_EX();
 	WSA_OVER_EX(IOCPOP iocpop, char byte, void* buf);
 	WSAOVERLAPPED& getWsaOver() { return _wsaover; };
-	char* getbuf() { return _buf; };
 };
 
 class FSocketThread : public FRunnable
@@ -50,13 +49,24 @@ public:
 
     void Stop();
     virtual uint32_t Run() override;
+
 	class AMain* _MainClass;
 	class AMyPlayerController* _MyController;
+	class ACitizenManager* _CitizenManager;
+
+
     bool IsRunning = true;
 	bool IsConnected = false;
     double CycleTime{};
 	WSA_OVER_EX _recv_over_ex;
 	SOCKET s_socket;
+
+	int _prev_size = 0;
+
+	char my_id;
+	void processpacket(unsigned char* buf);
+	void error_display(const char* msg, int err_no);
+
 private: 
    // FString IPAddress = "192.168.0.8";
     char IPAddress[20] = "127.0.0.1";
@@ -64,6 +74,7 @@ private:
     int32 BytesReceived;
     int32 BytesSent;
     
-    void error_display(const char* msg, int err_no);
+
+	
 
 };

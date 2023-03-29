@@ -165,11 +165,11 @@ void AMyPlayerController::MoveToMouseCursor()
             UE_LOG(LogTemp, Log, TEXT("Citizen"));
             if (wcscmp(*hitActor->Tags[1].ToString(), L"0") == 0)
             {
-                Main_Class->Citizens->Citizen_moving->Team = FCString::Atoi(*hitActor->Tags[1].ToString());
+               /* Main_Class->Citizens->Citizen_moving->Team = FCString::Atoi(*hitActor->Tags[1].ToString());
                 Main_Class->Citizens->Citizen_moving->CitizenNumber = FCString::Atoi(*hitActor->Tags[2].ToString());
                 Main_Class->Citizens->Citizen_moving->Location.x = hitActor->GetActorLocation().X;
                 Main_Class->Citizens->Citizen_moving->Location.y = hitActor->GetActorLocation().Y;
-                Main_Class->Citizens->Citizen_moving->Location.z = hitActor->GetActorLocation().Z;
+                Main_Class->Citizens->Citizen_moving->Location.z = hitActor->GetActorLocation().Z;*/
                 // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), ServerClass->Citizen_moving->team, ServerClass->Citizen_moving->citizen_number ,ServerClass->Citizen_moving->location.x, ServerClass->Citizen_moving->location.y);
             }
             else
@@ -194,7 +194,7 @@ void AMyPlayerController::MoveToMouseCursor()
 
 void AMyPlayerController::MoveToActor()
 {
-    FHitResult Hit;
+  /*  FHitResult Hit;
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
     if (Hit.bBlockingHit)
     {
@@ -224,7 +224,7 @@ void AMyPlayerController::MoveToActor()
         }
         ResourceUI = false;
         mouse_end_t = high_resolution_clock::now();
-    }
+    }*/
 }
 
 void AMyPlayerController::VisibilityTemperature()
@@ -317,7 +317,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     {
         if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
         {
-            Main_Class->Citizens->Citizen_moving->Team = -1;
+            //Main_Class->Citizens->Citizen_moving->Team = -1;
             temped = false;
         }
     }

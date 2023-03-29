@@ -1,6 +1,8 @@
 
 #include "Network.h"
 #include "Player.h"
+#include "Citizen.h"
+#include<iostream>
 
 std::array<Object*, MAXOBJECT> objects;
 HANDLE h_iocp;
@@ -18,7 +20,7 @@ WSA_OVER_EX::WSA_OVER_EX(IOCPOP iocpop, char byte, void* buf)
 	_wsabuf.len = byte;
 }
 
-void WSA_OVER_EX::processpacket(int client_id, char* pk)
+void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 {
 	unsigned char packet_type = pk[1];
 	Object* object = objects[client_id];
@@ -30,6 +32,7 @@ void WSA_OVER_EX::processpacket(int client_id, char* pk)
 		cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(pk);
 		Player* player = reinterpret_cast<Player*>(object);
 		send_login_ok_packet(client_id);
+		send_citizen_First_create_packet(client_id);
 		break;
 	}
 
@@ -59,11 +62,38 @@ void WSA_OVER_EX::send_login_ok_packet(int client_id)
 	packet.x = player->_x;
 	packet.y = player->_y;
 	packet.z = player->_z;
-	
+	packet.player_id = player->_id;
 	packet.size = sizeof(packet);
 	packet.type = SC_PACKET_LOGIN;
 
 	player->send_packet(&packet);
+}
+
+void WSA_OVER_EX::send_citizen_First_create_packet(int client_id)
+{
+	
+	Player* player = reinterpret_cast<Player*>(objects[client_id]);
+
+	for (int i = 0; i < MAXPLAYER; ++i)
+	{
+		for (int j = 0; j < 10; ++j)
+		{
+			sc_packet_citizencreate packet;
+			packet.x = objects[i * 200 + j + 5]->_x;
+			packet.y = objects[i * 200 + j + 5]->_y;
+			packet.z = objects[i * 200 + j + 5]->_z;
+			packet._citizenid = i * 200 + j + 5;
+
+			packet.size = sizeof(sc_packet_citizencreate);
+			packet.type = SC_PACKET_CITIZENCREATE;
+
+			player->send_packet(&packet);
+			//Sleep(100);
+			std::cout << i << packet.x << ", " <<packet.y << std::endl;
+		}
+	}
+	
+
 }
 
 void WSA_OVER_EX::set_accept_over()

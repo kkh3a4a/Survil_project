@@ -8,6 +8,8 @@
 #include<shared_mutex>
 #include<algorithm>
 #include"Network.h"
+#include"Player.h"
+#include"Citizen.h"
 
 #include "terrain.cu"
 
@@ -168,7 +170,11 @@ int main(int argc, char* argv[])
 	}
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
-		objects[i] = new Player();
+		objects[i] = new Player(i);
+	}
+	for (int i = MAXPLAYER; i < MAXCITIZEN * MAXPLAYER + MAXPLAYER; ++i)//5~1005±îÁö´Â Citizen
+	{
+		objects[i] = new Citizen(i);
 	}
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
@@ -184,11 +190,16 @@ int main(int argc, char* argv[])
 			}
 		}
 		reinterpret_cast<Player*>(objects[i])->set_player_location(x, y, z);
+		for (int j = 0; j < 10; ++j)
+		{
+			reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->set_citizen_location(x + 2000, y + (j * 500) - 2250,z);
+			cout  << i << " : " << reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->_x << ", " << reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->_y << endl;
+		}
 	}
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
 		Player* n_player = reinterpret_cast<Player*>(objects[i]);
-		cout << n_player->_x << ", " << n_player->_y << endl;
+		//cout << n_player->_x << ", " << n_player->_y << endl;
 	}
 
 	int user_id = 0;
@@ -232,9 +243,29 @@ int main(int argc, char* argv[])
 		{
 		case OP_RECV:
 		{
-			DWORD flags = 0;
-			player->_wsa_recv_over.processpacket(user_id, wsa_over_ex->_buf);
+			unsigned char* packet_start = wsa_over_ex->_buf;
+			int remain_data = io_byte + player->_prev_size;
+			while (remain_data > 0)
+			{
+				int packet_size = packet_start[0];
+				if (packet_size <= remain_data)
+				{
+					player->_wsa_recv_over.processpacket(user_id, wsa_over_ex->_buf);
+					packet_start += packet_size;
+					remain_data -= packet_size;
+				}
+				else
+					break;
+			}
+			player->_prev_size = remain_data;
+			if(remain_data > 0)
+			{
+				memcpy(wsa_over_ex->_buf, packet_start, remain_data);
+			}
+			DWORD flags = 0;			
 			ZeroMemory(&player->_wsa_recv_over._wsaover, sizeof(player->_wsa_recv_over._wsaover));
+			player->_wsa_recv_over._wsabuf.buf = reinterpret_cast<char*>(player->_wsa_recv_over._buf + player->_prev_size);
+			player->_wsa_recv_over._wsabuf.len = BUFSIZE - remain_data;
 			WSARecv(player->_socket, &player->_wsa_recv_over._wsabuf, 1, NULL, &flags, &player->_wsa_recv_over._wsaover, NULL);
 			break;
 		}

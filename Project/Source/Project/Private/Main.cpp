@@ -25,7 +25,8 @@ AMain::~AMain()
 {
 	if (NetworkThread != nullptr)
 	{
-		Network->Stop();
+		if(Network != nullptr)
+			Network->Stop();
 	}
 }
 
@@ -40,8 +41,8 @@ void AMain::BeginPlay()
 	KeyInput->d = false;
 	//Citizen
 	FActorSpawnParameters SpawnInfo;
-	Citizens = GetWorld()->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	Citizens->Initialize(CitizenActor, EnemyCitizenActor);
+	/*Citizens = GetWorld()->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	Citizens->Initialize(CitizenActor, EnemyCitizenActor);*/
 
 	//resource
 	MyTown = GetWorld()->SpawnActor<AMyTown>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
@@ -118,38 +119,6 @@ void AMain::Tick(float DeltaTime)
 	//CycleTime = duration_cast<milliseconds>(EndTime - StartTime).count();
 }
 
-
-void AMain::LocationInterpolate()
-{
-	//double Alpha;
-
-	////updateµÆÀ»¶§
-	//if (CycleNum == 0) {
-	//	CycleNum++;
-	//	OldLocation = FutureLocation;
-	//	FutureLocation = ServerStruct1.CurrentLocation;
-	//	OldInterpolatedLocation = InterpolatedLocation;
-	//	InterpolatedLocation = FVector(OldLocation.x, OldLocation.y, OldLocation.z);
-	//}
-	//else {
-	//	CycleNum++;
-	//	Alpha = CycleTime * (CycleNum) / Network->CycleTime;
-	//	OldInterpolatedLocation = InterpolatedLocation;
-	//	InterpolatedLocation = FMath::Lerp(FVector(OldLocation.x, OldLocation.y, 0), FVector(FutureLocation.x, FutureLocation.y, 0), min(Alpha, (double)0.9f));
-	//}
-	//
-	/*if (abs(InterpolatedLocation.X - OldInterpolatedLocation.X) > 100) {
-		UE_LOG(LogTemp, Warning, TEXT("CycleTime: %lf, NetCycle: %lf, CycleNum: %d, Alpha: %lf"), CycleTime, Network->CycleTime, CycleNum, Alpha);
-		UE_LOG(LogTemp, Warning, TEXT("Curr  : %f, %f"), ServerStruct1.CurrentLocation.x, ServerStruct1.CurrentLocation.y);
-		UE_LOG(LogTemp, Warning, TEXT("Old   : %f, %f"), OldLocation.x, OldLocation.y);
-		UE_LOG(LogTemp, Warning, TEXT("Future: %f, %f"), FutureLocation.x, FutureLocation.y);
-		UE_LOG(LogTemp, Warning, TEXT("InterDiff :[%lf, %lf]"), abs(InterpolatedLocation.X - OldInterpolatedLocation.X), abs(InterpolatedLocation.Y - OldInterpolatedLocation.Y));
-		UE_LOG(LogTemp, Warning, TEXT("Inter :[%lf, %lf]"), InterpolatedLocation.X, InterpolatedLocation.Y);
-	}*/
-	//UE_LOG(LogTemp, Warning, TEXT("InterDiff :[%lf, %lf]"), abs(InterpolatedLocation.X - OldInterpolatedLocation.X), abs(InterpolatedLocation.Y - OldInterpolatedLocation.Y));
-
-	SetActorLocation(FVector((int)InterpolatedLocation.X - MapSizeX * 100 / 2, (int)InterpolatedLocation.Y - MapSizeY * 100 / 2, 0));
-}
 
 void AMain::SetPlayerLocation(float x, float y, float z)
 {

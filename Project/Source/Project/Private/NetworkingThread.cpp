@@ -2,10 +2,11 @@
 
 #include "NetworkingThread.h"
 #include"Main.h"
+#include"Citizen.h"
 #include "MyPlayerController.h"
+#include "CitizenManager.h"
 #include "Kismet/GameplayStatics.h"
 using namespace std;
-
 
 
 FSocketThread* fsocket_thread;
@@ -107,6 +108,47 @@ void FSocketThread::error_display(const char* msg, int err_no)
 
 }
 
+void FSocketThread::processpacket(unsigned char* buf)
+{
+	unsigned char packet_type = buf[1];
+	switch (packet_type)
+	{
+	case SC_PACKET_LOGIN:
+	{
+		sc_packet_login* packet = reinterpret_cast<sc_packet_login*>(buf);
+		fsocket_thread->_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
+		fsocket_thread->my_id = packet->player_id;
+		break;
+	}
+	case SC_PACKET_MOVE:
+	{
+		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(buf);
+		fsocket_thread->_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
+		UE_LOG(LogTemp, Warning, TEXT("current Location : %f %f %f"), packet->currentX, packet->currentY, packet->currentZ);
+		break;
+	}
+	case SC_PACKET_CITIZENCREATE:
+	{
+		sc_packet_citizencreate* packet = reinterpret_cast<sc_packet_citizencreate*>(buf);
+		retry:
+		if (_CitizenManager == nullptr)
+		{
+			goto retry;
+		}
+		_CitizenManager->Spawncitizen(packet->_citizenid - CITIZENSTART, FVector(packet->x + MapSizeX * 100 / 2, packet->y + MapSizeY * 100 / 2, packet->z));
+		
+		break;
+	}
+
+
+	default:
+	{
+		//DebugBreak();
+		break;
+	}
+	}
+}
+
 void FSocketThread::Stop()
 {
 	IsRunning = false;
@@ -130,31 +172,31 @@ void CALLBACK recv_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED recv_over
 		return;
 	}
 	WSA_OVER_EX* wsa_over_ex = reinterpret_cast<WSA_OVER_EX*>(recv_over);
-	unsigned char packet_type = wsa_over_ex->_buf[1];
-	switch (packet_type)
-	{
-	case SC_PACKET_LOGIN:
-	{
-		sc_packet_login* packet = reinterpret_cast<sc_packet_login*>(wsa_over_ex->_buf);
-		fsocket_thread->_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
-		break;
-	}
-	case SC_PACKET_MOVE:
-	{
-		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(wsa_over_ex->_buf);
-		fsocket_thread->_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
-		UE_LOG(LogTemp, Warning, TEXT("current Location : %f %f %f"), packet->currentX, packet->currentY, packet->currentZ);
-		break;
+	
+	//여기서 패킷 재조립을 해준다.
+	unsigned char* packet_start = wsa_over_ex->_buf;
+	static size_t in_packet_size = 0;
+	static size_t saved_packet_size = 0;
+	static unsigned char packet_buffer[BUFSIZE];
+
+	while (0 != num_byte) {
+		if (0 == in_packet_size) in_packet_size = packet_start[0];
+		if (num_byte + saved_packet_size >= in_packet_size) {
+			memcpy(packet_buffer + saved_packet_size, packet_start, in_packet_size - saved_packet_size);
+
+			fsocket_thread->processpacket(packet_buffer);
+			packet_start += in_packet_size - saved_packet_size;
+			num_byte -= in_packet_size - saved_packet_size;
+			in_packet_size = 0;
+			saved_packet_size = 0;
+		}
+		else {
+			memcpy(packet_buffer + saved_packet_size, packet_start, num_byte);
+			saved_packet_size += num_byte;
+			num_byte = 0;
+		}
 	}
 
-
-
-	default:
-	{
-		//DebugBreak();
-		break;
-	}
-	}
 	ZeroMemory(&wsa_over_ex->_wsaover, sizeof(wsa_over_ex->_wsaover));
 	DWORD r_flags = 0;
 	WSARecv(fsocket_thread->s_socket, &fsocket_thread->_recv_over_ex._wsabuf, 1, 0, &r_flags, &fsocket_thread->_recv_over_ex._wsaover, recv_callback);

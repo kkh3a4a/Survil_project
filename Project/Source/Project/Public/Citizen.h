@@ -16,46 +16,15 @@ class PROJECT_API ACitizen : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ACitizen();
-	void Initialize(TSubclassOf<AActor>, TSubclassOf<AActor>);
-
+	ACitizen(int id);
 protected:
 
-public:	
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AActor> Citizen_Actor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AActor>EnemyCitizenActor;
-
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		//FActor_location_rotation MouseInput;
-
-		FCitizenMoving* Citizen_moving = new FCitizenMoving;
-
-
-		FCitizenSole temp_Actor;
-
-		TMap<int, FCitizenSole*> My_Citizen;
-
-
-		//int My_Citizen[MAXPLAYER][MAXCITIZEN];
-
-		TMap<int, TArray<AActor*>> Citizens_Editer;
-	
-
-
-	int My_Citizen_Num = 0;
-
+public:
+	float _id;
+	float _x, _y, _z;
+	char job;
 
 	void Spawn_Citizen();
 
 	void Citizen_Moving();
-
-	//void citizen_set(FServerStruct1&, FServerStruct2&);
-
-	void TF_set(FThreeFloat& a, FThreeFloat& b);
-
-	void CitizenNoJob(int& cnt);
 };

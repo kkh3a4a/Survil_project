@@ -3,7 +3,7 @@
 #include <string>
 #include <random>
 
-Player::Player(STATE state)
+Player::Player(int id, STATE state)
 {
 	_x = 0; _y = 0; _z = 0;
 	_type = OBJTYPE::PLAYER;
@@ -11,6 +11,7 @@ Player::Player(STATE state)
 	_currentX = 0; _currentY = 0; _currentZ = 0;
 	w = false, a = false, s = false, d = false;
 	isconnect = false;
+	_id = id;
 }
 
 Player::~Player()

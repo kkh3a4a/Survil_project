@@ -1,5 +1,4 @@
 #pragma once
-#include"Object.h"
 #include"protocol.h"
 #include"Network.h"
 
@@ -20,7 +19,7 @@ public:
 	float _currentX, _currentY, _currentZ;
 
 
-	Player(STATE state = STATE::ST_FREE);
+	Player(int id, STATE state = STATE::ST_FREE);
 	~Player();
 
 	void send_packet(void * packet);
