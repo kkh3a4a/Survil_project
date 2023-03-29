@@ -203,9 +203,7 @@ void AMyPlayerController::MoveToActor()
 void AMyPlayerController::VisibilityTemperature()
 {
     ATemperature* TemperatureClass = Main_Class->Temperature;
-
     UE_LOG(LogTemp, Log, TEXT("Thermal"));
-
     bool Hidden = TemperatureClass->GetIsHidden();
     if (Hidden) {
         TemperatureClass->Hide(false);

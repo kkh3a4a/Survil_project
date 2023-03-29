@@ -111,8 +111,8 @@ uint32_t FSocketThread::Run()
 
 			//Recv Temperature
 			if (IsConnected) {
-				for (int i = 0; i < MapSizeX; i++) {
-					IsConnected = Socket->Recv((uint8*)&MainClass->TerrainTemperature[i], sizeof(char) * MapSizeY, BytesReceived, ESocketReceiveFlags::WaitAll);
+				for (int i = 0; i < MapSizeX / 2; i++) {
+					IsConnected = Socket->Recv((uint8*)&MainClass->TerrainTemperature[i], sizeof(char) * MapSizeY / 2, BytesReceived, ESocketReceiveFlags::WaitAll);
 					if (!IsConnected) {
 						UE_LOG(LogTemp, Warning, TEXT("Network Recv Error!!"));
 						IsConnected = false;

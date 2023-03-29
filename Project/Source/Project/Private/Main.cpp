@@ -24,10 +24,10 @@ AMain::AMain()
 
 AMain::~AMain()
 {
-	if (NetworkThread != nullptr)
-	{
+	if (NetworkThread != nullptr){
 		Network->Stop();
-		NetworkThread->Kill();
+		NetworkThread->Kill(true);
+		delete Network;
 	}
 }
 
@@ -40,6 +40,7 @@ void AMain::BeginPlay()
 	KeyInput.a = false;
 	KeyInput.s = false;
 	KeyInput.d = false;
+	
 	//Citizen
 	FActorSpawnParameters SpawnInfo;
 	Citizens = GetWorld()->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);

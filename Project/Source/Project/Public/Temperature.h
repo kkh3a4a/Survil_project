@@ -20,7 +20,7 @@ public:
 
 protected:
 
-	int divide = 2;
+	int divide = 1;
 	const int TemperatureDivide = 4;
 	ADecalActor* DecalActor;
 	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
@@ -29,7 +29,7 @@ protected:
 
 public:	
 	void Initiaize(UMaterial*);
-	void Update(uint8(*TerrainTemperaturePtr)[MapSizeY]);
+	void Update(uint8(*TerrainTemperaturePtr)[MapSizeY / 2]);
 	void TemperatureToRGB(double , double& , double& , double& );
 
 	void Hide(bool);

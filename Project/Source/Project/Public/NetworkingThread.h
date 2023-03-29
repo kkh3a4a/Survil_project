@@ -8,6 +8,8 @@
 #include "MeshTerrain.h"
 #include "SocketSubsystem.h"
 #include<WS2tcpip.h>
+#include <mutex>
+
 
 class PROJECT_API NetworkingThread
 {

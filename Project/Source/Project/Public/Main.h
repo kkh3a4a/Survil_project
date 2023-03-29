@@ -116,7 +116,7 @@ public:
 		UMaterial* TemperatureMaterial;
 
 	int8 Terrain2DArray[MapSizeX][MapSizeY];
-	uint8 TerrainTemperature[MapSizeX][MapSizeY];
+	uint8 TerrainTemperature[MapSizeX / 2][MapSizeY / 2];
 
 	AMeshTerrain* TerrainActor;
 	ATemperature* Temperature;
