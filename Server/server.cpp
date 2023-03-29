@@ -409,7 +409,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 			sun_angle = 0;
 		sun_angle += 6;*/
 		//cout << "sun_angle : " << game->SunAngle << endl;
-		cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
+		cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest: " << (float)retval.y / 4 << endl;
 
 		//terrain->show_array(total_terrain, 320);
 		//terrain->show_array(shadow_map, 320);
@@ -482,7 +482,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			CopyAddress += sizeof(float);
 			memcpy(SendBufferPtr + CopyAddress, &ThisPlayer->CurrentLocation, sizeof(II));
 			CopyAddress += sizeof(II);
-			cout << "curr location: " << (int)ThisPlayer->CurrentLocation.x << ", " << (int)ThisPlayer->CurrentLocation.y << endl;
+			//cout << "curr location: " << (int)ThisPlayer->CurrentLocation.x << ", " << (int)ThisPlayer->CurrentLocation.y << endl;
 			for (auto& player : game->players) {
 				//해당 클라이언트의 정보면 id 0을 넣어줌. 나머지는 1234
 				if (player.first == port) {
@@ -522,8 +522,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 			}
 
 			////온도 전송
-			for (int i = 0; i < player_sight_size.x; ++i) {
-				retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y), 0);
+			for (int i = 0; i < player_sight_size.x / 2; ++i) {
+				retval = send(client_sock, (char*)player_sight_temperature[i], (int)(sizeof(char) * player_sight_size.y / 2), 0);
 				if (retval == SOCKET_ERROR) {
 					cout << "Send Error" << endl;
 					return 0;
@@ -708,7 +708,6 @@ int main(int argc, char* argv[])
 		if (hThread == NULL) { closesocket(client_sock); }
 		else { CloseHandle(hThread); }
 	}
-
 
 	// 소켓 닫기
 	closesocket(listen_sock);
