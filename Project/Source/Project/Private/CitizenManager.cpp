@@ -53,7 +53,7 @@ void ACitizenManager::Tick(float DeltaTime)
 
 }
 
-void ACitizenManager::Spawncitizen(int citizen_id, FVector Location)
+void ACitizenManager::Spawn_Citizen(int citizen_id, FVector Location)
 {
     FActorSpawnParameters SpawnInfo;
     if(Network->my_id == (citizen_id / 200))
@@ -62,4 +62,14 @@ void ACitizenManager::Spawncitizen(int citizen_id, FVector Location)
          citizen[citizen_id] = GetWorld()->SpawnActor<ACitizen>(EnemyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 
 }
+
+void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate)
+{
+    if (citizen[citizen_id]->GetWorld() && citizen[citizen_id]->IsValidLowLevel())
+    {
+        citizen[citizen_id]->SetActorLocation(Location);
+        citizen[citizen_id]->SetActorRotation(Rotate);
+    }
+}
+
 

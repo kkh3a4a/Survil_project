@@ -109,14 +109,15 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
-	auto Move_Timer_End = std::chrono::system_clock::now();
+	auto Player_Move_Timer_End = std::chrono::system_clock::now();
+	auto Citizen_Move_Timer_End = std::chrono::system_clock::now();
 	while(1)
 	{
-		auto Move_Timer_Start = std::chrono::system_clock::now();
+		auto Timer_Start = std::chrono::system_clock::now();
 
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(Move_Timer_Start - Move_Timer_End).count() > 10)
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Player_Move_Timer_End).count() > 10)
 		{
-			Move_Timer_End = std::chrono::system_clock::now();
+			Player_Move_Timer_End = std::chrono::system_clock::now();
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);
@@ -125,7 +126,18 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					player->keyinput();
 				}
 			}
-
+		}
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Citizen_Move_Timer_End).count() > 10)
+		{
+			Citizen_Move_Timer_End = std::chrono::system_clock::now();
+			for (int i = CITIZENSTART; i < MAXCITIZEN * MAXPLAYER + CITIZENSTART; ++i)
+			{
+				Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+				if (citizen->_Job != -1)
+				{
+					citizen->set_citizen_move();
+				}
+			}
 		}
 	}
 
@@ -189,11 +201,11 @@ int main(int argc, char* argv[])
 				goto retry;
 			}
 		}
-		reinterpret_cast<Player*>(objects[i])->set_player_location(x, y, z);
+		reinterpret_cast<Player*>(objects[i])->set_player_location(x, y, z, SIGHT_X, SIGHT_Y);
 		for (int j = 0; j < 10; ++j)
 		{
-			reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->set_citizen_location(x + 2000, y + (j * 500) - 2250,z);
-			cout  << i << " : " << reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->_x << ", " << reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->_y << endl;
+			reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->set_citizen_spwan_location(x + 2000, y + (j * 500) - 2250,z);
+			//cout  << i << " : " << reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->_x << ", " << reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->_y << endl;
 		}
 	}
 	for (int i = 0; i < MAXPLAYER; ++i)

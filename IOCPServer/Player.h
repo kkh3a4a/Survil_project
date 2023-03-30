@@ -23,6 +23,6 @@ public:
 	~Player();
 
 	void send_packet(void * packet);
-	void set_player_location(float x, float y, float z);
+	void set_player_location(float x, float y, float z , float sight_x, float sight_y);
 	void keyinput();
 };

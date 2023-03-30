@@ -35,5 +35,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	AActor* citizen[1000];
 	class FSocketThread* Network;
-	void Spawncitizen(int citizen_id, FVector Location);
+	void Spawn_Citizen(int citizen_id, FVector Location);
+	void Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate);
+
 };

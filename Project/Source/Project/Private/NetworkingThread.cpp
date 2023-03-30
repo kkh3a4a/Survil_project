@@ -117,6 +117,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 	{
 		sc_packet_login* packet = reinterpret_cast<sc_packet_login*>(buf);
 		fsocket_thread->_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
+		fsocket_thread->_MainClass->SetCurrentLocation(- MapSizeX * 100 / 2, - MapSizeY * 100 / 2, packet->z);
 		fsocket_thread->my_id = packet->player_id;
 		break;
 	}
@@ -124,22 +125,25 @@ void FSocketThread::processpacket(unsigned char* buf)
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(buf);
 		fsocket_thread->_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
-		UE_LOG(LogTemp, Warning, TEXT("current Location : %f %f %f"), packet->currentX, packet->currentY, packet->currentZ);
+		//UE_LOG(LogTemp, Warning, TEXT("current Location : %f %f %f"), packet->currentX, packet->currentY, packet->currentZ);
 		break;
 	}
 	case SC_PACKET_CITIZENCREATE:
 	{
 		sc_packet_citizencreate* packet = reinterpret_cast<sc_packet_citizencreate*>(buf);
-		retry:
-		if (_CitizenManager == nullptr)
-		{
-			goto retry;
-		}
-		_CitizenManager->Spawncitizen(packet->_citizenid - CITIZENSTART, FVector(packet->x + MapSizeX * 100 / 2, packet->y + MapSizeY * 100 / 2, packet->z));
+		
+		_CitizenManager->Spawn_Citizen(packet->_citizenid - CITIZENSTART, FVector(packet->x , packet->y, packet->z));
 		
 		break;
 	}
-
+	case SC_PACKET_CITIZENMOVE:
+	{
+		sc_packet_citizenmove* packet = reinterpret_cast<sc_packet_citizenmove*>(buf);
+		FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
+		_CitizenManager->Set_Citizen_Location(packet->_citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z), Rotation);
+		UE_LOG(LogTemp, Warning, TEXT("Rotate : %f %f %f"), Rotation.Pitch, Rotation.Yaw, Rotation.Roll);
+		break;
+	}
 
 	default:
 	{

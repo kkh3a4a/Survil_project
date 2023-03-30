@@ -12,6 +12,7 @@ Player::Player(int id, STATE state)
 	w = false, a = false, s = false, d = false;
 	isconnect = false;
 	_id = id;
+	_socket={0};
 }
 
 Player::~Player()
@@ -25,16 +26,17 @@ void Player::send_packet(void* packet)
 
 	WSA_OVER_EX* _wsa_send_over = new WSA_OVER_EX(OP_SEND, buf[0], packet);
 
-	WSASend(_socket, &_wsa_send_over->_wsabuf, 1, NULL, 0, &_wsa_send_over->_wsaover, NULL);
+	if(_socket)
+		WSASend(_socket, &_wsa_send_over->_wsabuf, 1, NULL, 0, &_wsa_send_over->_wsaover, NULL);
 }
 
-void Player::set_player_location(float x, float y, float z)
+void Player::set_player_location(float x, float y, float z,float sight_x, float sight_y)
 {
 	_x = x;
 	_y = y;
 	_z = 0;
-	_currentX = 0;
-	_currentY = 0;
+	_currentX = -sight_x * 100 / 2;
+	_currentY = -sight_y * 100 / 2;
 	_currentZ = 0;
 }
 
@@ -45,6 +47,8 @@ void Player::keyinput()
 	{
 		keyinput = true;
 		_currentY -= 20;
+		objects[5]->_x -= 20;
+		objects[5]->_y -= 20;
 	}
 	if (a)
 	{

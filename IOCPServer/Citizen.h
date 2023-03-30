@@ -1,5 +1,5 @@
 #pragma once
-#include"Network.h"
+#include "Player.h"
 
 
 
@@ -9,10 +9,13 @@ public:
 	Citizen(int id);
 	~Citizen();
 
-	char _Job;	//	-1 : 생성안됨, 및 사망, 0 : 무직, 1 : 자원 채취, 2 : ....
+	char _Job;	//	-1 : 생성안됨, 및 사망  // 0 : 생성 및 무직  // 1 : 자원 채취 // 2 : ....
 	float _job_x, _job_y, _job_z;
 	char _HP;
+	float _arrival_x, _arrival_y, _arrival_z;
+	void set_citizen_spwan_location(float x, float y, float z);
+	void set_citizen_arrival_location(float ax, float ay, float az);
+	void set_citizen_move();
 
-	void set_citizen_location(float x, float y, float z);
 };
 

@@ -125,7 +125,7 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 	Player_x = x; 
 	Player_y = y;
 	Player_z = z;
-	FVector Location(Player_x + MapSizeX * 100 / 2, Player_y + MapSizeY * 100 / 2, Player_z);
+	FVector Location(Player_x, Player_y, Player_z);
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
 

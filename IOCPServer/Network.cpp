@@ -88,8 +88,6 @@ void WSA_OVER_EX::send_citizen_First_create_packet(int client_id)
 			packet.type = SC_PACKET_CITIZENCREATE;
 
 			player->send_packet(&packet);
-			//Sleep(100);
-			std::cout << i << packet.x << ", " <<packet.y << std::endl;
 		}
 	}
 	
