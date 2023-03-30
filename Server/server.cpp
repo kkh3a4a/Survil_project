@@ -394,7 +394,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 	terrain->set_city_location(TF{ 20000, 20000 }, 0);*/
 
 	//terrain->show_array(total_terrain, 320);
-	//terrain->log_on();
+	terrain->log_on();
 	int i{};
 	while (1) {
 		//clock_t t_0 = clock();
@@ -429,6 +429,8 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		}
 		i++;
 	}
+	cout << "END" << endl;
+	return 0;
 }
 
 DWORD WINAPI ProcessClient(LPVOID arg)
@@ -564,6 +566,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	}
 
 	closesocket(client_sock);
+	cout << "END" << endl;
 	return 0;
 }
 
@@ -644,6 +647,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 	}
 
+	cout << "END" << endl;
 	return 0;
 }
 
@@ -682,9 +686,9 @@ int main(int argc, char* argv[])
 	SOCKET client_sock;
 	struct sockaddr_in clientaddr;
 	int addrlen;
-	HANDLE hThread;
-	hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
-	hThread = CreateThread(NULL, 0, terrain_change, 0, 0, NULL);
+	HANDLE ingame_handle, terrain_handle, network_handle;
+	ingame_handle = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
+	terrain_handle = CreateThread(NULL, 0, terrain_change, 0, 0, NULL);
 
 	while (1) {
 		// accept()
@@ -702,17 +706,23 @@ int main(int argc, char* argv[])
 		cout << addr << endl;
 
 		// 스레드 생성
-		hThread = CreateThread(NULL, 0, ProcessClient,
-			(LPVOID)client_sock, 0, NULL);
+		network_handle = CreateThread(NULL, 0, ProcessClient,(LPVOID)client_sock, 0, NULL);
 		//소켓 닫기
-		if (hThread == NULL) { closesocket(client_sock); }
-		else { CloseHandle(hThread); }
+		if (network_handle == NULL) { closesocket(client_sock); }
+		else { CloseHandle(network_handle); }
 	}
 
 	// 소켓 닫기
 	closesocket(listen_sock);
-
 	// 윈속 종료
 	WSACleanup();
+	
+	CloseHandle(ingame_handle);
+	CloseHandle(terrain_handle);
+	CloseHandle(network_handle);
+	delete SendBuffer;
+	delete RecvBuffer;
+	delete game;
+	delete terrain;
 	return 0;
 }
