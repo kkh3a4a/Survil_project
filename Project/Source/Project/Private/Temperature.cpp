@@ -21,7 +21,7 @@ void ATemperature::Initiaize(UMaterial* Material)
     for (int32 y = 0; y < MapSizeY / 2; y++){
         for (int32 x = 0; x < MapSizeX / 2; x++){
             DecalActor = GetWorld()->SpawnActor<ADecalActor>(FVector(Width * x + Width / 2, Width * y + Width / 2, 0), FRotator(0,-90,0));
-			DecalActor->SetActorScale3D(FVector(Height, 1, 1));
+			DecalActor->SetActorScale3D(FVector(Height, 2, 2));
 			DecalActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
             
             UMaterialInstanceDynamic* MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
