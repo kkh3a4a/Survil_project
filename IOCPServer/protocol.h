@@ -9,19 +9,23 @@
 
 #define MAXPLAYER		5
 #define CITIZENSTART	MAXPLAYER
-#define MAXCITIZEN		200
+#define MAXCITIZEN		1000
+#define RESOURCESTART	MAXCITIZEN + CITIZENSTART
+#define MAXRESOURCE		50
 
 
 
-#define CS_PACKET_LOGIN			1
-#define CS_PACKET_MOVE			2
-#define CS_PACKET_CITIZENCREATE	3
-#define CS_PACKET_CITIZENMOVE	4
+#define CS_PACKET_LOGIN				1
+#define CS_PACKET_MOVE				2
+#define CS_PACKET_CITIZENCREATE		3
+#define CS_PACKET_CITIZENMOVE		4
+#define CS_PACKET_RESOURCECREATE	5
 
-#define SC_PACKET_LOGIN			1
-#define SC_PACKET_MOVE			2
-#define SC_PACKET_CITIZENCREATE	3
-#define SC_PACKET_CITIZENMOVE	4
+#define SC_PACKET_LOGIN				1
+#define SC_PACKET_MOVE				2
+#define SC_PACKET_CITIZENCREATE		3
+#define SC_PACKET_CITIZENMOVE		4
+#define SC_PACKET_RESOURCECREATE	5
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -41,7 +45,7 @@ struct cs_packet_citizencreate
 {
 	unsigned char size;
 	unsigned char type;
-	//추후 서버에 citizen 생성할때 쓰일 예정
+	//추후 서버에 citizen 생성 요청할때 쓰일 예정
 };
 
 struct cs_packet_citizenmove
@@ -50,6 +54,13 @@ struct cs_packet_citizenmove
 	unsigned char type;
 	int _citizenid;
 	float x, y, z;
+};
+
+struct cs_packet_resourcecreate
+{
+	unsigned char size;
+	unsigned char type;
+	//resource 생성 요청
 };
 
 
@@ -94,6 +105,17 @@ struct sc_packet_citizenmove
 	float rx, ry, rz;
 };
 
+struct sc_packet_resourcecreate
+{
+	unsigned char size;
+	unsigned char type;
+
+	int _resourceid;
+	float x, y, z;
+	char resource_type;
+	int _amount;
+
+};
 
 
 

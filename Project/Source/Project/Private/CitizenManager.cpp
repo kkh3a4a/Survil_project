@@ -61,6 +61,9 @@ void ACitizenManager::Spawn_Citizen(int citizen_id, FVector Location)
     else  if (Network->my_id != (citizen_id / 200))
          citizen[citizen_id] = GetWorld()->SpawnActor<ACitizen>(EnemyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 
+    ACitizen* citi = reinterpret_cast<ACitizen*>(citizen[citizen_id]);
+    citi->_id = citizen_id;
+
 }
 
 void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate)

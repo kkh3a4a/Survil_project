@@ -2,6 +2,7 @@
 #include "Network.h"
 #include "Player.h"
 #include "Citizen.h"
+#include"Resource.h"
 #include<iostream>
 
 std::array<Object*, MAXOBJECT> objects;
@@ -33,6 +34,7 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		Player* player = reinterpret_cast<Player*>(object);
 		send_login_ok_packet(client_id);
 		send_citizen_First_create_packet(client_id);
+		send_resource_First_create_packet(client_id);
 		break;
 	}
 
@@ -48,6 +50,7 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	}
 	default:
 	{
+		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);
 		DebugBreak();
 		break;
 	}
@@ -92,6 +95,28 @@ void WSA_OVER_EX::send_citizen_First_create_packet(int client_id)
 	}
 	
 
+}
+
+void WSA_OVER_EX::send_resource_First_create_packet(int client_id)
+{
+	Player* player = reinterpret_cast<Player*>(objects[client_id]);
+	for (int i = RESOURCESTART; i < MAXRESOURCE + RESOURCESTART; ++i)
+	{
+		Resource* resource = reinterpret_cast<Resource*>(objects[i]);
+		sc_packet_resourcecreate packet;
+
+		packet.x = resource->_x;
+		packet.y = resource->_y;
+		packet.z = resource->_z;
+		packet.resource_type = resource->_type;
+		packet._resourceid = i;
+		packet._amount = resource->_amount;
+
+		packet.size = sizeof(sc_packet_resourcecreate);
+		packet.type = SC_PACKET_RESOURCECREATE;
+
+		player->send_packet(&packet);
+	}
 }
 
 void WSA_OVER_EX::set_accept_over()

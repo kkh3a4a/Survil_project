@@ -1,15 +1,18 @@
 #pragma once
+#include "Player.h"
 
-class Resource
+class Resource : public Object
 {
 public:
-	Resource();
+	Resource(int id,char type);
 	~Resource();
 
-	char Type{};
-	int Amount{};
-	int MaxAmount{};
-	int CitizenCount{};
-
+	char _type{-1};	//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
+	int _resourceid;
+	int _amount{20};
+	int _maxamount{};
+	int _citizencount{};
+	Object* _workcitizen[10]{};
+	void set_resource_spwan_location(float player_x, float player_y, float player_z);
 };
 

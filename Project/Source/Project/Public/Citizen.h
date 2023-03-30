@@ -20,7 +20,7 @@ public:
 protected:
 
 public:
-	float _id;
+	int _id;
 	float _x, _y, _z;
 	char job;
 

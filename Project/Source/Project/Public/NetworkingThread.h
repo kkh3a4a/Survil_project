@@ -53,6 +53,7 @@ public:
 	class AMain* _MainClass;
 	class AMyPlayerController* _MyController;
 	class ACitizenManager* _CitizenManager;
+	class AResourceManager* _ResourceManager;
 
 
     bool IsRunning = true;

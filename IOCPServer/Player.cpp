@@ -47,8 +47,6 @@ void Player::keyinput()
 	{
 		keyinput = true;
 		_currentY -= 20;
-		objects[5]->_x -= 20;
-		objects[5]->_y -= 20;
 	}
 	if (a)
 	{

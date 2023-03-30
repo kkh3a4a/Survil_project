@@ -1,0 +1,59 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "ResourceManager.h"
+#include "Main.h"
+#include "NetworkingThread.h"
+
+
+// Sets default values
+AResourceManager::AResourceManager()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+
+// Called when the game starts or when spawned
+void AResourceManager::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+// Called every frame
+void AResourceManager::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+    if (Network == nullptr)
+    {
+        if (Main == nullptr)
+        {
+            UE_LOG(LogTemp, Log, TEXT("Manager connect"));
+        }
+        Network = reinterpret_cast<FSocketThread*>(Main->Network);
+        Network->_ResourceManager = this;
+        UE_LOG(LogTemp, Log, TEXT("Manager connect"));
+    }
+}
+
+void AResourceManager::Spawn_Resource(int Resource_id, FVector Location, int amount , char resourcetype)
+{
+    FActorSpawnParameters SpawnInfo;
+    if (resourcetype == 0)
+        resources[Resource_id] = GetWorld()->SpawnActor<AActor>(OilActor, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+    else if (resourcetype == 1)
+        resources[Resource_id] = GetWorld()->SpawnActor<AActor>(WaterActor, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+    else if (resourcetype == 2)
+        resources[Resource_id] = GetWorld()->SpawnActor<AActor>(IronActor, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+    else if (resourcetype == 3)
+        resources[Resource_id] = GetWorld()->SpawnActor<AActor>(FoodActor, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+    else if (resourcetype == 4)
+        resources[Resource_id] = GetWorld()->SpawnActor<AActor>(WoodActor, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+    else
+        return;
+
+    resource_acount[Resource_id] = amount;
+    resource_type[Resource_id] = resourcetype;
+}
+

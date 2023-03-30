@@ -32,6 +32,7 @@ public:
 	void processpacket(int client_id, unsigned char* packet);
 	void send_login_ok_packet(int client_id);
 	void send_citizen_First_create_packet(int client_id);
+	void send_resource_First_create_packet(int client_id);
 	void set_accept_over();
 };
 

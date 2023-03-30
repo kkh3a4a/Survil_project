@@ -5,6 +5,7 @@
 #include"Citizen.h"
 #include "MyPlayerController.h"
 #include "CitizenManager.h"
+#include "ResourceManager.h"
 #include "Kismet/GameplayStatics.h"
 using namespace std;
 
@@ -141,9 +142,16 @@ void FSocketThread::processpacket(unsigned char* buf)
 		sc_packet_citizenmove* packet = reinterpret_cast<sc_packet_citizenmove*>(buf);
 		FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
 		_CitizenManager->Set_Citizen_Location(packet->_citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z), Rotation);
-		UE_LOG(LogTemp, Warning, TEXT("Rotate : %f %f %f"), Rotation.Pitch, Rotation.Yaw, Rotation.Roll);
+		//UE_LOG(LogTemp, Warning, TEXT("Rotate : %f %f %f"), Rotation.Pitch, Rotation.Yaw, Rotation.Roll);
 		break;
 	}
+	case SC_PACKET_RESOURCECREATE:
+	{
+		sc_packet_resourcecreate* packet = reinterpret_cast<sc_packet_resourcecreate*>(buf);
+		_ResourceManager->Spawn_Resource(packet->_resourceid - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->_amount, packet->resource_type);
+		break;
+	}
+
 
 	default:
 	{

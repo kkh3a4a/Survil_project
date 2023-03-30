@@ -7,9 +7,11 @@
 #include <chrono>
 #include<shared_mutex>
 #include<algorithm>
+
 #include"Network.h"
 #include"Player.h"
 #include"Citizen.h"
+#include"Resource.h"
 
 #include "terrain.cu"
 
@@ -130,7 +132,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Citizen_Move_Timer_End).count() > 10)
 		{
 			Citizen_Move_Timer_End = std::chrono::system_clock::now();
-			for (int i = CITIZENSTART; i < MAXCITIZEN * MAXPLAYER + CITIZENSTART; ++i)
+			for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 			{
 				Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
 				if (citizen->_Job != -1)
@@ -180,14 +182,23 @@ int main(int argc, char* argv[])
 	{
 		object = nullptr;
 	}
+
+	//미리 object의 종류를 정해줌
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
 		objects[i] = new Player(i);
 	}
-	for (int i = MAXPLAYER; i < MAXCITIZEN * MAXPLAYER + MAXPLAYER; ++i)//5~1005까지는 Citizen
+	for (int i = MAXPLAYER; i < MAXCITIZEN + MAXPLAYER; ++i)//5~1004까지는 Citizen
 	{
 		objects[i] = new Citizen(i);
 	}
+	for (int i = RESOURCESTART; i < RESOURCESTART + MAXRESOURCE; ++i)//1005 ~ 1054까지는 Resource
+	{
+		objects[i] = new Resource(i ,i % 5);	//i%5 해서 type을 정해줌 /0 : 석유,	1 : 물,		2 : 철,		3 : 식량,		4 : 나무
+	}
+	
+
+	//player, citizen, resource 초기 위치 지정 한번 하고 안쓸거라 main에 둠
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
 		default_random_engine dre2;
@@ -205,14 +216,11 @@ int main(int argc, char* argv[])
 		for (int j = 0; j < 10; ++j)
 		{
 			reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->set_citizen_spwan_location(x + 2000, y + (j * 500) - 2250,z);
-			//cout  << i << " : " << reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->_x << ", " << reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->_y << endl;
+			reinterpret_cast<Resource*>(objects[RESOURCESTART + i * 10 + j])->set_resource_spwan_location(x, y, z);
 		}
+
 	}
-	for (int i = 0; i < MAXPLAYER; ++i)
-	{
-		Player* n_player = reinterpret_cast<Player*>(objects[i]);
-		//cout << n_player->_x << ", " << n_player->_y << endl;
-	}
+
 
 	int user_id = 0;
 
