@@ -4,9 +4,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "Main.h"
 #include "NetworkingThread.h"
+#include "ResourceManager.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
-AMain* Main_Class;
+
 
 
 
@@ -29,6 +30,14 @@ AMyPlayerController::AMyPlayerController()
     if (Main_Class == nullptr){
         return; 
     }
+    AActor* resourceManagerActor = UGameplayStatics::GetActorOfClass(worldref, AResourceManager::StaticClass());
+    if (resourceManagerActor == nullptr) {
+        return;
+    }
+    ResourceManager = Cast < AResourceManager>(resourceManagerActor);
+    if (ResourceManager == nullptr) {
+        return;
+    }
 
     bShowMouseCursor = true;
     bEnableClickEvents = true;
@@ -44,11 +53,11 @@ AMyPlayerController::AMyPlayerController()
 void AMyPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
-    InputComponent->BindAction("RightClick", IE_Pressed, this, &AMyPlayerController::InputRightMoustButtonPressed);
-    InputComponent->BindAction("RightClick", IE_Released, this, &AMyPlayerController::InputRightMoustButtonReleased);
+    //InputComponent->BindAction("RightClick", IE_Pressed, this, &AMyPlayerController::MoveToMouseCursor);
+    //InputComponent->BindAction("RightClick", IE_Released, this, &AMyPlayerController::InputRightMoustButtonReleased);
 
-    InputComponent->BindAction("LeftClick", IE_Pressed, this, &AMyPlayerController::InputLeftMoustButtonPressed);
-    InputComponent->BindAction("LeftClick", IE_Released, this, &AMyPlayerController::InputLeftMoustButtonReleased);
+    InputComponent->BindAction("LeftClick", IE_Pressed, this, &AMyPlayerController::MoveToMouseCursor);
+    //InputComponent->BindAction("LeftClick", IE_Released, this, &AMyPlayerController::InputLeftMoustButtonReleased);
 
     InputComponent->BindAction("Up", IE_Pressed, this, &AMyPlayerController::InputUpPressed);
     InputComponent->BindAction("Up", IE_Released, this, &AMyPlayerController::InputUpReleased);
@@ -122,28 +131,40 @@ void AMyPlayerController::InputRightReleased()
 
 
 
-void AMyPlayerController::InputRightMoustButtonPressed()
+void AMyPlayerController::UIClick(bool isplus)
 {
-    if (!Main_Class->Building->BuildMode) {
-        bRightClickMouse = true;
-    }
+    cs_packet_citizenplacement packet;
+       packet.size = sizeof(cs_packet_citizenplacement);
+    packet.type = CS_PACKET_CITIZENPLACEMENT;
+    packet.objectid = ObjectId + ObjectType;
+    packet.isplus = isplus;
+    UE_LOG(LogTemp, Log, TEXT("UIClick"));
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
-void AMyPlayerController::InputRightMoustButtonReleased()
-{
-    if (!Main_Class->Building->BuildMode) {
-        bRightClickMouse = false;
-    }
-}
-
-void AMyPlayerController::InputLeftMoustButtonPressed()
-{
-    if (!Main_Class->Building->BuildMode) {
-        bLeftClickMouse = true;
-    }
-    else {
-    }
-}
+//void AMyPlayerController::InputRightMoustButtonPressed()
+//{
+//    if (!Main_Class->Building->BuildMode) {
+//        bRightClickMouse = true;
+//    }
+//}
+//
+//void AMyPlayerController::InputRightMoustButtonReleased()
+//{
+//    if (!Main_Class->Building->BuildMode) {
+//        bRightClickMouse = false;
+//    }
+//}
+//
+//void AMyPlayerController::InputLeftMoustButtonPressed()
+//{
+//    if (!Main_Class->Building->BuildMode) {
+//        bLeftClickMouse = true;
+//    }
+//    else {
+//    }
+//}
 
 void AMyPlayerController::InputLeftMoustButtonReleased()
 {
@@ -160,17 +181,13 @@ void AMyPlayerController::MoveToMouseCursor()
     if (Hit.bBlockingHit)
     {
         hitActor = Hit.GetActor();
+        UE_LOG(LogTemp, Log, TEXT( "%s"), * hitActor->GetName());
         if (hitActor->ActorHasTag("Citizen"))
         {
             UE_LOG(LogTemp, Log, TEXT("Citizen"));
             if (wcscmp(*hitActor->Tags[1].ToString(), L"0") == 0)
             {
-               /* Main_Class->Citizens->Citizen_moving->Team = FCString::Atoi(*hitActor->Tags[1].ToString());
-                Main_Class->Citizens->Citizen_moving->CitizenNumber = FCString::Atoi(*hitActor->Tags[2].ToString());
-                Main_Class->Citizens->Citizen_moving->Location.x = hitActor->GetActorLocation().X;
-                Main_Class->Citizens->Citizen_moving->Location.y = hitActor->GetActorLocation().Y;
-                Main_Class->Citizens->Citizen_moving->Location.z = hitActor->GetActorLocation().Z;*/
-                // UE_LOG(LogTemp, Log, TEXT("%d %d %lf, %lf"), ServerClass->Citizen_moving->team, ServerClass->Citizen_moving->citizen_number ,ServerClass->Citizen_moving->location.x, ServerClass->Citizen_moving->location.y);
+
             }
             else
             {
@@ -182,11 +199,15 @@ void AMyPlayerController::MoveToMouseCursor()
         {
             ResourceActor = hitActor;
             ResourceUI = true;
-            ResourceType = FCString::Atoi(*hitActor->Tags[1].ToString());
-            ResourceCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
+            ObjectType = RESOURCESTART;
+            ObjectId = FCString::Atoi(*hitActor->Tags[1].ToString());
+            ResourceType = ResourceManager->resource_type[ObjectId];
+            ResourceCount = ResourceManager->resource_acount[ObjectId];
         }
         else
         {
+            ObjectId = -1;
+            ObjectType = 0;
             ResourceUI = false;
         }
     }
@@ -303,32 +324,16 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     mouse_cnt++;
     //UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"),  *(ServerClass->MouseInput.name), ServerClass->MouseInput.location.x, ServerClass->MouseInput.location.y);
     //오른쪽 클릭 작업
-    if (bLeftClickMouse)
-    {
-        MoveToMouseCursor();
-    }
-    else if (bRightClickMouse)
-    {
-        MoveToActor();
-    }
+
     
-    mouse_start_t = high_resolution_clock::now();
-    if (temped && (mouse_cnt % 100 == 0))
-    {
-        if (duration_cast<milliseconds>(mouse_start_t - mouse_end_t).count() > 1000)
-        {
-            //Main_Class->Citizens->Citizen_moving->Team = -1;
-            temped = false;
-        }
-    }
     if (ResourceActor != NULL)
     {
-        ResourceCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
-        CitizenCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->CitizenCount;
+       /* ResourceCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
+        CitizenCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->CitizenCount;*/
 
         if (ResourceUI)
         {
-            if (Main_Class->RecvedUIInput == true)
+            /*if (Main_Class->RecvedUIInput == true)
             {
                 Main_Class->UI_Input.ResourceInput.CitizenCountAdd = false;
                 Main_Class->UI_Input.ResourceInput.CitizenCountSub = false;
@@ -344,7 +349,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
                 Main_Class->UI_Input.ResourceInput.CitizenCountAdd = CitizenAdd;
                 Main_Class->UI_Input.ResourceInput.CitizenCountSub = CitizenSub;
                 Main_Class->CitizenRelaese = CitizenRelease;
-            }
+            }*/
         }
     }
     if (Main_Class->Building->BuildMode) {
@@ -354,6 +359,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
 
 void AMyPlayerController::SendMovePacket()
 {
+    
     cs_packet_move packet;
     packet.w = Key_w;
     packet.a = Key_a;
@@ -361,7 +367,7 @@ void AMyPlayerController::SendMovePacket()
     packet.d = Key_d;
     packet.size = sizeof(cs_packet_move);
     packet.type = CS_PACKET_MOVE;
-    
+    UE_LOG(LogTemp, Log, TEXT("send Move"));
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }

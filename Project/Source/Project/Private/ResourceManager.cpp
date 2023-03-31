@@ -52,7 +52,11 @@ void AResourceManager::Spawn_Resource(int Resource_id, FVector Location, int amo
         resources[Resource_id] = GetWorld()->SpawnActor<AActor>(WoodActor, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
     else
         return;
-
+    //tagÃß°¡ 0 : resource , 1 : Resource_id
+   // AActor* SpawnedResource = resources[Resource_id];
+    resources[Resource_id]->Tags.Add("Resource");
+    resources[Resource_id]->Tags.Add(FName(*FString::FromInt(Resource_id)));
+    
     resource_acount[Resource_id] = amount;
     resource_type[Resource_id] = resourcetype;
 }

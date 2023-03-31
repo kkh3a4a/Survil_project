@@ -25,14 +25,13 @@ public:
 		FVector DestLocation;
 	AActor* hitActor;
 
-	std::chrono::steady_clock::time_point mouse_start_t;
-	std::chrono::steady_clock::time_point mouse_end_t;
-
 	bool temped;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool ResourceUI = false;
 
+	int ObjectType = 0;	//현재 클릭된 Object종류에따라 START위치를 더해줘서 id만들어주고 보내야함
+	int ObjectId = -1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int ResourceType = 0;
 
@@ -52,6 +51,9 @@ public:
 
 
 	AActor* ResourceActor;
+
+	UFUNCTION(BlueprintCallable)
+	void UIClick(bool isplus);
 
 protected:
 	long long int mouse_cnt = 0;
@@ -84,6 +86,8 @@ protected:
 	
 
 	//////////////////////
+	class AMain* Main_Class;
+	class AResourceManager* ResourceManager;
 	class FSocketThread* Network;
 	char Key_w, Key_a, Key_s, Key_d;
 

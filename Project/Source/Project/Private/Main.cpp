@@ -62,9 +62,6 @@ void AMain::BeginPlay()
 	Building = GetWorld()->SpawnActor<ABuilding>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	Building->Initialize(BuildingGridMaterial);
 
-	UI_Input.ResourceInput.ResourceNum = -1;
-	UI_Input.ResourceInput.CitizenCountAdd = false;
-	UI_Input.ResourceInput.CitizenCountSub = false;
 	
 	//Get Camera
 	TArray<AActor*> CameraActors;

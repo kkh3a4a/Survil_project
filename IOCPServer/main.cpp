@@ -113,6 +113,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 {
 	auto Player_Move_Timer_End = std::chrono::system_clock::now();
 	auto Citizen_Move_Timer_End = std::chrono::system_clock::now();
+	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
 	while(1)
 	{
 		auto Timer_Start = std::chrono::system_clock::now();
@@ -135,10 +136,25 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 			{
 				Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-				if (citizen->_Job != -1)
+				if (citizen->_Job == -1)
 				{
-					citizen->set_citizen_move();
+					continue;
 				}
+				citizen->set_citizen_move();
+				bool IsResourceTimer = false;
+				if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 500)
+				{
+					IsResourceTimer = true;
+					Resource_Collect_Timer_End = std::chrono::system_clock::now();
+				}
+				if(IsResourceTimer)
+				{
+					if (citizen->_Job == 1)
+					{
+
+					}
+				}
+				
 			}
 		}
 	}

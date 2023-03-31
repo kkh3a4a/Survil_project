@@ -45,6 +45,7 @@ void Player::keyinput()
 	bool keyinput = false;
 	if (w)
 	{
+		std::cout << "w" ;
 		keyinput = true;
 		_currentY -= 20;
 	}
@@ -61,10 +62,11 @@ void Player::keyinput()
 	}
 	if (d)
 	{
+		std::cout << "d" ;
 		keyinput = true;
 		_currentX += 20;
 	}
-
+	std::cout << std::endl;
 
 	if (keyinput)
 	{

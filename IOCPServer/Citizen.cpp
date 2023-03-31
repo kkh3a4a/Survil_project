@@ -53,7 +53,7 @@ void Citizen::set_citizen_move()
 		packet.rx = (_arrival_x - _x) / distance;
 		packet.ry = (_arrival_y - _y) / distance;
 		packet.rz = (_arrival_z - _z) / distance;
-		packet._citizenid = _id;
+		packet.citizenid = _id;
 		packet.size = sizeof(sc_packet_citizenmove);
 		packet.type = SC_PACKET_CITIZENMOVE;
 

@@ -12,7 +12,8 @@ public:
 	int _amount{20};
 	int _maxamount{};
 	int _citizencount{};
-	Object* _workcitizen[10]{};
+	class Citizen* _workcitizen[10]{};
 	void set_resource_spwan_location(float player_x, float player_y, float player_z);
+	void set_resource_citizen_placement(int client_id, char isplus);
 };
 

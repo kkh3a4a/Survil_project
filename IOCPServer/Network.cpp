@@ -24,14 +24,13 @@ WSA_OVER_EX::WSA_OVER_EX(IOCPOP iocpop, char byte, void* buf)
 void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 {
 	unsigned char packet_type = pk[1];
-	Object* object = objects[client_id];
+	Player* player = reinterpret_cast<Player*>(objects[client_id]);
 
 	switch (packet_type)
 	{
 	case CS_PACKET_LOGIN:
 	{
 		cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(pk);
-		Player* player = reinterpret_cast<Player*>(object);
 		send_login_ok_packet(client_id);
 		send_citizen_First_create_packet(client_id);
 		send_resource_First_create_packet(client_id);
@@ -41,11 +40,22 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	case CS_PACKET_MOVE:
 	{
 		cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(pk);
-		Player* player = reinterpret_cast<Player*>(object);
 		player->w = packet->w;
 		player->a = packet->a;
 		player->s = packet->s;
 		player->d = packet->d;
+		break;
+	}
+	case CS_PACKET_CITIZENPLACEMENT:
+	{
+		//추후 건물도 똑같이 작동할거니깐 건물도 추가해주면 좋음
+
+		cs_packet_citizenplacement* packet = reinterpret_cast<cs_packet_citizenplacement*>(pk);
+		if (packet->objectid >= RESOURCESTART && packet->objectid < RESOURCESTART + MAXRESOURCE) 
+		{
+			Resource* resource = reinterpret_cast<Resource*> (objects[packet->objectid]);
+			resource->set_resource_citizen_placement(client_id, packet->isplus);
+		}
 		break;
 	}
 	default:
@@ -85,7 +95,7 @@ void WSA_OVER_EX::send_citizen_First_create_packet(int client_id)
 			packet.x = objects[i * 200 + j + 5]->_x;
 			packet.y = objects[i * 200 + j + 5]->_y;
 			packet.z = objects[i * 200 + j + 5]->_z;
-			packet._citizenid = i * 200 + j + 5;
+			packet.citizenid = i * 200 + j + 5;
 
 			packet.size = sizeof(sc_packet_citizencreate);
 			packet.type = SC_PACKET_CITIZENCREATE;
@@ -109,8 +119,8 @@ void WSA_OVER_EX::send_resource_First_create_packet(int client_id)
 		packet.y = resource->_y;
 		packet.z = resource->_z;
 		packet.resource_type = resource->_type;
-		packet._resourceid = i;
-		packet._amount = resource->_amount;
+		packet.resourceid = i;
+		packet.amount = resource->_amount;
 
 		packet.size = sizeof(sc_packet_resourcecreate);
 		packet.type = SC_PACKET_RESOURCECREATE;

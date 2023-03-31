@@ -1,17 +1,18 @@
 #pragma once
 
 
-#define BUFSIZE			255
-#define SERVERPORT		9000
+#define BUFSIZE						255
+#define SERVERPORT					9000
 
-#define MAXNAMESIZE		20
-#define MAXOBJECT		5000
+#define MAXNAMESIZE					20
+#define MAXOBJECT					5000
 
-#define MAXPLAYER		5
-#define CITIZENSTART	MAXPLAYER
-#define MAXCITIZEN		1000
-#define RESOURCESTART	MAXCITIZEN + CITIZENSTART
-#define MAXRESOURCE		50
+#define MAXPLAYER					5
+#define CITIZENSTART				MAXPLAYER
+#define PLAYERCITIZENCOUNT			200
+#define MAXCITIZEN					1000
+#define RESOURCESTART				(MAXCITIZEN + CITIZENSTART)
+#define MAXRESOURCE					50
 
 
 
@@ -21,11 +22,16 @@
 #define CS_PACKET_CITIZENMOVE		4
 #define CS_PACKET_RESOURCECREATE	5
 
+#define CS_PACKET_CITIZENPLACEMENT	10
+
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
 #define SC_PACKET_CITIZENCREATE		3
 #define SC_PACKET_CITIZENMOVE		4
 #define SC_PACKET_RESOURCECREATE	5
+
+#define SC_PACKET_CITIZENPLACEMENT	10
+
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -52,17 +58,26 @@ struct cs_packet_citizenmove
 {
 	unsigned char size;
 	unsigned char type;
-	int _citizenid;
+	int citizenid;
 	float x, y, z;
 };
 
 struct cs_packet_resourcecreate
 {
-	unsigned char size;
+	unsigned char size;	
 	unsigned char type;
+	
 	//resource 积己 夸没
 };
 
+struct cs_packet_citizenplacement
+{
+	unsigned char size;
+	unsigned char type;
+	int objectid;
+	char isplus;
+	//resource 积己 夸没
+};
 
 
 
@@ -91,7 +106,7 @@ struct sc_packet_citizencreate
 {
 	unsigned char size;
 	unsigned char type;
-	int _citizenid;
+	int citizenid;
 	float x, y, z;
 };
 
@@ -100,7 +115,7 @@ struct sc_packet_citizenmove
 {
 	unsigned char size;
 	unsigned char type;
-	int _citizenid;
+	int citizenid;
 	float x, y, z;
 	float rx, ry, rz;
 };
@@ -110,10 +125,10 @@ struct sc_packet_resourcecreate
 	unsigned char size;
 	unsigned char type;
 
-	int _resourceid;
+	int resourceid;
 	float x, y, z;
 	char resource_type;
-	int _amount;
+	int amount;
 
 };
 

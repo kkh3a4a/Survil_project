@@ -115,21 +115,21 @@ public:
 	int d;
 };
 
-USTRUCT(Atomic, BlueprintType)
-struct FUI_resource_Input {
-	GENERATED_USTRUCT_BODY()
-public:
-	int ResourceNum;
-	int CitizenCountAdd;
-	int CitizenCountSub;
-};
-
-USTRUCT(Atomic, BlueprintType)
-struct FUI_Input {
-	GENERATED_USTRUCT_BODY()
-public:
-	FUI_resource_Input ResourceInput;
-};
+//USTRUCT(Atomic, BlueprintType)
+//struct FUI_resource_Input {
+//	GENERATED_USTRUCT_BODY()
+//public:
+//	int ResourceNum;
+//	int CitizenCountAdd;
+//	int CitizenCountSub;
+//};
+//
+//USTRUCT(Atomic, BlueprintType)
+//struct FUI_Input {
+//	GENERATED_USTRUCT_BODY()
+//public:
+//	FUI_resource_Input ResourceInput;
+//};
 
 
 class PROJECT_API global

@@ -45,8 +45,6 @@ public:
 	bool IsConnected = false;
 	bool RecvedFirstData = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FUI_Input UI_Input;
 
 	//////////////UI때문에 여기있어야함
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
