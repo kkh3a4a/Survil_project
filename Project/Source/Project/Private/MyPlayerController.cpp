@@ -207,9 +207,11 @@ void AMyPlayerController::VisibilityTemperature()
     bool Hidden = TemperatureClass->GetIsHidden();
     if (Hidden) {
         TemperatureClass->Hide(false);
+        Main_Class->SunManager->SetActorHiddenInGame(true);
 	}
     else{
         TemperatureClass->Hide(true);
+        Main_Class->SunManager->SetActorHiddenInGame(false);
 	}
 }
 
