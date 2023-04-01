@@ -25,9 +25,11 @@ AMain::AMain()
 AMain::~AMain()
 {
 	if (NetworkThread != nullptr){
-		Network->Stop();
 		NetworkThread->Kill(true);
-		delete Network;
+		if (Network != nullptr) {
+			Network->Stop();
+			delete Network;
+		}
 	}
 }
 
@@ -79,6 +81,7 @@ void AMain::BeginPlay()
 			break;
 		}
 	}
+
 	//Get Sun
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), Actors);
@@ -90,7 +93,6 @@ void AMain::BeginPlay()
 			break;
 		}
 	}
-
 
 	Network = new FSocketThread(this);
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);

@@ -155,6 +155,8 @@ uint32_t FSocketThread::Run()
 			Sleep(1);
 		}
 	}
+	delete SendBuffer;
+	delete RecvBuffer;
 	UE_LOG(LogTemp, Warning, TEXT("Network Thread End!!"));
 	return 0;
 }
