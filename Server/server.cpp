@@ -415,7 +415,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		//terrain->show_array(shadow_map, 320);
 		//terrain->show_array(temperature_map, 320);
 
-
+	
 		/*terrain->copy_for_player_map(II{ 200, 200 });
 		terrain->show_array(player_sight_terrain, 120);
 		terrain->show_array(player_sight_temperature, 120);*/
@@ -564,7 +564,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		cout << "erase" << endl;
 		game->players.erase(port);
 	}
-
+	delete ThisPlayer;
 	closesocket(client_sock);
 	cout << "END" << endl;
 	return 0;
@@ -653,12 +653,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 int main(int argc, char* argv[])
 {
-	int SendBufferSize = sizeof(float) + sizeof(II) + (sizeof(char) + sizeof(II) + sizeof(Citizen) * 100 + sizeof(Resource) * 5 + sizeof(Building) * 20) * MAXPLAYER;
-	char* SendBuffer = new char[SendBufferSize];
-	int RecvBufferSize = sizeof(K) + sizeof(UII);
-	char* RecvBuffer = new char[RecvBufferSize];
-	cout << "Recv Buffer Size: " << RecvBufferSize << ", Send Buffer Size: " << SendBufferSize << endl;
-
 	int retval;
 	// 윈속 초기화
 	WSADATA wsa;
@@ -720,8 +714,6 @@ int main(int argc, char* argv[])
 	CloseHandle(ingame_handle);
 	CloseHandle(terrain_handle);
 	CloseHandle(network_handle);
-	delete SendBuffer;
-	delete RecvBuffer;
 	delete game;
 	delete terrain;
 	return 0;

@@ -614,13 +614,13 @@ public:
 		clock_t t_2 = clock();
 		for (int i = 0; i < player_sight_size.x; i++) {
 			terrain_player_sight_host[i] = new char[player_sight_size.y];
-			if(i < one_side_number)
+			if(i < player_sight_size.x / 2)
 				temperature_player_sight[i] = new char[player_sight_size.y];
 		}
 		for (int i = 0; i < player_sight_size.x; i++) {
 			for (int j = 0; j < player_sight_size.y; j++) {
 				terrain_player_sight_host[i][j] = 0;
-				if (i < one_side_number)
+				if (i < player_sight_size.x / 2 && j < player_sight_size.y / 2)
 					temperature_player_sight[i][j] = 0;
 			}
 		}
