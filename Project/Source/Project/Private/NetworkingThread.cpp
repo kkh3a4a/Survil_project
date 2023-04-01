@@ -117,15 +117,15 @@ void FSocketThread::processpacket(unsigned char* buf)
 	case SC_PACKET_LOGIN:
 	{
 		sc_packet_login* packet = reinterpret_cast<sc_packet_login*>(buf);
-		fsocket_thread->_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
-		fsocket_thread->_MainClass->SetCurrentLocation(- MapSizeX * 100 / 2, - MapSizeY * 100 / 2, packet->z);
-		fsocket_thread->my_id = packet->player_id;
+		_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
+		_MainClass->SetCurrentLocation(- MapSizeX * 100 / 2, - MapSizeY * 100 / 2, packet->z);
+		my_id = packet->player_id;
 		break;
 	}
 	case SC_PACKET_MOVE:
 	{
 		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(buf);
-		fsocket_thread->_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
+		_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
 		//UE_LOG(LogTemp, Warning, TEXT("current Location : %f %f %f"), packet->currentX, packet->currentY, packet->currentZ);
 		break;
 	}
@@ -150,6 +150,22 @@ void FSocketThread::processpacket(unsigned char* buf)
 		_ResourceManager->Spawn_Resource(packet->resourceid - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->amount, packet->resource_type);
 		break;
 	}
+	case SC_PACKET_RESOURCEAMOUNT:
+	{
+		sc_packet_resourceamount* packet = reinterpret_cast<sc_packet_resourceamount*>(buf);
+		_ResourceManager->SetResourceAmount(packet->resourceid - RESOURCESTART, packet->amount);
+	}
+	case SC_PACKET_PLAYERRESOURCE:
+	{
+		sc_packet_playerresource* packet = reinterpret_cast<sc_packet_playerresource*>(buf);
+		_MainClass->SetPlayerResource(packet->resources_acount[0], packet->resources_acount[1], packet->resources_acount[2], packet->resources_acount[3], packet->resources_acount[4]);
+		break;
+	}
+	case SC_PACKET_CITIZENPLACEMENT:
+	{
+		sc_packet_citizenplacement* packet = reinterpret_cast<sc_packet_citizenplacement*>(buf);
+		_ResourceManager->SetResourcePlacement(packet->resource_id - RESOURCESTART, packet->workcitizen, packet->playerjobless);
+	}
 
 
 	default:
@@ -171,6 +187,10 @@ void FSocketThread::Stop()
 
 void CALLBACK send_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED send_over, DWORD flag)
 {
+	if (err != 0)
+	{
+		return;
+	}
 	WSA_OVER_EX* wsa_over_ex = reinterpret_cast<WSA_OVER_EX*>(send_over);
 	delete  wsa_over_ex;
 }

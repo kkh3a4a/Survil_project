@@ -47,7 +47,10 @@ public:
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int CitizenCount=0;
+	int workcitizen = 10;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int joblessCitizen = 0;
 
 
 	AActor* ResourceActor;

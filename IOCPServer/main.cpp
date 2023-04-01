@@ -114,7 +114,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	auto Player_Move_Timer_End = std::chrono::system_clock::now();
 	auto Citizen_Move_Timer_End = std::chrono::system_clock::now();
 	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
-	while(1)
+	while (1)
 	{
 		auto Timer_Start = std::chrono::system_clock::now();
 
@@ -141,22 +141,24 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					continue;
 				}
 				citizen->set_citizen_move();
-				bool IsResourceTimer = false;
-				if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 500)
-				{
-					IsResourceTimer = true;
-					Resource_Collect_Timer_End = std::chrono::system_clock::now();
-				}
-				if(IsResourceTimer)
-				{
-					if (citizen->_Job == 1)
-					{
-
-					}
-				}
 				
 			}
 		}
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)
+		{	
+			Resource_Collect_Timer_End = std::chrono::system_clock::now();
+			for (int i = RESOURCESTART; i < RESOURCESTART + MAXRESOURCE; ++i)
+			{
+				Resource* resource = reinterpret_cast<Resource*>(objects[i]);
+				resource->collect_resource();
+			}
+			for (int i = 0; i < MAXPLAYER; ++i)
+			{
+				Player* player = reinterpret_cast<Player*>(objects[i]);
+				player->send_resourceacount();
+			}
+		}
+
 	}
 
 
@@ -263,6 +265,7 @@ int main(int argc, char* argv[])
 
 		if (user_id < MAXPLAYER)
 		{
+			
 			player = reinterpret_cast<Player*>(objects[user_id]);
 		}
 		else if (user_id == 99999)
@@ -281,6 +284,7 @@ int main(int argc, char* argv[])
 		{
 			unsigned char* packet_start = wsa_over_ex->_buf;
 			int remain_data = io_byte + player->_prev_size;
+			cout << user_id<< "// byte : " << remain_data << endl;
 			while (remain_data > 0)
 			{
 				int packet_size = packet_start[0];

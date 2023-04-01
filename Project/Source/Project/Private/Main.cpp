@@ -41,7 +41,7 @@ void AMain::BeginPlay()
 	KeyInput->d = false;
 	//Citizen
 	FActorSpawnParameters SpawnInfo;
-	/*Citizens = GetWorld()->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	/*Citizens = UWorld* uworld = GetWorld();->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	Citizens->Initialize(CitizenActor, EnemyCitizenActor);*/
 
 	//resource
@@ -125,8 +125,9 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 	FVector Location(Player_x, Player_y, Player_z);
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
 	FActorSpawnParameters SpawnInfo;
-
-	GetWorld()->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
+	UWorld* uworld = GetWorld();
+	if(uworld != nullptr)
+	uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
 
 	SetActorLocation(FVector(x, y, z));
 }
@@ -134,5 +135,14 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 void AMain::SetCurrentLocation(float current_x, float current_y, float current_z)
 {
 	SetActorLocation(FVector(Player_x + current_x, Player_y + current_y, Player_z + current_z));
+}
+
+void AMain::SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount)
+{
+	oil_count = oilcount;
+	water_count = watercount;
+	iron_count = ironcount;
+	food_count = foodcount;
+	wood_count = woodcount;
 }
 

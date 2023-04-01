@@ -56,10 +56,13 @@ void ACitizenManager::Tick(float DeltaTime)
 void ACitizenManager::Spawn_Citizen(int citizen_id, FVector Location)
 {
     FActorSpawnParameters SpawnInfo;
+    UWorld* uworld = GetWorld();
+    if (uworld == nullptr)
+        return;
     if(Network->my_id == (citizen_id / 200))
-         citizen[citizen_id] = GetWorld()->SpawnActor<ACitizen>(MyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+         citizen[citizen_id] = uworld->SpawnActor<ACitizen>(MyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
     else  if (Network->my_id != (citizen_id / 200))
-         citizen[citizen_id] = GetWorld()->SpawnActor<ACitizen>(EnemyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+         citizen[citizen_id] = uworld->SpawnActor<ACitizen>(EnemyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 
     ACitizen* citi = reinterpret_cast<ACitizen*>(citizen[citizen_id]);
     citi->_id = citizen_id;

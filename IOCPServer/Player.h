@@ -15,6 +15,8 @@ public:
 	char _packet_buf[BUFSIZE]{};
 	char isconnect;
 	char w, a, s, d;
+	
+	int _resourceacount[5] = {};
 
 	float _currentX, _currentY, _currentZ;
 
@@ -25,4 +27,5 @@ public:
 	void send_packet(void * packet);
 	void set_player_location(float x, float y, float z , float sight_x, float sight_y);
 	void keyinput();
+	void send_resourceacount();
 };

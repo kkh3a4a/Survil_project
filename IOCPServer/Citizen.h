@@ -13,6 +13,7 @@ public:
 	float _job_x, _job_y, _job_z;
 	char _HP;
 	float _arrival_x, _arrival_y, _arrival_z;
+	int _playerID;
 	void set_citizen_spwan_location(float x, float y, float z);
 	void set_citizen_arrival_location(float ax, float ay, float az);
 	void set_citizen_move();

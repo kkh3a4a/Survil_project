@@ -7,6 +7,7 @@ Citizen::Citizen(int id)
 	_HP = 100;
 	_job_x = 0; _job_y = 0; _job_z = 0;
 	_id = id;
+	_playerID = (_id - 5) / 200;
 }
 
 Citizen::~Citizen()

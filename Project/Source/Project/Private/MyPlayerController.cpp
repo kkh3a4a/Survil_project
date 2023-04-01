@@ -133,6 +133,7 @@ void AMyPlayerController::InputRightReleased()
 
 void AMyPlayerController::UIClick(bool isplus)
 {
+
     cs_packet_citizenplacement packet;
        packet.size = sizeof(cs_packet_citizenplacement);
     packet.type = CS_PACKET_CITIZENPLACEMENT;
@@ -165,6 +166,10 @@ void AMyPlayerController::UIClick(bool isplus)
 //    else {
 //    }
 //}
+
+void AMyPlayerController::InputRightMoustButtonPressed()
+{
+}
 
 void AMyPlayerController::InputLeftMoustButtonReleased()
 {
@@ -202,7 +207,9 @@ void AMyPlayerController::MoveToMouseCursor()
             ObjectType = RESOURCESTART;
             ObjectId = FCString::Atoi(*hitActor->Tags[1].ToString());
             ResourceType = ResourceManager->resource_type[ObjectId];
-            ResourceCount = ResourceManager->resource_acount[ObjectId];
+            ResourceCount = ResourceManager->resource_amount[ObjectId];
+            workcitizen = ResourceManager->workCitizens[ObjectId];
+            joblessCitizen = ResourceManager->playerjobless;
         }
         else
         {
@@ -324,7 +331,16 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     mouse_cnt++;
     //UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"),  *(ServerClass->MouseInput.name), ServerClass->MouseInput.location.x, ServerClass->MouseInput.location.y);
     //오른쪽 클릭 작업
-
+    if (ResourceUI == true)
+    {
+        ResourceActor = hitActor;        
+        ObjectType = RESOURCESTART;
+        ObjectId = FCString::Atoi(*hitActor->Tags[1].ToString());
+        ResourceType = ResourceManager->resource_type[ObjectId];
+        ResourceCount = ResourceManager->resource_amount[ObjectId];
+        workcitizen = ResourceManager->workCitizens[ObjectId];
+        joblessCitizen = ResourceManager->playerjobless;
+    }
     
     if (ResourceActor != NULL)
     {

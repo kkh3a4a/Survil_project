@@ -24,6 +24,9 @@
 
 #define CS_PACKET_CITIZENPLACEMENT	10
 
+#define CS_PACKET_RESOURCEAMOUNT	20
+#define CS_PACKET_PLAYERRESOURCE	21
+
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
 #define SC_PACKET_CITIZENCREATE		3
@@ -31,6 +34,8 @@
 #define SC_PACKET_RESOURCECREATE	5
 
 #define SC_PACKET_CITIZENPLACEMENT	10
+#define SC_PACKET_RESOURCEAMOUNT	20
+#define SC_PACKET_PLAYERRESOURCE	21
 
 
 #pragma pack (push, 1)
@@ -76,7 +81,7 @@ struct cs_packet_citizenplacement
 	unsigned char type;
 	int objectid;
 	char isplus;
-	//resource 생성 요청
+
 };
 
 
@@ -109,7 +114,15 @@ struct sc_packet_citizencreate
 	int citizenid;
 	float x, y, z;
 };
+struct sc_packet_citizenplacement
+{
+	unsigned char size;
+	unsigned char type;
 
+	int resource_id;
+	char playerjobless;
+	char workcitizen;
+};
 
 struct sc_packet_citizenmove
 {
@@ -132,7 +145,21 @@ struct sc_packet_resourcecreate
 
 };
 
+struct sc_packet_resourceamount
+{
+	unsigned char size;
+	unsigned char type;
 
+	int resourceid;
+	int amount;
+};
+struct sc_packet_playerresource
+{
+	unsigned char size;
+	unsigned char type;
+
+	int resources_acount[5];
+};
 
 
 

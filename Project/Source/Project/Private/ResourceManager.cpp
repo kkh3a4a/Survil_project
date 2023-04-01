@@ -18,7 +18,7 @@ AResourceManager::AResourceManager()
 void AResourceManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+   
 }
 
 // Called every frame
@@ -27,13 +27,19 @@ void AResourceManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
     if (Network == nullptr)
     {
-        if (Main == nullptr)
-        {
-            UE_LOG(LogTemp, Log, TEXT("Manager connect"));
-        }
         Network = reinterpret_cast<FSocketThread*>(Main->Network);
         Network->_ResourceManager = this;
-        UE_LOG(LogTemp, Log, TEXT("Manager connect"));
+    }
+    for (int i = 0; i < 50; ++i)
+    {
+        if (resources[i] != nullptr)
+        {
+            if (resource_amount[i] == 0)
+            {
+                resources[i]->SetActorHiddenInGame(true);
+                resources[i]->SetActorEnableCollision(false);
+            }
+        }
     }
 }
 
@@ -57,7 +63,18 @@ void AResourceManager::Spawn_Resource(int Resource_id, FVector Location, int amo
     resources[Resource_id]->Tags.Add("Resource");
     resources[Resource_id]->Tags.Add(FName(*FString::FromInt(Resource_id)));
     
-    resource_acount[Resource_id] = amount;
+    resource_amount[Resource_id] = amount;
     resource_type[Resource_id] = resourcetype;
+}
+
+void AResourceManager::SetResourceAmount(int Resource_id, int amount)
+{
+    resource_amount[Resource_id] = amount;
+}
+
+void AResourceManager::SetResourcePlacement(int Resource_id, char work_citizen, char player_job_less)
+{
+    workCitizens[Resource_id] = work_citizen;
+    playerjobless = player_job_less;
 }
 

@@ -42,8 +42,12 @@ public:
 		TSubclassOf<AActor>WoodActor;
 
 	AActor* resources[50];
-	int resource_acount[50]{};	//resource.cpp을 만들기보다 여기서 같이 관리하자
+	int resource_amount[50]{};	//resource.cpp을 만들기보다 여기서 같이 관리하자
 	char resource_type[50]{};	//type도 마찬가지
+	char workCitizens[50]{};		// 몇명 일하는것도 마찬가지
+	char playerjobless = {10};
 	class FSocketThread* Network;
 	void Spawn_Resource(int Resource_id, FVector Location, int amount, char resourcetype);
+	void SetResourceAmount(int Resource_id, int amount);
+	void SetResourcePlacement(int Resource_id, char work_citizen, char player_job_less);
 };

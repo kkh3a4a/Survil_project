@@ -45,7 +45,6 @@ void Player::keyinput()
 	bool keyinput = false;
 	if (w)
 	{
-		std::cout << "w" ;
 		keyinput = true;
 		_currentY -= 20;
 	}
@@ -62,12 +61,9 @@ void Player::keyinput()
 	}
 	if (d)
 	{
-		std::cout << "d" ;
 		keyinput = true;
 		_currentX += 20;
 	}
-	std::cout << std::endl;
-
 	if (keyinput)
 	{
 		sc_packet_move sc_packet_move;
@@ -80,4 +76,18 @@ void Player::keyinput()
 
 	}
 }
+
+void Player::send_resourceacount()
+{
+	sc_packet_playerresource packet;
+	packet.size = sizeof(sc_packet_playerresource);
+	packet.type = SC_PACKET_PLAYERRESOURCE;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		packet.resources_acount[i] = _resourceacount[i];
+	}
+	send_packet(&packet);
+}
+
 
