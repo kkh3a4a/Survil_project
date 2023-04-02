@@ -139,7 +139,14 @@ public:
 	ABuilding* Building;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
 		UMaterial* BuildingGridMaterial;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+		TSubclassOf<AActor>Building_1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+		TSubclassOf<AActor>Building_2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+		TSubclassOf<AActor>Building_3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+		TSubclassOf<AActor>Building_4;
 
 	void TF_set(FThreeFloat& a, FThreeFloat& b);
 	void resoure_set(FResource& a, FResource& b);

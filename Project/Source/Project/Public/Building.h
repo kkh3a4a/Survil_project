@@ -22,8 +22,13 @@ protected:
 public:	
 	bool BuildMode = false;
 	FVector DecalLocation;
+	char SelectedBuilding{};
 	
-	void Initialize(UMaterial*);
+	void Initialize(UMaterial*, TArray<TSubclassOf<AActor>*>);
 	void Update();
 	void DecalVisibility();
-};
+	void Build();
+
+	TArray<TSubclassOf<AActor>*> BuildingArray;
+	TArray<AActor*> BuildedBuildings;
+}; 

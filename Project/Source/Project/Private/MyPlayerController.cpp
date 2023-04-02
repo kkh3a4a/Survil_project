@@ -9,7 +9,6 @@ AMain* Main_Class;
 
 AMyPlayerController::AMyPlayerController()
 {
-
     UWorld* worldref = GetWorld();
     if (worldref == nullptr){
         return;
@@ -56,6 +55,11 @@ void AMyPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Thermal", IE_Pressed, this, &AMyPlayerController::VisibilityTemperature);
 
     InputComponent->BindAction("Build", IE_Pressed, this, &AMyPlayerController::BuildMode);
+    InputComponent->BindAction("Building1", IE_Pressed, this, &AMyPlayerController::SelectBuilding1);
+    InputComponent->BindAction("Building2", IE_Pressed, this, &AMyPlayerController::SelectBuilding2);
+    InputComponent->BindAction("Building3", IE_Pressed, this, &AMyPlayerController::SelectBuilding3);
+    InputComponent->BindAction("Building4", IE_Pressed, this, &AMyPlayerController::SelectBuilding4);
+
 
     InputComponent->BindAction("MouseScrollUp", IE_Pressed, this, &AMyPlayerController::MouseScrollUp);
     InputComponent->BindAction("MouseScrollDown", IE_Pressed, this, &AMyPlayerController::MouseScrollDown);
@@ -80,7 +84,6 @@ void AMyPlayerController::InputRightPressed()
 {
     Main_Class->KeyInput.d = true;
 }
-
 
 
 void AMyPlayerController::InputUpReleased()
@@ -118,6 +121,9 @@ void AMyPlayerController::InputRightMoustButtonReleased()
 void AMyPlayerController::InputLeftMoustButtonPressed()
 {
     bLeftClickMouse = true;
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->Build();
+    }
 }
 
 void AMyPlayerController::InputLeftMoustButtonReleased()
@@ -246,9 +252,37 @@ void AMyPlayerController::OnBuildMode()
         UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, 0);*/
         Main_Class->Building->DecalLocation = CalculatedLocation;
 
-        if (bLeftClickMouse) {
-            UE_LOG(LogTemp, Log, TEXT("click on build mode"));
-        }
+        /*if (bLeftClickMouse) {
+            Main_Class->Building->Build();
+        }*/
+    }
+}
+
+void AMyPlayerController::SelectBuilding1()
+{
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->SelectedBuilding = 1;
+    }
+}
+
+void AMyPlayerController::SelectBuilding2()
+{
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->SelectedBuilding = 2;
+    }
+}
+
+void AMyPlayerController::SelectBuilding3()
+{
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->SelectedBuilding = 3;
+    }
+}
+
+void AMyPlayerController::SelectBuilding4()
+{
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->SelectedBuilding = 4;
     }
 }
 

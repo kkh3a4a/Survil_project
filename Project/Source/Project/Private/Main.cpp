@@ -24,12 +24,8 @@ AMain::AMain()
 
 AMain::~AMain()
 {
-	if (NetworkThread != nullptr){
+	if (NetworkThread){
 		NetworkThread->Kill(true);
-		if (Network != nullptr) {
-			Network->Stop();
-			delete Network;
-		}
 	}
 }
 
@@ -64,7 +60,12 @@ void AMain::BeginPlay()
 
 	//Spawn Building
 	Building = GetWorld()->SpawnActor<ABuilding>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	Building->Initialize(BuildingGridMaterial);
+	TArray<TSubclassOf<AActor>*> Buildings;
+	Buildings.Add(&Building_1);
+	Buildings.Add(&Building_2);
+	Buildings.Add(&Building_3);
+	Buildings.Add(&Building_4);
+	Building->Initialize(BuildingGridMaterial, Buildings);
 
 	UI_Input.ResourceInput.ResourceNum = -1;
 	UI_Input.ResourceInput.CitizenCountAdd = false;
