@@ -19,6 +19,8 @@ public:
 	int _resourceacount[5] = {};
 
 	float _currentX, _currentY, _currentZ;
+
+	char** player_sight_terrain;
 	float _terrainX, _terrainY, _terrainZ;
 
 	Player(int id, STATE state = STATE::ST_FREE);
@@ -28,4 +30,5 @@ public:
 	void set_player_location(float x, float y, float z);
 	void keyinput();
 	void send_resourceacount();
+	void send_terrain_All();
 };

@@ -122,4 +122,10 @@ void Player::send_resourceacount()
 	send_packet(&packet);
 }
 
+void Player::send_terrain_All()
+{
+
+	return;
+}
+
 

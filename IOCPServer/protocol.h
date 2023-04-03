@@ -1,7 +1,7 @@
 #pragma once
 
 
-#define BUFSIZE						255
+#define BUFSIZE						512
 #define SERVERPORT					9000
 
 #define MAXNAMESIZE					20
@@ -30,7 +30,8 @@
 #define CS_PACKET_RESOURCEAMOUNT	20
 #define CS_PACKET_PLAYERRESOURCE	21
 
-#define CS_PACKET_TERRAINLOCATION	30
+#define CS_PACKET_TERRAIN			30
+#define CS_PACKET_TERRAINLOCATION	31
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -42,7 +43,8 @@
 #define SC_PACKET_RESOURCEAMOUNT	20
 #define SC_PACKET_PLAYERRESOURCE	21
 
-#define SC_PACKET_TERRAINLOCATION	30
+#define SC_PACKET_TERRAIN			30
+#define SC_PACKET_TERRAINLOCATION	31
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -168,6 +170,15 @@ struct sc_packet_playerresource
 };
 
 
+struct sc_pakcet_terrain
+{
+	unsigned char size;
+	unsigned char type;
+
+	char line;
+	char terrain[100];
+};
+
 struct sc_packet_terrainlocation
 {
 	unsigned char size;
@@ -175,6 +186,7 @@ struct sc_packet_terrainlocation
 
 	float terrainX, terrainY;
 };
+
 
 
 

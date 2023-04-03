@@ -1,19 +1,19 @@
-#include <iostream>
-#include <fstream>
-#include<vector>
+//#include <iostream>
+//#include <fstream>
+//#include<vector>
 #include<mutex>
 #include<string>
-#include<map>
-#include <chrono>
+//#include<map>
+//#include <chrono>
 #include<shared_mutex>
-#include<algorithm>
+//#include<algorithm>
 
 #include"Network.h"
 #include"Player.h"
 #include"Citizen.h"
 #include"Resource.h"
+#include"terrain.cu"
 
-#include "terrain.cu"
 
 
 #pragma comment (lib,"WS2_32.lib")
@@ -254,8 +254,7 @@ int main(int argc, char* argv[])
 			if (wsa_over_ex->_iocpop == OP_ACCEPT) cout << "Accept Error";
 			else {
 				cout << "GQCS Error on client [" << key << "]\n";
-				//disconnect(static_cast<int>(key));
-				//if (ex_over->_comp_type == OP_SEND) delete ex_over;
+
 				continue;
 			}
 		}
@@ -311,7 +310,6 @@ int main(int argc, char* argv[])
 		}
 		case OP_SEND:
 		{
-			cout << io_byte << endl;
 			delete wsa_over_ex;
 			break;
 		}
@@ -329,6 +327,7 @@ int main(int argc, char* argv[])
 			n_player->_wsa_recv_over._wsabuf.buf = reinterpret_cast<char*>(n_player->_wsa_recv_over._buf);
 			n_player->_wsa_recv_over._wsabuf.len = BUFSIZE;
 			n_player->isconnect = true;
+			//n_player->player_sight_terrain = terrain->get_player_sight_map();
 			DWORD flags = 0;
 			WSARecv(c_socket, &n_player->_wsa_recv_over._wsabuf, 1, NULL, &flags, &n_player->_wsa_recv_over._wsaover, NULL);
 

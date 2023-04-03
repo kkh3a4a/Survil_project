@@ -171,7 +171,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 	case SC_PACKET_TERRAINLOCATION:
 	{
 		sc_packet_terrainlocation* packet = reinterpret_cast<sc_packet_terrainlocation*>(buf);
-		UE_LOG(LogTemp, Warning, TEXT("terrain Location : %f %f"), packet->terrainX, packet->terrainY);
+		
 		_MainClass->SetTerrainActorLocation(packet->terrainX, packet->terrainY);
 		break;
 	}

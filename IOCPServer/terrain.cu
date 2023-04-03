@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <stdio.h>
 #include <random>
@@ -701,15 +702,22 @@ public:
 		}
 		CC value{ highest, lowest };
 		clock_t t_1 = clock();
-		cout << "Get Highest : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		if(log)
+		{
+			cout << "Get Highest : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		}
 		return value;
 	}
 
 	void make_shadow_map(int sun_angle) {
 		clock_t t_0 = clock();
 		
+		
 		if (sun_angle <= 0 || sun_angle >= 180) {
-			cout << "Shadow Sun Angle is not valid: " << sun_angle << endl;
+			if (log)
+			{
+				cout << "Shadow Sun Angle is not valid: " << sun_angle << endl;
+			}
 			return;
 		}
 		

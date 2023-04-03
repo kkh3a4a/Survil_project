@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Citizen.h"
 #include"Resource.h"
+
 #include<iostream>
 
 std::array<Object*, MAXOBJECT> objects;
@@ -34,6 +35,7 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		send_login_ok_packet(client_id);
 		send_citizen_First_create_packet(client_id);
 		send_resource_First_create_packet(client_id);
+		player->send_terrain_All();
 		break;
 	}
 

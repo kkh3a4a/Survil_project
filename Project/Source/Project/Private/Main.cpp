@@ -82,9 +82,18 @@ void AMain::BeginPlay()
 void AMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//steady_clock::time_point StartTime = high_resolution_clock::now();
-	//steady_clock::time_point EndTime = StartTime;
+	
+	if (testterrain % 1000 == 0)
+	{
+		for (auto& x : Terrain2DArray)
+		{
+			for (auto& y : x)
+			{
+				y = rand() % 10;
+			}
+		}
+	}
+	testterrain++;
 	//if (!RecvedFirstData){
 	//	if (ThreadInitSendRecv){
 	//		Citizens->citizen_set(ServerStruct1, ServerStruct2);
@@ -104,7 +113,7 @@ void AMain::Tick(float DeltaTime)
 	//	SunAngle = ServerStruct1.SunAngle;
 	//	Citizens->CitizenNoJob(CitizenNoJobCnt);
 	//	Citizens->Citizen_Moving();
-	//	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
+	
 	//	Temperature->Update(TerrainTemperature);
 	//	Building->Update();
 	//	MyTown->UpdateResource();
@@ -148,9 +157,76 @@ void AMain::SetPlayerResource(int oilcount, int watercount, int ironcount, int f
 
 void AMain::SetTerrainActorLocation(float x, float y)
 {
+	static float t_x = x, t_y = y;
 	if(TerrainActor != nullptr)
 	{
 		TerrainActor->SetActorLocation(FVector(Player_x + x, Player_y + y, 0.0));
+		
 	}
+	if ((int)t_x != (int)x)
+	{
+		if ((int)t_x < (int)x)
+		{
+			for (int i = 0; i < SIGHT_X - 1; ++i)
+			{
+				for(int j=0; j < SIGHT_Y;++j)
+					Terrain2DArray[i][j] = Terrain2DArray[i + 1][j];
+			}
+			for (int i = 0; i < SIGHT_Y; ++i)
+			{
+				Terrain2DArray[SIGHT_X - 1][i] = { 0 };
+			}
+		}
+		if ((int)t_x > (int)x)
+		{
+
+			for (int i = SIGHT_X - 1; i > 1; --i)
+			{
+				for (int j = 0; j < SIGHT_Y; ++j)
+				{
+					Terrain2DArray[i][j] = Terrain2DArray[i - 1][j];
+				}
+			}
+			for (int i = 0; i < SIGHT_Y; ++i)
+			{
+				Terrain2DArray[1][i] = { 0 };
+			}
+		}
+		t_x = x;
+	}
+
+	if ((int)t_y != (int)y)
+	{
+		if ((int)t_y < (int)y)
+		{
+			for (int i = 0; i < SIGHT_X - 1; ++i)
+			{
+				for (int j = 0; j < SIGHT_Y - 1; ++j)
+					Terrain2DArray[i][j] = Terrain2DArray[i][j + 1];
+			}
+			for (int i = 0; i < SIGHT_X; ++i)
+			{
+				//추후 받아온 terrian 넣어주면됨
+				Terrain2DArray[i][SIGHT_Y - 1] = { 0 };
+			}
+		}
+		if ((int)t_y > (int)y)
+		{
+			for (int i = 0; i < SIGHT_X - 1; ++i)
+			{
+				for (int j = SIGHT_Y - 1; j > 1 ; --j)
+				{
+					Terrain2DArray[i][j] = Terrain2DArray[i][j - 1];
+				}
+			}
+			for (int i = 0; i < SIGHT_X; ++i)
+			{
+				//추후 받아온 terrian 넣어주면됨
+				Terrain2DArray[i][1] = { 0 };
+			}
+		}
+		t_y = y;
+	}
+	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 }
 
