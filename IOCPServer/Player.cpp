@@ -9,10 +9,12 @@ Player::Player(int id, STATE state)
 	_type = OBJTYPE::PLAYER;
 	_state = state;
 	_currentX = 0; _currentY = 0; _currentZ = 0;
+	_terrainX = 0; _terrainY = 0; _terrainZ = 0;
 	w = false, a = false, s = false, d = false;
 	isconnect = false;
 	_id = id;
 	_socket={0};
+
 }
 
 Player::~Player()
@@ -30,18 +32,19 @@ void Player::send_packet(void* packet)
 		WSASend(_socket, &_wsa_send_over->_wsabuf, 1, NULL, 0, &_wsa_send_over->_wsaover, NULL);
 }
 
-void Player::set_player_location(float x, float y, float z,float sight_x, float sight_y)
+void Player::set_player_location(float x, float y, float z)
 {
 	_x = x;
 	_y = y;
 	_z = 0;
-	_currentX = -sight_x * 100 / 2;
-	_currentY = -sight_y * 100 / 2;
+	_currentX = - (SIGHT_X * 100 / 2);
+	_currentY = - (SIGHT_Y * 100 / 2);
 	_currentZ = 0;
 }
 
 void Player::keyinput()
-{
+{ 
+	//std::cout << _currentX <<std::endl;
 	bool keyinput = false;
 	if (w)
 	{
@@ -64,6 +67,25 @@ void Player::keyinput()
 		keyinput = true;
 		_currentX += 20;
 	}
+	//terrain좌표와 current좌표를 비교하여 100차이가 나는경우 terrain좌표 업데이트
+	bool ischangeTerrain =false;
+	if((int)(_currentX) % 100 ==0)
+	{
+		if ((int)_terrainX / 100 != (int)(_currentX) / 100)
+		{
+			_terrainX = _currentX;
+			ischangeTerrain = true;
+		}
+	}
+	if ((int)(_currentY) % 100 == 0)
+	{
+		if ((int)_terrainY / 100 != (int)(_currentY / 100))
+		{
+			_terrainY = _currentY;
+			ischangeTerrain = true;
+		}
+	}
+	
 	if (keyinput)
 	{
 		sc_packet_move sc_packet_move;
@@ -74,6 +96,16 @@ void Player::keyinput()
 		sc_packet_move.type = SC_PACKET_MOVE;
 		send_packet(&sc_packet_move);
 
+	}
+	if (ischangeTerrain)
+	{
+		sc_packet_terrainlocation packet;
+		packet.size = sizeof(sc_packet_terrainlocation);
+		packet.type = SC_PACKET_TERRAINLOCATION;
+
+		packet.terrainX = _terrainX;
+		packet.terrainY = _terrainY;
+		send_packet(&packet);
 	}
 }
 

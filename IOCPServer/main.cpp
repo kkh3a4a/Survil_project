@@ -230,7 +230,7 @@ int main(int argc, char* argv[])
 				goto retry;
 			}
 		}
-		reinterpret_cast<Player*>(objects[i])->set_player_location(x, y, z, SIGHT_X, SIGHT_Y);
+		reinterpret_cast<Player*>(objects[i])->set_player_location(x, y, z);
 		for (int j = 0; j < 10; ++j)
 		{
 			reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->set_citizen_spwan_location(x + 2000, y + (j * 500) - 2250,z);
@@ -311,6 +311,7 @@ int main(int argc, char* argv[])
 		}
 		case OP_SEND:
 		{
+			cout << io_byte << endl;
 			delete wsa_over_ex;
 			break;
 		}

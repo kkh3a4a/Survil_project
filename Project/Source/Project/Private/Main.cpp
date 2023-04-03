@@ -50,13 +50,13 @@ void AMain::BeginPlay()
 
 	//Init Mesh Terrain
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(FVector(0, 0, 0), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	//TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
 	//Spawn Decal
-	Temperature = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	/*Temperature = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	Temperature->Initiaize(TemperatureMaterial);
-	Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);*/
 
 	//Spawn Building
 	Building = GetWorld()->SpawnActor<ABuilding>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
@@ -128,7 +128,7 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 	UWorld* uworld = GetWorld();
 	if(uworld != nullptr)
 	uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
-
+	TerrainActor->SetActorLocation(FVector(Player_x, Player_y, 0.0));
 	SetActorLocation(FVector(x, y, z));
 }
 
@@ -144,5 +144,13 @@ void AMain::SetPlayerResource(int oilcount, int watercount, int ironcount, int f
 	iron_count = ironcount;
 	food_count = foodcount;
 	wood_count = woodcount;
+}
+
+void AMain::SetTerrainActorLocation(float x, float y)
+{
+	if(TerrainActor != nullptr)
+	{
+		TerrainActor->SetActorLocation(FVector(Player_x + x, Player_y + y, 0.0));
+	}
 }
 

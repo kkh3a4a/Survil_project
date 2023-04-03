@@ -154,6 +154,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 	{
 		sc_packet_resourceamount* packet = reinterpret_cast<sc_packet_resourceamount*>(buf);
 		_ResourceManager->SetResourceAmount(packet->resourceid - RESOURCESTART, packet->amount);
+		break;
 	}
 	case SC_PACKET_PLAYERRESOURCE:
 	{
@@ -165,6 +166,14 @@ void FSocketThread::processpacket(unsigned char* buf)
 	{
 		sc_packet_citizenplacement* packet = reinterpret_cast<sc_packet_citizenplacement*>(buf);
 		_ResourceManager->SetResourcePlacement(packet->resource_id - RESOURCESTART, packet->workcitizen, packet->playerjobless);
+		break;
+	}
+	case SC_PACKET_TERRAINLOCATION:
+	{
+		sc_packet_terrainlocation* packet = reinterpret_cast<sc_packet_terrainlocation*>(buf);
+		UE_LOG(LogTemp, Warning, TEXT("terrain Location : %f %f"), packet->terrainX, packet->terrainY);
+		_MainClass->SetTerrainActorLocation(packet->terrainX, packet->terrainY);
+		break;
 	}
 
 

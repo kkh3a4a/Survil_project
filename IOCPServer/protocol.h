@@ -15,6 +15,9 @@
 #define MAXRESOURCE					50
 
 
+#define SIGHT_X 240
+#define SIGHT_Y 100
+
 
 #define CS_PACKET_LOGIN				1
 #define CS_PACKET_MOVE				2
@@ -27,6 +30,8 @@
 #define CS_PACKET_RESOURCEAMOUNT	20
 #define CS_PACKET_PLAYERRESOURCE	21
 
+#define CS_PACKET_TERRAINLOCATION	30
+
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
 #define SC_PACKET_CITIZENCREATE		3
@@ -37,6 +42,7 @@
 #define SC_PACKET_RESOURCEAMOUNT	20
 #define SC_PACKET_PLAYERRESOURCE	21
 
+#define SC_PACKET_TERRAINLOCATION	30
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -162,6 +168,13 @@ struct sc_packet_playerresource
 };
 
 
+struct sc_packet_terrainlocation
+{
+	unsigned char size;
+	unsigned char type;
+
+	float terrainX, terrainY;
+};
 
 
 

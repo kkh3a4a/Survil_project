@@ -1,8 +1,7 @@
 #pragma once
 
 #define FIRSTSPAWN 10
-#define SIGHT_X 240
-#define SIGHT_Y 100
+
 #define UNIT 100
 const int one_side_number = 32000;
 const int random_array_size = 90000000;
@@ -27,7 +26,7 @@ typedef struct Key {
 }K;
 
 
-II player_sight_size{ SIGHT_X, SIGHT_Y };
+
 
 float location_distance(TF p1, TF p2)
 {

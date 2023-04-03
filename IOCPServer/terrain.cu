@@ -10,10 +10,12 @@
 #include <cooperative_groups.h>
 #include "device_launch_parameters.h"
 #include "global.h"
+#include"Network.h"
+
 #define PI 3.1415926
 
 using namespace std;
-
+II player_sight_size{ SIGHT_X, SIGHT_Y };
 
 
 const int min_height = 4;

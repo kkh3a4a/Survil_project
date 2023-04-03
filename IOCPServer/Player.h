@@ -19,13 +19,13 @@ public:
 	int _resourceacount[5] = {};
 
 	float _currentX, _currentY, _currentZ;
-
+	float _terrainX, _terrainY, _terrainZ;
 
 	Player(int id, STATE state = STATE::ST_FREE);
 	~Player();
 
 	void send_packet(void * packet);
-	void set_player_location(float x, float y, float z , float sight_x, float sight_y);
+	void set_player_location(float x, float y, float z);
 	void keyinput();
 	void send_resourceacount();
 };
