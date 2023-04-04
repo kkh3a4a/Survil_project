@@ -144,29 +144,6 @@ void AMyPlayerController::UIClick(bool isplus)
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
-//void AMyPlayerController::InputRightMoustButtonPressed()
-//{
-//    if (!Main_Class->Building->BuildMode) {
-//        bRightClickMouse = true;
-//    }
-//}
-//
-//void AMyPlayerController::InputRightMoustButtonReleased()
-//{
-//    if (!Main_Class->Building->BuildMode) {
-//        bRightClickMouse = false;
-//    }
-//}
-//
-//void AMyPlayerController::InputLeftMoustButtonPressed()
-//{
-//    if (!Main_Class->Building->BuildMode) {
-//        bLeftClickMouse = true;
-//    }
-//    else {
-//    }
-//}
-
 void AMyPlayerController::InputRightMoustButtonPressed()
 {
 }
@@ -222,37 +199,7 @@ void AMyPlayerController::MoveToMouseCursor()
 
 void AMyPlayerController::MoveToActor()
 {
-  /*  FHitResult Hit;
-    GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-    if (Hit.bBlockingHit)
-    {
-        UE_LOG(LogTemp, Log, TEXT("checkmouse"));
-        DestLocation = Hit.ImpactPoint;
-        if (Hit.GetActor()->ActorHasTag(L"Resource"))
-        {
-            Main_Class->Citizens->Citizen_moving->Job = 1;
-            DestLocation = Hit.GetActor()->GetActorLocation();
-
-            UE_LOG(LogTemp, Log, TEXT("Resource"));
-        }
-        else
-        {
-            Main_Class->Citizens->Citizen_moving->Job = 0;
-        }
-
-        if (hitActor) {
-            if (hitActor->ActorHasTag("Citizen"))
-            {
-                temped = true;
-                Main_Class->Citizens->Citizen_moving->Location.x = DestLocation.X;
-                Main_Class->Citizens->Citizen_moving->Location.y = DestLocation.Y;
-                Main_Class->Citizens->Citizen_moving->Location.z = DestLocation.Z;
-                hitActor = NULL;
-            }
-        }
-        ResourceUI = false;
-        mouse_end_t = high_resolution_clock::now();
-    }*/
+  
 }
 
 void AMyPlayerController::VisibilityTemperature()
@@ -289,17 +236,7 @@ void AMyPlayerController::OnBuildMode()
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
     if (Hit.bBlockingHit)
     {
-        //FVector CalculatedLocation;
-        //CalculatedLocation.X = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.X);
-        //CalculatedLocation.X = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.X);
-        //CalculatedLocation.Y = min((int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2), (int64)Hit.ImpactPoint.Y);
-        //CalculatedLocation.Y = max((int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.Y);
-        //CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000 + 500, (uint64)CalculatedLocation.Y / 1000 * 1000 + 500, 0);
-        ///*UE_LOG(LogTemp, Log, TEXT("LOC: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x, (int64)Main_Class->ServerStruct1.PlayerInfo.location.y);
-        //UE_LOG(LogTemp, Log, TEXT("X: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.x + (int64)(CITYSIZE * 100 / 2));
-        //UE_LOG(LogTemp, Log, TEXT("Y: %lld %lld"), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y - (int64)(CITYSIZE * 100 / 2), (int64)Main_Class->ServerStruct1.PlayerInfo.location.y + (int64)(CITYSIZE * 100 / 2));
-        //UE_LOG(LogTemp, Log, TEXT("%lld %lld %lld"), (uint64)CalculatedLocation.X, (uint64)CalculatedLocation.Y, 0);*/
-        //Main_Class->Building->DecalLocation = CalculatedLocation;
+        
     }
 }
 
@@ -344,28 +281,11 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     
     if (ResourceActor != NULL)
     {
-       /* ResourceCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->Count;
-        CitizenCount = Main_Class->MyTown->resources_create_landscape[(FCString::Atoi(*ResourceActor->Tags[2].ToString()))]->CitizenCount;*/
+       
 
         if (ResourceUI)
         {
-            /*if (Main_Class->RecvedUIInput == true)
-            {
-                Main_Class->UI_Input.ResourceInput.CitizenCountAdd = false;
-                Main_Class->UI_Input.ResourceInput.CitizenCountSub = false;
-                if (CitizenRelease)
-                {
-                    Main_Class->CitizenRelaese = CitizenRelease;
-                    CitizenRelease = false;
-                }
-            }
-            else
-            {                
-                Main_Class->UI_Input.ResourceInput.ResourceNum = FCString::Atoi(*ResourceActor->Tags[2].ToString());
-                Main_Class->UI_Input.ResourceInput.CitizenCountAdd = CitizenAdd;
-                Main_Class->UI_Input.ResourceInput.CitizenCountSub = CitizenSub;
-                Main_Class->CitizenRelaese = CitizenRelease;
-            }*/
+           
         }
     }
     if (Main_Class->Building->BuildMode) {

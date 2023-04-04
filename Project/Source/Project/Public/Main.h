@@ -5,7 +5,6 @@
 // include header with included Windows.h
 #include<iostream>
 #include <chrono>
-#include "global.h"
 #include "Windows/HideWindowsPlatformTypes.h"
 #include "Kismet/GameplayStatics.h"
 #include "CoreMinimal.h"
@@ -62,43 +61,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Resource")
 		int wood_count = 0;
 
-	TMap<int, FActorTransform*> players_list;
-
 	bool ThreadInitSendRecv = false;
 
 	bool CitizenRelaese = false;
 	
-	FKeyInput* KeyInput = new FKeyInput;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Citizen_num = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int CitizenNoJobCnt = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Citizen")
-		TSubclassOf<AActor>CitizenActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Citizen")
-		TSubclassOf<AActor>EnemyCitizenActor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 		TSubclassOf<AActor>WellPump;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
-		TSubclassOf<AActor>OilActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
-		TSubclassOf<AActor>WaterActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
-		TSubclassOf<AActor>IronActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
-		TSubclassOf<AActor>FoodActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
-		TSubclassOf<AActor>WoodActor;
 
 	//citizen
 	ACitizen* Citizens;
@@ -121,10 +92,6 @@ public:
 
 	ACameraActor* MyCamera;
 
-	FThreeFloat OldLocation;
-	FThreeFloat FutureLocation;
-	FVector InterpolatedLocation;
-	FVector OldInterpolatedLocation;
 	double CycleTime{};
 	int CycleNum{};
 

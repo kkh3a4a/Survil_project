@@ -4,7 +4,6 @@
 #pragma once
 
 #include <chrono>
-#include "global.h"
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Temperature.h"
@@ -32,6 +31,7 @@ public:
 
 	int ObjectType = 0;	//현재 클릭된 Object종류에따라 START위치를 더해줘서 id만들어주고 보내야함
 	int ObjectId = -1;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int ResourceType = 0;
 
