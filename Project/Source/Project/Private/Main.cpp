@@ -35,30 +35,14 @@ void AMain::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	KeyInput->w = false;
-	KeyInput->a = false;
-	KeyInput->s = false;
-	KeyInput->d = false;
-	//Citizen
+
 	FActorSpawnParameters SpawnInfo;
-	/*Citizens = UWorld* uworld = GetWorld();->SpawnActor<ACitizen>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	Citizens->Initialize(CitizenActor, EnemyCitizenActor);*/
-
-	//resource
-	MyTown = GetWorld()->SpawnActor<AMyTown>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	MyTown->Initialize(WellPump, OilActor, WaterActor, IronActor, FoodActor, WoodActor);
-
+	
 	//Init Mesh Terrain
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(FVector(0, 0, 0), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	//TerrainActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
-	//Spawn Decal
-	/*Temperature = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	Temperature->Initiaize(TemperatureMaterial);
-	Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);*/
-
-	//Spawn Building
+	
 	Building = GetWorld()->SpawnActor<ABuilding>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	Building->Initialize(BuildingGridMaterial);
 
@@ -82,7 +66,7 @@ void AMain::BeginPlay()
 void AMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+	//지워야함 지형 대신 받은거임///////
 	if (testterrain % 1000 == 0)
 	{
 		for (auto& x : Terrain2DArray)
@@ -94,36 +78,18 @@ void AMain::Tick(float DeltaTime)
 		}
 	}
 	testterrain++;
-	//if (!RecvedFirstData){
-	//	if (ThreadInitSendRecv){
-	//		Citizens->citizen_set(ServerStruct1, ServerStruct2);
-	//		Citizens->Spawn_Citizen();
-	//		MyTown->SpawnTown(players_list);
-	//		MyTown->SpawnResource(ServerStruct1, ServerStruct2);
-	//		Citizens->Citizen_Moving();
-	//		RecvedFirstData = true;
-	//	}
-	//}
-	//else {
-	//	
-	//	memcpy(&ClientStruct1.UIInput, &UI_Input.ResourceInput, sizeof(FUI_Input));
-
-	//	clock_t t_1 = clock();
-	//	oil_count = ServerStruct1.MyResource[0], water_count = ServerStruct1.MyResource[1], iron_count = ServerStruct1.MyResource[2], food_count = ServerStruct1.MyResource[3], wood_count = ServerStruct1.MyResource[4];
-	//	SunAngle = ServerStruct1.SunAngle;
-	//	Citizens->CitizenNoJob(CitizenNoJobCnt);
-	//	Citizens->Citizen_Moving();
-	
-	//	Temperature->Update(TerrainTemperature);
-	//	Building->Update();
-	//	MyTown->UpdateResource();
-
-	//	LocationInterpolate();
-	//	//SetActorLocation(FVector(ServerStruct1.CurrentLocation.x - MapSizeX * 100 / 2, ServerStruct1.CurrentLocation.y - MapSizeY * 100 / 2, ServerStruct1.CurrentLocation.z));
-	//}
-	//EndTime = high_resolution_clock::now();
-	//CycleTime = duration_cast<milliseconds>(EndTime - StartTime).count();
+	/////////////////////////////////////////////////
 }
+
+
+
+
+
+
+
+
+
+
 
 
 void AMain::SetPlayerLocation(float x, float y, float z)
@@ -180,7 +146,7 @@ void AMain::SetTerrainActorLocation(float x, float y)
 		if ((int)t_x > (int)x)
 		{
 
-			for (int i = SIGHT_X - 1; i > 1; --i)
+			for (int i = SIGHT_X - 1; i > 0; --i)
 			{
 				for (int j = 0; j < SIGHT_Y; ++j)
 				{
@@ -189,7 +155,7 @@ void AMain::SetTerrainActorLocation(float x, float y)
 			}
 			for (int i = 0; i < SIGHT_Y; ++i)
 			{
-				Terrain2DArray[1][i] = { 0 };
+				Terrain2DArray[0][i] = { 0 };
 			}
 		}
 		t_x = x;
@@ -214,7 +180,7 @@ void AMain::SetTerrainActorLocation(float x, float y)
 		{
 			for (int i = 0; i < SIGHT_X - 1; ++i)
 			{
-				for (int j = SIGHT_Y - 1; j > 1 ; --j)
+				for (int j = SIGHT_Y - 1; j > 0 ; --j)
 				{
 					Terrain2DArray[i][j] = Terrain2DArray[i][j - 1];
 				}
@@ -222,7 +188,7 @@ void AMain::SetTerrainActorLocation(float x, float y)
 			for (int i = 0; i < SIGHT_X; ++i)
 			{
 				//추후 받아온 terrian 넣어주면됨
-				Terrain2DArray[i][1] = { 0 };
+				Terrain2DArray[i][0] = { 0 };
 			}
 		}
 		t_y = y;

@@ -27,31 +27,5 @@ public:
 
 	
 		
-	TArray<Fresources_actor*>resources_create_landscape;
-
-	TArray<AActor*> ResourceEditer;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>WellPump;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>OilActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>WaterActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>IronActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>FoodActor;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>WoodActor;
-
-
-	void Initialize(TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>, TSubclassOf<AActor>);
-	void SpawnTown(TMap<int, FActorTransform*>&);
-	//void SpawnResource(FServerStruct1&, FServerStruct2&);
-	void UpdateResource();
+	
 };
