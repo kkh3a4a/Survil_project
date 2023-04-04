@@ -180,7 +180,7 @@ void AMain::SetTerrainActorLocation(float x, float y)
 		if ((int)t_x > (int)x)
 		{
 
-			for (int i = SIGHT_X - 1; i > 1; --i)
+			for (int i = SIGHT_X - 1; i > 0; --i)
 			{
 				for (int j = 0; j < SIGHT_Y; ++j)
 				{
@@ -189,7 +189,7 @@ void AMain::SetTerrainActorLocation(float x, float y)
 			}
 			for (int i = 0; i < SIGHT_Y; ++i)
 			{
-				Terrain2DArray[1][i] = { 0 };
+				Terrain2DArray[0][i] = { 0 };
 			}
 		}
 		t_x = x;
@@ -214,7 +214,7 @@ void AMain::SetTerrainActorLocation(float x, float y)
 		{
 			for (int i = 0; i < SIGHT_X - 1; ++i)
 			{
-				for (int j = SIGHT_Y - 1; j > 1 ; --j)
+				for (int j = SIGHT_Y - 1; j > 0 ; --j)
 				{
 					Terrain2DArray[i][j] = Terrain2DArray[i][j - 1];
 				}
@@ -222,7 +222,7 @@ void AMain::SetTerrainActorLocation(float x, float y)
 			for (int i = 0; i < SIGHT_X; ++i)
 			{
 				//추후 받아온 terrian 넣어주면됨
-				Terrain2DArray[i][1] = { 0 };
+				Terrain2DArray[i][0] = { 0 };
 			}
 		}
 		t_y = y;
