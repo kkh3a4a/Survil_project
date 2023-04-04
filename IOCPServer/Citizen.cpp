@@ -15,7 +15,6 @@ Citizen::~Citizen()
 
 }
 
-
 void Citizen::set_citizen_spwan_location(float x, float y, float z)
 {
 	_Job = 0;

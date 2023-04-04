@@ -3,7 +3,6 @@
 #include "Player.h"
 #include "Citizen.h"
 #include"Resource.h"
-
 #include<iostream>
 
 std::array<Object*, MAXOBJECT> objects;
@@ -105,8 +104,6 @@ void WSA_OVER_EX::send_citizen_First_create_packet(int client_id)
 			player->send_packet(&packet);
 		}
 	}
-	
-
 }
 
 void WSA_OVER_EX::send_resource_First_create_packet(int client_id)
@@ -121,7 +118,7 @@ void WSA_OVER_EX::send_resource_First_create_packet(int client_id)
 		packet.y = resource->_y;
 		packet.z = resource->_z;
 		packet.resource_type = resource->_type;
-		packet.resourceid = i;
+		packet.resource_id = i;
 		packet.amount = resource->_amount;
 
 		packet.size = sizeof(sc_packet_resourcecreate);

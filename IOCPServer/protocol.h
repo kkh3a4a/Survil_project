@@ -146,7 +146,7 @@ struct sc_packet_resourcecreate
 	unsigned char size;
 	unsigned char type;
 
-	int resourceid;
+	int resource_id;
 	float x, y, z;
 	char resource_type;
 	int amount;

@@ -16,7 +16,7 @@ public:
 	char isconnect;
 	char w, a, s, d;
 	
-	int _resourceacount[5] = {};
+	int _resource_amount[5] = {};
 
 	float _currentX, _currentY, _currentZ;
 
@@ -28,7 +28,7 @@ public:
 
 	void send_packet(void * packet);
 	void set_player_location(float x, float y, float z);
-	void keyinput();
-	void send_resourceacount();
+	void key_input();
+	void send_resource_amount();
 	void send_terrain_All();
 };

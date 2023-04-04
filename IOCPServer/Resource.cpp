@@ -143,7 +143,7 @@ void Resource::collect_resource()
 			{
 				_amount--;
 				Player* player = reinterpret_cast<Player*>(objects[_workcitizens[i]->_playerID]);
-				player->_resourceacount[_type]++;
+				player->_resource_amount[_type]++;
 				change_Resource_amount = true;
 			}
 		}

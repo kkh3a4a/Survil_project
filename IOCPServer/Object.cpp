@@ -1,9 +1,5 @@
 #include "Object.h"
 
-
-
-
-
 Object::Object()
 {
 	_x = 0.f, _y = 0.f, _z = 0.f;
@@ -16,8 +12,6 @@ Object::~Object()
 {
 
 }
-
-
 
 void Object::ResetOBJ()
 {

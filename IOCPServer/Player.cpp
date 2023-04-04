@@ -42,7 +42,7 @@ void Player::set_player_location(float x, float y, float z)
 	_currentZ = 0;
 }
 
-void Player::keyinput()
+void Player::key_input()
 { 
 	//std::cout << _currentX <<std::endl;
 	bool keyinput = false;
@@ -109,7 +109,7 @@ void Player::keyinput()
 	}
 }
 
-void Player::send_resourceacount()
+void Player::send_resource_amount()
 {
 	sc_packet_playerresource packet;
 	packet.size = sizeof(sc_packet_playerresource);
@@ -117,7 +117,7 @@ void Player::send_resourceacount()
 
 	for (int i = 0; i < 5; ++i)
 	{
-		packet.resources_acount[i] = _resourceacount[i];
+		packet.resources_acount[i] = _resource_amount[i];
 	}
 	send_packet(&packet);
 }

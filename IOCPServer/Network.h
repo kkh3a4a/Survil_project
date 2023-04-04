@@ -37,4 +37,3 @@ public:
 	void set_accept_over();
 };
 
-

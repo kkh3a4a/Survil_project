@@ -14,11 +14,8 @@
 #include"Resource.h"
 #include"terrain.cu"
 
-
-
 #pragma comment (lib,"WS2_32.lib")
 #pragma comment (lib,"MSWSock.lib")
-
 
 using namespace std;
 using namespace chrono;
@@ -38,13 +35,6 @@ volatile int player_cnt = 0;
 
 
 /////////////////////////////////
-
-
-
-
-
-
-
 //Terrain* terrain = new Terrain();
 //char** total_terrain = terrain->get_map();
 //char** shadow_map = terrain->get_shadow_map();
@@ -126,7 +116,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				Player* player = reinterpret_cast<Player*>(objects[i]);
 				if (player->isconnect)
 				{
-					player->keyinput();
+					player->key_input();
 				}
 			}
 		}
@@ -155,13 +145,11 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);
-				player->send_resourceacount();
+				player->send_resource_amount();
 			}
 		}
 
 	}
-
-
 	return 0;
 }
 
@@ -236,9 +224,7 @@ int main(int argc, char* argv[])
 			reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->set_citizen_spwan_location(x + 2000, y + (j * 500) - 2250,z);
 			reinterpret_cast<Resource*>(objects[RESOURCESTART + i * 10 + j])->set_resource_spwan_location(x, y, z);
 		}
-
 	}
-
 
 	int user_id = 0;
 
