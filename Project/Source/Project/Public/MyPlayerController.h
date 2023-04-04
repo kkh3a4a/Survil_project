@@ -83,10 +83,6 @@ protected:
 	void SelectBuilding4();
 
 	void OnBuildMode();
-	void SelectBuilding1();
-	void SelectBuilding2();
-	void SelectBuilding3();
-	void SelectBuilding4();
 	void MouseScrollUp();
 	void MouseScrollDown();
 
