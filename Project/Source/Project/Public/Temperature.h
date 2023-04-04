@@ -12,11 +12,11 @@ UCLASS()
 class PROJECT_API ATemperature : public AActor
 {
 	GENERATED_BODY()
-
-public:
+	
+public:	
 	// Sets default values for this actor's properties
 	ATemperature();
-
+	
 
 protected:
 
@@ -27,10 +27,10 @@ protected:
 	TArray<ADecalActor*> DecalArray;
 	bool IsHidden = false;
 
-public:
+public:	
 	void Initiaize(UMaterial*);
 	void Update(uint8(*TerrainTemperaturePtr)[MapSizeY / 2]);
-	void TemperatureToRGB(double, double&, double&, double&);
+	void TemperatureToRGB(double , double& , double& , double& );
 
 	void Hide(bool);
 	bool GetIsHidden();

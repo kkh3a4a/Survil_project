@@ -40,13 +40,13 @@ typedef struct FActor_location_rotation {
 
 typedef struct FCitizen_sole {
 	TCHAR name[30];
-	TF location;
-	TF rotation;
-	int resources[5];
-	int HP;
-	int job;				/////////////// 0 : 무직, 1 : 자원 채취
-	int isJob;		
-	TF Job_location;		
+	II location;
+	int rotation;
+	char resources[5];
+	char HP;
+	char job;				/////////////// 0 : 무직, 1 : 자원 채취
+	char isJob;
+	II Job_location;		
 }FCitizen_sole;
 
 typedef struct location_rotation
@@ -65,10 +65,10 @@ typedef struct Citizen_moving
 }Citizen_moving;
 
 typedef struct keyboard_input {
-	int w;
-	int a;
-	int s;
-	int d;
+	bool w;
+	bool a;
+	bool s;
+	bool d;
 }keyboard_input;
 
 typedef struct players_profile {
@@ -87,7 +87,7 @@ typedef struct resource_actor
 {
 	int type;		///////////////0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	int count;
-	TF location;
+	II location;
 	int CitizenCount = 0;
 }resource_actor;
 
@@ -135,11 +135,71 @@ void FActor_TF_define(TF& a, TF& b)
 	a.z = b.z;
 }
 
+void FActor_TF_define(II& a, TF& b)
+{
+	a.x = b.x;
+	a.y = b.y;
+}
+void FActor_TF_define(TF& a, II& b)
+{
+	a.x = b.x;
+	a.y = b.y;
+}
+void FActor_TF_define(II& a, II& b)
+{
+	a.x = b.x;
+	a.y = b.y;
+}
+
 bool TF_Same(TF a, TF b)
 {
 	if (a.x == b.x && a.y == b.y)
 		return true;
 	return false;
+}
+bool TF_Same(II a, TF b)
+{
+	if (a.x == b.x && a.y == b.y)
+		return true;
+	return false;
+}
+bool TF_Same(II a, II b)
+{
+	if (a.x == b.x && a.y == b.y)
+		return true;
+	return false;
+}
+
+float location_distance(II& p1, TF& p2)
+{
+	float distance;
+
+	// 피타고라스의 정리
+	// pow(x,2) x의 2승,  sqrt() 제곱근
+	distance = sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
+
+	return distance;
+}
+float location_distance(TF& p1, II& p2)
+{
+	float distance;
+
+	// 피타고라스의 정리
+	// pow(x,2) x의 2승,  sqrt() 제곱근
+	distance = sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
+
+	return distance;
+}
+
+float location_distance(II& p1, II& p2)
+{
+	float distance;
+
+	// 피타고라스의 정리
+	// pow(x,2) x의 2승,  sqrt() 제곱근
+	distance = sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
+
+	return distance;
 }
 
 float location_distance(TF& p1, TF& p2)
@@ -152,6 +212,15 @@ float location_distance(TF& p1, TF& p2)
 
 	return distance;
 }
+void Move_Civil(II& civil, TF& end_location) {
+	float distance;
+	distance = location_distance(civil, end_location);
+
+	civil.x += ((end_location.x - civil.x) / distance) * 21;
+	civil.y += ((end_location.y - civil.y) / distance) * 21;
+	//civil.z += ((end_location.z - civil.z) / distance) * 21;
+}
+
 
 void Move_Civil(TF& civil, TF& end_location) {
 	float distance;
@@ -159,9 +228,9 @@ void Move_Civil(TF& civil, TF& end_location) {
 
 	civil.x += ((end_location.x - civil.x) / distance) * 21;
 	civil.y += ((end_location.y - civil.y) / distance) * 21;
-	civil.z += ((end_location.z - civil.z) / distance) * 21;
+	//civil.z += ((end_location.z - civil.z) / distance) * 21;
 }
-int CitizenResourceCount(int resource[5])
+int CitizenResourceCount(char resource[5])
 {
 	int temp = 0;
 	for (int i = 0; i < 5; ++i)

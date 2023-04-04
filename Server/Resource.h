@@ -1,17 +1,15 @@
 #pragma once
-#include "NewGlobal.h"
+#include "Building.h"
 
 class Resource
 {
 public:
-	Resource();
-	~Resource();
-
-	char Type{};
-	II Location{};
+	char Type{};///////////////0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	int Amount{};
-	int MaxAmount{};
+	II Location{};
 	int CitizenCount{};
 
+	Resource();
+	~Resource();
 };
 

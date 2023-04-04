@@ -9,12 +9,10 @@
 #include <cuda_runtime.h>
 #include <cooperative_groups.h>
 #include "device_launch_parameters.h"
-#include "global.h"
+#include "Game.h"
 #define PI 3.1415926
 
 using namespace std;
-
-
 
 const int min_height = 4;
 const int max_height = 8;
@@ -42,6 +40,10 @@ typedef struct compare_block {
 	II left;
 	II right;
 }CB;
+
+II player_sight_size{ SIGHT_X, SIGHT_Y };
+const int random_array_size = 90000000;
+const int city_size = 100;
 
 random_device rd;
 default_random_engine dre(rd());
@@ -435,6 +437,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 	else {
 		height[2] = terrain_array_device[coo.x + 1][coo.y];
 	}
+	int temperature{};
 	//온도 unsigned char로 해서 256까진데 0.25단위로 클라랑 차이내서 클라에서 받으면 곱하기 0.25해서 받을거임 그래서 최대 온도 64임
 	//낮일 때
 	if (sun_angle >= 0 && sun_angle <= 180){
@@ -454,25 +457,24 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 
 			//각도차 90도 넘어서 햇빛 영향 없음
 			if (angle_difference >= 90) {
-				//temperature_map_device[coo.x][coo.y] -= 1;
+				temperature = 1;
 			}
 			//각도차 90도 이하로 햇빛 영향 있음
 			else {
-				int temperature = (90 - angle_difference) / 10;
-				//printf("%d %d\n", angle_difference, temperature);
-				temperature_map_device[coo.x][coo.y] += temperature;
+				temperature = (90 - angle_difference) / 5;
 			}
 		}
 		//햇빛 안드는 곳
 		else {
-			//temperature_map_device[coo.x][coo.y] -= 1;
+			temperature = -1;
 		}
 	}
 	//밤일 때
 	else {
-		temperature_map_device[coo.x][coo.y] -= temperature_divide * 1;
+		temperature = -temperature_divide;
 	}
-	
+	temperature_map_device[coo.x][coo.y] += temperature;
+
 	//최고 최저 온도 설정
 	temperature_map_device[coo.x][coo.y] = max(temperature_map_device[coo.x][coo.y], 20 * temperature_divide);
 	temperature_map_device[coo.x][coo.y] = min(temperature_map_device[coo.x][coo.y], 60 * temperature_divide);
@@ -540,10 +542,6 @@ void heat_conduction_cuda(unsigned char** temperature_map_device)
 	}
 	int average = sum / 9;
 	temperature_map_device[coo.x][coo.y] = average;
-	//9개 평균내면 온도가 안올라감
-	//printf("%d\n", sum);
-
-	//temperature_map_device[coo.x][coo.y] = sum / 9;
 }
 
 class Terrain
@@ -562,7 +560,7 @@ private:
 	unsigned char* temperature_map_temp[one_side_number];
 	
 	char** terrain_player_sight_host = new char* [player_sight_size.x];
-	char** temperature_player_sight = new char* [player_sight_size.x];
+	char** temperature_player_sight = new char* [player_sight_size.x / 2];
 
 	unsigned __int64 init_total_hill_height = (unsigned __int64)one_side_number * (unsigned __int64)one_side_number * (unsigned __int64)(max_height + min_height) / 2;
 	
@@ -616,12 +614,14 @@ public:
 		clock_t t_2 = clock();
 		for (int i = 0; i < player_sight_size.x; i++) {
 			terrain_player_sight_host[i] = new char[player_sight_size.y];
-			temperature_player_sight[i] = new char[player_sight_size.y];
+			if(i < player_sight_size.x / 2)
+				temperature_player_sight[i] = new char[player_sight_size.y];
 		}
 		for (int i = 0; i < player_sight_size.x; i++) {
 			for (int j = 0; j < player_sight_size.y; j++) {
 				terrain_player_sight_host[i][j] = 0;
-				temperature_player_sight[i][j] = 0;
+				if (i < player_sight_size.x / 2 && j < player_sight_size.y / 2)
+					temperature_player_sight[i][j] = 0;
 			}
 		}
 
@@ -646,11 +646,15 @@ public:
 		}
 		for (int i = 0; i < player_sight_size.x; i++) {
 			delete[] terrain_player_sight_host[i];
+			if (i < player_sight_size.x / 2) {
+				delete[] temperature_player_sight[i];
+			}
 		}
 		delete[] terrain_array_host;
 		delete[] shadow_map_host;
 		delete[] temperature_map_host;
 		delete[] terrain_player_sight_host;
+		delete[] temperature_player_sight;
 		
 		cudaFree(terrain_array_temp);
 		cudaFree(shadow_map_temp);
@@ -737,8 +741,6 @@ public:
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		make_temperature_map_cuda << <grid, block >> > (terrain_array_device, shadow_map_device, temperature_map_device, sun_angle);
-		/*cudaDeviceSynchronize();
-		heat_conduction_cuda << <grid, block >> > (temperature_map_device);*/
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}
@@ -814,9 +816,6 @@ public:
 		}
 		add_scarce_cuda << <grid, block >> > (terrain_array_device, random_array_device, scarce_blocks);
 		cudaDeviceSynchronize();
-		/*for (int i = 0; i < one_side_number; i++) {
-			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}*/
 		
 		random_array_used = true;
 		
@@ -825,9 +824,6 @@ public:
 		//==================================================================================
 
 		clock_t t_2 = clock();
-		
-		/*scarce_blocks = init_total_hill_height - add_all();
-		cout << "after_add_blocks: " << scarce_blocks << endl;*/
 
 		if (log) {
 			cout << "Waiting Time for Random Thread: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
@@ -943,11 +939,24 @@ public:
 			for (int j = 0; j < player_sight_size.y; j++) {
 				if (player_location.x - player_sight_size.x / 2 + i < 0 || player_location.x - player_sight_size.x / 2 + i >= one_side_number || player_location.y - player_sight_size.y / 2 + j < 0 || player_location.y - player_sight_size.y / 2 + j >= one_side_number) {
 					terrain_player_sight_host[i][j] = 0;
-					temperature_player_sight[i][j] = 0;
+
+					if (i < player_sight_size.x / 2 && j < player_sight_size.y / 2)
+						temperature_player_sight[i][j] = 0;
 				}
 				else {
 					terrain_player_sight_host[i][j] = terrain_array_host[player_location.x - player_sight_size.x / 2 + i][player_location.y - player_sight_size.y / 2 + j];
-					temperature_player_sight[i][j] = temperature_map_host[player_location.x - player_sight_size.x / 2 + i][player_location.y - player_sight_size.y / 2 + j];
+					
+					if (i % 2 == 0 && j % 2 == 0) {
+						
+						int sum{};
+						sum += temperature_map_host[(player_location.x / 2 * 2 - player_sight_size.x / 2) / 2 * 2 + i][(player_location.y / 2 * 2 - player_sight_size.y / 2) / 2 * 2 + j];
+						sum += temperature_map_host[(player_location.x / 2 * 2 - player_sight_size.x / 2) / 2 * 2 + i][(player_location.y / 2 * 2 - player_sight_size.y / 2) / 2 * 2 + j + 1];
+						sum += temperature_map_host[(player_location.x / 2 * 2 - player_sight_size.x / 2) / 2 * 2 + i + 1][(player_location.y / 2 * 2 - player_sight_size.y / 2) / 2 * 2 + j];
+						sum += temperature_map_host[(player_location.x / 2 * 2 - player_sight_size.x / 2) / 2 * 2 + i + 1][(player_location.y / 2 * 2 - player_sight_size.y / 2) / 2 * 2 + j + 1];
+						
+						//cout << (player_location.x - player_sight_size.x / 2) / 2 * 2 << " " << (player_location.y - player_sight_size.y / 2) / 2 * 2 << endl;
+						temperature_player_sight[i / 2][j / 2] = sum / 4;
+					}
 				}
 			}
 		}
@@ -979,6 +988,15 @@ public:
 	}
 
 	void set_city_location(TF location, int iter) {
+		if (iter > 4) {
+			cout << "Error: set_city_location, Bigger than array size" << endl;
+		}
+		city_location[iter].x = location.x / 100;
+		city_location[iter].y = location.y / 100;
+		cout << "city_location[" << iter << "] = " << city_location[iter].x << " " << city_location[iter].y << endl;
+	}
+	
+	void set_city_location(II location, int iter) {
 		if (iter > 4) {
 			cout << "Error: set_city_location, Bigger than array size" << endl;
 		}
