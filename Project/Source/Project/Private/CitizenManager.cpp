@@ -48,9 +48,6 @@ void ACitizenManager::Tick(float DeltaTime)
         Network->_CitizenManager = this;
         UE_LOG(LogTemp, Log, TEXT("Manager connect"));
     }
-
-    
-
 }
 
 void ACitizenManager::Spawn_Citizen(int citizen_id, FVector Location)

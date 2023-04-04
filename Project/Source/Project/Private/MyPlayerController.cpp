@@ -7,11 +7,6 @@
 #include "ResourceManager.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 
-
-
-
-
-
 AMyPlayerController::AMyPlayerController()
 {
 
@@ -53,11 +48,8 @@ AMyPlayerController::AMyPlayerController()
 void AMyPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
-    //InputComponent->BindAction("RightClick", IE_Pressed, this, &AMyPlayerController::MoveToMouseCursor);
-    //InputComponent->BindAction("RightClick", IE_Released, this, &AMyPlayerController::InputRightMoustButtonReleased);
 
-    InputComponent->BindAction("LeftClick", IE_Pressed, this, &AMyPlayerController::MoveToMouseCursor);
-    //InputComponent->BindAction("LeftClick", IE_Released, this, &AMyPlayerController::InputLeftMoustButtonReleased);
+    InputComponent->BindAction("LeftClick", IE_Pressed, this, &AMyPlayerController::InputLeftMoustButtonPressed);
 
     InputComponent->BindAction("Up", IE_Pressed, this, &AMyPlayerController::InputUpPressed);
     InputComponent->BindAction("Up", IE_Released, this, &AMyPlayerController::InputUpReleased);
@@ -74,6 +66,10 @@ void AMyPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Thermal", IE_Pressed, this, &AMyPlayerController::VisibilityTemperature);
 
     InputComponent->BindAction("Build", IE_Pressed, this, &AMyPlayerController::BuildMode);
+    InputComponent->BindAction("1", IE_Pressed, this, &AMyPlayerController::SelectBuilding1);
+    InputComponent->BindAction("2", IE_Pressed, this, &AMyPlayerController::SelectBuilding2);
+    InputComponent->BindAction("3", IE_Pressed, this, &AMyPlayerController::SelectBuilding3);
+    InputComponent->BindAction("4", IE_Pressed, this, &AMyPlayerController::SelectBuilding4);
 
     InputComponent->BindAction("MouseScrollUp", IE_Pressed, this, &AMyPlayerController::MouseScrollUp);
     InputComponent->BindAction("MouseScrollDown", IE_Pressed, this, &AMyPlayerController::MouseScrollDown);
@@ -135,7 +131,7 @@ void AMyPlayerController::UIClick(bool isplus)
 {
 
     cs_packet_citizenplacement packet;
-       packet.size = sizeof(cs_packet_citizenplacement);
+    packet.size = sizeof(cs_packet_citizenplacement);
     packet.type = CS_PACKET_CITIZENPLACEMENT;
     packet.objectid = ObjectId + ObjectType;
     packet.isplus = isplus;
@@ -144,14 +140,13 @@ void AMyPlayerController::UIClick(bool isplus)
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
-void AMyPlayerController::InputRightMoustButtonPressed()
+void AMyPlayerController::InputLeftMoustButtonPressed()
 {
-}
-
-void AMyPlayerController::InputLeftMoustButtonReleased()
-{
-    if (!Main_Class->Building->BuildMode) {
-        bLeftClickMouse = false;
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->Build();
+    }
+    else {
+        MoveToMouseCursor();
     }
 }
 
@@ -236,7 +231,36 @@ void AMyPlayerController::OnBuildMode()
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
     if (Hit.bBlockingHit)
     {
-        
+		Main_Class->Building->Update(Hit.ImpactPoint, Main_Class->Player_x, Main_Class->Player_y);
+
+    }
+}
+
+void AMyPlayerController::SelectBuilding1()
+{
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->SelectedBuilding = 1;
+    }
+}
+
+void AMyPlayerController::SelectBuilding2()
+{
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->SelectedBuilding = 2;
+    }
+}
+
+void AMyPlayerController::SelectBuilding3()
+{
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->SelectedBuilding = 3;
+    }
+}
+
+void AMyPlayerController::SelectBuilding4()
+{
+    if (Main_Class->Building->BuildMode) {
+        Main_Class->Building->SelectedBuilding = 4;
     }
 }
 
@@ -281,8 +305,6 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     
     if (ResourceActor != NULL)
     {
-       
-
         if (ResourceUI)
         {
            

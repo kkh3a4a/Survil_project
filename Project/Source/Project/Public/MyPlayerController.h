@@ -64,10 +64,7 @@ protected:
 	bool bRightClickMouse;
 	bool bLeftClickMouse;
 
-	void InputRightMoustButtonPressed();
-	void InputRightMoustButtonReleased();
 	void InputLeftMoustButtonPressed();
-	void InputLeftMoustButtonReleased();
 	void InputUpPressed();
 	void InputDownPressed();
 	void InputLeftPressed();
@@ -81,6 +78,10 @@ protected:
 	void VisibilityTemperature();
 	void BuildMode();
 	void OnBuildMode();
+	void SelectBuilding1();
+	void SelectBuilding2();
+	void SelectBuilding3();
+	void SelectBuilding4();
 	void MouseScrollUp();
 	void MouseScrollDown();
 

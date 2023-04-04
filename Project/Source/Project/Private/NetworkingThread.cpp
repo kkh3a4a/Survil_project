@@ -147,7 +147,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 	case SC_PACKET_RESOURCECREATE:
 	{
 		sc_packet_resourcecreate* packet = reinterpret_cast<sc_packet_resourcecreate*>(buf);
-		_ResourceManager->Spawn_Resource(packet->resourceid - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->amount, packet->resource_type);
+		_ResourceManager->Spawn_Resource(packet->resource_id - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->amount, packet->resource_type);
 		break;
 	}
 	case SC_PACKET_RESOURCEAMOUNT:

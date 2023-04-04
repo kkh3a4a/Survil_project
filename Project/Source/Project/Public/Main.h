@@ -62,7 +62,6 @@ public:
 		int wood_count = 0;
 
 	bool ThreadInitSendRecv = false;
-
 	bool CitizenRelaese = false;
 	
 
@@ -91,13 +90,19 @@ public:
 	ATemperature* Temperature;
 
 	ACameraActor* MyCamera;
-
-	double CycleTime{};
-	int CycleNum{};
+	AActor* SunManager;
 
 	ABuilding* Building;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
 		UMaterial* BuildingGridMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+		TSubclassOf<AActor>Building_1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+		TSubclassOf<AActor>Building_2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+		TSubclassOf<AActor>Building_3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
+		TSubclassOf<AActor>Building_4;
 
 
 

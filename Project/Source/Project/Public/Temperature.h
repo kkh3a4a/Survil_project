@@ -12,25 +12,25 @@ UCLASS()
 class PROJECT_API ATemperature : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ATemperature();
-	
+
 
 protected:
 
-	int divide = 2;
+	int divide = 1;
 	const int TemperatureDivide = 4;
 	ADecalActor* DecalActor;
 	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
 	TArray<ADecalActor*> DecalArray;
 	bool IsHidden = false;
 
-public:	
+public:
 	void Initiaize(UMaterial*);
-	void Update(uint8(*TerrainTemperaturePtr)[MapSizeY]);
-	void TemperatureToRGB(double , double& , double& , double& );
+	void Update(uint8(*TerrainTemperaturePtr)[MapSizeY / 2]);
+	void TemperatureToRGB(double, double&, double&, double&);
 
 	void Hide(bool);
 	bool GetIsHidden();

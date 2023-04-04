@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <math.h>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Engine/DecalActor.h"
@@ -11,19 +12,24 @@ UCLASS()
 class PROJECT_API ABuilding : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ABuilding();
 
 protected:
 	ADecalActor* DecalActor;
 
-public:	
+public:
 	bool BuildMode = false;
 	FVector DecalLocation;
-	
-	void Initialize(UMaterial*);
-	void Update();
+	char SelectedBuilding{};
+
+	void Initialize(UMaterial*, TArray<TSubclassOf<AActor>*>);
+	void Update(FVector, float, float);
 	void DecalVisibility();
+	void Build();
+
+	TArray<TSubclassOf<AActor>*> BuildingArray;
+	TArray<AActor*> BuildedBuildings;
 };

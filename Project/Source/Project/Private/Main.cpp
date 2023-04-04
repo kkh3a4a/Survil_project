@@ -35,17 +35,25 @@ void AMain::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
 	FActorSpawnParameters SpawnInfo;
 	
 	//Init Mesh Terrain
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(FVector(0, 0, 0), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
+	//Spawn Temperature
+	Temperature = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	Temperature->Initiaize(TemperatureMaterial);
+	//Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	
+	//Spawn Building
 	Building = GetWorld()->SpawnActor<ABuilding>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	Building->Initialize(BuildingGridMaterial);
-
+	TArray<TSubclassOf<AActor>*> Buildings;
+	Buildings.Add(&Building_1);
+	Buildings.Add(&Building_2);
+	Buildings.Add(&Building_3);
+	Buildings.Add(&Building_4);
+	Building->Initialize(BuildingGridMaterial, Buildings);
 	
 	//Get Camera
 	TArray<AActor*> CameraActors;
@@ -57,6 +65,20 @@ void AMain::BeginPlay()
 			UE_LOG(LogTemp, Warning, TEXT("CameraActor_1"));
 		}
 	}
+
+	//Get Sun
+	TArray<AActor*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), Actors);
+	for (AActor* Actor : Actors) {
+		//UE_LOG(LogTemp, Warning, TEXT("Actor name: %s"), *Actor->GetName());
+		if (Actor->GetName() == "SunManager_C_1") {
+			SunManager = Actor;
+			UE_LOG(LogTemp, Warning, TEXT("FOUND SUN MANAGER"));
+			break;
+		}
+	}
+
+	//Newtwork
 	Network = new FSocketThread();
 	Network->_MainClass = this;
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
@@ -66,8 +88,9 @@ void AMain::BeginPlay()
 void AMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	//지워야함 지형 대신 받은거임///////
-	if (testterrain % 1000 == 0)
+	/*if (testterrain % 1000 == 0)
 	{
 		for (auto& x : Terrain2DArray)
 		{
@@ -77,20 +100,14 @@ void AMain::Tick(float DeltaTime)
 			}
 		}
 	}
-	testterrain++;
+	testterrain++;*/
 	/////////////////////////////////////////////////
+	//SunManager->SetActorRotation(FRotator(SunAngle, 0.f, 0.f));
+	//Temperature->Update(TerrainTemperature);
+	//Building->Update();
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
 
 void AMain::SetPlayerLocation(float x, float y, float z)
 {
