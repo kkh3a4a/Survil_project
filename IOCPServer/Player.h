@@ -31,4 +31,5 @@ public:
 	void key_input();
 	void send_resource_amount();
 	void send_terrain_All();
+	void send_sunangle(const float sunangle);
 };

@@ -128,4 +128,14 @@ void Player::send_terrain_All()
 	return;
 }
 
+void Player::send_sunangle(const float sunangle)
+{
+	sc_packet_sunangle packet;
+	packet.size = sizeof(sc_packet_sunangle);
+	packet.type = SC_PACKET_SUNANGLE;
+	packet.sunangle = sunangle;
+
+	send_packet(&packet);
+}
+
 

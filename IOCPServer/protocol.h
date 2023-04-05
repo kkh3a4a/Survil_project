@@ -24,6 +24,7 @@
 #define CS_PACKET_CITIZENCREATE		3
 #define CS_PACKET_CITIZENMOVE		4
 #define CS_PACKET_RESOURCECREATE	5
+#define CS_PACKET_SUNANGLE			6
 
 #define CS_PACKET_CITIZENPLACEMENT	10
 
@@ -38,6 +39,7 @@
 #define SC_PACKET_CITIZENCREATE		3
 #define SC_PACKET_CITIZENMOVE		4
 #define SC_PACKET_RESOURCECREATE	5
+#define SC_PACKET_SUNANGLE			6
 
 #define SC_PACKET_CITIZENPLACEMENT	10
 #define SC_PACKET_RESOURCEAMOUNT	20
@@ -170,7 +172,7 @@ struct sc_packet_playerresource
 };
 
 
-struct sc_pakcet_terrain
+struct sc_packet_terrain
 {
 	unsigned char size;
 	unsigned char type;
@@ -188,7 +190,13 @@ struct sc_packet_terrainlocation
 };
 
 
+struct sc_packet_sunangle
+{
+	unsigned char size;
+	unsigned char type;
 
+	float sunangle;
+};
 
 
 

@@ -175,7 +175,14 @@ void FSocketThread::processpacket(unsigned char* buf)
 		_MainClass->SetTerrainActorLocation(packet->terrainX, packet->terrainY);
 		break;
 	}
+	case SC_PACKET_SUNANGLE:
+	{
+		sc_packet_sunangle* packet = reinterpret_cast<sc_packet_sunangle*>(buf);
 
+		_MainClass->SetSunAngle(packet->sunangle);
+
+		break;
+	}
 
 	default:
 	{

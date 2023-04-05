@@ -110,15 +110,28 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Player_Move_Timer_End).count() > 10)
 		{
+			//sunangle...
+			auto cycle_time = duration_cast<milliseconds>(Timer_Start - Player_Move_Timer_End).count();
 			Player_Move_Timer_End = std::chrono::system_clock::now();
+			sun_angle += 2.f * cycle_time / 1000.f;
+			if (sun_angle >= 360.f) {
+				sun_angle -= 360.f;
+			}
+
+
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);
 				if (player->isconnect)
 				{
 					player->key_input();
+					player->send_sunangle(sun_angle);
 				}
+
 			}
+			//rotate sunangle
+			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
+			
 		}
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Citizen_Move_Timer_End).count() > 10)
 		{

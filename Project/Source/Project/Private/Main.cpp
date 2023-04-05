@@ -213,3 +213,9 @@ void AMain::SetTerrainActorLocation(float x, float y)
 	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 }
 
+void AMain::SetSunAngle(float s_sunangle)
+{
+	SunAngle = s_sunangle;
+	SunManager->SetActorRotation(FRotator(SunAngle, 0.f, 0.f));
+}
+
