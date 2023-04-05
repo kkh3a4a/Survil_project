@@ -5,7 +5,7 @@
 #include "Main.h"
 #include "NetworkingThread.h"
 #include "ResourceManager.h"
-#include "Blueprint/AIBlueprintHelperLibrary.h"
+//#include "Blueprint/AIBlueprintHelperLibrary.h"
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -31,6 +31,15 @@ AMyPlayerController::AMyPlayerController()
     }
     ResourceManager = Cast < AResourceManager>(resourceManagerActor);
     if (ResourceManager == nullptr) {
+        return;
+    }
+
+    AActor* BuildManagerActor = UGameplayStatics::GetActorOfClass(worldref, ABuildManager::StaticClass());
+    if (resourceManagerActor == nullptr) {
+        return;
+    }
+    BuildManager = Cast <ABuildManager>(BuildManagerActor);
+    if (BuildManager == nullptr) {
         return;
     }
 
@@ -142,8 +151,8 @@ void AMyPlayerController::UIClick(bool isplus)
 
 void AMyPlayerController::InputLeftMoustButtonPressed()
 {
-    if (Main_Class->Building->BuildMode) {
-        Main_Class->Building->Build();
+    if (BuildManager->BuildMode) {
+        BuildManager->Build();
     }
     else {
         MoveToMouseCursor();
@@ -214,15 +223,15 @@ void AMyPlayerController::VisibilityTemperature()
 
 void AMyPlayerController::BuildMode()
 {
-    if (Main_Class->Building->BuildMode) {
-        Main_Class->Building->BuildMode = false;
+    if (BuildManager->BuildMode) {
+        BuildManager->BuildMode = false;
         UE_LOG(LogTemp, Log, TEXT("BuildMode Off"));
     }
     else {
-        Main_Class->Building->BuildMode = true;
+        BuildManager->BuildMode = true;
         UE_LOG(LogTemp, Log, TEXT("BuildMode On"));
     }
-    Main_Class->Building->DecalVisibility();
+    BuildManager->DecalVisibility();
 }
 
 void AMyPlayerController::OnBuildMode()
@@ -231,36 +240,36 @@ void AMyPlayerController::OnBuildMode()
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
     if (Hit.bBlockingHit)
     {
-		Main_Class->Building->Update(Hit.ImpactPoint, Main_Class->Player_x, Main_Class->Player_y);
+        BuildManager->Update(Hit.ImpactPoint, Main_Class->Player_x, Main_Class->Player_y);
 
     }
 }
 
 void AMyPlayerController::SelectBuilding1()
 {
-    if (Main_Class->Building->BuildMode) {
-        Main_Class->Building->SelectedBuilding = 1;
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 1;
     }
 }
 
 void AMyPlayerController::SelectBuilding2()
 {
-    if (Main_Class->Building->BuildMode) {
-        Main_Class->Building->SelectedBuilding = 2;
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 2;
     }
 }
 
 void AMyPlayerController::SelectBuilding3()
 {
-    if (Main_Class->Building->BuildMode) {
-        Main_Class->Building->SelectedBuilding = 3;
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 3;
     }
 }
 
 void AMyPlayerController::SelectBuilding4()
 {
-    if (Main_Class->Building->BuildMode) {
-        Main_Class->Building->SelectedBuilding = 4;
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 4;
     }
 }
 
@@ -310,7 +319,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
            
         }
     }
-    if (Main_Class->Building->BuildMode) {
+    if (BuildManager->BuildMode) {
         OnBuildMode();
     }
 }

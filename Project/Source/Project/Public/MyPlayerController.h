@@ -7,6 +7,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Temperature.h"
+#include "BuildManager.h"
 #include "MyPlayerController.generated.h"
 
 /**
@@ -93,6 +94,7 @@ protected:
 	//////////////////////
 	class AMain* Main_Class;
 	class AResourceManager* ResourceManager;
+	class ABuildManager* BuildManager;
 	class FSocketThread* Network;
 	char Key_w, Key_a, Key_s, Key_d;
 

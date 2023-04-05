@@ -2,10 +2,8 @@
 
 #pragma once
 
-#include <math.h>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Engine/DecalActor.h"
 #include "Building.generated.h"
 
 UCLASS()
@@ -18,18 +16,7 @@ public:
 	ABuilding();
 
 protected:
-	ADecalActor* DecalActor;
 
 public:
-	bool BuildMode = false;
-	FVector DecalLocation;
-	char SelectedBuilding{};
-
-	void Initialize(UMaterial*, TArray<TSubclassOf<AActor>*>);
-	void Update(FVector, float, float);
-	void DecalVisibility();
-	void Build();
-
-	TArray<TSubclassOf<AActor>*> BuildingArray;
-	TArray<AActor*> BuildedBuildings;
+	
 };

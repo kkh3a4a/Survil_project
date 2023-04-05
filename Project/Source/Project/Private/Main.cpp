@@ -46,15 +46,6 @@ void AMain::BeginPlay()
 	Temperature->Initiaize(TemperatureMaterial);
 	//Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	
-	//Spawn Building
-	Building = GetWorld()->SpawnActor<ABuilding>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	TArray<TSubclassOf<AActor>*> Buildings;
-	Buildings.Add(&Building_1);
-	Buildings.Add(&Building_2);
-	Buildings.Add(&Building_3);
-	Buildings.Add(&Building_4);
-	Building->Initialize(BuildingGridMaterial, Buildings);
-	
 	//Get Camera
 	TArray<AActor*> CameraActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), CameraActors);

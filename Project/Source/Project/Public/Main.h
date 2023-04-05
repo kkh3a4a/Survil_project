@@ -70,10 +70,6 @@ public:
 		TSubclassOf<AActor>WellPump;
 
 
-	//citizen
-	ACitizen* Citizens;
-	AMyTown* MyTown;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float SunAngle;
 	
@@ -91,19 +87,6 @@ public:
 
 	ACameraActor* MyCamera;
 	AActor* SunManager;
-
-	ABuilding* Building;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
-		UMaterial* BuildingGridMaterial;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
-		TSubclassOf<AActor>Building_1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
-		TSubclassOf<AActor>Building_2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
-		TSubclassOf<AActor>Building_3;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Building")
-		TSubclassOf<AActor>Building_4;
-
 
 
 	//////////////////////////////////////////
