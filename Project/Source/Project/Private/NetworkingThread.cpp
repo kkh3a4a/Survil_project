@@ -112,83 +112,96 @@ void FSocketThread::error_display(const char* msg, int err_no)
 void FSocketThread::processpacket(unsigned char* buf)
 {
 	unsigned char packet_type = buf[1];
-	switch (packet_type)
+	
+	if(IsRunning)
 	{
-	case SC_PACKET_LOGIN:
-	{
-		sc_packet_login* packet = reinterpret_cast<sc_packet_login*>(buf);
-		_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
-		_MainClass->SetCurrentLocation(- MapSizeX * 100 / 2, - MapSizeY * 100 / 2, packet->z);
-		my_id = packet->player_id;
-		break;
-	}
-	case SC_PACKET_MOVE:
-	{
-		sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(buf);
-		_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
-		//UE_LOG(LogTemp, Warning, TEXT("current Location : %f %f %f"), packet->currentX, packet->currentY, packet->currentZ);
-		break;
-	}
-	case SC_PACKET_CITIZENCREATE:
-	{
-		sc_packet_citizencreate* packet = reinterpret_cast<sc_packet_citizencreate*>(buf);
-		
-		_CitizenManager->Spawn_Citizen(packet->citizenid - CITIZENSTART, FVector(packet->x , packet->y, packet->z));
-		
-		break;
-	}
-	case SC_PACKET_CITIZENMOVE:
-	{
-		sc_packet_citizenmove* packet = reinterpret_cast<sc_packet_citizenmove*>(buf);
-		FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
-		_CitizenManager->Set_Citizen_Location(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z), Rotation);
-		break;
-	}
-	case SC_PACKET_RESOURCECREATE:
-	{
-		sc_packet_resourcecreate* packet = reinterpret_cast<sc_packet_resourcecreate*>(buf);
-		_ResourceManager->Spawn_Resource(packet->resource_id - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->amount, packet->resource_type);
-		break;
-	}
-	case SC_PACKET_RESOURCEAMOUNT:
-	{
-		sc_packet_resourceamount* packet = reinterpret_cast<sc_packet_resourceamount*>(buf);
-		_ResourceManager->SetResourceAmount(packet->resourceid - RESOURCESTART, packet->amount);
-		break;
-	}
-	case SC_PACKET_PLAYERRESOURCE:
-	{
-		sc_packet_playerresource* packet = reinterpret_cast<sc_packet_playerresource*>(buf);
-		_MainClass->SetPlayerResource(packet->resources_acount[0], packet->resources_acount[1], packet->resources_acount[2], packet->resources_acount[3], packet->resources_acount[4]);
-		break;
-	}
-	case SC_PACKET_CITIZENPLACEMENT:
-	{
-		sc_packet_citizenplacement* packet = reinterpret_cast<sc_packet_citizenplacement*>(buf);
-		_ResourceManager->SetResourcePlacement(packet->resource_id - RESOURCESTART, packet->workcitizen, packet->playerjobless);
-		break;
-	}
-	case SC_PACKET_TERRAINLOCATION:
-	{
-		sc_packet_terrainlocation* packet = reinterpret_cast<sc_packet_terrainlocation*>(buf);
-		
-		_MainClass->SetTerrainActorLocation(packet->terrainX, packet->terrainY);
-		break;
-	}
-	case SC_PACKET_SUNANGLE:
-	{
-		sc_packet_sunangle* packet = reinterpret_cast<sc_packet_sunangle*>(buf);
+		switch (packet_type)
+		{
+		case SC_PACKET_LOGIN:
+		{
+			sc_packet_login* packet = reinterpret_cast<sc_packet_login*>(buf);
+			_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
+			_MainClass->SetCurrentLocation(-MapSizeX * 100 / 2, -MapSizeY * 100 / 2, packet->z);
+			my_id = packet->player_id;
+			break;
+		}
+		case SC_PACKET_MOVE:
+		{
+			sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(buf);
+			_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
+			//UE_LOG(LogTemp, Warning, TEXT("current Location : %f %f %f"), packet->currentX, packet->currentY, packet->currentZ);
+			break;
+		}
+		case SC_PACKET_CITIZENCREATE:
+		{
+			sc_packet_citizencreate* packet = reinterpret_cast<sc_packet_citizencreate*>(buf);
 
-		_MainClass->SetSunAngle(packet->sunangle);
+			_CitizenManager->Spawn_Citizen(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z));
 
-		break;
-	}
+			break;
+		}
+		case SC_PACKET_CITIZENMOVE:
+		{
+			sc_packet_citizenmove* packet = reinterpret_cast<sc_packet_citizenmove*>(buf);
+			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
+			_CitizenManager->Set_Citizen_Location(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z), Rotation);
+			break;
+		}
+		case SC_PACKET_RESOURCECREATE:
+		{
+			sc_packet_resourcecreate* packet = reinterpret_cast<sc_packet_resourcecreate*>(buf);
+			_ResourceManager->Spawn_Resource(packet->resource_id - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->amount, packet->resource_type);
+			break;
+		}
+		case SC_PACKET_RESOURCEAMOUNT:
+		{
+			sc_packet_resourceamount* packet = reinterpret_cast<sc_packet_resourceamount*>(buf);
+			_ResourceManager->SetResourceAmount(packet->resourceid - RESOURCESTART, packet->amount);
+			break;
+		}
+		case SC_PACKET_PLAYERRESOURCE:
+		{
+			sc_packet_playerresource* packet = reinterpret_cast<sc_packet_playerresource*>(buf);
+			_MainClass->SetPlayerResource(packet->resources_acount[0], packet->resources_acount[1], packet->resources_acount[2], packet->resources_acount[3], packet->resources_acount[4]);
+			break;
+		}
+		case SC_PACKET_CITIZENPLACEMENT:
+		{
+			sc_packet_citizenplacement* packet = reinterpret_cast<sc_packet_citizenplacement*>(buf);
+			_ResourceManager->SetResourcePlacement(packet->resource_id - RESOURCESTART, packet->workcitizen, packet->playerjobless);
+			break;
+		}
+		case SC_PACKET_TERRAINXLOCATION:
+		{
+			sc_packet_terrainXlocation* packet = reinterpret_cast<sc_packet_terrainXlocation*>(buf);
 
-	default:
-	{
-		//DebugBreak();
-		break;
-	}
+			_MainClass->SetTerrainXActorLocation(packet->terrainX, packet->terrainline_Y);
+			UE_LOG(LogTemp, Warning, TEXT("server : %d %d"), (int)packet->terrainX, (int)packet->terrainline_Y[10]);
+			break;
+		}
+		case SC_PACKET_TERRAINYLOCATION:
+		{
+			sc_packet_terrainYlocation* packet = reinterpret_cast<sc_packet_terrainYlocation*>(buf);
+
+			_MainClass->SetTerrainYActorLocation(packet->terrainY, packet->terrainline_X);
+			UE_LOG(LogTemp, Warning, TEXT("server : %d %d"), (int)packet->terrainY, (int)packet->terrainline_X[10]);
+			break;
+		}
+		case SC_PACKET_SUNANGLE:
+		{
+			sc_packet_sunangle* packet = reinterpret_cast<sc_packet_sunangle*>(buf);
+
+			_MainClass->SetSunAngle(packet->sunangle);
+
+			break;
+		}
+
+		default:
+		{
+			//DebugBreak();
+			break;
+		}
+		}
 	}
 }
 

@@ -129,13 +129,13 @@ void AMain::SetPlayerResource(int oilcount, int watercount, int ironcount, int f
 	wood_count = woodcount;
 }
 
-void AMain::SetTerrainActorLocation(float x, float y)
+void AMain::SetTerrainXActorLocation(float x, char* terrainline_Y)
 {
-	static float t_x = x, t_y = y;
-	if(TerrainActor != nullptr)
+	static float t_x = x;
+	if (TerrainActor != nullptr)
 	{
-		TerrainActor->SetActorLocation(FVector(Player_x + x, Player_y + y, 0.0));
-		
+		TerrainActor->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
+
 	}
 	if ((int)t_x != (int)x)
 	{
@@ -143,12 +143,12 @@ void AMain::SetTerrainActorLocation(float x, float y)
 		{
 			for (int i = 0; i < SIGHT_X - 1; ++i)
 			{
-				for(int j=0; j < SIGHT_Y;++j)
+				for (int j = 0; j < SIGHT_Y; ++j)
 					Terrain2DArray[i][j] = Terrain2DArray[i + 1][j];
 			}
 			for (int i = 0; i < SIGHT_Y; ++i)
 			{
-				Terrain2DArray[SIGHT_X - 1][i] = { 0 };
+				Terrain2DArray[SIGHT_X - 1][i] = terrainline_Y[i];
 			}
 		}
 		if ((int)t_x > (int)x)
@@ -163,10 +163,23 @@ void AMain::SetTerrainActorLocation(float x, float y)
 			}
 			for (int i = 0; i < SIGHT_Y; ++i)
 			{
-				Terrain2DArray[0][i] = { 0 };
+				Terrain2DArray[0][i] = terrainline_Y[i];
 			}
 		}
 		t_x = x;
+	}
+
+	TerrainActor->UpdateMeshTerrain(Terrain2DArray);
+}
+
+void AMain::SetTerrainYActorLocation(float y, char* terrainline_X)
+{
+	static float t_y = y;
+	if (TerrainActor != nullptr)
+	{
+		
+		TerrainActor->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
+
 	}
 
 	if ((int)t_y != (int)y)
@@ -181,14 +194,14 @@ void AMain::SetTerrainActorLocation(float x, float y)
 			for (int i = 0; i < SIGHT_X; ++i)
 			{
 				//추후 받아온 terrian 넣어주면됨
-				Terrain2DArray[i][SIGHT_Y - 1] = { 0 };
+				Terrain2DArray[i][SIGHT_Y - 1] = terrainline_X[i];
 			}
 		}
 		if ((int)t_y > (int)y)
 		{
 			for (int i = 0; i < SIGHT_X - 1; ++i)
 			{
-				for (int j = SIGHT_Y - 1; j > 0 ; --j)
+				for (int j = SIGHT_Y - 1; j > 0; --j)
 				{
 					Terrain2DArray[i][j] = Terrain2DArray[i][j - 1];
 				}
@@ -196,7 +209,7 @@ void AMain::SetTerrainActorLocation(float x, float y)
 			for (int i = 0; i < SIGHT_X; ++i)
 			{
 				//추후 받아온 terrian 넣어주면됨
-				Terrain2DArray[i][0] = { 0 };
+				Terrain2DArray[i][0] = terrainline_X[i];
 			}
 		}
 		t_y = y;
@@ -207,6 +220,9 @@ void AMain::SetTerrainActorLocation(float x, float y)
 void AMain::SetSunAngle(float s_sunangle)
 {
 	SunAngle = s_sunangle;
-	SunManager->SetActorRotation(FRotator(SunAngle, 0.f, 0.f));
+	if (SunManager != nullptr)
+	{
+		SunManager->SetActorRotation(FRotator(SunAngle, 0.f, 0.f));
+	}
 }
 

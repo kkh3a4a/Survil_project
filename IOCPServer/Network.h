@@ -25,7 +25,7 @@ public:
 
 public:
 	WSA_OVER_EX();
-	WSA_OVER_EX(IOCPOP iocpop, char byte, void* buf);
+	WSA_OVER_EX(IOCPOP iocpop, unsigned char byte, void* buf);
 	WSAOVERLAPPED& getWsaOver() { return _wsaover; };
 	unsigned char* getbuf() { return _buf; };
 

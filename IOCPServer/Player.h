@@ -32,4 +32,5 @@ public:
 	void send_resource_amount();
 	void send_terrain_All();
 	void send_sunangle(const float sunangle);
+	void send_terrain_line();
 };

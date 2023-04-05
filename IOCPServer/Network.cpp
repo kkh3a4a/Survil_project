@@ -13,7 +13,7 @@ WSA_OVER_EX::WSA_OVER_EX()
 	return;
 }
 
-WSA_OVER_EX::WSA_OVER_EX(IOCPOP iocpop, char byte, void* buf)
+WSA_OVER_EX::WSA_OVER_EX(IOCPOP iocpop, unsigned char byte, void* buf)
 {
 	ZeroMemory(&_wsaover, sizeof(_wsaover));
 	_iocpop = iocpop;

@@ -68,13 +68,14 @@ void Player::key_input()
 		_currentX += 20;
 	}
 	//terrain좌표와 current좌표를 비교하여 100차이가 나는경우 terrain좌표 업데이트
-	bool ischangeTerrain =false;
+	bool ischangeTerrainX = false;
+	bool ischangeTerrainY = false;
 	if((int)(_currentX) % 100 ==0)
 	{
 		if ((int)_terrainX / 100 != (int)(_currentX) / 100)
 		{
 			_terrainX = _currentX;
-			ischangeTerrain = true;
+			ischangeTerrainX = true;
 		}
 	}
 	if ((int)(_currentY) % 100 == 0)
@@ -82,7 +83,7 @@ void Player::key_input()
 		if ((int)_terrainY / 100 != (int)(_currentY / 100))
 		{
 			_terrainY = _currentY;
-			ischangeTerrain = true;
+			ischangeTerrainY = true;
 		}
 	}
 	
@@ -97,14 +98,32 @@ void Player::key_input()
 		send_packet(&sc_packet_move);
 
 	}
-	if (ischangeTerrain)
+	if (ischangeTerrainX)
 	{
-		sc_packet_terrainlocation packet;
-		packet.size = sizeof(sc_packet_terrainlocation);
-		packet.type = SC_PACKET_TERRAINLOCATION;
+		sc_packet_terrainXlocation packet;
+		packet.size = sizeof(sc_packet_terrainXlocation);
+
+		packet.type = SC_PACKET_TERRAINXLOCATION;
 
 		packet.terrainX = _terrainX;
+
+		for (auto& a : packet.terrainline_Y)
+			a = rand() % 10;
+
+		send_packet(&packet);
+	}
+	if (ischangeTerrainY)
+	{
+		sc_packet_terrainYlocation packet;
+		packet.size = sizeof(sc_packet_terrainYlocation);
+
+		packet.type = SC_PACKET_TERRAINYLOCATION;
+
 		packet.terrainY = _terrainY;
+
+		for (auto& a : packet.terrainline_X)
+			a = rand() % 10;
+
 		send_packet(&packet);
 	}
 }
@@ -137,5 +156,6 @@ void Player::send_sunangle(const float sunangle)
 
 	send_packet(&packet);
 }
+
 
 

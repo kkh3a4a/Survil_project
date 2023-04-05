@@ -68,10 +68,13 @@ void ACitizenManager::Spawn_Citizen(int citizen_id, FVector Location)
 
 void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate)
 {
-    if (citizen[citizen_id]->GetWorld() && citizen[citizen_id]->IsValidLowLevel())
+    if(citizen[citizen_id] != nullptr)
     {
-        citizen[citizen_id]->SetActorLocation(Location);
-        citizen[citizen_id]->SetActorRotation(Rotate);
+        if (citizen[citizen_id]->GetWorld() && citizen[citizen_id]->IsValidLowLevel())
+        {
+            citizen[citizen_id]->SetActorLocation(Location);
+            citizen[citizen_id]->SetActorRotation(Rotate);
+        }
     }
 }
 

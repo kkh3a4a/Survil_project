@@ -95,7 +95,8 @@ public:
 	void SetPlayerLocation(float x, float y, float z);
 	void SetCurrentLocation(float x, float y, float z);
 	void SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount);
-	void SetTerrainActorLocation(float x, float y);
+	void SetTerrainXActorLocation(float x, char* terrainline_Y);
+	void SetTerrainYActorLocation(float y, char* terrainline_X);
 	void SetSunAngle(float s_sunangle);
 	int testterrain = 0;
 };

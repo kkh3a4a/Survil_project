@@ -32,7 +32,8 @@
 #define CS_PACKET_PLAYERRESOURCE	21
 
 #define CS_PACKET_TERRAIN			30
-#define CS_PACKET_TERRAINLOCATION	31
+#define CS_PACKET_TERRAINXLOCATION	31
+#define CS_PACKET_TERRAINXLOCATION	32
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -46,7 +47,8 @@
 #define SC_PACKET_PLAYERRESOURCE	21
 
 #define SC_PACKET_TERRAIN			30
-#define SC_PACKET_TERRAINLOCATION	31
+#define SC_PACKET_TERRAINXLOCATION	31
+#define SC_PACKET_TERRAINYLOCATION	32
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -178,17 +180,25 @@ struct sc_packet_terrain
 	unsigned char type;
 
 	char line;
-	char terrain[100];
 };
 
-struct sc_packet_terrainlocation
+struct sc_packet_terrainXlocation
 {
 	unsigned char size;
 	unsigned char type;
 
-	float terrainX, terrainY;
+	float terrainX;
+	char terrainline_Y[SIGHT_Y];
 };
 
+struct sc_packet_terrainYlocation
+{
+	unsigned char size;
+	unsigned char type;
+
+	float terrainY;
+	char terrainline_X[SIGHT_X];
+};
 
 struct sc_packet_sunangle
 {
