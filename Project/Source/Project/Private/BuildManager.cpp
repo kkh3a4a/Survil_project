@@ -22,10 +22,10 @@ void ABuildManager::BeginPlay()
 	DecalActor->SetDecalMaterial(MaterialInstance);
 	DecalActor->SetActorHiddenInGame(true);
 
-	BuildingArray.Add(&Building_1);
-	BuildingArray.Add(&Building_2);
-	BuildingArray.Add(&Building_3);
-	BuildingArray.Add(&Building_4);
+	BuildingArray.Add(Building_1);
+	BuildingArray.Add(Building_2);
+	BuildingArray.Add(Building_3);
+	BuildingArray.Add(Building_4);
 }
 
 void ABuildManager::Tick(float DeltaTime)
@@ -55,10 +55,11 @@ void ABuildManager::Build()
 	UE_LOG(LogTemp, Log, TEXT("Selected Building %d"), SelectedBuilding);
 	FRotator Rotation = FRotator(0, 0, 0);
 	FActorSpawnParameters SpawnInfo;
-	AActor* Building;
-	Building = GetWorld()->SpawnActor<AActor>(*BuildingArray[SelectedBuilding - 1], DecalLocation, Rotation, SpawnInfo);
-	BuildedBuildings.Add(Building);
-	UE_LOG(LogTemp, Log, TEXT("Builded Buildings: %d"), BuildedBuildings.Num());
+	ABuilding* BuildingActor = GetWorld()->SpawnActor<ABuilding>(DecalLocation, Rotation, SpawnInfo);
+	BuildingActor->SetMesh(BuildingArray[SelectedBuilding - 1]);
+
+	BuiltBuildings.Add(BuildingActor);
+	UE_LOG(LogTemp, Log, TEXT("Built Buildings: %d"), BuiltBuildings.Num());
 }
 
 void ABuildManager::UpdateDecalPosition(FVector MouseHitPoint, float CityX, float CityY)

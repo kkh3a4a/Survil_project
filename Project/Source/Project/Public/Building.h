@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Citizen.h"
 #include "Building.generated.h"
 
 UCLASS()
@@ -14,9 +15,19 @@ class PROJECT_API ABuilding : public AActor
 public:
 	// Sets default values for this actor's properties
 	ABuilding();
-
 protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 public:
-	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	char Type{};
+	char Hp{};
+	char Capacity{};
+	TArray<ACitizen*> Citizens;
+
+	void SetMesh(TSubclassOf<AActor>);
+
 };

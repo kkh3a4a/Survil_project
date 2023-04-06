@@ -8,5 +8,26 @@
 // Sets default values
 ABuilding::ABuilding()
 {
+	PrimaryActorTick.bCanEverTick = true;
 
+	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	RootComponent = Root;
+}
+
+void ABuilding::BeginPlay()
+{
+	Super::BeginPlay();
+
+}
+
+void ABuilding::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void ABuilding::SetMesh(TSubclassOf<AActor> Mesh)
+{
+	FActorSpawnParameters SpawnInfo;
+	AActor* BuildingMesh = GetWorld()->SpawnActor<AActor>(Mesh, FVector(0, 0, 0), FRotator(0, 0, 0), SpawnInfo);
+	BuildingMesh->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
 }

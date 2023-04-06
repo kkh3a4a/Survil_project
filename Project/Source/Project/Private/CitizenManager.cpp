@@ -31,7 +31,6 @@ ACitizenManager::ACitizenManager()
 void ACitizenManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -63,7 +62,6 @@ void ACitizenManager::Spawn_Citizen(int citizen_id, FVector Location)
 
     ACitizen* citi = reinterpret_cast<ACitizen*>(citizen[citizen_id]);
     citi->_id = citizen_id;
-
 }
 
 void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate)
@@ -77,5 +75,3 @@ void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRo
         }
     }
 }
-
-
