@@ -191,6 +191,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 
 			break;
 		}
+		case SC_PACKET_TERRAINALL:
+		{
+			sc_packet_terrainAll* packet = reinterpret_cast<sc_packet_terrainAll*>(buf);
+			UE_LOG(LogTemp, Warning, TEXT("terrain :%d"), (int)packet->line);
+			_MainClass->SetTerrainChange(packet->line, packet->terrainline_Y);
+			break;
+		}
 
 		default:
 		{
