@@ -40,7 +40,7 @@ public:
 	FVector DecalLocation;
 	char SelectedBuilding{};
 
-	void Update(FVector, float, float);
+	void UpdateDecalPosition(FVector, float, float);
 	void DecalVisibility();
 	void Build();
 

@@ -80,22 +80,8 @@ void AMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//지워야함 지형 대신 받은거임///////
-	/*if (testterrain % 1000 == 0)
-	{
-		for (auto& x : Terrain2DArray)
-		{
-			for (auto& y : x)
-			{
-				y = rand() % 10;
-			}
-		}
-	}
-	testterrain++;*/
-	/////////////////////////////////////////////////
-	//SunManager->SetActorRotation(FRotator(SunAngle, 0.f, 0.f));
+	
 	//Temperature->Update(TerrainTemperature);
-	//Building->Update();
 
 
 }
@@ -135,7 +121,7 @@ void AMain::SetTerrainXActorLocation(float x, char* terrainline_Y)
 	if (TerrainActor != nullptr)
 	{
 		TerrainActor->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
-
+		Temperature->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
 	}
 	if ((int)t_x != (int)x)
 	{
@@ -179,7 +165,7 @@ void AMain::SetTerrainYActorLocation(float y, char* terrainline_X)
 	{
 		
 		TerrainActor->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
-
+		Temperature->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
 	}
 
 	if ((int)t_y != (int)y)

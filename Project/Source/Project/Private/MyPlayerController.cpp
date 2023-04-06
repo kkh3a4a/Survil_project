@@ -240,8 +240,7 @@ void AMyPlayerController::OnBuildMode()
     GetHitResultUnderCursor(ECC_Visibility, false, Hit);
     if (Hit.bBlockingHit)
     {
-        BuildManager->Update(Hit.ImpactPoint, Main_Class->Player_x, Main_Class->Player_y);
-
+        BuildManager->UpdateDecalPosition(Hit.ImpactPoint, Main_Class->Player_x, Main_Class->Player_y);
     }
 }
 

@@ -37,10 +37,6 @@ WSA_OVER_EX::WSA_OVER_EX(IOCPOP iocpop, char byte, void* buf)
 	_wsabuf.len = byte;
 }
 
-
-
-
-
 FSocketThread::FSocketThread()
 {
 	IsRunning = true;
@@ -176,7 +172,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			sc_packet_terrainXlocation* packet = reinterpret_cast<sc_packet_terrainXlocation*>(buf);
 
 			_MainClass->SetTerrainXActorLocation(packet->terrainX, packet->terrainline_Y);
-			UE_LOG(LogTemp, Warning, TEXT("server : %d %d"), (int)packet->terrainX, (int)packet->terrainline_Y[10]);
+			//UE_LOG(LogTemp, Warning, TEXT("server : %d %d"), (int)packet->terrainX, (int)packet->terrainline_Y[10]);
 			break;
 		}
 		case SC_PACKET_TERRAINYLOCATION:
@@ -184,7 +180,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			sc_packet_terrainYlocation* packet = reinterpret_cast<sc_packet_terrainYlocation*>(buf);
 
 			_MainClass->SetTerrainYActorLocation(packet->terrainY, packet->terrainline_X);
-			UE_LOG(LogTemp, Warning, TEXT("server : %d %d"), (int)packet->terrainY, (int)packet->terrainline_X[10]);
+			//UE_LOG(LogTemp, Warning, TEXT("server : %d %d"), (int)packet->terrainY, (int)packet->terrainline_X[10]);
 			break;
 		}
 		case SC_PACKET_SUNANGLE:

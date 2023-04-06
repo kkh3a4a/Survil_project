@@ -24,7 +24,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="device_atomic_functions.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="NewGlobal.h" />
     <ClInclude Include="Object.h">

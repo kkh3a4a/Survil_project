@@ -25,6 +25,7 @@ void AResourceManager::BeginPlay()
 void AResourceManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
     if (Network == nullptr)
     {
         Network = reinterpret_cast<FSocketThread*>(Main->Network);
