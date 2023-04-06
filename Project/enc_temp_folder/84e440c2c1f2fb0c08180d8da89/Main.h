@@ -80,7 +80,6 @@ public:
 		UMaterial* TemperatureMaterial;
 
 	int8 Terrain2DArray[MapSizeX][MapSizeY];
-	int8 TerrainChange2DArray[MapSizeX][MapSizeY]{};
 	uint8 TerrainTemperature[MapSizeX][MapSizeY];
 
 	AMeshTerrain* TerrainActor;
@@ -99,7 +98,6 @@ public:
 	void SetTerrainXActorLocation(float x, char* terrainline_Y);
 	void SetTerrainYActorLocation(float y, char* terrainline_X);
 	void SetSunAngle(float s_sunangle);
-	void SetTerrainChange(unsigned char line, char* terrainline_Y);
 	int testterrain = 0;
 };
 

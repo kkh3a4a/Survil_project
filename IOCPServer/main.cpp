@@ -39,10 +39,10 @@ volatile int player_cnt = 0;
 //char** total_terrain = terrain->get_map();
 //char** shadow_map = terrain->get_shadow_map();
 //unsigned char** temperature_map = terrain->get_temperature_map();
-//
-//volatile bool location_set = false;
-//int ingame_play = false;
-//
+////
+////volatile bool location_set = false;
+////int ingame_play = false;
+////
 //DWORD WINAPI terrain_change(LPVOID arg)
 //{
 //	/*char** player_sight_terrain = terrain->get_player_sight_map();
@@ -104,6 +104,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	auto Player_Move_Timer_End = std::chrono::system_clock::now();
 	auto Citizen_Move_Timer_End = std::chrono::system_clock::now();
 	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
+	auto TerrainSend_Timer_End = std::chrono::system_clock::now();
+	bool Isterrain_change = true;
 	while (1)
 	{
 		auto Timer_Start = std::chrono::system_clock::now();
@@ -162,6 +164,45 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				player->send_resource_amount();
 			}
 		}
+		//추후 수정///////////////
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - TerrainSend_Timer_End).count() > 10000)
+		{
+			TerrainSend_Timer_End = std::chrono::system_clock::now();
+			Isterrain_change = true;
+		}
+		if (Isterrain_change)
+		{
+			
+			for (int i = 0; i < MAXPLAYER; ++i)
+			{
+				Player* player = reinterpret_cast<Player*>(objects[i]);
+				
+				if(player->isconnect)
+				{
+					while(1)
+					{
+						static unsigned char terrainLine[5] = { 0 };
+						if (terrainLine[i] == SIGHT_X)
+						{
+							terrainLine[i] = 0;
+							Isterrain_change = false;
+							break;
+						}
+						sc_packet_terrainAll packet;
+						packet.size = sizeof(sc_packet_terrainAll);
+						packet.type = SC_PACKET_TERRAINALL;
+
+						packet.line = terrainLine[i];
+						for (auto& a : packet.terrainline_Y)
+							a = 0;
+
+						player->send_packet(&packet);
+						++terrainLine[i];
+					}
+				}
+			}			
+		}
+		///////////////////////
 
 	}
 	return 0;
@@ -170,9 +211,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 int main(int argc, char* argv[])
 {	
 	cout << fixed;
-	HANDLE hThread;
-	//hThread = CreateThread(NULL, 0, terrain_change, 0, 0, NULL);
-	hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
+	
 	// 윈속 초기화
 	WSADATA wsa;
 	int ret = WSAStartup(MAKEWORD(2, 2), &wsa);
@@ -233,6 +272,7 @@ int main(int argc, char* argv[])
 			}
 		}
 		reinterpret_cast<Player*>(objects[i])->set_player_location(x, y, z);
+		//reinterpret_cast<Player*>(objects[i])->player_sight_terrain = total_terrain;
 		for (int j = 0; j < 10; ++j)
 		{
 			reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->set_citizen_spwan_location(x + 2000, y + (j * 500) - 2250,z);
@@ -240,6 +280,10 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	//다 지정해주고 thread생성
+	HANDLE hThread;
+	//hThread = CreateThread(NULL, 0, terrain_change, 0, 0, NULL);
+	hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
 	int user_id = 0;
 
 	while (1) {
