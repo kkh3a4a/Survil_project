@@ -31,9 +31,9 @@
 #define CS_PACKET_RESOURCEAMOUNT	20
 #define CS_PACKET_PLAYERRESOURCE	21
 
-#define CS_PACKET_TERRAIN			30
+#define CS_PACKET_TERRAINALL		30
 #define CS_PACKET_TERRAINXLOCATION	31
-#define CS_PACKET_TERRAINXLOCATION	32
+#define CS_PACKET_TERRAINYLOCATION	32
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -46,7 +46,7 @@
 #define SC_PACKET_RESOURCEAMOUNT	20
 #define SC_PACKET_PLAYERRESOURCE	21
 
-#define SC_PACKET_TERRAIN			30
+#define SC_PACKET_TERRAINALL		30
 #define SC_PACKET_TERRAINXLOCATION	31
 #define SC_PACKET_TERRAINYLOCATION	32
 
@@ -174,12 +174,13 @@ struct sc_packet_playerresource
 };
 
 
-struct sc_packet_terrain
+struct sc_packet_terrainAll
 {
 	unsigned char size;
 	unsigned char type;
 
-	char line;
+	unsigned char line;
+	char terrainline_Y[SIGHT_Y];
 };
 
 struct sc_packet_terrainXlocation
