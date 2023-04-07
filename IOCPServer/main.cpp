@@ -104,7 +104,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	{
 		Player* player = reinterpret_cast<Player*>(objects[i]);
 		TF player_city{ player->_x, player->_y };
-		terrain->set_city_location(player_city, i);
+		terrain->set_city_location(TF{player->_x, player->_y}, i);
 	}
 	
 	while (1)
@@ -174,7 +174,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);
-				terrain->copy_for_player_map(II{ (int)player->_x / 100, (int)player->_y / 100});
+				terrain->copy_for_player_map(II{ (int)(player->_x - (int)player->_terrainX) / 100, (int)(player->_y - (int)player->_terrainY) / 100});
 				if(player->isconnect)
 				{
 					while(1)

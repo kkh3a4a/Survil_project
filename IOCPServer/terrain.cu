@@ -899,9 +899,9 @@ public:
 	
 	void except_city_terrain()
 	{
-		for (int i = 0; i < 5; i++) {
+		/*for (int i = 0; i < 5; i++) {
 			cout << city_location[i].x << " " << city_location[i].y << endl;
-		}
+		}*/
 		if (city_location[0].x == 0 && city_location[0].y == 0) {
 			for (int i = 0; i < one_side_number; i++) {
 				cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
