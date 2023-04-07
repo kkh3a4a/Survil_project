@@ -46,7 +46,7 @@ void AMeshTerrain::UpdateMeshTerrain(int8(*Terrain2DArrayPtr)[MapSizeY])
 {
 	for (int32 i = 0; i < Vertices.Num(); i++) {
 		Vertices[i].Z = Terrain2DArrayPtr[i % MapSizeX][i / MapSizeX] * 50;
-		//UE_LOG(LogTemp, Log, TEXT("%d %d"), i % MapSizeX, i / MapSizeX);
+		//UE_LOG(LogTemp, Log, TEXT("%d"), Vertices[i].Z);
 	}
 	MeshTerrain->UpdateMeshSection_LinearColor(0, Vertices, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>());
 }
