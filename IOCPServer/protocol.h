@@ -35,6 +35,10 @@
 #define CS_PACKET_TERRAINXLOCATION	31
 #define CS_PACKET_TERRAINYLOCATION	32
 
+#define CS_PACKET_BUILDABLE			40
+#define CS_PACKET_BUILD				41
+
+
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
 #define SC_PACKET_CITIZENCREATE		3
@@ -49,6 +53,10 @@
 #define SC_PACKET_TERRAINALL		30
 #define SC_PACKET_TERRAINXLOCATION	31
 #define SC_PACKET_TERRAINYLOCATION	32
+
+#define SC_PACKET_BUILDABLE			40
+#define SC_PACKET_BUILD				41
+
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -94,6 +102,24 @@ struct cs_packet_citizenplacement
 	int objectid;
 	char isplus;
 
+};
+
+struct cs_packet_buildable
+{
+	unsigned char size;
+	unsigned char type;
+	
+	char building_type;
+	float x, y;
+};
+
+struct cs_packet_build
+{
+	unsigned char size;
+	unsigned char type;
+	
+	char building_type;
+	float x, y;
 };
 
 
@@ -207,6 +233,24 @@ struct sc_packet_sunangle
 	unsigned char type;
 
 	float sunangle;
+};
+
+struct sc_packet_buildable
+{
+	unsigned char size;
+	unsigned char type;
+
+	char building_type;
+	float x, y;
+};
+
+struct sc_packet_build
+{
+	unsigned char size;
+	unsigned char type;
+
+	char building_type;
+	float x, y;
 };
 
 
