@@ -59,6 +59,33 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		}
 		break;
 	}
+	case CS_PACKET_BUILDABLE:
+	{
+		cs_packet_buildable* cs_packet = reinterpret_cast<cs_packet_buildable*>(pk);
+		std::cout << "buildable" << std::endl;
+		sc_packet_buildable sc_packet;
+		for (auto& obj : objects) {
+			if (obj == nullptr)
+				continue;
+			if (obj->_x == 0) {
+				continue;
+			}
+			//std::cout << obj->_x << " " << obj->_y <<std:: endl;
+			if (obj->_x < cs_packet->x + 800 && obj->_x > cs_packet->x - 800 && obj->_y < cs_packet->y + 800 && obj->_y > cs_packet->y - 800) {
+				sc_packet.buildable = false;
+				break;
+			}
+			sc_packet.buildable = true;
+		}
+		player->send_packet(&sc_packet);
+		break;
+	}
+	case CS_PACKET_BUILD:
+	{
+		cs_packet_build* cs_packet = reinterpret_cast<cs_packet_build*>(pk);
+		std::cout << "build" << std::endl;
+
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

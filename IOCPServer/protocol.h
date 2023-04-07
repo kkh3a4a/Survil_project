@@ -240,8 +240,7 @@ struct sc_packet_buildable
 	unsigned char size = sizeof(sc_packet_buildable);
 	unsigned char type = SC_PACKET_BUILDABLE;
 
-	char building_type;
-	float x, y;
+	bool buildable;
 };
 
 struct sc_packet_build
