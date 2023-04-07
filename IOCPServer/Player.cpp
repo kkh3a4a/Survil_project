@@ -156,6 +156,3 @@ void Player::send_sunangle(const float sunangle)
 
 	send_packet(&packet);
 }
-
-
-

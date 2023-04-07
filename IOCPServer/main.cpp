@@ -34,59 +34,52 @@ float sun_angle;
 volatile int player_cnt = 0;
 
 
-/////////////////////////////////
-//Terrain* terrain = new Terrain();
-//char** total_terrain = terrain->get_map();
-//char** shadow_map = terrain->get_shadow_map();
-//unsigned char** temperature_map = terrain->get_temperature_map();
-////
-////volatile bool location_set = false;
-////int ingame_play = false;
-////
-//DWORD WINAPI terrain_change(LPVOID arg)
-//{
-//	/*char** player_sight_terrain = terrain->get_player_sight_map();
-//	char** player_sight_temperature = terrain->get_player_temperature_map();
-//	terrain->set_city_location(TF{ 20000, 20000 }, 0);*/
-//
-//	//terrain->show_array(total_terrain, 320);
-//	terrain->log_on();
-//	int i{};
-//	while (1){
-//		//clock_t t_0 = clock();
-//		cout << endl << i << "번째" << endl;
-//		
-//
-//		terrain->wind_blow({ 1, 0 }, 1);
-//		terrain->make_shadow_map(sun_angle);
-//		terrain->make_tempertature_map(sun_angle);
-//		CC retval = terrain->get_highest_lowest(temperature_map);
-//
-//		/*if (sun_angle > 360)
-//			sun_angle = 0;
-//		sun_angle += 6;*/
-//		cout << "sun_angle : " << sun_angle << endl;
-//		cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
-//
-//		//terrain->show_array(total_terrain, 320);
-//		//terrain->show_array(shadow_map, 320);
-//		//terrain->show_array(temperature_map, 320);
-//
-//
-//		/*terrain->copy_for_player_map(II{ 200, 200 });
-//		terrain->show_array(player_sight_terrain, 120);
-//		terrain->show_array(player_sight_temperature, 120);*/
-//
-//
-//		//clock_t t_1 = clock();
-//		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
-//		if (i % 100 == 0 && i != 0) {
-//			terrain->save_terrain();
-//			cout << "SAVED!!!" << endl;
-//		}
-//		i++;
-//	}
-//}
+///////////////////////////////
+Terrain* terrain = new Terrain();
+char** total_terrain = terrain->get_map();
+char** shadow_map = terrain->get_shadow_map();
+unsigned char** temperature_map = terrain->get_temperature_map();
+
+DWORD WINAPI terrain_change(LPVOID arg)
+{
+	/*char** player_sight_terrain = terrain->get_player_sight_map();
+	char** player_sight_temperature = terrain->get_player_temperature_map();
+	terrain->set_city_location(TF{ 20000, 20000 }, 0);*/
+
+	//terrain->show_array(total_terrain, 320);
+	//terrain->log_on();
+	int i{};
+	while (1){
+		//clock_t t_0 = clock();
+		cout << endl << i << "번째" << endl;
+		
+
+		terrain->wind_blow({ 1, 0 }, 1);
+		terrain->make_shadow_map(sun_angle);
+		terrain->make_tempertature_map(sun_angle);
+		CC retval = terrain->get_highest_lowest(temperature_map);
+
+		cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
+
+		//terrain->show_array(total_terrain, 320);
+		//terrain->show_array(shadow_map, 320);
+		//terrain->show_array(temperature_map, 320);
+
+
+		/*terrain->copy_for_player_map(II{ 200, 200 });
+		terrain->show_array(player_sight_terrain, 120);
+		terrain->show_array(player_sight_temperature, 120);*/
+
+
+		//clock_t t_1 = clock();
+		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
+		if (i % 100 == 0 && i != 0) {
+			terrain->save_terrain();
+			cout << "SAVED!!!" << endl;
+		}
+		i++;
+	}
+}
 
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
@@ -106,6 +99,14 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
 	auto TerrainSend_Timer_End = std::chrono::system_clock::now();
 	bool Isterrain_change = true;
+	char** player_terrain = terrain->get_player_sight_map();
+	for (int i = 0; i < MAXPLAYER; ++i)
+	{
+		Player* player = reinterpret_cast<Player*>(objects[i]);
+		TF player_city{ player->_x, player->_y };
+		terrain->set_city_location(player_city, i);
+	}
+	
 	while (1)
 	{
 		auto Timer_Start = std::chrono::system_clock::now();
@@ -133,8 +134,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				}
 
 			}
-			
-			
 		}
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Citizen_Move_Timer_End).count() > 10)
 		{
@@ -172,32 +171,30 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		}
 		if (Isterrain_change)
 		{
-			
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);
-				
+				terrain->copy_for_player_map(II{ (int)player->_x / 100, (int)player->_y / 100});
 				if(player->isconnect)
 				{
 					while(1)
 					{
-						static unsigned char terrainLine[5] = { 0 };
-						if (terrainLine[i] == SIGHT_X)
+						static unsigned char terrain_x{};
+						if (terrain_x == SIGHT_X)
 						{
-							terrainLine[i] = 0;
+							terrain_x = 0;
 							Isterrain_change = false;
 							break;
 						}
 						sc_packet_terrainAll packet;
 						packet.size = sizeof(sc_packet_terrainAll);
 						packet.type = SC_PACKET_TERRAINALL;
-
-						packet.line = terrainLine[i];
-						for (auto& a : packet.terrainline_Y)
-							a = 0;
+						packet.terrain_X = terrain_x;
+						memcpy(packet.terrain_Y, player_terrain[terrain_x], SIGHT_Y);
+						
 
 						player->send_packet(&packet);
-						++terrainLine[i];
+						terrain_x++;
 					}
 				}
 			}			
@@ -282,7 +279,7 @@ int main(int argc, char* argv[])
 
 	//다 지정해주고 thread생성
 	HANDLE hThread;
-	//hThread = CreateThread(NULL, 0, terrain_change, 0, 0, NULL);
+	hThread = CreateThread(NULL, 0, terrain_change, 0, 0, NULL);
 	hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
 	int user_id = 0;
 
@@ -386,8 +383,6 @@ int main(int argc, char* argv[])
 		default:
 			break;
 		}
-
 	}
-	
 	return 0;
 }

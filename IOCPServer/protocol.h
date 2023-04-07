@@ -179,8 +179,8 @@ struct sc_packet_terrainAll
 	unsigned char size;
 	unsigned char type;
 
-	unsigned char line;
-	char terrainline_Y[SIGHT_Y];
+	unsigned char terrain_X;
+	char terrain_Y[SIGHT_Y];
 };
 
 struct sc_packet_terrainXlocation
