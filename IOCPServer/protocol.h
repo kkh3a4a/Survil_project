@@ -106,8 +106,8 @@ struct cs_packet_citizenplacement
 
 struct cs_packet_buildable
 {
-	unsigned char size;
-	unsigned char type;
+	unsigned char size = sizeof(cs_packet_buildable);
+	unsigned char type = CS_PACKET_BUILDABLE;
 	
 	char building_type;
 	float x, y;
@@ -115,8 +115,8 @@ struct cs_packet_buildable
 
 struct cs_packet_build
 {
-	unsigned char size;
-	unsigned char type;
+	unsigned char size = sizeof(cs_packet_build);
+	unsigned char type = CS_PACKET_BUILD;
 	
 	char building_type;
 	float x, y;
@@ -237,8 +237,8 @@ struct sc_packet_sunangle
 
 struct sc_packet_buildable
 {
-	unsigned char size;
-	unsigned char type;
+	unsigned char size = sizeof(sc_packet_buildable);
+	unsigned char type = SC_PACKET_BUILDABLE;
 
 	char building_type;
 	float x, y;
@@ -246,8 +246,8 @@ struct sc_packet_buildable
 
 struct sc_packet_build
 {
-	unsigned char size;
-	unsigned char type;
+	unsigned char size = sizeof(sc_packet_build);
+	unsigned char type = SC_PACKET_BUILD;
 
 	char building_type;
 	float x, y;
