@@ -201,7 +201,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_BUILDABLE:
 		{
 			sc_packet_buildable* packet = reinterpret_cast<sc_packet_buildable*>(buf);
-			_MainClass->BuildManager->Buildable = packet->Buildable;
+			_MainClass->BuildManager->Buildable = packet->buildable;
 			//UE_LOG(LogTemp, Warning, TEXT("%d"), packet->Buildable);
 			break;
 		}
