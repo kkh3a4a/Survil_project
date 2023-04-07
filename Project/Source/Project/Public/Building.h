@@ -29,5 +29,4 @@ public:
 	TArray<ACitizen*> Citizens;
 
 	void SetMesh(TSubclassOf<AActor>);
-
 };
