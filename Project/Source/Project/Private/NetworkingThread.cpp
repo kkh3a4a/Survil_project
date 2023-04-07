@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "NetworkingThread.h"
-#include"Main.h"
-#include"Citizen.h"
+#include "Main.h"
+#include "Citizen.h"
 #include "MyPlayerController.h"
 #include "CitizenManager.h"
 #include "ResourceManager.h"
@@ -195,7 +195,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_terrainAll* packet = reinterpret_cast<sc_packet_terrainAll*>(buf);
 			//UE_LOG(LogTemp, Warning, TEXT("terrain :%d"), (int)packet->line);
-			_MainClass->SetTerrainChange(packet->line, packet->terrainline_Y);
+			_MainClass->SetTerrainChange(packet->terrain_X, packet->terrain_Y);
 			break;
 		}
 
