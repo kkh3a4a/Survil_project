@@ -1,6 +1,7 @@
 #pragma once
+#include "Object.h"
 
-class Building
+class Building : public Object
 {
 public:
 	Building();

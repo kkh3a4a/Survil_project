@@ -12,6 +12,7 @@
 #include"Player.h"
 #include"Citizen.h"
 #include"Resource.h"
+#include "Building.h"
 #include"terrain.cu"
 
 #pragma comment (lib,"WS2_32.lib")
@@ -174,7 +175,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);
-				terrain->copy_for_player_map(II{ (int)(player->_x - (int)player->_terrainX) / 100, (int)(player->_y - (int)player->_terrainY) / 100});
+				terrain->copy_for_player_map(II{ (int)(player->_x + (int)player->_currentX) / 100, (int)(player->_y + (int)player->_currentY) / 100});
 				if(player->isconnect)
 				{
 					while(1)

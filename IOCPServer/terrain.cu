@@ -954,13 +954,13 @@ public:
 		start_t = clock();
 		for (int i = 0; i < player_sight_size.x; i++) {
 			for (int j = 0; j < player_sight_size.y; j++) {
-				if (player_location.x - player_sight_size.x / 2 + i < 0 || player_location.x - player_sight_size.x / 2 + i >= one_side_number || player_location.y - player_sight_size.y / 2 + j < 0 || player_location.y - player_sight_size.y / 2 + j >= one_side_number) {
+				if (player_location.x + i < 0 || player_location.x  + i >= one_side_number || player_location.y + j < 0 || player_location.y + j >= one_side_number) {
 					terrain_player_sight_host[i][j] = 0;
 					temperature_player_sight[i][j] = 0;
 				}
 				else {
-					terrain_player_sight_host[i][j] = terrain_array_host[player_location.x - player_sight_size.x / 2 + i][player_location.y - player_sight_size.y / 2 + j];
-					temperature_player_sight[i][j] = temperature_map_host[player_location.x - player_sight_size.x / 2 + i][player_location.y - player_sight_size.y / 2 + j];
+					terrain_player_sight_host[i][j] = terrain_array_host[player_location.x + i][player_location.y  + j];
+					temperature_player_sight[i][j] = temperature_map_host[player_location.x  + i][player_location.y + j];
 				}
 			}
 		}
