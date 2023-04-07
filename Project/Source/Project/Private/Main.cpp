@@ -37,6 +37,16 @@ void AMain::BeginPlay()
 	
 	FActorSpawnParameters SpawnInfo;
 	
+	//Get BuildManager
+	AActor* BuildManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ABuildManager::StaticClass());
+	if (BuildManagerActor == nullptr) {
+		return;
+	}
+	BuildManager = Cast <ABuildManager>(BuildManagerActor);
+	if (BuildManager == nullptr) {
+		return;
+	}
+
 	//Init Mesh Terrain
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(FVector(0, 0, 0), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);

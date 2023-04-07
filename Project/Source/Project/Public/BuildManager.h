@@ -4,6 +4,7 @@
 #include "Engine/DecalActor.h"
 #include "GameFramework/Actor.h"
 #include "Building.h"
+#include "NetworkingThread.h"
 #include "BuildManager.generated.h"
 
 UCLASS()
@@ -25,8 +26,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
 		UMaterial* BuildingGridMaterial;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 		TSubclassOf<AActor>Building_1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
@@ -36,15 +38,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 		TSubclassOf<AActor>Building_4;
 
-
+	UMaterialInstanceDynamic* MaterialInstance;
 	bool BuildMode = false;
+	bool Buildable = false;
 	FVector DecalLocation;
 	char SelectedBuilding{};
 
 	void UpdateDecalPosition(FVector, float, float);
 	void DecalVisibility();
 	void Build();
-
+	void SendBuildablePacket();
+	void SendBuildPacket();
+	class AMain* Main;
 	TArray<TSubclassOf<AActor>> BuildingArray;
 	TArray<ABuilding*> BuiltBuildings;
 };

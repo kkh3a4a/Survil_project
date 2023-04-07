@@ -35,7 +35,7 @@ AMyPlayerController::AMyPlayerController()
     }
 
     AActor* BuildManagerActor = UGameplayStatics::GetActorOfClass(worldref, ABuildManager::StaticClass());
-    if (resourceManagerActor == nullptr) {
+    if (BuildManagerActor == nullptr) {
         return;
     }
     BuildManager = Cast <ABuildManager>(BuildManagerActor);
@@ -325,7 +325,6 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
 
 void AMyPlayerController::SendMovePacket()
 {
-    
     cs_packet_move packet;
     packet.w = Key_w;
     packet.a = Key_a;

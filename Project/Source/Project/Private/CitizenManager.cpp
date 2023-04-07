@@ -16,7 +16,6 @@ ACitizenManager::ACitizenManager()
     if (worldref == nullptr) {
         return;
     }
-  
 
     AActor* actor = UGameplayStatics::GetActorOfClass(worldref, AMain::StaticClass());
     if (actor == nullptr) {

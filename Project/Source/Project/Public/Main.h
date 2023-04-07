@@ -15,6 +15,7 @@
 #include "MeshTerrain.h"
 #include "Temperature.h"
 #include "Building.h"
+#include "BuildManager.h"
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Math/UnrealMathUtility.h"
@@ -88,7 +89,7 @@ public:
 
 	ACameraActor* MyCamera;
 	AActor* SunManager;
-
+	ABuildManager* BuildManager;
 
 	//////////////////////////////////////////
 	class FSocketThread* Network;
