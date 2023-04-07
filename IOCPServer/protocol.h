@@ -76,7 +76,7 @@ struct cs_packet_citizencreate
 {
 	unsigned char size;
 	unsigned char type;
-	//ÃßÈÄ ¼­¹ö¿¡ citizen »ý¼º ¿äÃ»ÇÒ¶§ ¾²ÀÏ ¿¹Á¤
+	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ citizen ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»ï¿½Ò¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 };
 
 struct cs_packet_citizenmove
@@ -92,7 +92,7 @@ struct cs_packet_resourcecreate
 	unsigned char size;	
 	unsigned char type;
 	
-	//resource »ý¼º ¿äÃ»
+	//resource ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»
 };
 
 struct cs_packet_citizenplacement
@@ -240,7 +240,7 @@ struct sc_packet_buildable
 	unsigned char size = sizeof(sc_packet_buildable);
 	unsigned char type = SC_PACKET_BUILDABLE;
 
-	bool Buildable;
+	bool buildable;
 };
 
 struct sc_packet_build
