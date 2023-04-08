@@ -40,6 +40,7 @@ void Player::set_player_location(float x, float y, float z)
 	_currentX = - (SIGHT_X * 100 / 2);
 	_currentY = - (SIGHT_Y * 100 / 2);
 	_currentZ = 0;
+	//_x는 가운데 위치, _x +_currentX 모서리 위치
 }
 
 void Player::key_input()
