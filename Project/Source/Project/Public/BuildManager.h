@@ -41,6 +41,7 @@ public:
 	UMaterialInstanceDynamic* MaterialInstance;
 	bool BuildMode = false;
 	bool Buildable = false;
+
 	FVector DecalLocation;
 	char SelectedBuilding{};
 

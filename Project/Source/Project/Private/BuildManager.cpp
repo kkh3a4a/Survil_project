@@ -69,10 +69,6 @@ void ABuildManager::DecalVisibility()
 
 void ABuildManager::Build()
 {
-	if (SelectedBuilding < 1 || SelectedBuilding > BuildingArray.Num()) {
-		UE_LOG(LogTemp, Log, TEXT("Select Type of Building!!"));
-		return;
-	}
 	UE_LOG(LogTemp, Log, TEXT("Selected Building %d"), SelectedBuilding);
 	FRotator Rotation = FRotator(0, 0, 0);
 	FActorSpawnParameters SpawnInfo;
@@ -95,10 +91,20 @@ void ABuildManager::SendBuildablePacket()
 
 void ABuildManager::SendBuildPacket()
 {
+	if (SelectedBuilding < 1 || SelectedBuilding > BuildingArray.Num()) {
+		UE_LOG(LogTemp, Log, TEXT("Select Type of Building!!"));
+		return;
+	}
+	if (!Buildable) {
+		UE_LOG(LogTemp, Log, TEXT("Cannot build here!!"));
+		return;
+	}
 	cs_packet_build Packet;
 	Packet.building_type = SelectedBuilding;
 	Packet.x = DecalLocation.X;
 	Packet.y = DecalLocation.Y;
+	WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, Packet.size, &Packet);
+	WSASend(Main->Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
 void ABuildManager::UpdateDecalPosition(FVector MouseHitPoint, float CityX, float CityY)

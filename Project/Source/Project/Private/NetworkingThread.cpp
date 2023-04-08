@@ -205,6 +205,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 			//UE_LOG(LogTemp, Warning, TEXT("%d"), packet->Buildable);
 			break;
 		}
+		case SC_PACKET_BUILD:
+		{
+			sc_packet_build* packet = reinterpret_cast<sc_packet_build*>(buf);
+			if (packet->do_build) {
+				_MainClass->BuildManager->Build();
+			}
+		}
 
 		default:
 		{

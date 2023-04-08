@@ -152,7 +152,7 @@ void AMyPlayerController::UIClick(bool isplus)
 void AMyPlayerController::InputLeftMoustButtonPressed()
 {
     if (BuildManager->BuildMode) {
-        BuildManager->Build();
+        BuildManager->SendBuildPacket();
     }
     else {
         MoveToMouseCursor();

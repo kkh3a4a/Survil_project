@@ -248,6 +248,7 @@ struct sc_packet_build
 	unsigned char size = sizeof(sc_packet_build);
 	unsigned char type = SC_PACKET_BUILD;
 
+	bool do_build;
 	char building_type;
 	float x, y;
 };
