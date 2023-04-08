@@ -968,6 +968,29 @@ public:
 		//if (log)
 			//cout << "copy_for_player_map : " << double(end_t - start_t) / CLOCKS_PER_SEC << endl;
 	}
+	
+	void copy_for_player_map_line(char w, char s, char a, char d, II player_location)
+	{
+		char* terrain_line_x = new char[player_sight_size.x + 2];
+		char* terrain_line_y = new char[player_sight_size.y + 2];
+
+		if (w) {	//up
+			for (int x = -1; x < player_sight_size.x + 1; x++) {
+				terrain_line_x[x + 1] = terrain_array_host[player_location.x + x][player_location.y];
+			}
+		}
+		else if (s) {	//down
+			for (int x = -1; x < player_sight_size.x + 1; x++) {
+				terrain_line_x[x + 1] = terrain_array_host[player_location.x + x][player_location.y + player_sight_size.y];
+			}
+		}
+		else if (a) {	//left
+			memcpy(terrain_line_x, &terrain_array_host[player_location.x][player_location.y - 1], player_sight_size.x + 2);
+		}
+		else if (d) {	//right
+			memcpy(terrain_line_x, &terrain_array_host[player_location.x + player_sight_size.x][player_location.y - 1], player_sight_size.x + 2);
+		}
+	}
 		
 	char** get_map() {
 		return terrain_array_host;

@@ -66,11 +66,9 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		//terrain->show_array(shadow_map, 320);
 		//terrain->show_array(temperature_map, 320);
 
-
 		/*terrain->copy_for_player_map(II{ 200, 200 });
 		terrain->show_array(player_sight_terrain, 120);
 		terrain->show_array(player_sight_temperature, 120);*/
-
 
 		//clock_t t_1 = clock();
 		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
@@ -175,7 +173,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);
-				terrain->copy_for_player_map(II{ (int)(player->_x + (int)player->_currentX) / 100, (int)(player->_y + (int)player->_currentY) / 100});
+				terrain->copy_for_player_map(II{ (int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100});
 				if(player->isconnect)
 				{
 					while(1)
@@ -192,7 +190,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						packet.type = SC_PACKET_TERRAINALL;
 						packet.terrain_X = terrain_x;
 						memcpy(packet.terrain_Y, player_terrain[terrain_x], SIGHT_Y);
-						
 
 						player->send_packet(&packet);
 						terrain_x++;
