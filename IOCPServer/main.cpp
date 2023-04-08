@@ -250,6 +250,10 @@ int main(int argc, char* argv[])
 	{
 		objects[i] = new Resource(i ,i % 5);	//i%5 해서 type을 정해줌 /0 : 석유,	1 : 물,		2 : 철,		3 : 식량,		4 : 나무
 	}
+	for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i)//1055 ~ 1659까지는 Building	인당 11*11개 = 121개
+	{
+		objects[i] = new Building(i);
+	}
 	
 
 	//player, citizen, resource 초기 위치 지정 한번 하고 안쓸거라 main에 둠

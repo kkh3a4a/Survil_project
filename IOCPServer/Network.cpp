@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Citizen.h"
 #include"Resource.h"
+#include "Building.h"
 #include<iostream>
 
 std::array<Object*, MAXOBJECT> objects;
@@ -62,7 +63,7 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	case CS_PACKET_BUILDABLE:
 	{
 		cs_packet_buildable* cs_packet = reinterpret_cast<cs_packet_buildable*>(pk);
-		std::cout << "buildable" << std::endl;
+		//std::cout << "buildable" << std::endl;
 		sc_packet_buildable sc_packet;
 		for (auto& obj : objects) {
 			if (obj == nullptr)
@@ -70,7 +71,6 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 			if (obj->_x == 0) {
 				continue;
 			}
-			//std::cout << obj->_x << " " << obj->_y <<std:: endl;
 			if (obj->_x < cs_packet->x + 800 && obj->_x > cs_packet->x - 800 && obj->_y < cs_packet->y + 800 && obj->_y > cs_packet->y - 800) {
 				sc_packet.buildable = false;
 				break;
@@ -84,7 +84,20 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	{
 		cs_packet_build* cs_packet = reinterpret_cast<cs_packet_build*>(pk);
 		std::cout << "build" << std::endl;
-
+		//objects¿¡ Ãß°¡
+		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
+			if (objects[i]->_x != 0 || objects[i]->_y != 0)
+				continue;
+			Building* building = reinterpret_cast<Building*>(objects[i]);
+			building->_x = cs_packet->x;
+			building->_y = cs_packet->y;
+			building->_type = cs_packet->building_type;
+			break;
+		}
+		sc_packet_build sc_packet;
+		sc_packet.do_build = true;
+		player->send_packet(&sc_packet);
+		break;
 	}
 	default:
 	{
