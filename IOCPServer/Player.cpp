@@ -43,7 +43,7 @@ void Player::set_player_location(float x, float y, float z)
 	//_x는 가운데 위치, _x +_currentX 모서리 위치
 }
 
-void Player::key_input()
+void Player::key_input(char** player_sight_line)
 { 
 	//std::cout << _currentX <<std::endl;
 	bool keyinput = false;
@@ -75,7 +75,6 @@ void Player::key_input()
 	{
 		if ((int)_terrainX / 100 != (int)(_currentX) / 100)
 		{
-			_terrainX = _currentX;
 			ischangeTerrainX = true;
 		}
 	}
@@ -83,11 +82,10 @@ void Player::key_input()
 	{
 		if ((int)_terrainY / 100 != (int)(_currentY / 100))
 		{
-			_terrainY = _currentY;
 			ischangeTerrainY = true;
 		}
 	}
-	
+
 	if (keyinput)
 	{
 		sc_packet_move sc_packet_move;
@@ -99,6 +97,7 @@ void Player::key_input()
 		send_packet(&sc_packet_move);
 
 	}
+
 	if (ischangeTerrainX)
 	{
 		sc_packet_terrainXlocation packet;
@@ -106,10 +105,44 @@ void Player::key_input()
 
 		packet.type = SC_PACKET_TERRAINXLOCATION;
 
-		packet.terrainX = _terrainX;
+		packet.terrainX = _currentX;
 
-		for (auto& a : packet.terrainline_Y)
-			a = rand() % 10;
+		if (_terrainX > _currentX)
+		{
+			if (ischangeTerrainY)
+			{
+				if(_terrainY > _currentY)
+				{
+					memcpy(packet.terrainline_Y, player_sight_line[2] + 2, SIGHT_Y);
+				}
+				else
+				{
+					memcpy(packet.terrainline_Y, player_sight_line[2], SIGHT_Y);
+				}
+			}
+			else
+			{
+				memcpy(packet.terrainline_Y, player_sight_line[2] + 1, SIGHT_Y);
+			}
+		}
+		else if (_terrainX < _currentX)
+		{
+			if (ischangeTerrainY)
+			{
+				if (_terrainY > _currentY)
+				{
+					memcpy(packet.terrainline_Y, player_sight_line[3] + 2, SIGHT_Y);
+				}
+				else
+				{
+					memcpy(packet.terrainline_Y, player_sight_line[3], SIGHT_Y);
+				}
+			}
+			else
+			{
+				memcpy(packet.terrainline_Y, player_sight_line[3] + 1, SIGHT_Y);
+			}
+		}
 
 		send_packet(&packet);
 	}
@@ -120,13 +153,70 @@ void Player::key_input()
 
 		packet.type = SC_PACKET_TERRAINYLOCATION;
 
-		packet.terrainY = _terrainY;
+		packet.terrainY = _currentY;
 
-		for (auto& a : packet.terrainline_X)
-			a = rand() % 10;
+		if (_terrainY > _currentY)
+		{
+			if (ischangeTerrainX)
+			{
+				if (_terrainX > _currentX)
+				{
+					memcpy(packet.terrainline_X, player_sight_line[0] + 2, SIGHT_X);
+				}
+				else
+				{
+					memcpy(packet.terrainline_X, player_sight_line[0], SIGHT_X);
+				}
+			}
+			else
+			{
+				memcpy(packet.terrainline_X, player_sight_line[0] + 1, SIGHT_X);
+			}
+		}
+		else if (_terrainY < _currentY)
+		{
+			if (ischangeTerrainX)
+			{
+				if (_terrainX > _currentX)
+				{
+					memcpy(packet.terrainline_X, player_sight_line[1] + 2, SIGHT_X);
+				}
+				else
+				{
+					memcpy(packet.terrainline_X, player_sight_line[1], SIGHT_X);
+				}
+			}
+			else
+			{
+				memcpy(packet.terrainline_X, player_sight_line[1] + 1, SIGHT_X);
+			}
+		}
+
+
 
 		send_packet(&packet);
 	}
+	if ((int)(_currentX) % 100 == 0)
+	{
+		if ((int)_terrainX / 100 != (int)(_currentX) / 100)
+		{
+			_terrainX = _currentX;
+		}
+	}
+	if ((int)(_currentY) % 100 == 0)
+	{
+		if ((int)_terrainY / 100 != (int)(_currentY / 100))
+		{
+			_terrainY = _currentY;
+		}
+	}
+	
+	
+
+	delete player_sight_line[0];
+	delete player_sight_line[1];
+	delete player_sight_line[2];
+	delete player_sight_line[3];
 }
 
 void Player::send_resource_amount()
