@@ -28,7 +28,7 @@ public:
 
 	void send_packet(void * packet);
 	void set_player_location(float x, float y, float z);
-	void key_input();
+	void key_input(char** player_sight_line);
 	void send_resource_amount();
 	void send_terrain_All();
 	void send_sunangle(const float sunangle);

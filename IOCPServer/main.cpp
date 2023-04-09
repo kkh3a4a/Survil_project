@@ -128,7 +128,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				Player* player = reinterpret_cast<Player*>(objects[i]);
 				if (player->isconnect)
 				{
-					player->key_input();
+					char** player_sight_line;
+					player_sight_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) /100, (int)(player->_y + player->_currentY) / 100);
+					player->key_input(player_sight_line);
 					player->send_sunangle(sun_angle);
 				}
 
