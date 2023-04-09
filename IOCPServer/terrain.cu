@@ -985,10 +985,10 @@ public:
 			}
 		}
 		else if (a) {	//left
-			memcpy(terrain_line_x, &terrain_array_host[player_location.x][player_location.y - 1], player_sight_size.x + 2);
+			memcpy(terrain_line_y, &terrain_array_host[player_location.x][player_location.y - 1], player_sight_size.x + 2);
 		}
 		else if (d) {	//right
-			memcpy(terrain_line_x, &terrain_array_host[player_location.x + player_sight_size.x][player_location.y - 1], player_sight_size.x + 2);
+			memcpy(terrain_line_y, &terrain_array_host[player_location.x + player_sight_size.x][player_location.y - 1], player_sight_size.x + 2);
 		}
 	}
 		

@@ -20,7 +20,6 @@ public:
 
 protected:
 
-	int divide = 1;
 	const int TemperatureDivide = 4;
 	ADecalActor* DecalActor;
 	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
