@@ -34,10 +34,10 @@ void ABuildManager::BeginPlay()
 	DecalActor->SetDecalMaterial(MaterialInstance);
 	DecalActor->SetActorHiddenInGame(true);
 
-	BuildingArray.Add(Building_1);
-	BuildingArray.Add(Building_2);
-	BuildingArray.Add(Building_3);
-	BuildingArray.Add(Building_4);
+	BuildingArray.Add(Building_HOUSE);
+	BuildingArray.Add(Building_HOUSE2);
+	BuildingArray.Add(Building_HOUSE3);
+	BuildingArray.Add(Building_HUNTERHOUSE);
 }
 
 void ABuildManager::Tick(float DeltaTime)

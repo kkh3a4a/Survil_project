@@ -6,7 +6,6 @@
 Player::Player(int id, STATE state)
 {
 	_x = 0; _y = 0; _z = 0;
-	_type = OBJTYPE::PLAYER;
 	_state = state;
 	_currentX = 0; _currentY = 0; _currentZ = 0;
 	_terrainX = 0; _terrainY = 0; _terrainZ = 0;

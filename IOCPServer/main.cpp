@@ -328,7 +328,7 @@ int main(int argc, char* argv[])
 		{
 			unsigned char* packet_start = wsa_over_ex->_buf;
 			int remain_data = io_byte + player->_prev_size;
-			cout << user_id<< "// byte : " << remain_data << endl;
+			//cout << user_id<< "// byte : " << remain_data << endl;
 			while (remain_data > 0)
 			{
 				int packet_size = packet_start[0];
