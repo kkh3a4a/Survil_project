@@ -173,7 +173,6 @@ void AMain::SetTerrainYActorLocation(float y, char* terrainline_X)
 	static float t_y = y;
 	if (TerrainActor != nullptr)
 	{
-		
 		TerrainActor->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
 		Temperature->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
 	}

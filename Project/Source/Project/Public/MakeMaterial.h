@@ -1,10 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
+#include <iostream>
+#include <random>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Engine/DecalActor.h"
+#include "Components/DecalComponent.h"
 
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialParameterCollection.h"
@@ -44,19 +46,25 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	ADecalActor* Decal;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
 		TSubclassOf<AActor>terrain;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
 		UMaterial* Material;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Function")
 		UMaterialFunction* Func;
 
-	TArray<UMaterialExpressionConstant4Vector*> Colors;
-	TArray<UMaterialExpressionMultiply*> Multiplies;
-	TArray<UMaterialExpressionAdd*> Adds;
+	
+	int _Size = 20;
+	float _DecalSize = _Size + 2;
+	float _Space = 1.f / _DecalSize;
+	float _Radius = 3.f / (_DecalSize * 2);
+	float _Density = 1.5f;
 
+	TArray<UMaterialExpressionMultiply*> Multiplies;
+	UMaterialInstanceDynamic* MaterialInstance;
+
+	void MakeMaterial();
+	void GetMaterial();
 };
