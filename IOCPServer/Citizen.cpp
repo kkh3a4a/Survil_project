@@ -2,7 +2,6 @@
 
 Citizen::Citizen(int id)
 {
-	_type = OBJTYPE::CITIZEN;
 	_Job = -1;
 	_HP = 100;
 	_job_x = 0; _job_y = 0; _job_z = 0;

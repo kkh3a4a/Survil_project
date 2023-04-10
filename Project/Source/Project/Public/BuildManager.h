@@ -30,13 +30,13 @@ public:
 		UMaterial* BuildingGridMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
-		TSubclassOf<AActor>Building_1;
+		TSubclassOf<AActor>Building_HOUSE;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
-		TSubclassOf<AActor>Building_2;
+		TSubclassOf<AActor>Building_HOUSE2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
-		TSubclassOf<AActor>Building_3;
+		TSubclassOf<AActor>Building_HOUSE3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
-		TSubclassOf<AActor>Building_4;
+		TSubclassOf<AActor>Building_HUNTERHOUSE;
 
 	UMaterialInstanceDynamic* MaterialInstance;
 	bool BuildMode = false;
