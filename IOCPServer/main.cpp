@@ -99,6 +99,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	auto TerrainSend_Timer_End = std::chrono::system_clock::now();
 	bool Isterrain_change = true;
 	bool IsNight = false;
+	bool IsOnceWork = true;
 	char** player_terrain = terrain->get_player_sight_map();
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
@@ -123,6 +124,16 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			if (sun_angle >= 360.f) {
 				sun_angle -= 360.f;
 				IsNight = false;
+				IsOnceWork = true;
+				for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
+				{
+					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+					if (citizen->_Job == 1)
+					{
+						citizen->_arrival_x = citizen->_job_x;
+						citizen->_arrival_y = citizen->_job_y;
+					}
+				}
 			}
 			else if (sun_angle >= 180.f)
 			{
@@ -152,30 +163,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				if (citizen->_Job == -1)
 				{
 					continue;
-				}
-				if (IsNight)
-				{
-					if(sun_angle <= 185.f)
-					{
-						if (citizen->_HouseId == -1)
-						{
-							int rocate = 1;
-							if (rand() % 2 == 0)
-								rocate *= -1;
-							citizen->_arrival_x = player->_x + (rand() % 500) * rocate + 500 * rocate;
-							if (rand() % 2 == 0)
-								rocate *= -1;
-							citizen->_arrival_y = player->_y + rand() % 500 * rocate + 500 * rocate;
-						}
-					}
-				}
-				else
-				{
-					if(citizen->_Job == 1)
-					{
-						citizen->_arrival_x = citizen->_job_x;
-						citizen->_arrival_y = citizen->_job_y;
-					}
 				}
 				citizen->set_citizen_move();				
 			}
@@ -228,6 +215,29 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					}
 				}
 			}			
+		}
+
+		if (IsNight)
+		{
+			if(IsOnceWork)
+			{
+				for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
+				{
+					Player* player = reinterpret_cast<Player*>(objects[(i - 5) / 200]);
+					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+					if (citizen->_HouseId == -1)
+					{
+						int rocate = 1;
+						if (rand() % 2 == 0)
+							rocate *= -1;
+						citizen->_arrival_x = player->_x + (rand() % 500) * rocate + 500 * rocate;
+						if (rand() % 2 == 0)
+							rocate *= -1;
+						citizen->_arrival_y = player->_y + rand() % 500 * rocate + 500 * rocate;
+					}
+				}
+				IsOnceWork = false;
+			}
 		}
 		///////////////////////
 
