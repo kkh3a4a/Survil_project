@@ -98,6 +98,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
 	auto TerrainSend_Timer_End = std::chrono::system_clock::now();
 	bool Isterrain_change = true;
+	bool IsNight = false;
 	char** player_terrain = terrain->get_player_sight_map();
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
@@ -106,6 +107,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		terrain->set_city_location(TF{player->_x, player->_y}, i);
 	}
 	
+
 	while (1)
 	{
 		auto Timer_Start = std::chrono::system_clock::now();
@@ -117,11 +119,15 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			Player_Move_Timer_End = std::chrono::system_clock::now();
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
-			sun_angle += 2.f * cycle_time / 1000.f;
+			sun_angle += 2.f * cycle_time / 200.f;
 			if (sun_angle >= 360.f) {
 				sun_angle -= 360.f;
+				IsNight = false;
 			}
-
+			else if (sun_angle >= 180.f)
+			{
+				IsNight = true;
+			}
 
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
@@ -141,13 +147,37 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			Citizen_Move_Timer_End = std::chrono::system_clock::now();
 			for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 			{
+				Player* player = reinterpret_cast<Player*>(objects[(i - 5) / 200]);
 				Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
 				if (citizen->_Job == -1)
 				{
 					continue;
 				}
-				citizen->set_citizen_move();
-				
+				if (IsNight)
+				{
+					if(sun_angle <= 185.f)
+					{
+						if (citizen->_HouseId == -1)
+						{
+							int rocate = 1;
+							if (rand() % 2 == 0)
+								rocate *= -1;
+							citizen->_arrival_x = player->_x + (rand() % 500) * rocate + 500 * rocate;
+							if (rand() % 2 == 0)
+								rocate *= -1;
+							citizen->_arrival_y = player->_y + rand() % 500 * rocate + 500 * rocate;
+						}
+					}
+				}
+				else
+				{
+					if(citizen->_Job == 1)
+					{
+						citizen->_arrival_x = citizen->_job_x;
+						citizen->_arrival_y = citizen->_job_y;
+					}
+				}
+				citizen->set_citizen_move();				
 			}
 		}
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)

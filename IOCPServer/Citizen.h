@@ -11,7 +11,9 @@ public:
 
 	char _Job;	//	-1 : 생성안됨, 및 사망  // 0 : 생성 및 무직  // 1 : 자원 채취 // 2 : ....
 	float _job_x, _job_y, _job_z;
+	int _HouseId;	// -1 : 집없음, 나머지 : 집 object id
 	char _HP;
+
 	float _arrival_x, _arrival_y, _arrival_z;
 	int _playerID;
 	void set_citizen_spwan_location(float x, float y, float z);
