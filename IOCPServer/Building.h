@@ -7,9 +7,13 @@ public:
 	Building(int);
 	~Building();
 	
-	char _type{};	// -1 : 아직 지어지지 않음 , 0 : ?, 1 : ?, 2 : ?
+	char _type{};	// -1 : 아직 지어지지 않음 
+					// 1 : House , 2: House2, 3: House3
+					// 11 : HunterHouse
 	char _hp{};
 	char _level{};
+	class Citizen* _citizens[10]{};
 	
+	bool _create_building(float x, float y, char type, int id);
 };
 

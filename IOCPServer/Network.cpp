@@ -83,19 +83,16 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	case CS_PACKET_BUILD:
 	{
 		cs_packet_build* cs_packet = reinterpret_cast<cs_packet_build*>(pk);
-		std::cout << "build" << std::endl;
+		sc_packet_build sc_packet;
 		//objects¿¡ Ãß°¡
 		for (int i = BUILDINGSTART + PLAYERBUILDINGCOUNT * player->_id; i < BUILDINGSTART + PLAYERBUILDINGCOUNT * player->_id + PLAYERBUILDINGCOUNT; ++i) {
 			Building* building = reinterpret_cast<Building*>(objects[i]);
 			if (building->_type != -1)
 				continue;
-			building->_x = cs_packet->x;
-			building->_y = cs_packet->y;
-			building->_type = cs_packet->building_type;
+			sc_packet.do_build = building->_create_building(cs_packet->x, cs_packet->y, cs_packet->building_type, i);
 			break;
 		}
-		sc_packet_build sc_packet;
-		sc_packet.do_build = true;
+
 		player->send_packet(&sc_packet);
 		break;
 	}

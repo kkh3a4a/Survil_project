@@ -3,7 +3,7 @@
 #define FIRSTSPAWN 10
 
 #define UNIT 100
-const int one_side_number = 32000;
+const int one_side_number = 3200;
 const int random_array_size = 90000000;
 const int city_size = 100;
 

@@ -51,6 +51,6 @@ public:
 	void SendBuildablePacket();
 	void SendBuildPacket();
 	class AMain* Main;
-	TArray<TSubclassOf<AActor>> BuildingArray;
+	TMap<char,TSubclassOf<AActor>> BuildingArray;
 	TArray<ABuilding*> BuiltBuildings;
 };

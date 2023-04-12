@@ -34,10 +34,10 @@ void ABuildManager::BeginPlay()
 	DecalActor->SetDecalMaterial(MaterialInstance);
 	DecalActor->SetActorHiddenInGame(true);
 
-	BuildingArray.Add(Building_HOUSE);
-	BuildingArray.Add(Building_HOUSE2);
-	BuildingArray.Add(Building_HOUSE3);
-	BuildingArray.Add(Building_HUNTERHOUSE);
+	BuildingArray.Add(1, Building_HOUSE);
+	BuildingArray.Add(2, Building_HOUSE2);
+	BuildingArray.Add(3, Building_HOUSE3);
+	BuildingArray.Add(11, Building_HUNTERHOUSE);
 }
 
 void ABuildManager::Tick(float DeltaTime)
@@ -73,7 +73,7 @@ void ABuildManager::Build()
 	FRotator Rotation = FRotator(0, 0, 0);
 	FActorSpawnParameters SpawnInfo;
 	ABuilding* BuildingActor = GetWorld()->SpawnActor<ABuilding>(DecalLocation, Rotation, SpawnInfo);
-	BuildingActor->SetMesh(BuildingArray[SelectedBuilding - 1]);
+	BuildingActor->SetMesh(BuildingArray[SelectedBuilding]);
 
 	BuiltBuildings.Add(BuildingActor);
 	UE_LOG(LogTemp, Log, TEXT("Built Buildings: %d"), BuiltBuildings.Num());
@@ -91,7 +91,7 @@ void ABuildManager::SendBuildablePacket()
 
 void ABuildManager::SendBuildPacket()
 {
-	if (SelectedBuilding < 1 || SelectedBuilding > BuildingArray.Num()) {
+	if (!BuildingArray.Find(SelectedBuilding)) {
 		UE_LOG(LogTemp, Log, TEXT("Select Type of Building!!"));
 		return;
 	}

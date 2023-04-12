@@ -75,10 +75,10 @@ void AMyPlayerController::SetupInputComponent()
 	InputComponent->BindAction("Thermal", IE_Pressed, this, &AMyPlayerController::VisibilityTemperature);
 
     InputComponent->BindAction("Build", IE_Pressed, this, &AMyPlayerController::BuildMode);
-    InputComponent->BindAction("1", IE_Pressed, this, &AMyPlayerController::SelectBuilding1);
-    InputComponent->BindAction("2", IE_Pressed, this, &AMyPlayerController::SelectBuilding2);
-    InputComponent->BindAction("3", IE_Pressed, this, &AMyPlayerController::SelectBuilding3);
-    InputComponent->BindAction("4", IE_Pressed, this, &AMyPlayerController::SelectBuilding4);
+    InputComponent->BindAction("1", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse);
+    InputComponent->BindAction("2", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse2);
+    InputComponent->BindAction("3", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse3);
+    InputComponent->BindAction("4", IE_Pressed, this, &AMyPlayerController::SelectBuildingHunterHouse);
 
     InputComponent->BindAction("MouseScrollUp", IE_Pressed, this, &AMyPlayerController::MouseScrollUp);
     InputComponent->BindAction("MouseScrollDown", IE_Pressed, this, &AMyPlayerController::MouseScrollDown);
@@ -247,33 +247,42 @@ void AMyPlayerController::OnBuildMode()
     }
 }
 
-void AMyPlayerController::SelectBuilding1()
+
+
+
+void AMyPlayerController::SelectBuildingHouse()
 {
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 1;
     }
 }
 
-void AMyPlayerController::SelectBuilding2()
+void AMyPlayerController::SelectBuildingHouse2()
 {
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 2;
     }
 }
 
-void AMyPlayerController::SelectBuilding3()
+void AMyPlayerController::SelectBuildingHouse3()
 {
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 3;
     }
 }
 
-void AMyPlayerController::SelectBuilding4()
+void AMyPlayerController::SelectBuildingHunterHouse()
 {
     if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 4;
+        BuildManager->SelectedBuilding = 11;
     }
 }
+
+
+
+
+
+
 
 void AMyPlayerController::MouseScrollUp()
 {
