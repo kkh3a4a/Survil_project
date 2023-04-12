@@ -120,7 +120,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			Player_Move_Timer_End = std::chrono::system_clock::now();
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
-			sun_angle += 2.f * cycle_time / 200.f;
+			sun_angle += 2.f * cycle_time / 1000.f;
 			if (sun_angle >= 360.f) {
 				sun_angle -= 360.f;
 				IsNight = false;
@@ -167,7 +167,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				citizen->set_citizen_move();				
 			}
 		}
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)	//5000
 		{	
 			Resource_Collect_Timer_End = std::chrono::system_clock::now();
 			for (int i = RESOURCESTART; i < RESOURCESTART + MAXRESOURCE; ++i)
