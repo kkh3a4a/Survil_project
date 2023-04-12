@@ -7,43 +7,25 @@
 // Sets default values
 ATemperature::ATemperature()
 {
-	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+    // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+    PrimaryActorTick.bCanEverTick = true;
 
-	// Set the root component as the root of the actor
+	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	RootComponent = Root;
 }
 
-// ATemperature::Initiaize(UMaterial* Material)
-void ATemperature::Initiaize(UMaterial* Material)
+void ATemperature::BeginPlay()
 {
-    /*const float Width = 200; 
-    const float Height = 5000;
+    Super::BeginPlay();
 
-    for (int32 y = 0; y < MapSizeY / 2; y++){
-        for (int32 x = 0; x < MapSizeX / 2; x++){
-            DecalActor = GetWorld()->SpawnActor<ADecalActor>(FVector(Width * x + Width / 2, Width * y + Width / 2, 0), FRotator(0,-90,0));
-			DecalActor->SetActorScale3D(FVector(Height, 2, 2));
-			DecalActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-            
-            UMaterialInstanceDynamic* MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
-            MaterialInstance->SetVectorParameterValue(TEXT("Temperature"), FLinearColor(1, 0, 0, 1));
-            MaterialInstanceArray.Add(MaterialInstance);
-			
-            DecalActor->SetDecalMaterial(MaterialInstance);
-			DecalArray.Add(DecalActor);
-        }
-    }
-	Hide(true);*/
-
-    MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
     for (int i = 0; i < 12 * 5; i++) {
+        UMaterialInstanceDynamic* MaterialInstance = UMaterialInstanceDynamic::Create(TemperatureMaterial, this);
         MaterialInstanceArray.Add(MaterialInstance);
     }
 
     FVector Location(0, 0, 0);
     FRotator Rotation = FRotator(0, 0, 0);
     FActorSpawnParameters SpawnInfo;
-
 
     for (int32 y = 0; y < 5; y++) {
         for (int32 x = 0; x < 12; x++) {
@@ -52,25 +34,26 @@ void ATemperature::Initiaize(UMaterial* Material)
             DecalComponent->DecalSize = FVector(100, 100, 100);
             Decal->SetActorScale3D(FVector(10, _DecalSize, _DecalSize));
             Decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-            Decal->SetDecalMaterial(MaterialInstanceArray[y*12+x]);
+            Decal->SetDecalMaterial(MaterialInstanceArray[y * 12 + x]);
             DecalArray.Add(Decal);
         }
     }
     Hide(true);
 }
 
-void ATemperature::Update(uint8(*TerrainTemperaturePtr)[MapSizeY])
+void ATemperature::Tick(float DeltaTime)
 {
-	if (IsHidden)
-		return;
-	for (int32 i = 0; i < 12*5; i++) {
+    Super::Tick(DeltaTime);
+
+    if (IsHidden)
+        return;
+    for (int32 i = 0; i < 12 * 5; i++) {
         FVector RGB;
-        TemperatureToRGB(TerrainTemperaturePtr[i % MapSizeX][i / MapSizeX], RGB.X, RGB.Y, RGB.Z);
-        //UE_LOG(LogTemp, Warning, TEXT("%d %d"), (i) % (MapSizeX / 2), (i) / (MapSizeX / 2));
-        //MaterialInstanceArray[i]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), i), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
-        for(int c = 0; c < 20*20; c++)
+        for (int c = 0; c < 20 * 20; c++) {
+            TemperatureToRGB(TerrainTemperature[i % MapSizeX][i / MapSizeX], RGB.X, RGB.Y, RGB.Z);
             MaterialInstanceArray[i]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), c), FLinearColor((float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, 1));
-	}
+        }
+    }
 }
 
 void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, double& b) {
@@ -103,7 +86,6 @@ void ATemperature::Hide(bool visibility)
 	}
 	IsHidden = visibility;
 }
-
 
 bool ATemperature::GetIsHidden()
 {

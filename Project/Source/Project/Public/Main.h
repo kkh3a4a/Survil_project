@@ -64,8 +64,6 @@ public:
 
 	bool ThreadInitSendRecv = false;
 	bool CitizenRelaese = false;
-	
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Resource")
 		TSubclassOf<AActor>WellPump;
@@ -76,13 +74,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terrain")
 		UMaterialInstance* TerrainMaterialInstance;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Temperature")
-		UMaterial* TemperatureMaterial;
+	
 
 	int8 Terrain2DArray[MapSizeX][MapSizeY];
 	int8 TerrainChange2DArray[MapSizeX][MapSizeY]{};
-	uint8 TerrainTemperature[MapSizeX][MapSizeY];
 
 	AMeshTerrain* TerrainActor;
 	ATemperature* Temperature;

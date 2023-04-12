@@ -47,15 +47,21 @@ void AMain::BeginPlay()
 		return;
 	}
 
+	//Get Temperature
+	AActor* TemperatureActor = UGameplayStatics::GetActorOfClass(GetWorld(), ATemperature::StaticClass());
+	if (TemperatureActor == nullptr) {
+		return;
+	}
+	Temperature = Cast <ATemperature>(TemperatureActor);
+	if (Temperature == nullptr) {
+		return;
+	}
+	//TemperatureActor->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
 	//Init Mesh Terrain
 	TerrainActor = GetWorld()->SpawnActor<AMeshTerrain>(FVector(0, 0, 0), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	TerrainActor->InitializeMeshTerrain(TerrainMaterialInstance);
 
-	//Spawn Temperature
-	Temperature = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	Temperature->Initiaize(TemperatureMaterial);
-	Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	
 	//Get Camera
 	TArray<AActor*> CameraActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), CameraActors);
@@ -91,9 +97,6 @@ void AMain::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	
-	Temperature->Update(TerrainTemperature);
-
-
 }
 
 void AMain::SetPlayerLocation(float x, float y, float z)
@@ -131,7 +134,7 @@ void AMain::SetTerrainXActorLocation(float x, char* terrainline_Y)
 	if (TerrainActor != nullptr)
 	{
 		TerrainActor->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
-		//Temperature->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
+		Temperature->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
 	}
 	if ((int)t_x != (int)x)
 	{
@@ -174,7 +177,7 @@ void AMain::SetTerrainYActorLocation(float y, char* terrainline_X)
 	if (TerrainActor != nullptr)
 	{
 		TerrainActor->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
-		//Temperature->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
+		Temperature->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
 	}
 
 	if ((int)t_y != (int)y)

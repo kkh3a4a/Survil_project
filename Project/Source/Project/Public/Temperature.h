@@ -17,21 +17,27 @@ class PROJECT_API ATemperature : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ATemperature();
-	
 
 protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
+	ADecalActor* DecalActor;
 	const int TemperatureDivide = 4;
-	UMaterialInstanceDynamic* MaterialInstance;
 	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
 	TArray<ADecalActor*> DecalArray;
 	bool IsHidden = false;
 	float _DecalSize = 22;
+	
 public:	
-	void Initiaize(UMaterial*);
-	void Update(uint8(*TerrainTemperaturePtr)[MapSizeY]);
-	void TemperatureToRGB(double , double& , double& , double& );
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Temperature")
+		UMaterial* TemperatureMaterial;
+
+	uint8 TerrainTemperature[MapSizeX][MapSizeY];
+	void TemperatureToRGB(double , double& , double& , double& );
 	void Hide(bool);
 	bool GetIsHidden();
 };
