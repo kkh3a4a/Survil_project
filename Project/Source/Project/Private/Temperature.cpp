@@ -13,9 +13,10 @@ ATemperature::ATemperature()
 	RootComponent = Root;
 }
 
+// ATemperature::Initiaize(UMaterial* Material)
 void ATemperature::Initiaize(UMaterial* Material)
 {
-    const float Width = 200; 
+    /*const float Width = 200; 
     const float Height = 5000;
 
     for (int32 y = 0; y < MapSizeY / 2; y++){
@@ -32,18 +33,43 @@ void ATemperature::Initiaize(UMaterial* Material)
 			DecalArray.Add(DecalActor);
         }
     }
-	Hide(true);
+	Hide(true);*/
+
+    MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
+    for (int i = 0; i < 12 * 5; i++) {
+        MaterialInstanceArray.Add(MaterialInstance);
+    }
+
+    FVector Location(0, 0, 0);
+    FRotator Rotation = FRotator(0, 0, 0);
+    FActorSpawnParameters SpawnInfo;
+
+
+    for (int32 y = 0; y < 5; y++) {
+        for (int32 x = 0; x < 12; x++) {
+            ADecalActor* Decal = GetWorld()->SpawnActor<ADecalActor>(Location + FVector(4000 * x, 4000 * y, 0), Rotation);
+            UDecalComponent* DecalComponent = Decal->GetDecal();
+            DecalComponent->DecalSize = FVector(100, 100, 100);
+            Decal->SetActorScale3D(FVector(10, _DecalSize, _DecalSize));
+            Decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+            Decal->SetDecalMaterial(MaterialInstanceArray[y*12+x]);
+            DecalArray.Add(Decal);
+        }
+    }
+    Hide(true);
 }
 
-void ATemperature::Update(uint8(*TerrainTemperaturePtr)[MapSizeY / 2])
+void ATemperature::Update(uint8(*TerrainTemperaturePtr)[MapSizeY])
 {
 	if (IsHidden)
 		return;
-	for (int32 i = 0; i < MapSizeX / 2 * MapSizeY / 2; i++) {
+	for (int32 i = 0; i < 12*5; i++) {
         FVector RGB;
-        TemperatureToRGB(TerrainTemperaturePtr[(i) % (MapSizeX / 2)][(i) / (MapSizeX / 2)], RGB.X, RGB.Y, RGB.Z);
+        TemperatureToRGB(TerrainTemperaturePtr[i % MapSizeX][i / MapSizeX], RGB.X, RGB.Y, RGB.Z);
         //UE_LOG(LogTemp, Warning, TEXT("%d %d"), (i) % (MapSizeX / 2), (i) / (MapSizeX / 2));
-        MaterialInstanceArray[i]->SetVectorParameterValue(TEXT("Temperature"), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
+        //MaterialInstanceArray[i]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), i), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
+        for(int c = 0; c < 20*20; c++)
+            MaterialInstanceArray[i]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), c), FLinearColor((float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, 1));
 	}
 }
 

@@ -54,7 +54,7 @@ void AMain::BeginPlay()
 	//Spawn Temperature
 	Temperature = GetWorld()->SpawnActor<ATemperature>(FVector(0.0f, 0.0f, 0.0f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 	Temperature->Initiaize(TemperatureMaterial);
-	//Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	
 	//Get Camera
 	TArray<AActor*> CameraActors;
@@ -91,7 +91,7 @@ void AMain::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	
-	//Temperature->Update(TerrainTemperature);
+	Temperature->Update(TerrainTemperature);
 
 
 }
@@ -131,7 +131,7 @@ void AMain::SetTerrainXActorLocation(float x, char* terrainline_Y)
 	if (TerrainActor != nullptr)
 	{
 		TerrainActor->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
-		Temperature->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
+		//Temperature->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
 	}
 	if ((int)t_x != (int)x)
 	{
@@ -174,7 +174,7 @@ void AMain::SetTerrainYActorLocation(float y, char* terrainline_X)
 	if (TerrainActor != nullptr)
 	{
 		TerrainActor->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
-		Temperature->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
+		//Temperature->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
 	}
 
 	if ((int)t_y != (int)y)

@@ -6,6 +6,7 @@
 #include "Engine/DecalActor.h"
 #include "MeshTerrain.h"
 #include "Components/InstancedStaticMeshComponent.h"
+#include "Components/DecalComponent.h"
 #include "Temperature.generated.h"
 
 UCLASS()
@@ -21,14 +22,14 @@ public:
 protected:
 
 	const int TemperatureDivide = 4;
-	ADecalActor* DecalActor;
+	UMaterialInstanceDynamic* MaterialInstance;
 	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
 	TArray<ADecalActor*> DecalArray;
 	bool IsHidden = false;
-
+	float _DecalSize = 22;
 public:	
 	void Initiaize(UMaterial*);
-	void Update(uint8(*TerrainTemperaturePtr)[MapSizeY / 2]);
+	void Update(uint8(*TerrainTemperaturePtr)[MapSizeY]);
 	void TemperatureToRGB(double , double& , double& , double& );
 
 	void Hide(bool);
