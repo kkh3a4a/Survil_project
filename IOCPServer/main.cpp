@@ -60,7 +60,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		//clock_t t_0 = clock();
 		auto Timer_Start = std::chrono::system_clock::now();
 
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - TerrainChange_Timer_End).count() > 30000)
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - TerrainChange_Timer_End).count() > 100)
 		{
 			auto TerrainChange_Timer_End = std::chrono::system_clock::now();
 			cout << endl << i << "번째" << endl;
@@ -114,6 +114,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	bool IsNight = false;
 	bool IsOnceWork = true;
 	char** player_terrain = terrain->get_player_sight_map();
+	char** player_temperature = terrain->get_player_temperature_map();
+	
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
 		Player* player = reinterpret_cast<Player*>(objects[i]);
@@ -133,7 +135,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			Player_Move_Timer_End = std::chrono::system_clock::now();
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
-			sun_angle += 2.f * cycle_time / 100.f;
+			sun_angle += 2.f * cycle_time / 1000.f;
 			if (sun_angle >= 360.f) {
 				sun_angle -= 360.f;
 				IsNight = false;
@@ -194,7 +196,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				player->send_resource_amount();
 			}
 		}
-		//추후 수정///////////////
 		if (Isterrain_change)
 		{
 			for (int i = 0; i < MAXPLAYER; ++i)
@@ -209,7 +210,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						if (terrain_x == SIGHT_X)
 						{
 							terrain_x = 0;
-							Isterrain_change = false;
 							break;
 						}
 						sc_packet_terrainAll packet;
@@ -221,10 +221,26 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						player->send_packet(&packet);
 						terrain_x++;
 					}
+					
+					while (1)
+					{
+						static unsigned char terrain_x{};
+						if (terrain_x == SIGHT_X)
+						{
+							terrain_x = 0;
+							break;
+						}
+						sc_packet_temperature packet;
+						packet.terrain_X = terrain_x;
+						memcpy(packet.terrain_Y, player_temperature[terrain_x], SIGHT_Y);
+
+						player->send_packet(&packet);
+						terrain_x++;
+					}
+					Isterrain_change = false;
 				}
 			}			
 		}
-
 		if (IsNight)
 		{
 			if(IsOnceWork)

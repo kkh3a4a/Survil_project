@@ -41,6 +41,9 @@
 #define CS_PACKET_BUILDABLE			40
 #define CS_PACKET_BUILD				41
 
+#define CS_PACKET_TEMPERATURE		50
+
+
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -59,6 +62,9 @@
 
 #define SC_PACKET_BUILDABLE			40
 #define SC_PACKET_BUILD				41
+
+#define SC_PACKET_TEMPERATURE		50
+
 
 
 #pragma pack (push, 1)
@@ -256,6 +262,13 @@ struct sc_packet_build
 	float x, y;
 };
 
+struct sc_packet_temperature
+{
+	unsigned char size = sizeof(sc_packet_temperature);
+	unsigned char type = SC_PACKET_TEMPERATURE;
 
+	unsigned char terrain_X;
+	char terrain_Y[SIGHT_Y];
+};
 
 #pragma pack (pop)
