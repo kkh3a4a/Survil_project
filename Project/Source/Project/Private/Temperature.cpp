@@ -29,7 +29,7 @@ void ATemperature::BeginPlay()
 
     for (int32 y = 0; y < 5; y++) {
         for (int32 x = 0; x < 12; x++) {
-            ADecalActor* Decal = GetWorld()->SpawnActor<ADecalActor>(Location + FVector(4000 * x, 4000 * y, 0), Rotation);
+            ADecalActor* Decal = GetWorld()->SpawnActor<ADecalActor>(Location + FVector(2000 * x + 1000, 2000 * y + 1000, 0), Rotation);
             UDecalComponent* DecalComponent = Decal->GetDecal();
             DecalComponent->DecalSize = FVector(100, 100, 100);
             Decal->SetActorScale3D(FVector(10, _DecalSize, _DecalSize));
@@ -47,13 +47,26 @@ void ATemperature::Tick(float DeltaTime)
 
     if (IsHidden)
         return;
-    for (int32 i = 0; i < 12 * 5; i++) {
-        FVector RGB;
-        for (int c = 0; c < 20 * 20; c++) {
-            TemperatureToRGB(TerrainTemperature[i % MapSizeX][i / MapSizeX], RGB.X, RGB.Y, RGB.Z);
-            MaterialInstanceArray[i]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), c), FLinearColor((float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, 1));
+    FVector RGB;
+    //for (int32 y = 0; y < 5; y++) {
+    //    for (int32 x = 0; x < 12; x++) {
+    //        for (int cy = 0; cy < 20; cy++) {
+    //            for (int cx = 0; cx < 20; cx++) {
+    //                TemperatureToRGB(TerrainTemperature[x * cx][y * cy], RGB.X, RGB.Y, RGB.Z);
+    //                //MaterialInstanceArray[i]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), c), FLinearColor((float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, 1));
+    //                MaterialInstanceArray[y * 5 + x]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), cy * 20 + cx), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
+    //            }
+    //        }
+    //    }
+    //}
+    for (int y = 0; y < 100; y++) {
+        for (int x = 0; x < 240; x++) {
+            TemperatureToRGB(TerrainTemperature[x][y], RGB.X, RGB.Y, RGB.Z);
+            MaterialInstanceArray[(y / 20) * 12 + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
+
         }
     }
+
 }
 
 void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, double& b) {

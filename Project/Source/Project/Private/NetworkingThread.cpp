@@ -211,6 +211,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 			if (packet->do_build) {
 				_MainClass->BuildManager->Build();
 			}
+			break;
+		}
+		case SC_PACKET_TEMPERATURE:
+		{
+			sc_packet_temperature* packet = reinterpret_cast<sc_packet_temperature*>(buf);
+			memcpy(_MainClass->Temperature->TerrainTemperature[packet->terrain_X], packet->terrain_Y, SIGHT_Y);
+			break;
 		}
 
 		default:

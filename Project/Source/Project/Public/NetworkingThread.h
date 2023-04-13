@@ -55,7 +55,6 @@ public:
 	class ACitizenManager* _CitizenManager;
 	class AResourceManager* _ResourceManager;
 
-
     bool IsRunning = true;
 	bool IsConnected = false;
     double CycleTime{};
@@ -69,8 +68,8 @@ public:
 	void error_display(const char* msg, int err_no);
 
 private: 
-	//char IPAddress[20] = "192.168.0.8";
-	char IPAddress[20] = "127.0.0.1";
+	char IPAddress[20] = "192.168.0.8";
+	//char IPAddress[20] = "127.0.0.1";
 
     int32 BytesReceived;
     int32 BytesSent;

@@ -27,7 +27,7 @@ protected:
 	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
 	TArray<ADecalActor*> DecalArray;
 	bool IsHidden = false;
-	float _DecalSize = 22;
+	float _DecalSize = 11;
 	
 public:	
 	// Called every frame
