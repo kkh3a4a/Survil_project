@@ -1,4 +1,9 @@
 #include "Citizen.h"
+#include"Building.h"
+
+//추후 지울것
+#include<iostream>
+using namespace std;
 
 Citizen::Citizen(int id)
 {
@@ -41,7 +46,49 @@ void Citizen::set_citizen_move()
 			_x = _arrival_x;
 			_y = _arrival_y;
 		}
-		else
+		bool _isOverlap = false;
+		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i)
+		{
+			Building* building = reinterpret_cast<Building*>(objects[i]);
+
+			if (building->_type != -1)
+			{
+				float builddistance = sqrt(pow(_x - building->_x, 2) + pow(_y - building->_y, 2));
+				/*if (builddistance < 300)
+				{
+					builddistance;
+					if (building->_y + 350 >= _y && building->_y - 350 <= _y)
+					{
+						if ((building->_y - _y) <= 0)
+						{
+							_y += 10;
+						}
+						else
+						{
+							_y -= 10;
+						}
+					}
+
+					if (building->_x + 350 >= _x && building->_x - 350 <= _x)
+					{
+
+						if ((building->_x - _x) <= 0)
+						{
+							_x += 10;
+						}
+						else
+						{
+							_x -= 10;
+						}
+					}
+
+					_isOverlap = true;
+				}
+			}*/
+			}
+
+		}
+		if(!_isOverlap)
 		{
 			_x += ((_arrival_x - _x) / distance) * 10;
 			_y += ((_arrival_y - _y) / distance) * 10;

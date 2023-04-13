@@ -14,6 +14,11 @@ Player::Player(int id, STATE state)
 	_id = id;
 	_socket={0};
 
+	//초기 자원 지정
+	for (auto& a : _resource_amount)
+	{
+		a = 500;
+	}
 }
 
 Player::~Player()

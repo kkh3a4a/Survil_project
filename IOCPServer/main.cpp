@@ -40,6 +40,7 @@ Terrain* terrain = new Terrain();
 char** total_terrain = terrain->get_map();
 char** shadow_map = terrain->get_shadow_map();
 unsigned char** temperature_map = terrain->get_temperature_map();
+bool Isterrain_change = true;
 
 DWORD WINAPI terrain_change(LPVOID arg)
 {
@@ -50,33 +51,45 @@ DWORD WINAPI terrain_change(LPVOID arg)
 	//terrain->show_array(total_terrain, 320);
 	//terrain->log_on();
 	int i{};
+	auto TerrainChange_Timer_End = std::chrono::system_clock::now();
+	terrain->wind_blow({ 1, 0 }, 1);
+	terrain->make_shadow_map(sun_angle);
+	terrain->make_tempertature_map(sun_angle);
+	CC retval = terrain->get_highest_lowest(temperature_map);
 	while (1){
 		//clock_t t_0 = clock();
-		cout << endl << i << "번째" << endl;
-		
+		auto Timer_Start = std::chrono::system_clock::now();
 
-		terrain->wind_blow({ 1, 0 }, 1);
-		terrain->make_shadow_map(sun_angle);
-		terrain->make_tempertature_map(sun_angle);
-		CC retval = terrain->get_highest_lowest(temperature_map);
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - TerrainChange_Timer_End).count() > 30000)
+		{
+			auto TerrainChange_Timer_End = std::chrono::system_clock::now();
+			cout << endl << i << "번째" << endl;
 
-		cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
 
-		//terrain->show_array(total_terrain, 320);
-		//terrain->show_array(shadow_map, 320);
-		//terrain->show_array(temperature_map, 320);
+			terrain->wind_blow({ 1, 0 }, 1);
+			terrain->make_shadow_map(sun_angle);
+			terrain->make_tempertature_map(sun_angle);
+			CC retval = terrain->get_highest_lowest(temperature_map);
 
-		/*terrain->copy_for_player_map(II{ 200, 200 });
-		terrain->show_array(player_sight_terrain, 120);
-		terrain->show_array(player_sight_temperature, 120);*/
+			cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
 
-		//clock_t t_1 = clock();
-		//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
-		if (i % 100 == 0 && i != 0) {
-			terrain->save_terrain();
-			cout << "SAVED!!!" << endl;
+			//terrain->show_array(total_terrain, 320);
+			//terrain->show_array(shadow_map, 320);
+			//terrain->show_array(temperature_map, 320);
+
+			/*terrain->copy_for_player_map(II{ 200, 200 });
+			terrain->show_array(player_sight_terrain, 120);
+			terrain->show_array(player_sight_temperature, 120);*/
+
+			//clock_t t_1 = clock();
+			//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
+			if (i % 100 == 0 && i != 0) {
+				terrain->save_terrain();
+				cout << "SAVED!!!" << endl;
+			}
+			i++;
+			Isterrain_change = true;
 		}
-		i++;
 	}
 }
 
@@ -97,7 +110,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	auto Citizen_Move_Timer_End = std::chrono::system_clock::now();
 	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
 	auto TerrainSend_Timer_End = std::chrono::system_clock::now();
-	bool Isterrain_change = true;
+	
 	bool IsNight = false;
 	bool IsOnceWork = true;
 	char** player_terrain = terrain->get_player_sight_map();
@@ -120,12 +133,12 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			Player_Move_Timer_End = std::chrono::system_clock::now();
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
-			sun_angle += 2.f * cycle_time / 1000.f;
+			sun_angle += 2.f * cycle_time / 100.f;
 			if (sun_angle >= 360.f) {
 				sun_angle -= 360.f;
 				IsNight = false;
 				IsOnceWork = true;
-				for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
+			for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 				{
 					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
 					if (citizen->_Job == 1)
@@ -182,11 +195,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			}
 		}
 		//추후 수정///////////////
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - TerrainSend_Timer_End).count() > 10000)
-		{
-			TerrainSend_Timer_End = std::chrono::system_clock::now();
-			Isterrain_change = true;
-		}
 		if (Isterrain_change)
 		{
 			for (int i = 0; i < MAXPLAYER; ++i)
@@ -221,19 +229,56 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		{
 			if(IsOnceWork)
 			{
-				for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
+				for (int citizen_id = CITIZENSTART; citizen_id < MAXCITIZEN + CITIZENSTART; ++citizen_id)
 				{
-					Player* player = reinterpret_cast<Player*>(objects[(i - 5) / 200]);
-					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+					int player_id = (citizen_id - 5) / 200;
+					Player* player = reinterpret_cast<Player*>(objects[player_id]);
+					Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
+					if (citizen->_Job == -1)
+						continue;
+					
 					if (citizen->_HouseId == -1)
 					{
-						int rocate = 1;
-						if (rand() % 2 == 0)
-							rocate *= -1;
-						citizen->_arrival_x = player->_x + (rand() % 500) * rocate + 500 * rocate;
-						if (rand() % 2 == 0)
-							rocate *= -1;
-						citizen->_arrival_y = player->_y + rand() % 500 * rocate + 500 * rocate;
+						bool isHouseStaff = false;
+						//만약 빈 HOUSE가 생겼을때 시민을 배치해준다.
+						for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; building_id++)
+						{
+
+							Building* building = reinterpret_cast<Building*>(objects[building_id]);
+							if (building->_type == 1 || building->_type == 2 || building->_type == 3)
+							{
+								for (auto& a : building->_citizens)
+								{
+									if (a == nullptr)
+									{
+										citizen->_HouseId = building->_id;
+										a = citizen;
+										citizen->_arrival_x = objects[citizen->_HouseId]->_x;
+										citizen->_arrival_y = objects[citizen->_HouseId]->_y;
+										isHouseStaff = true;
+										break;
+									}
+								}
+							}
+							if (isHouseStaff)
+								break;
+
+						}
+						if(!isHouseStaff)
+						{
+							int rocate = 1;
+							if (rand() % 2 == 0)
+								rocate *= -1;
+							citizen->_arrival_x = player->_x + (rand() % 500) * rocate + 500 * rocate;
+							if (rand() % 2 == 0)
+								rocate *= -1;
+							citizen->_arrival_y = player->_y + rand() % 500 * rocate + 500 * rocate;
+						}
+					}
+					else
+					{
+						citizen->_arrival_x = objects[citizen->_HouseId]->_x;
+						citizen->_arrival_y = objects[citizen->_HouseId]->_y;
 					}
 				}
 				IsOnceWork = false;
@@ -248,7 +293,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 int main(int argc, char* argv[])
 {	
 	cout << fixed;
-	
 	// 윈속 초기화
 	WSADATA wsa;
 	int ret = WSAStartup(MAKEWORD(2, 2), &wsa);
