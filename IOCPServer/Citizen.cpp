@@ -11,8 +11,10 @@ Citizen::Citizen(int id)
 	_HP = 100;
 	_job_x = 0; _job_y = 0; _job_z = 0;
 	_id = id;
-	_playerID = (_id - 5) / 200;
+	_playerID = (_id - CITIZENSTART) / 200;
 	_HouseId = -1;
+	_Satiety = 100;
+	_thirst = 100;
 }
 
 Citizen::~Citizen()
@@ -109,5 +111,41 @@ void Citizen::set_citizen_move()
 			reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
 		}
 	}
+}
+
+void Citizen::citizen_dead()
+{
+	_Job = -1;
+	_HP = 100;
+	_job_x = 0; _job_y = 0; _job_z = 0;
+	_playerID = (_id - CITIZENSTART) / 200;
+	_HouseId = -1;
+	_Satiety = 100;
+	_thirst = 100;
+}
+
+bool Citizen::citizen_eat_food()
+{
+	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+	if (player->_resource_amount[3] > 0)
+	{
+		player->_resource_amount[3] -= 1;
+		_Satiety += 30;
+		return true;
+	}
+	return false;
+}
+
+bool Citizen::citizen_eat_water()
+{
+	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+	if (player->_resource_amount[3] > 0)
+	{
+		player->_resource_amount[1] -= 1;
+		_thirst += 30;
+		
+		return true;
+	}
+	return false;
 }
 

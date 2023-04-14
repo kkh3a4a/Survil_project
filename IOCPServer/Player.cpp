@@ -1,4 +1,6 @@
 #include "Player.h"
+
+#include"Citizen.h"
 #include <iostream>
 #include <string>
 #include <random>
@@ -17,7 +19,7 @@ Player::Player(int id, STATE state)
 	//초기 자원 지정
 	for (auto& a : _resource_amount)
 	{
-		a = 500;
+		a = 75;
 	}
 }
 
@@ -250,4 +252,17 @@ void Player::send_sunangle(const float sunangle)
 	packet.sunangle = sunangle;
 
 	send_packet(&packet);
+}
+
+int Player::playercitizencount()
+{
+	int _citizencount = 0;
+	for (int citizen_id = CITIZENSTART + _id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
+	{
+		Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
+		if (citizen->_Job != -1)
+			_citizencount++;
+
+	}
+	return _citizencount;
 }

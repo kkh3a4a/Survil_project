@@ -60,7 +60,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		//clock_t t_0 = clock();
 		auto Timer_Start = std::chrono::system_clock::now();
 
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - TerrainChange_Timer_End).count() > 100)
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - TerrainChange_Timer_End).count() > 300)
 		{
 			auto TerrainChange_Timer_End = std::chrono::system_clock::now();
 			cout << endl << i << "번째" << endl;
@@ -115,7 +115,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	bool IsOnceWork = true;
 	char** player_terrain = terrain->get_player_sight_map();
 	char** player_temperature = terrain->get_player_temperature_map();
-	
+	int citizenfoodwatereat = 0;
+
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
 		Player* player = reinterpret_cast<Player*>(objects[i]);
@@ -135,12 +136,15 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			Player_Move_Timer_End = std::chrono::system_clock::now();
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
+			
 			sun_angle += 2.f * cycle_time / 1000.f;
-			if (sun_angle >= 360.f) {
+			if (sun_angle >= 360.f) 
+			{
 				sun_angle -= 360.f;
 				IsNight = false;
 				IsOnceWork = true;
-			for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
+				citizenfoodwatereat = 0;
+				for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 				{
 					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
 					if (citizen->_Job == 1)
@@ -153,6 +157,59 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			else if (sun_angle >= 180.f)
 			{
 				IsNight = true;
+			}
+
+			if (sun_angle - citizenfoodwatereat > 10)
+			{
+				citizenfoodwatereat = sun_angle;
+				for(int player_id = 0;player_id < MAXPLAYER;++player_id)
+				{
+					Player* player = reinterpret_cast<Player*>(objects[player_id]);
+					int citizencount = player->playercitizencount();
+					for (int citizen_id = CITIZENSTART + player_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
+					{
+						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
+						if (citizen->_Job == -1)
+							continue;
+						citizen->_Satiety -= 1;
+						citizen->_thirst -= 1;
+
+						if (citizen->_Satiety == 0)
+						{
+							if (!citizen->citizen_eat_food())
+								citizen->citizen_dead();
+						}
+						if (citizen->_thirst == 0)
+						{
+							if (!citizen->citizen_eat_water())
+								citizen->citizen_dead();
+						}
+
+						if (player->_resource_amount[3] > citizencount)
+						{
+							if(citizen->_Satiety < 70)
+								citizen->citizen_eat_food();
+						}
+						else
+						{
+							if (citizen->_Satiety < 30)
+								citizen->citizen_eat_food();
+						}
+
+						if (player->_resource_amount[1] > citizencount)
+						{
+							if (citizen->_thirst < 70)
+								citizen->citizen_eat_water();
+						}
+						else
+						{
+							if (citizen->_thirst < 30)
+								citizen->citizen_eat_water();
+						}
+					}
+
+					player->send_resource_amount();
+				}
 			}
 
 			for (int i = 0; i < MAXPLAYER; ++i)
@@ -173,13 +230,12 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			Citizen_Move_Timer_End = std::chrono::system_clock::now();
 			for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 			{
-				Player* player = reinterpret_cast<Player*>(objects[(i - 5) / 200]);
 				Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
 				if (citizen->_Job == -1)
 				{
 					continue;
 				}
-				citizen->set_citizen_move();				
+				citizen->set_citizen_move();
 			}
 		}
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)	//5000

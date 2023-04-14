@@ -16,6 +16,7 @@ public:
 	char isconnect;
 	char w, a, s, d;
 	
+	//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	int _resource_amount[5] = {};
 
 	float _currentX, _currentY, _currentZ;
@@ -33,4 +34,6 @@ public:
 	void send_terrain_All();
 	void send_sunangle(const float sunangle);
 	void send_terrain_line();
+	int playercitizencount();
+
 };
