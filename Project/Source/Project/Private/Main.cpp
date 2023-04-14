@@ -140,26 +140,14 @@ void AMain::SetTerrainXActorLocation(float x, char* TerrainLineY)
 	{
 		if ((int)TerrainX < (int)x)
 		{
-			for (int i = 0; i < SIGHT_X - 1; ++i)
-			{
-				memcpy(Terrain2DArray[i],Terrain2DArray[i + 1], SIGHT_Y);
-			}
-			for (int i = 0; i < SIGHT_Y; ++i)
-			{
-				Terrain2DArray[SIGHT_X - 1][i] = TerrainLineY[i];
-			}
+			memcpy(Terrain2DArray[0],Terrain2DArray[1], SIGHT_Y * (SIGHT_X - 1));
+			memcpy(Terrain2DArray[SIGHT_X - 1],TerrainLineY, SIGHT_Y);
 		}
 		if ((int)TerrainX > (int)x)
 		{
 
-			for (int i = SIGHT_X - 1; i > 0; --i)
-			{
-				memcpy(Terrain2DArray[i], Terrain2DArray[i - 1], SIGHT_Y);
-			}
-			for (int i = 0; i < SIGHT_Y; ++i)
-			{
-				Terrain2DArray[0][i] = TerrainLineY[i];
-			}
+			memcpy(Terrain2DArray[1], Terrain2DArray[0], SIGHT_Y * (SIGHT_X - 1));
+			memcpy(Terrain2DArray[0], TerrainLineY,SIGHT_Y);
 		}
 		TerrainX = x;
 	}
