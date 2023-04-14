@@ -90,6 +90,7 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 			if (building->_type != -1)
 				continue;
 			sc_packet.do_build = building->_create_building(cs_packet->x, cs_packet->y, cs_packet->building_type, i);
+			sc_packet.id = building->_id;
 			break;
 		}
 

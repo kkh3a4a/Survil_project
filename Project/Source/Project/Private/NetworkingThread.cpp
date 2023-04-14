@@ -209,7 +209,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_build* packet = reinterpret_cast<sc_packet_build*>(buf);
 			if (packet->do_build) {
-				_MainClass->BuildManager->Build();
+				_MainClass->BuildManager->Build(packet->id);
 			}
 			break;
 		}

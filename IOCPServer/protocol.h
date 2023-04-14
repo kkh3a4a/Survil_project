@@ -259,6 +259,7 @@ struct sc_packet_build
 
 	bool do_build;
 	char building_type;
+	int id;
 	float x, y;
 };
 

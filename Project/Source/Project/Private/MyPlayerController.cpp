@@ -192,6 +192,10 @@ void AMyPlayerController::MoveToMouseCursor()
             workcitizen = ResourceManager->workCitizens[ObjectId];
             joblessCitizen = ResourceManager->playerjobless;
         }
+        else if (hitActor->ActorHasTag("Building"))
+        {
+            UE_LOG(LogTemp, Log, TEXT("type : %d"), FCString::Atoi(*hitActor->Tags[1].ToString()));
+        }
         else
         {
             ObjectId = -1;

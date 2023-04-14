@@ -25,9 +25,12 @@ void ABuilding::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ABuilding::SetMesh(TSubclassOf<AActor> Mesh)
+void ABuilding::SetMesh(TSubclassOf<AActor> Mesh,int type, int id)
 {
 	FActorSpawnParameters SpawnInfo;
 	AActor* BuildingMesh = GetWorld()->SpawnActor<AActor>(Mesh, FVector(0, 0, 0), FRotator(0, 0, 0), SpawnInfo);
 	BuildingMesh->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+	BuildingMesh->Tags.Add(TEXT("Building"));
+	BuildingMesh->Tags.Add(*FString::FromInt(type));
+	BuildingMesh->Tags.Add(*FString::FromInt(id));
 }

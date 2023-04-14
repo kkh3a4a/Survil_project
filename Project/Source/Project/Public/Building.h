@@ -28,5 +28,5 @@ public:
 	char Capacity{};
 	TArray<ACitizen*> Citizens;
 
-	void SetMesh(TSubclassOf<AActor>);
+	void SetMesh(TSubclassOf<AActor>, int type, int id);
 };

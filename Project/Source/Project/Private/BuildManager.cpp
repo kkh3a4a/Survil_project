@@ -67,14 +67,17 @@ void ABuildManager::DecalVisibility()
 	SelectedBuilding = 0;
 }
 
-void ABuildManager::Build()
+void ABuildManager::Build(int obj_id)
 {
 	UE_LOG(LogTemp, Log, TEXT("Selected Building %d"), SelectedBuilding);
+	 UWorld* uworld = GetWorld();
+    if (uworld == nullptr)
+        return;
 	FRotator Rotation = FRotator(0, 0, 0);
 	FActorSpawnParameters SpawnInfo;
 	ABuilding* BuildingActor = GetWorld()->SpawnActor<ABuilding>(DecalLocation, Rotation, SpawnInfo);
-	BuildingActor->SetMesh(BuildingArray[SelectedBuilding]);
-
+	BuildingActor->SetMesh(BuildingArray[SelectedBuilding],SelectedBuilding,obj_id);
+	
 	BuiltBuildings.Add(BuildingActor);
 	UE_LOG(LogTemp, Log, TEXT("Built Buildings: %d"), BuiltBuildings.Num());
 }
