@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Async/ParallelFor.h"
 #include "Temperature.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -18,7 +18,7 @@ void ATemperature::BeginPlay()
 {
     Super::BeginPlay();
 
-    for (int i = 0; i < 12 * 5; i++) {
+    for (int i = 0; i < (SIGHT_X / ColorsInDecalX) * (SIGHT_Y / ColorsInDecalY); i++) {
         UMaterialInstanceDynamic* MaterialInstance = UMaterialInstanceDynamic::Create(TemperatureMaterial, this);
         MaterialInstanceArray.Add(MaterialInstance);
     }
@@ -27,18 +27,20 @@ void ATemperature::BeginPlay()
     FRotator Rotation = FRotator(0, 0, 0);
     FActorSpawnParameters SpawnInfo;
 
-    for (int32 y = 0; y < 5; y++) {
-        for (int32 x = 0; x < 12; x++) {
+    for (int32 y = 0; y < (SIGHT_Y / ColorsInDecalY); y++) {
+        for (int32 x = 0; x < (SIGHT_X / ColorsInDecalX); x++) {
             ADecalActor* Decal = GetWorld()->SpawnActor<ADecalActor>(Location + FVector(2000 * x + 1000, 2000 * y + 1000, 0), Rotation);
             UDecalComponent* DecalComponent = Decal->GetDecal();
             DecalComponent->DecalSize = FVector(100, 100, 100);
             Decal->SetActorScale3D(FVector(10, _DecalSize, _DecalSize));
             Decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-            Decal->SetDecalMaterial(MaterialInstanceArray[y * 12 + x]);
+            Decal->SetDecalMaterial(MaterialInstanceArray[y * (SIGHT_X / ColorsInDecalX) + x]);
             DecalArray.Add(Decal);
         }
     }
     Hide(true);
+
+    TerrainTemperature32.SetNum(SIGHT_X);
 }
 
 void ATemperature::Tick(float DeltaTime)
@@ -47,26 +49,29 @@ void ATemperature::Tick(float DeltaTime)
 
     if (IsHidden)
         return;
-    FVector RGB;
-    //for (int32 y = 0; y < 5; y++) {
-    //    for (int32 x = 0; x < 12; x++) {
-    //        for (int cy = 0; cy < 20; cy++) {
-    //            for (int cx = 0; cx < 20; cx++) {
-    //                TemperatureToRGB(TerrainTemperature[x * cx][y * cy], RGB.X, RGB.Y, RGB.Z);
-    //                //MaterialInstanceArray[i]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), c), FLinearColor((float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, 1));
-    //                MaterialInstanceArray[y * 5 + x]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), cy * 20 + cx), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
-    //            }
-    //        }
-    //    }
-    //}
-    for (int y = 0; y < 100; y++) {
-        for (int x = 0; x < 240; x++) {
-            TemperatureToRGB(TerrainTemperature[x][y], RGB.X, RGB.Y, RGB.Z);
-            MaterialInstanceArray[(y / 20) * 12 + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
 
+    FVector RGB;
+    for (int y = 0; y < SIGHT_Y; y++) {
+        for (int x = 0; x < SIGHT_X; x++) {
+            TemperatureToRGB(TerrainTemperature[x][y], RGB.X, RGB.Y, RGB.Z);
+            MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
         }
     }
-
+    
+    
+    //for (int y = 0; y < SIGHT_Y; y++) {
+    //    TFunction<void(int32)> MyLambda = [&](int32 Index)
+    //    {
+    //        FVector RGB;
+    //        uint8 _Temperature = TerrainTemperature[Index][y];
+    //        TemperatureToRGB(_Temperature, RGB.X, RGB.Y, RGB.Z);
+    //        if ((y / 20) * 12 + (Index / 20) >= 60 || (Index % 20) * 20 + (y % 20) >= 400) {
+    //            UE_LOG(LogTemp, Warning, TEXT("%d of %d,  %d of 400"), (y / 20) * 12 + (Index / 20), MaterialInstanceArray.Num(), (Index % 20) * 20 + (y % 20));
+    //        }
+    //        //MaterialInstanceArray[(y / 20) * 12 + (Index / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (Index % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
+    //    };
+    //    ParallelFor(TerrainTemperature32.Num(), MyLambda);
+    //}
 }
 
 void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, double& b) {

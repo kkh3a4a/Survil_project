@@ -117,7 +117,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_login* packet = reinterpret_cast<sc_packet_login*>(buf);
 			_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
-			_MainClass->SetCurrentLocation(-MapSizeX * 100 / 2, -MapSizeY * 100 / 2, packet->z);
+			_MainClass->SetCurrentLocation(-SIGHT_X * 100 / 2, -SIGHT_Y * 100 / 2, packet->z);
 			my_id = packet->player_id;
 			break;
 		}

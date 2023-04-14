@@ -3,10 +3,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
+#include "../../../../IOCPServer/protocol.h"
 #include "MeshTerrain.generated.h"
 
-const int MapSizeX = 240;
-const int MapSizeY = 100;
 
 UCLASS()
 class PROJECT_API AMeshTerrain : public AActor
@@ -22,7 +21,7 @@ protected:
 public:	
 
 	void InitializeMeshTerrain(UMaterialInstance* TerrainMaterial);
-	void UpdateMeshTerrain(int8(*Terrain2DArrayPtr)[MapSizeY]);
+	void UpdateMeshTerrain(int8(*Terrain2DArrayPtr)[SIGHT_Y]);
 
 	TArray<FVector> Vertices;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

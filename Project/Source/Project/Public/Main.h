@@ -76,8 +76,8 @@ public:
 		UMaterialInstance* TerrainMaterialInstance;
 	
 
-	int8 Terrain2DArray[MapSizeX][MapSizeY];
-	int8 TerrainChange2DArray[MapSizeX][MapSizeY]{};
+	int8 Terrain2DArray[SIGHT_X][SIGHT_Y];
+	int8 TerrainChange2DArray[SIGHT_X][SIGHT_Y]{};
 
 	AMeshTerrain* TerrainActor;
 	ATemperature* Temperature;

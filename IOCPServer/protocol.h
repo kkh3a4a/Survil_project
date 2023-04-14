@@ -18,7 +18,7 @@
 #define MAXBUILDING					(PLAYERBUILDINGCOUNT * MAXPLAYER)
 
 
-#define SIGHT_X 240
+#define SIGHT_X 200
 #define SIGHT_Y 100
 
 

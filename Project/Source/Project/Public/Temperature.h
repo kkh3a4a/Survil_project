@@ -7,6 +7,7 @@
 #include "MeshTerrain.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Components/DecalComponent.h"
+#include "../../../../IOCPServer/protocol.h"
 #include "Temperature.generated.h"
 
 UCLASS()
@@ -23,20 +24,23 @@ protected:
 	virtual void BeginPlay() override;
 
 	ADecalActor* DecalActor;
-	const int TemperatureDivide = 4;
 	TArray<UMaterialInstanceDynamic*> MaterialInstanceArray;
 	TArray<ADecalActor*> DecalArray;
 	bool IsHidden = false;
-	float _DecalSize = 11;
-	
+
+	const int TemperatureDivide = 4;
+	const int _DecalSize = 11;
+	const int ColorsInDecalX = 20;
+	const int ColorsInDecalY = 20;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Temperature")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
 		UMaterial* TemperatureMaterial;
 
-	uint8 TerrainTemperature[MapSizeX][MapSizeY];
+	uint8 TerrainTemperature[SIGHT_X][SIGHT_Y];
+	TArray<int32>TerrainTemperature32;
 	void TemperatureToRGB(double , double& , double& , double& );
 	void Hide(bool);
 	bool GetIsHidden();
