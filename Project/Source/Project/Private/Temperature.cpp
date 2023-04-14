@@ -39,8 +39,6 @@ void ATemperature::BeginPlay()
         }
     }
     Hide(true);
-
-    //TerrainTemperature32.SetNum(SIGHT_X);
 }
 
 void ATemperature::Tick(float DeltaTime)
@@ -57,21 +55,6 @@ void ATemperature::Tick(float DeltaTime)
             MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
         }
     }
-    
-    
-    //for (int y = 0; y < SIGHT_Y; y++) {
-    //    TFunction<void(int32)> MyLambda = [&](int32 Index)
-    //    {
-    //        FVector RGB;
-    //        uint8 _Temperature = TerrainTemperature[Index][y];
-    //        TemperatureToRGB(_Temperature, RGB.X, RGB.Y, RGB.Z);
-    //        if ((y / 20) * 12 + (Index / 20) >= 60 || (Index % 20) * 20 + (y % 20) >= 400) {
-    //            UE_LOG(LogTemp, Warning, TEXT("%d of %d,  %d of 400"), (y / 20) * 12 + (Index / 20), MaterialInstanceArray.Num(), (Index % 20) * 20 + (y % 20));
-    //        }
-    //        //MaterialInstanceArray[(y / 20) * 12 + (Index / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (Index % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
-    //    };
-    //    ParallelFor(TerrainTemperature32.Num(), MyLambda);
-    //}
 }
 
 void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, double& b) {
