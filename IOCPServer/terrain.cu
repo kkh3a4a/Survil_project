@@ -439,6 +439,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 		height[2] = terrain_array_device[coo.x + 1][coo.y];
 	}
 	//온도 unsigned char로 해서 256까진데 0.25단위로 클라랑 차이내서 클라에서 받으면 곱하기 0.25해서 받을거임 그래서 최대 온도 64임
+	int temperature{};
 	//낮일 때
 	if (sun_angle >= 0 && sun_angle <= 180){
 		//햇빛 드는 곳
@@ -457,25 +458,25 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 
 			//각도차 90도 넘어서 햇빛 영향 없음
 			if (angle_difference >= 90) {
-				//temperature_map_device[coo.x][coo.y] -= 1;
+				temperature = -1;
 			}
 			//각도차 90도 이하로 햇빛 영향 있음
 			else {
-				int temperature = (90 - angle_difference) / 10;
+				temperature = (90 - angle_difference) / 10;
 				//printf("%d %d\n", angle_difference, temperature);
-				temperature_map_device[coo.x][coo.y] += temperature;
 			}
 		}
 		//햇빛 안드는 곳
 		else {
-			//temperature_map_device[coo.x][coo.y] -= 1;
+			temperature = -1;
 		}
 	}
 	//밤일 때
 	else {
-		temperature_map_device[coo.x][coo.y] -= temperature_divide * 1;
+		temperature = -2;
 	}
 	
+	temperature_map_device[coo.x][coo.y] += temperature;
 	//최고 최저 온도 설정
 	temperature_map_device[coo.x][coo.y] = max(temperature_map_device[coo.x][coo.y], 20 * temperature_divide);
 	temperature_map_device[coo.x][coo.y] = min(temperature_map_device[coo.x][coo.y], 60 * temperature_divide);
@@ -1096,7 +1097,7 @@ public:
 				for (int j = 0; j < one_side_number; j++) {
 					terrain_array_host[i][j] = height_uid(dre);			//언덕 생성 안하고 랜덤으로 생성
 					shadow_map_host[i][j] = 0;
-					temperature_map_host[i][j] = 30 * temperature_divide;
+					temperature_map_host[i][j] = 20 * temperature_divide;
 				}
 			}
 			cout << "Terrain File Not Exist" << endl;
