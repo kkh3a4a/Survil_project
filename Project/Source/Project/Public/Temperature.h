@@ -40,7 +40,7 @@ public:
 		UMaterial* TemperatureMaterial;
 
 	uint8 TerrainTemperature[SIGHT_X][SIGHT_Y];
-	TArray<int32>TerrainTemperature32;
+	//TArray<int32>TerrainTemperature32;
 	void TemperatureToRGB(double , double& , double& , double& );
 	void Hide(bool);
 	bool GetIsHidden();

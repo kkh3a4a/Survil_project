@@ -77,7 +77,7 @@ public:
 	
 
 	int8 Terrain2DArray[SIGHT_X][SIGHT_Y];
-	int8 TerrainChange2DArray[SIGHT_X][SIGHT_Y]{};
+	int8 ChangedTerrain2DArray[SIGHT_X][SIGHT_Y]{};
 
 	AMeshTerrain* TerrainActor;
 	ATemperature* Temperature;

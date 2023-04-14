@@ -40,7 +40,7 @@ void ATemperature::BeginPlay()
     }
     Hide(true);
 
-    TerrainTemperature32.SetNum(SIGHT_X);
+    //TerrainTemperature32.SetNum(SIGHT_X);
 }
 
 void ATemperature::Tick(float DeltaTime)
