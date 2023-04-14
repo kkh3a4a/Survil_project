@@ -34,37 +34,23 @@ shared_mutex player_list_lock;
 float sun_angle;
 volatile int player_cnt = 0;
 
-
-///////////////////////////////
 Terrain* terrain = new Terrain();
 char** total_terrain = terrain->get_map();
 char** shadow_map = terrain->get_shadow_map();
 unsigned char** temperature_map = terrain->get_temperature_map();
-bool Isterrain_change = true;
+bool Isterrain_change = false;
 
 DWORD WINAPI terrain_change(LPVOID arg)
 {
-	/*char** player_sight_terrain = terrain->get_player_sight_map();
-	char** player_sight_temperature = terrain->get_player_temperature_map();
-	terrain->set_city_location(TF{ 20000, 20000 }, 0);*/
-
-	//terrain->show_array(total_terrain, 320);
 	//terrain->log_on();
 	int i{};
-	auto TerrainChange_Timer_End = std::chrono::system_clock::now();
-	terrain->wind_blow({ 1, 0 }, 1);
-	terrain->make_shadow_map(sun_angle);
-	terrain->make_tempertature_map(sun_angle);
-	CC retval = terrain->get_highest_lowest(temperature_map);
+	auto terrain_start = std::chrono::system_clock::now();
 	while (1){
-		//clock_t t_0 = clock();
-		auto Timer_Start = std::chrono::system_clock::now();
-
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - TerrainChange_Timer_End).count() > 300)
+		auto terrain_end = std::chrono::system_clock::now();
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(terrain_end - terrain_start).count() > 1000)
 		{
-			auto TerrainChange_Timer_End = std::chrono::system_clock::now();
+			terrain_start = std::chrono::system_clock::now();
 			cout << endl << i << "¹øÂ°" << endl;
-
 
 			terrain->wind_blow({ 1, 0 }, 1);
 			terrain->make_shadow_map(sun_angle);
@@ -77,12 +63,6 @@ DWORD WINAPI terrain_change(LPVOID arg)
 			//terrain->show_array(shadow_map, 320);
 			//terrain->show_array(temperature_map, 320);
 
-			/*terrain->copy_for_player_map(II{ 200, 200 });
-			terrain->show_array(player_sight_terrain, 120);
-			terrain->show_array(player_sight_temperature, 120);*/
-
-			//clock_t t_1 = clock();
-			//cout << "[[[ Loop:" << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec ]] ]" << endl;
 			if (i % 100 == 0 && i != 0) {
 				terrain->save_terrain();
 				cout << "SAVED!!!" << endl;
