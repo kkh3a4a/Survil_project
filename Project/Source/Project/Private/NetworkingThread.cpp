@@ -167,9 +167,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_ResourceManager->SetResourcePlacement(packet->resource_id - RESOURCESTART, packet->workcitizen, packet->playerjobless);
 			break;
 		}
-
-
-
 		case SC_PACKET_TERRAINALL:
 		{
 			sc_packet_terrainAll* packet = reinterpret_cast<sc_packet_terrainAll*>(buf);
@@ -197,9 +194,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 			memcpy(&_MainClass->Terrain->Work->TerrainLineX, packet->terrainline_X, SIGHT_X);
 			break;
 		}
-
-
-
 		case SC_PACKET_SUNANGLE:
 		{
 			sc_packet_sunangle* packet = reinterpret_cast<sc_packet_sunangle*>(buf);

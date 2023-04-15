@@ -348,7 +348,7 @@ void AMyPlayerController::SendMovePacket()
     packet.d = Key_d;
     packet.size = sizeof(cs_packet_move);
     packet.type = CS_PACKET_MOVE;
-    UE_LOG(LogTemp, Log, TEXT("send Move"));
+    //UE_LOG(LogTemp, Log, TEXT("send Move"));
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }

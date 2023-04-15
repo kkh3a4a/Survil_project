@@ -41,11 +41,9 @@ void AMeshTerrain::BeginPlay()
 			Triangles.Add((Y + 1) * SIGHT_X + X);
 		}
 	}
-	// Create the mesh component
 	MeshTerrain = NewObject<UProceduralMeshComponent>(this);
 	MeshTerrain->CreateMeshSection_LinearColor(0, Vertices, Triangles, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>(), true);
 
-	// Add the mesh component to the actor
 	MeshTerrain->SetMaterial(0, TerrainMaterialInstance);
 	MeshTerrain->RegisterComponent();
 

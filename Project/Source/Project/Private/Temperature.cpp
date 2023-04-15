@@ -33,11 +33,12 @@ void ATemperature::BeginPlay()
     FRotator Rotation = FRotator(0, 0, 0);
     FActorSpawnParameters SpawnInfo;
 
+
     for (int32 y = 0; y < (SIGHT_Y / ColorsInDecalY); y++) {
         for (int32 x = 0; x < (SIGHT_X / ColorsInDecalX); x++) {
-            ADecalActor* Decal = GetWorld()->SpawnActor<ADecalActor>(Location + FVector(2000 * x + 1000, 2000 * y + 1000, 0), Rotation);
+            ADecalActor* Decal = GetWorld()->SpawnActor<ADecalActor>(FVector(2000 * x + 1000, 2000 * y + 1000, 0), Rotation);
             UDecalComponent* DecalComponent = Decal->GetDecal();
-            DecalComponent->DecalSize = FVector(100, 100, 100);
+			DecalComponent->DecalSize = FVector(100, 100, 100);
             Decal->SetActorScale3D(FVector(10, _DecalSize, _DecalSize));
             Decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
             Decal->SetDecalMaterial(MaterialInstanceArray[y * (SIGHT_X / ColorsInDecalX) + x]);
@@ -46,11 +47,9 @@ void ATemperature::BeginPlay()
     }
     Hide(true);
 
-
 	Work = new FTemperatureThread();
 	Work->TemperatureClass = this;
 	WorkThread = FRunnableThread::Create(Work, TEXT("TemperatureThread"), 0, TPri_BelowNormal);
-
 }
 
 void ATemperature::Tick(float DeltaTime)
@@ -62,15 +61,43 @@ void ATemperature::Tick(float DeltaTime)
 	if (!ReadyToUpdate) {
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("update temperature"));
 
 	FVector RGB;
+
 	for (int y = 0; y < SIGHT_Y; y++) {
 		for (int x = 0; x < SIGHT_X; x++) {
 			TemperatureToRGB(TerrainTemperature[x][y], RGB.X, RGB.Y, RGB.Z);
 			MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
 		}
 	}
+	//TArray<FVector> RGBArray;
+	//RGBArray.SetNum(SIGHT_X * SIGHT_Y);
+	//for (int y = 0; y < SIGHT_Y; y++) {
+	//	TFunction<void(int32)> MyLambda = [&](int32 Index)
+	//	{
+	//		double scaledTemperature = TerrainTemperature[Index][y] / TemperatureDivide - 20; //20 ~ 60 -> 0 ~ 40
+	//		if (scaledTemperature > 20) {
+	//			RGB.X = scaledTemperature - 20;
+	//			RGB.Y = 20 - RGB.X;
+	//			RGB.Z = 0;
+	//		}
+	//		else {
+	//			RGB.X = 0;
+	//			RGB.Y = scaledTemperature;
+	//			RGB.Z = 20 - RGB.Y;
+	//		}
+	//		RGB.X /= 20;
+	//		RGB.Y /= 20;
+	//		RGB.Z /= 20;
+	//		RGBArray[y * SIGHT_Y + Index] = RGB;
+	//	};
+	//	ParallelFor(SIGHT_X, MyLambda, false);
+	//	for (int x = 0; x < SIGHT_X; x++) {
+	//		int Num = y * SIGHT_Y + x;
+	//		MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGBArray[Num].X, RGBArray[Num].Y, RGBArray[Num].Z, 1));
+	//	}
+	//}
+
 	ReadyToUpdate = false;
 }
 
