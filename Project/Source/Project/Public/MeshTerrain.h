@@ -6,6 +6,28 @@
 #include "../../../../IOCPServer/protocol.h"
 #include "MeshTerrain.generated.h"
 
+class FTerrainThread : public FRunnable
+{
+public:
+	FTerrainThread();
+	void Stop();
+	virtual uint32_t Run() override;
+
+	bool LineX = false;
+	bool LineY = false;
+
+	char TerrainLineX[SIGHT_X];
+	char TerrainLineY[SIGHT_Y];
+
+	float x;
+	float y;
+
+	AMeshTerrain* TerrainClass;
+	bool Running = true;
+private:
+
+
+};
 
 UCLASS()
 class PROJECT_API AMeshTerrain : public AActor
@@ -15,15 +37,26 @@ class PROJECT_API AMeshTerrain : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AMeshTerrain();
+	~AMeshTerrain();
 
 protected:
-
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
-	void InitializeMeshTerrain(UMaterialInstance* TerrainMaterial);
-	void UpdateMeshTerrain(int8(*Terrain2DArrayPtr)[SIGHT_Y]);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
+		UMaterialInstance* TerrainMaterialInstance;
+
+	int8 Terrain2DArray[SIGHT_X][SIGHT_Y];
 
 	TArray<FVector> Vertices;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UProceduralMeshComponent* MeshTerrain;
+
+	FRunnableThread* WorkThread;
+	FTerrainThread* Work;
+	bool ReadyToUpdate = false;
 };

@@ -71,15 +71,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float SunAngle;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terrain")
-		UMaterialInstance* TerrainMaterialInstance;
-	
 
-	int8 Terrain2DArray[SIGHT_X][SIGHT_Y];
-	int8 ChangedTerrain2DArray[SIGHT_X][SIGHT_Y]{};
 
-	AMeshTerrain* TerrainActor;
+
+	AMeshTerrain* Terrain;
 	ATemperature* Temperature;
 
 	ACameraActor* MyCamera;
@@ -92,10 +87,7 @@ public:
 	void SetPlayerLocation(float x, float y, float z);
 	void SetCurrentLocation(float x, float y, float z);
 	void SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount);
-	void SetTerrainXActorLocation(float x, char* terrainline_Y);
-	void SetTerrainYActorLocation(float y, char* terrainline_X);
 	void SetSunAngle(float s_sunangle);
-	void SetTerrainChange(unsigned char line, char* terrainline_Y);
 	int testterrain = 0;
 };
 

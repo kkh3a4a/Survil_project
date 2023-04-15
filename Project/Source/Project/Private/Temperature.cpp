@@ -49,7 +49,7 @@ void ATemperature::BeginPlay()
 
 	Work = new FTemperatureThread();
 	Work->TemperatureClass = this;
-	WorkThread = FRunnableThread::Create(Work, TEXT("WorkThread"), 0, TPri_BelowNormal);
+	WorkThread = FRunnableThread::Create(Work, TEXT("TemperatureThread"), 0, TPri_BelowNormal);
 
 }
 
@@ -120,6 +120,7 @@ void FTemperatureThread::Stop()
 
 uint32_t FTemperatureThread::Run()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Temperature Thread Start"));
 	while (1) {
 		if (!Running)
 			break;
