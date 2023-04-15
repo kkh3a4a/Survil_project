@@ -992,6 +992,28 @@ public:
 		returnvalue[3] = terrain_line_y2;
 		return returnvalue;
 	}
+
+	char** copy_for_player_temperature_line(int player_x, int player_y)
+	{
+		char* terrain_line_x = new char[player_sight_size.x + 2];
+		char* terrain_line_x2 = new char[player_sight_size.x + 2];
+		char* terrain_line_y = new char[player_sight_size.y + 2];
+		char* terrain_line_y2 = new char[player_sight_size.y + 2];
+		char* returnvalue[4] = {};
+		for (int x = -1; x < player_sight_size.x + 1; x++) {
+			terrain_line_x[x + 1] = temperature_map_host[player_x + x][player_y];
+			terrain_line_x2[x + 1] = temperature_map_host[player_x + x][player_y + player_sight_size.y];
+		}
+
+		memcpy(terrain_line_y, &temperature_map_host[player_x][player_y - 1], player_sight_size.y + 2);
+		memcpy(terrain_line_y2, &temperature_map_host[player_x + player_sight_size.x][player_y - 1], player_sight_size.y + 2);
+
+		returnvalue[0] = terrain_line_x;
+		returnvalue[1] = terrain_line_x2;
+		returnvalue[2] = terrain_line_y;
+		returnvalue[3] = terrain_line_y2;
+		return returnvalue;
+	}
 		
 	char** get_map() {
 		return terrain_array_host;

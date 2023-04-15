@@ -49,7 +49,7 @@ void Player::set_player_location(float x, float y, float z)
 	//_x는 가운데 위치, _x +_currentX 모서리 위치
 }
 
-void Player::key_input(char** player_sight_line)
+void Player::key_input(char** player_sight_terrain_line, char** player_sight_temperature_line)
 { 
 	//std::cout << _currentX <<std::endl;
 	bool keyinput = false;
@@ -106,102 +106,143 @@ void Player::key_input(char** player_sight_line)
 
 	if (ischangeTerrainX)
 	{
-		sc_packet_terrainXlocation packet;
-		packet.size = sizeof(sc_packet_terrainXlocation);
-
-		packet.type = SC_PACKET_TERRAINXLOCATION;
-
-		packet.terrainX = _currentX;
-
-		if (_terrainX > _currentX)
-		{
-			if (ischangeTerrainY)
-			{
-				if(_terrainY > _currentY)
-				{
-					memcpy(packet.terrainline_Y, player_sight_line[2] + 2, SIGHT_Y);
+		//Terrain
+		sc_packet_terrainXlocation terrain_packet;
+		terrain_packet.size = sizeof(sc_packet_terrainXlocation);
+		terrain_packet.type = SC_PACKET_TERRAINXLOCATION;
+		terrain_packet.terrainX = _currentX;
+		if (_terrainX > _currentX){
+			if (ischangeTerrainY){
+				if(_terrainY > _currentY){
+					memcpy(terrain_packet.terrainline_Y, player_sight_terrain_line[2] + 2, SIGHT_Y);
 				}
-				else
-				{
-					memcpy(packet.terrainline_Y, player_sight_line[2], SIGHT_Y);
+				else{
+					memcpy(terrain_packet.terrainline_Y, player_sight_terrain_line[2], SIGHT_Y);
 				}
 			}
-			else
-			{
-				memcpy(packet.terrainline_Y, player_sight_line[2] + 1, SIGHT_Y);
+			else{
+				memcpy(terrain_packet.terrainline_Y, player_sight_terrain_line[2] + 1, SIGHT_Y);
 			}
 		}
-		else if (_terrainX < _currentX)
-		{
-			if (ischangeTerrainY)
-			{
-				if (_terrainY > _currentY)
-				{
-					memcpy(packet.terrainline_Y, player_sight_line[3] + 2, SIGHT_Y);
+		else if (_terrainX < _currentX){
+			if (ischangeTerrainY){
+				if (_terrainY > _currentY){
+					memcpy(terrain_packet.terrainline_Y, player_sight_terrain_line[3] + 2, SIGHT_Y);
 				}
-				else
-				{
-					memcpy(packet.terrainline_Y, player_sight_line[3], SIGHT_Y);
+				else{
+					memcpy(terrain_packet.terrainline_Y, player_sight_terrain_line[3], SIGHT_Y);
 				}
 			}
-			else
-			{
-				memcpy(packet.terrainline_Y, player_sight_line[3] + 1, SIGHT_Y);
+			else{
+				memcpy(terrain_packet.terrainline_Y, player_sight_terrain_line[3] + 1, SIGHT_Y);
 			}
 		}
+		send_packet(&terrain_packet);
 
-		send_packet(&packet);
+		
+		//Temperature
+		sc_packet_temperatureX temperature_packet;
+		temperature_packet.terrainX = _currentX;
+		if (_terrainX > _currentX) {
+			if (ischangeTerrainY) {
+				if (_terrainY > _currentY) {
+					memcpy(temperature_packet.terrainline_Y, player_sight_temperature_line[2] + 2, SIGHT_Y);
+				}
+				else {
+					memcpy(temperature_packet.terrainline_Y, player_sight_temperature_line[2], SIGHT_Y);
+				}
+			}
+			else {
+				memcpy(temperature_packet.terrainline_Y, player_sight_temperature_line[2] + 1, SIGHT_Y);
+			}
+		}
+		else if (_terrainX < _currentX) {
+			if (ischangeTerrainY) {
+				if (_terrainY > _currentY) {
+					memcpy(temperature_packet.terrainline_Y, player_sight_temperature_line[3] + 2, SIGHT_Y);
+				}
+				else {
+					memcpy(temperature_packet.terrainline_Y, player_sight_temperature_line[3], SIGHT_Y);
+				}
+			}
+			else {
+				memcpy(temperature_packet.terrainline_Y, player_sight_temperature_line[3] + 1, SIGHT_Y);
+			}
+		}
+		send_packet(&temperature_packet);
 	}
+	
 	if (ischangeTerrainY)
 	{
-		sc_packet_terrainYlocation packet;
-		packet.size = sizeof(sc_packet_terrainYlocation);
+		//Terrain
+		sc_packet_terrainYlocation terrain_packet;
+		terrain_packet.size = sizeof(sc_packet_terrainYlocation);
+		terrain_packet.type = SC_PACKET_TERRAINYLOCATION;
+		terrain_packet.terrainY = _currentY;
 
-		packet.type = SC_PACKET_TERRAINYLOCATION;
-
-		packet.terrainY = _currentY;
-
-		if (_terrainY > _currentY)
-		{
-			if (ischangeTerrainX)
-			{
-				if (_terrainX > _currentX)
-				{
-					memcpy(packet.terrainline_X, player_sight_line[0] + 2, SIGHT_X);
+		if (_terrainY > _currentY){
+			if (ischangeTerrainX){
+				if (_terrainX > _currentX){
+					memcpy(terrain_packet.terrainline_X, player_sight_terrain_line[0] + 2, SIGHT_X);
 				}
-				else
-				{
-					memcpy(packet.terrainline_X, player_sight_line[0], SIGHT_X);
+				else{
+					memcpy(terrain_packet.terrainline_X, player_sight_terrain_line[0], SIGHT_X);
 				}
 			}
-			else
-			{
-				memcpy(packet.terrainline_X, player_sight_line[0] + 1, SIGHT_X);
+			else{
+				memcpy(terrain_packet.terrainline_X, player_sight_terrain_line[0] + 1, SIGHT_X);
 			}
 		}
-		else if (_terrainY < _currentY)
-		{
-			if (ischangeTerrainX)
-			{
-				if (_terrainX > _currentX)
-				{
-					memcpy(packet.terrainline_X, player_sight_line[1] + 2, SIGHT_X);
+		else if (_terrainY < _currentY){
+			if (ischangeTerrainX){
+				if (_terrainX > _currentX){
+					memcpy(terrain_packet.terrainline_X, player_sight_terrain_line[1] + 2, SIGHT_X);
 				}
-				else
-				{
-					memcpy(packet.terrainline_X, player_sight_line[1], SIGHT_X);
+				else{
+					memcpy(terrain_packet.terrainline_X, player_sight_terrain_line[1], SIGHT_X);
 				}
 			}
-			else
-			{
-				memcpy(packet.terrainline_X, player_sight_line[1] + 1, SIGHT_X);
+			else{
+				memcpy(terrain_packet.terrainline_X, player_sight_terrain_line[1] + 1, SIGHT_X);
 			}
 		}
+		send_packet(&terrain_packet);
 
-
-
-		send_packet(&packet);
+		//Temperature
+		sc_packet_temperatureY temperature_packet;
+		temperature_packet.terrainY = _currentY;
+		if (_terrainY > _currentY) {
+			if (ischangeTerrainX) {
+				if (_terrainX > _currentX) {
+					memcpy(temperature_packet.terrainline_X, player_sight_temperature_line[0] + 2, SIGHT_X);
+				}
+				else {
+					memcpy(temperature_packet.terrainline_X, player_sight_temperature_line[0], SIGHT_X);
+				}
+			}
+			else {
+				memcpy(temperature_packet.terrainline_X, player_sight_temperature_line[0] + 1, SIGHT_X);
+			}
+		}
+		else if (_terrainY < _currentY) {
+			if (ischangeTerrainX) {
+				if (_terrainX > _currentX) {
+					memcpy(temperature_packet.terrainline_X, player_sight_temperature_line[1] + 2, SIGHT_X);
+				}
+				else {
+					memcpy(temperature_packet.terrainline_X, player_sight_temperature_line[1], SIGHT_X);
+				}
+			}
+			else {
+				memcpy(temperature_packet.terrainline_X, player_sight_temperature_line[1] + 1, SIGHT_X);
+			}
+		}
+		send_packet(&temperature_packet);
 	}
+	
+	
+
+	
 	if ((int)(_currentX) % 100 == 0)
 	{
 		if ((int)_terrainX / 100 != (int)(_currentX) / 100)
@@ -209,6 +250,7 @@ void Player::key_input(char** player_sight_line)
 			_terrainX = _currentX;
 		}
 	}
+	
 	if ((int)(_currentY) % 100 == 0)
 	{
 		if ((int)_terrainY / 100 != (int)(_currentY / 100))
@@ -216,13 +258,16 @@ void Player::key_input(char** player_sight_line)
 			_terrainY = _currentY;
 		}
 	}
-	
-	
 
-	delete player_sight_line[0];
-	delete player_sight_line[1];
-	delete player_sight_line[2];
-	delete player_sight_line[3];
+	delete player_sight_terrain_line[0];
+	delete player_sight_terrain_line[1];
+	delete player_sight_terrain_line[2];
+	delete player_sight_terrain_line[3];
+
+	delete player_sight_temperature_line[0];
+	delete player_sight_temperature_line[1];
+	delete player_sight_temperature_line[2];
+	delete player_sight_temperature_line[3];
 }
 
 void Player::send_resource_amount()

@@ -197,9 +197,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				Player* player = reinterpret_cast<Player*>(objects[i]);
 				if (player->isconnect)
 				{
-					char** player_sight_line;
-					player_sight_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) /100, (int)(player->_y + player->_currentY) / 100);
-					player->key_input(player_sight_line);
+					char** player_sight_terrain_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) /100, (int)(player->_y + player->_currentY) / 100);
+					char** player_sight_temperature_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100);
+
+					player->key_input(player_sight_terrain_line, player_sight_temperature_line);
 					player->send_sunangle(sun_angle);
 				}
 
@@ -242,6 +243,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				{
 					while(1)
 					{
+						//Terrain
 						static unsigned char terrain_x{};
 						if (terrain_x == SIGHT_X)
 						{
@@ -257,7 +259,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						player->send_packet(&packet);
 						terrain_x++;
 					}
-					
+					//Temperature
 					while (1)
 					{
 						static unsigned char terrain_x{};
@@ -276,7 +278,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					Isterrain_change = false;
 				}
 			}	
-			
 		}
 		if (IsNight)
 		{
