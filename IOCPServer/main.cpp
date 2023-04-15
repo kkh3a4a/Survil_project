@@ -198,7 +198,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				if (player->isconnect)
 				{
 					char** player_sight_terrain_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) /100, (int)(player->_y + player->_currentY) / 100);
-					char** player_sight_temperature_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100);
+					char** player_sight_temperature_line = terrain->copy_for_player_temperature_line((int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100);
 
 					player->key_input(player_sight_terrain_line, player_sight_temperature_line);
 					player->send_sunangle(sun_angle);
