@@ -41,6 +41,7 @@ public:
 
 	uint8 TerrainTemperature[SIGHT_X][SIGHT_Y];
 	void TemperatureToRGB(double , double& , double& , double& );
+	void Update(unsigned char X, char[SIGHT_Y]);
 	void Hide(bool);
 	bool GetIsHidden();
 };

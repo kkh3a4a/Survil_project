@@ -111,6 +111,7 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 	if(uworld != nullptr)
 	uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
 	TerrainActor->SetActorLocation(FVector(Player_x, Player_y, 0.0));
+	Temperature->SetActorLocation(FVector(Player_x - SIGHT_X * 100 / 2, Player_y - SIGHT_Y * 100 / 2, 0.0));
 	SetActorLocation(FVector(x, y, z));
 }
 
@@ -134,7 +135,9 @@ void AMain::SetTerrainXActorLocation(float x, char* TerrainLineY)
 	if (TerrainActor != nullptr)
 	{
 		TerrainActor->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
-		Temperature->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
+		if (!Temperature->GetIsHidden()) {
+			Temperature->SetActorLocation(FVector(Player_x + x, TerrainActor->GetActorLocation().Y, 0.0));
+		}
 	}
 	if ((int)TerrainX != (int)x)
 	{
@@ -161,7 +164,9 @@ void AMain::SetTerrainYActorLocation(float y, char* TerrainLineX)
 	if (TerrainActor != nullptr)
 	{
 		TerrainActor->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
-		Temperature->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
+		if (!Temperature->GetIsHidden()) {
+			Temperature->SetActorLocation(FVector(TerrainActor->GetActorLocation().X, Player_y + y, 0.0));
+		}
 	}
 
 	if ((int)TerrainY != (int)y)
@@ -217,4 +222,3 @@ void AMain::SetTerrainChange(unsigned char line, char* terrainline_Y)
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 	}
 }
-

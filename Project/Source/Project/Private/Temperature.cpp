@@ -8,7 +8,7 @@
 ATemperature::ATemperature()
 {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 
 	USceneComponent* Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	RootComponent = Root;
@@ -48,13 +48,7 @@ void ATemperature::Tick(float DeltaTime)
     if (IsHidden)
         return;
 
-    FVector RGB;
-    for (int y = 0; y < SIGHT_Y; y++) {
-        for (int x = 0; x < SIGHT_X; x++) {
-            TemperatureToRGB(TerrainTemperature[x][y], RGB.X, RGB.Y, RGB.Z);
-            MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
-        }
-    }
+   
 }
 
 void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, double& b) {
@@ -75,9 +69,22 @@ void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, do
     r /= 20;
 	g /= 20;
 	b /= 20;
-    if (r && b) {
-    }
+
     //UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), r, g, b);
+}
+
+void ATemperature::Update(unsigned char X, char TemperatureY[SIGHT_Y])
+{
+    memcpy(TerrainTemperature[X], TemperatureY, SIGHT_Y);
+    if (X == SIGHT_X - 1) {
+        FVector RGB;
+        for (int y = 0; y < SIGHT_Y; y++) {
+            for (int x = 0; x < SIGHT_X; x++) {
+                TemperatureToRGB(TerrainTemperature[x][y], RGB.X, RGB.Y, RGB.Z);
+                MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
+            }
+        }
+    }
 }
 
 void ATemperature::Hide(bool visibility)

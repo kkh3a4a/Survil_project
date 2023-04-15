@@ -216,7 +216,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TEMPERATURE:
 		{
 			sc_packet_temperature* packet = reinterpret_cast<sc_packet_temperature*>(buf);
-			memcpy(_MainClass->Temperature->TerrainTemperature[packet->terrain_X], packet->terrain_Y, SIGHT_Y);
+			//memcpy(_MainClass->Temperature->TerrainTemperature[packet->terrain_X], packet->terrain_Y, SIGHT_Y);
+			_MainClass->Temperature->Update(packet->terrain_X, packet->terrain_Y);
 			break;
 		}
 

@@ -32,7 +32,7 @@ void AMakeMaterial::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	for (int i = 0; i < _Size * _Size; i++) {
+	for (int i = 0; i < NumOfDots * NumOfDots; i++) {
 		//MaterialInstance->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), i), FLinearColor(i/_Size, 0, 0, 1));
 		MaterialInstance->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), i), FLinearColor((float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, (float)(FMath::RandRange(0, 100)) / 100.f, 1));
 	}
@@ -53,8 +53,8 @@ void AMakeMaterial::MakeMaterial()
 	Material = NewObject<UMaterial>(MaterialPackage, *MaterialName, RF_Public | RF_Standalone | RF_MarkAsRootSet);
 	Material->BlendMode = EBlendMode::BLEND_Translucent;
 	Material->MaterialDomain = EMaterialDomain::MD_DeferredDecal;
-	for (int x = 0; x < _Size; x++) {
-		for (int y = 0; y < _Size; y++) {
+	for (int x = 0; x < NumOfDots; x++) {
+		for (int y = 0; y < NumOfDots; y++) {
 			// Create a material expression and set its properties
 			UMaterialExpressionMaterialFunctionCall* FunctionCall = NewObject<UMaterialExpressionMaterialFunctionCall>(Material);
 			FunctionCall->MaterialFunction = Func;
@@ -91,7 +91,7 @@ void AMakeMaterial::MakeMaterial()
 			}
 
 			UMaterialExpressionVectorParameter* Color = NewObject<UMaterialExpressionVectorParameter>(Material);
-			Color->ParameterName = FName("Color" + FString::FromInt(x * _Size + y));
+			Color->ParameterName = FName("Color" + FString::FromInt(x * NumOfDots + y));
 			Color->DefaultValue = FLinearColor(1.0f, 1.0f, 1.0f);
 			Material->Expressions.Add(Color);
 
@@ -141,7 +141,7 @@ void AMakeMaterial::MakeMaterial()
 
 	//머티리얼 인스턴스 생성
 	MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
-	for (int i = 0; i < _Size * _Size; i++)
+	for (int i = 0; i < NumOfDots * NumOfDots; i++)
 		MaterialInstance->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), i), FLinearColor(1, 0, 0, 1));
 
 
@@ -169,7 +169,7 @@ void AMakeMaterial::GetMaterial()
 {
 	//머티리얼 인스턴스 생성
 	MaterialInstance = UMaterialInstanceDynamic::Create(Material, this);
-	for (int i = 0; i < _Size * _Size; i++)
+	for (int i = 0; i < NumOfDots * NumOfDots; i++)
 		MaterialInstance->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), i), FLinearColor(1, 0, 0, 1));
 
 

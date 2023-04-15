@@ -56,8 +56,8 @@ public:
 		UMaterialFunction* Func;
 
 	
-	int _Size = 20;
-	float _DecalSize = _Size + 2;
+	int NumOfDots = 20;
+	float _DecalSize = NumOfDots + 2;
 	float _Space = 1.f / _DecalSize;
 	float _Radius = 3.f / (_DecalSize * 2);
 	float _Density = 1.5f;
