@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Temperature.h"
 #include "Async/ParallelFor.h"
+#include "Temperature.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -16,8 +16,7 @@ ATemperature::ATemperature()
 
 ATemperature::~ATemperature()
 {
-	if (Work != nullptr)
-		Work->Stop();
+	WorkThread->Kill();
 }
 
 void ATemperature::BeginPlay()
@@ -64,6 +63,7 @@ void ATemperature::Tick(float DeltaTime)
 	}
 	UE_LOG(LogTemp, Warning, TEXT("update temperature"));
 
+	ReadyToUpdate = false;
 	FVector RGB;
 	for (int y = 0; y < SIGHT_Y; y++) {
 		for (int x = 0; x < SIGHT_X; x++) {
@@ -71,7 +71,6 @@ void ATemperature::Tick(float DeltaTime)
 			MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
 		}
 	}
-	ReadyToUpdate = false;
 }
 
 void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, double& b) {

@@ -216,23 +216,27 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TEMPERATURE:
 		{
 			sc_packet_temperature* packet = reinterpret_cast<sc_packet_temperature*>(buf);
-			memcpy(&_MainClass->Temperature->TerrainTemperature[packet->terrain_X], packet->terrain_Y, SIGHT_Y);
-			_MainClass->Temperature->ReadyToUpdate = true;
+			/*memcpy(&_MainClass->Temperature->TerrainTemperature[packet->terrain_X], packet->terrain_Y, SIGHT_Y);
+			_MainClass->Temperature->ReadyToUpdate = true;*/
 			break;
 		}
 		case SC_PACKET_TEMPERATUREX:
 		{
 			sc_packet_temperatureX* packet = reinterpret_cast<sc_packet_temperatureX*>(buf);
+			//_MainClass->Temperature->SetLineX(packet->terrainX, packet->terrainline_Y);
 			_MainClass->Temperature->Work->LineX = true;
 			_MainClass->Temperature->Work->x = packet->terrainX;
+			//_MainClass->Temperature->Work->TerrainLineY = packet->terrainline_Y;
 			memcpy(&_MainClass->Temperature->Work->TerrainLineY, packet->terrainline_Y, SIGHT_Y);
 			break;
 		}
 		case SC_PACKET_TEMPERATUREY:
 		{
 			sc_packet_temperatureY* packet = reinterpret_cast<sc_packet_temperatureY*>(buf);
+			//_MainClass->Temperature->SetLineY(packet->terrainY, packet->terrainline_X);
 			_MainClass->Temperature->Work->LineY = true;
 			_MainClass->Temperature->Work->y = packet->terrainY;
+			//_MainClass->Temperature->Work->TerrainLineX = packet->terrainline_X;
 			memcpy(&_MainClass->Temperature->Work->TerrainLineX, packet->terrainline_X, SIGHT_X);
 			break;
 		}

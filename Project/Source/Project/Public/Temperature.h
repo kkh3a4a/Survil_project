@@ -10,6 +10,31 @@
 #include "../../../../IOCPServer/protocol.h"
 #include "Temperature.generated.h"
 
+class FTemperatureThread : public FRunnable
+{
+public:
+	FTemperatureThread();
+	void Stop();
+	virtual uint32_t Run() override;
+
+	bool LineX = false;
+	bool LineY = false;
+
+	/*char* TerrainLineX;
+	char* TerrainLineY;*/
+	char TerrainLineX[SIGHT_X];
+	char TerrainLineY[SIGHT_Y];
+
+	float x;
+	float y;
+
+	ATemperature* TemperatureClass;
+	bool Running = true;
+private:
+
+
+};
+
 UCLASS()
 class PROJECT_API ATemperature : public AActor
 {
@@ -18,6 +43,7 @@ class PROJECT_API ATemperature : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ATemperature();
+	~ATemperature();
 
 protected:
 	// Called when the game starts or when spawned
@@ -41,9 +67,10 @@ public:
 
 	uint8 TerrainTemperature[SIGHT_X][SIGHT_Y];
 	void TemperatureToRGB(double , double& , double& , double& );
-	void Update();
 	void Hide(bool);
 	bool GetIsHidden();
-	void SetLineX(float x, char* TerrainLineY);
-	void SetLineY(float x, char* TerrainLineY);
+
+	FRunnableThread* WorkThread;
+	FTemperatureThread* Work;
+	bool ReadyToUpdate = false;
 };
