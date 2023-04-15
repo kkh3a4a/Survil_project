@@ -47,7 +47,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 	auto terrain_start = std::chrono::system_clock::now();
 	while (1){
 		auto terrain_end = std::chrono::system_clock::now();
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(terrain_end - terrain_start).count() > 30000)
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(terrain_end - terrain_start).count() > 1000)
 		{
 			terrain_start = std::chrono::system_clock::now();
 			cout << endl << i << "¹øÂ°" << endl;

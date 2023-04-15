@@ -19,8 +19,8 @@ using namespace std;
 II player_sight_size{ SIGHT_X, SIGHT_Y };
 
 
-const int min_height = 4;
-const int max_height = 8;
+const int min_height = 1;
+const int max_height = 10;
 const int base_floor = 1;
 const int temperature_divide = 4;
 
