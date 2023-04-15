@@ -216,10 +216,10 @@ void AMain::SetSunAngle(float s_sunangle)
 
 void AMain::SetTerrainChange(unsigned char line, char* terrainline_Y)
 {
-	memcpy(Terrain2DArray[line], terrainline_Y,SIGHT_Y);
+	memcpy(ChangedTerrain2DArray[line], terrainline_Y,SIGHT_Y);
 	if (line == SIGHT_X - 1)
 	{
-		memcpy(Terrain2DArray, Terrain2DArray, sizeof(Terrain2DArray));
+		memcpy(Terrain2DArray, ChangedTerrain2DArray, sizeof(Terrain2DArray));
 		TerrainActor->UpdateMeshTerrain(Terrain2DArray);
 	}
 }

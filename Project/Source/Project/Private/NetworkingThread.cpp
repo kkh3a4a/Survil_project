@@ -216,11 +216,24 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TEMPERATURE:
 		{
 			sc_packet_temperature* packet = reinterpret_cast<sc_packet_temperature*>(buf);
-			//memcpy(_MainClass->Temperature->TerrainTemperature[packet->terrain_X], packet->terrain_Y, SIGHT_Y);
-			_MainClass->Temperature->Update(packet->terrain_X, packet->terrain_Y);
+			memcpy(_MainClass->Temperature->TerrainTemperature[packet->terrain_X], packet->terrain_Y, SIGHT_Y);
+			if (packet->terrain_X == SIGHT_X - 1) {
+				_MainClass->Temperature->Update();
+			}
 			break;
 		}
-
+		case SC_PACKET_TEMPERATUREX:
+		{
+			sc_packet_temperatureX* packet = reinterpret_cast<sc_packet_temperatureX*>(buf);
+			_MainClass->Temperature->SetLineX(packet->terrainX, packet->terrainline_Y);
+			break;
+		}
+		case SC_PACKET_TEMPERATUREY:
+		{
+			sc_packet_temperatureY* packet = reinterpret_cast<sc_packet_temperatureY*>(buf);
+			_MainClass->Temperature->SetLineY(packet->terrainY, packet->terrainline_X);
+			break;
+		}
 		default:
 		{
 			//DebugBreak();
@@ -235,10 +248,6 @@ void FSocketThread::Stop()
 	IsRunning = false;
 }
 
-
-
-
-
 void CALLBACK send_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED send_over, DWORD flag)
 {
 	if (err != 0)
@@ -248,7 +257,6 @@ void CALLBACK send_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED send_over
 	WSA_OVER_EX* wsa_over_ex = reinterpret_cast<WSA_OVER_EX*>(send_over);
 	delete  wsa_over_ex;
 }
-
 
 void CALLBACK recv_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED recv_over, DWORD flag) 
 {
@@ -285,5 +293,4 @@ void CALLBACK recv_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED recv_over
 	ZeroMemory(&wsa_over_ex->_wsaover, sizeof(wsa_over_ex->_wsaover));
 	DWORD r_flags = 0;
 	WSARecv(fsocket_thread->s_socket, &fsocket_thread->_recv_over_ex._wsabuf, 1, 0, &r_flags, &fsocket_thread->_recv_over_ex._wsaover, recv_callback);
-
 }

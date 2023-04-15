@@ -73,16 +73,16 @@ void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, do
     //UE_LOG(LogTemp, Warning, TEXT("%f %f %f"), r, g, b);
 }
 
-void ATemperature::Update(unsigned char X, char TemperatureY[SIGHT_Y])
+void ATemperature::Update()
 {
-    memcpy(TerrainTemperature[X], TemperatureY, SIGHT_Y);
-    if (X == SIGHT_X - 1) {
-        FVector RGB;
-        for (int y = 0; y < SIGHT_Y; y++) {
-            for (int x = 0; x < SIGHT_X; x++) {
-                TemperatureToRGB(TerrainTemperature[x][y], RGB.X, RGB.Y, RGB.Z);
-                MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
-            }
+	if (IsHidden) {
+		return;
+	}
+    FVector RGB;
+    for (int y = 0; y < SIGHT_Y; y++) {
+        for (int x = 0; x < SIGHT_X; x++) {
+            TemperatureToRGB(TerrainTemperature[x][y], RGB.X, RGB.Y, RGB.Z);
+            MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
         }
     }
 }
@@ -98,4 +98,64 @@ void ATemperature::Hide(bool visibility)
 bool ATemperature::GetIsHidden()
 {
     return IsHidden;
+}
+
+void ATemperature::SetLineX(float x, char* TerrainLineY)
+{
+	if (IsHidden) {
+		return;
+	}
+	static float TerrainX = x;
+	if ((int)TerrainX != (int)x){
+		if ((int)TerrainX < (int)x){
+			memcpy(TerrainTemperature[0], TerrainTemperature[1], SIGHT_Y * (SIGHT_X - 1));
+			memcpy(TerrainTemperature[SIGHT_X - 1], TerrainLineY, SIGHT_Y);
+		}
+		if ((int)TerrainX > (int)x){
+			memcpy(TerrainTemperature[1], TerrainTemperature[0], SIGHT_Y * (SIGHT_X - 1));
+			memcpy(TerrainTemperature[0], TerrainLineY, SIGHT_Y);
+		}
+		TerrainX = x;
+	}
+	FVector RGB;
+	for (int y = 0; y < SIGHT_Y; y++) {
+		for (int x = 0; x < SIGHT_X; x++) {
+			TemperatureToRGB(TerrainTemperature[x][y], RGB.X, RGB.Y, RGB.Z);
+			MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
+		}
+	}
+	Update();
+}
+
+void ATemperature::SetLineY(float y, char* TerrainLineX)
+{
+	if (IsHidden) {
+		return;
+	}
+	static float TerrainY = y;
+	if ((int)TerrainY != (int)y){
+		if ((int)TerrainY < (int)y){
+			for (int i = 0; i < SIGHT_X - 1; ++i){
+				for (int j = 0; j < SIGHT_Y - 1; ++j)
+					TerrainTemperature[i][j] = TerrainTemperature[i][j + 1];
+			}
+			for (int i = 0; i < SIGHT_X; ++i){
+				//추후 받아온 terrian 넣어주면됨
+				TerrainTemperature[i][SIGHT_Y - 1] = TerrainLineX[i];
+			}
+		}
+		if ((int)TerrainY > (int)y){
+			for (int i = 0; i < SIGHT_X - 1; ++i){
+				for (int j = SIGHT_Y - 1; j > 0; --j){
+					TerrainTemperature[i][j] = TerrainTemperature[i][j - 1];
+				}
+			}
+			for (int i = 0; i < SIGHT_X; ++i){
+				//추후 받아온 terrian 넣어주면됨
+				TerrainTemperature[i][0] = TerrainLineX[i];
+			}
+		}
+		TerrainY = y;
+	}
+	Update();
 }
