@@ -7,7 +7,7 @@
 
 extern std::array<class Object*, MAXOBJECT> objects;
 extern HANDLE h_iocp;
-
+extern bool IsNight;
 
 enum IOCPOP
 {

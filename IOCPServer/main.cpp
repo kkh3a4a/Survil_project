@@ -91,7 +91,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
 	auto TerrainSend_Timer_End = std::chrono::system_clock::now();
 	
-	bool IsNight = false;
 	bool IsOnceWork = true;
 	char** player_terrain = terrain->get_player_sight_map();
 	char** player_temperature = terrain->get_player_temperature_map();
@@ -117,7 +116,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
 			
-			sun_angle += 2.f * cycle_time / 1000.f;
+			sun_angle += 2.f * cycle_time / 200.f;
 			if (sun_angle >= 360.f) 
 			{
 				sun_angle -= 360.f;

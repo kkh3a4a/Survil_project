@@ -8,6 +8,7 @@
 
 std::array<Object*, MAXOBJECT> objects;
 HANDLE h_iocp;
+bool IsNight;
 
 WSA_OVER_EX::WSA_OVER_EX()
 {

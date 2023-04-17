@@ -69,7 +69,8 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 					placement_citizen->_job_x = _x;
 					placement_citizen->_job_y = _y;
 					placement_citizen->_job_z = _z;
-					placement_citizen->set_citizen_arrival_location(_x, _y, _z);
+					if(!IsNight)
+						placement_citizen->set_citizen_arrival_location(_x, _y, _z);
 					_workcitizens[i] = placement_citizen;
 					_citizencount++;
 					break;
@@ -97,7 +98,7 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 			{
 				if (placement_citizen != nullptr)
 				{
-					if(_workcitizens[i]->_x == _x && _workcitizens[i]->_y)
+					if(_workcitizens[i]->_x == _x && _workcitizens[i]->_y && !IsNight)
 					{
 						_workcitizens[i]->_arrival_x = _x + i * 100 - 500;
 						_workcitizens[i]->_arrival_y = _y + 500;
