@@ -29,13 +29,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
 		UMaterial* BuildingGridMaterial;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building_HOUSE;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building_HOUSE2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building_HOUSE3;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building_HUNTERHOUSE;
 
 	UMaterialInstanceDynamic* MaterialInstance;
@@ -43,7 +43,7 @@ public:
 	bool Buildable = false;
 
 	FVector DecalLocation;
-	char SelectedBuilding{};
+	int SelectedBuilding{};
 
 	void UpdateDecalPosition(FVector, float, float);
 	void DecalVisibility();
@@ -51,6 +51,7 @@ public:
 	void SendBuildablePacket();
 	void SendBuildPacket();
 	class AMain* Main;
-	TMap<char,TSubclassOf<AActor>> BuildingArray;
-	TArray<ABuilding*> BuiltBuildings;
+	TMap<int,TSubclassOf<AActor>> BuildingArray;
+	AActor* BuiltBuildings[MAXBUILDING];
+	int buildingWorkCount[MAXBUILDING] = {};
 };

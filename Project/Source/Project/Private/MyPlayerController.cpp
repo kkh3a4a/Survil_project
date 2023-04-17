@@ -138,7 +138,6 @@ void AMyPlayerController::InputRightReleased()
 
 void AMyPlayerController::UIClick(bool isplus)
 {
-
     cs_packet_citizenplacement packet;
     packet.size = sizeof(cs_packet_citizenplacement);
     packet.type = CS_PACKET_CITIZENPLACEMENT;
@@ -180,27 +179,38 @@ void AMyPlayerController::MoveToMouseCursor()
                 hitActor = NULL;
             }
             ResourceUI = false;
+            BuildingUI = false;
         }
         else if (hitActor->ActorHasTag("Resource"))
         {
             ResourceActor = hitActor;
-            ResourceUI = true;
+            
             ObjectType = RESOURCESTART;
             ObjectId = FCString::Atoi(*hitActor->Tags[1].ToString());
-            ResourceType = ResourceManager->resource_type[ObjectId];
+            ClickObjectType = ResourceManager->resource_type[ObjectId];
             ResourceCount = ResourceManager->resource_amount[ObjectId];
             workcitizen = ResourceManager->workCitizens[ObjectId];
-            joblessCitizen = ResourceManager->playerjobless;
+            joblessCitizen = Network->playerjobless;
+            ResourceUI = true;
+            BuildingUI = false;
         }
         else if (hitActor->ActorHasTag("Building"))
         {
             UE_LOG(LogTemp, Log, TEXT("type : %d"), FCString::Atoi(*hitActor->Tags[1].ToString()));
+            ObjectType = BUILDINGSTART;
+            ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
+            ClickObjectType = FCString::Atoi(*hitActor->Tags[1].ToString());
+            workcitizen = BuildManager->buildingWorkCount[ObjectId];
+            joblessCitizen = Network->playerjobless;
+            ResourceUI = false;
+            BuildingUI = true;
         }
         else
         {
             ObjectId = -1;
             ObjectType = 0;
             ResourceUI = false;
+            BuildingUI = false;
         }
     }
 }
@@ -321,10 +331,10 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
         ResourceActor = hitActor;        
         ObjectType = RESOURCESTART;
         ObjectId = FCString::Atoi(*hitActor->Tags[1].ToString());
-        ResourceType = ResourceManager->resource_type[ObjectId];
+        ClickObjectType = ResourceManager->resource_type[ObjectId];
         ResourceCount = ResourceManager->resource_amount[ObjectId];
         workcitizen = ResourceManager->workCitizens[ObjectId];
-        joblessCitizen = ResourceManager->playerjobless;
+        joblessCitizen = Network->playerjobless;
     }
     
     if (ResourceActor != NULL)

@@ -71,9 +71,9 @@ void AResourceManager::SetResourceAmount(int Resource_id, int amount)
     resource_amount[Resource_id] = amount;
 }
 
-void AResourceManager::SetResourcePlacement(int Resource_id, char work_citizen, char player_job_less)
+void AResourceManager::SetResourcePlacement(int Resource_id, char work_citizen)
 {
     workCitizens[Resource_id] = work_citizen;
-    playerjobless = player_job_less;
+   
 }
 

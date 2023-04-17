@@ -164,7 +164,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_CITIZENPLACEMENT:
 		{
 			sc_packet_citizenplacement* packet = reinterpret_cast<sc_packet_citizenplacement*>(buf);
-			_ResourceManager->SetResourcePlacement(packet->resource_id - RESOURCESTART, packet->workcitizen, packet->playerjobless);
+			playerjobless = packet->playerjobless;
+			_ResourceManager->SetResourcePlacement(packet->resource_id - RESOURCESTART, packet->workcitizen);
 			break;
 		}
 		case SC_PACKET_TERRAINALL:
@@ -211,7 +212,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_build* packet = reinterpret_cast<sc_packet_build*>(buf);
 			if (packet->do_build) {
-				_MainClass->BuildManager->Build(packet->id);
+				_MainClass->BuildManager->Build(packet->id - BUILDINGSTART);
 			}
 			break;
 		}

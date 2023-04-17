@@ -30,21 +30,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool ResourceUI = false;
 
+	
+
 	int ObjectType = 0;	//현재 클릭된 Object종류에따라 START위치를 더해줘서 id만들어주고 보내야함
 	int ObjectId = -1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int ResourceType = 0;
+	int ClickObjectType = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int ResourceCount = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool CitizenAdd = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool CitizenSub = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool CitizenRelease = false;
+		bool BuildingUI = false;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include"global.h"
+#include"Citizen.h"
 #include "GameFramework/Actor.h"
-#include "Citizen.h"
+
 #include "Building.generated.h"
 
 UCLASS()
@@ -17,16 +19,15 @@ public:
 	ABuilding();
 protected:
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	//virtual void BeginPlay() override;
 
 public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//virtual void Tick(float DeltaTime) override;
 
 	char Type{};
 	char Hp{};
 	char Capacity{};
-	TArray<ACitizen*> Citizens;
-
-	void SetMesh(TSubclassOf<AActor>, int type, int id);
+	int workcitizen;
+	//TArray<ACitizen*> Citizens;
 };

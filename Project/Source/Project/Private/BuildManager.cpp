@@ -38,12 +38,17 @@ void ABuildManager::BeginPlay()
 	BuildingArray.Add(2, Building_HOUSE2);
 	BuildingArray.Add(3, Building_HOUSE3);
 	BuildingArray.Add(11, Building_HUNTERHOUSE);
+
+	for (auto& a : BuiltBuildings)
+	{
+		a = nullptr;
+	}
 }
 
 void ABuildManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	if (BuildMode) {
 		DecalActor->SetActorLocation(DecalLocation);
 		SendBuildablePacket();
@@ -69,17 +74,26 @@ void ABuildManager::DecalVisibility()
 
 void ABuildManager::Build(int obj_id)
 {
-	UE_LOG(LogTemp, Log, TEXT("Selected Building %d"), SelectedBuilding);
+	UE_LOG(LogTemp, Log, TEXT("Selected Building %d %d"), SelectedBuilding, obj_id);
 	 UWorld* uworld = GetWorld();
     if (uworld == nullptr)
         return;
-	FRotator Rotation = FRotator(0, 0, 0);
+
 	FActorSpawnParameters SpawnInfo;
-	ABuilding* BuildingActor = GetWorld()->SpawnActor<ABuilding>(DecalLocation, Rotation, SpawnInfo);
-	BuildingActor->SetMesh(BuildingArray[SelectedBuilding],SelectedBuilding,obj_id);
+	if(BuiltBuildings[obj_id] == nullptr)
+	{
+		AActor * building = uworld->SpawnActor<AActor>(BuildingArray[SelectedBuilding], DecalLocation, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+		BuiltBuildings[obj_id] = reinterpret_cast<ABuilding*>(building);
+		BuiltBuildings[obj_id]->Tags.Add(TEXT("Building"));
+		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(SelectedBuilding));
+		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id));
+	}
+
+	//uworld->SpawnActor<ACitizen>(MyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	//ABuilding* BuildingActor = reinterpret_cast<ABuilding*>(BuiltBuildings[obj_id]);
+	//BuildingActor->SetMesh(BuildingArray[SelectedBuilding],SelectedBuilding,obj_id);
 	
-	BuiltBuildings.Add(BuildingActor);
-	UE_LOG(LogTemp, Log, TEXT("Built Buildings: %d"), BuiltBuildings.Num());
+	//UE_LOG(LogTemp, Log, TEXT("Built Buildings: %d"), BuiltBuildings.Num());
 }
 
 void ABuildManager::SendBuildablePacket()
