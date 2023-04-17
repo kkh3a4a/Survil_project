@@ -116,7 +116,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
 			
-			sun_angle += 2.f * cycle_time / 200.f;
+			//sun_angle += 2.f * cycle_time / 1000.f;
+			sun_angle = 45.f;
 			if (sun_angle >= 360.f) 
 			{
 				sun_angle -= 360.f;

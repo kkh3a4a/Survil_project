@@ -53,64 +53,83 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 { 
 	//std::cout << _currentX <<std::endl;
 	bool keyinput = false;
-	if (w)
-	{
+	char directionX{};
+	char directionY{};
+	int speed = 25;
+	bool usedX{};
+	bool usedY{};
+
+	if (w) {
+		directionY = -1;
 		keyinput = true;
-		_currentY -= 20;
+		usedY = true;
 	}
-	if (a)
-	{
+	if (s) {
+		directionY = 1;
 		keyinput = true;
-		
-		_currentX -= 20;
+		usedY = true;
 	}
-	if (s)
-	{
+	if (a) {
+		directionX = -1;
 		keyinput = true;
-		_currentY += 20;
+		usedX = true;
 	}
-	if (d)
-	{
+	if (d) {
+		directionX = 1;
 		keyinput = true;
-		_currentX += 20;
-	}
-	//terrain좌표와 current좌표를 비교하여 100차이가 나는경우 terrain좌표 업데이트
-	bool ischangeTerrainX = false;
-	bool ischangeTerrainY = false;
-	if((int)(_currentX) % 100 ==0)
-	{
-		if ((int)_terrainX / 100 != (int)(_currentX) / 100)
-		{
-			ischangeTerrainX = true;
-		}
-	}
-	if ((int)(_currentY) % 100 == 0)
-	{
-		if ((int)_terrainY / 100 != (int)(_currentY / 100))
-		{
-			ischangeTerrainY = true;
-		}
+		usedX = true;
 	}
 
+	if (keyinput) {
+		if (usedX && usedY) {
+			//speed = sqrt(pow(speed, 2) / 2);
+			20;
+		}
+		_currentX += speed * directionX;
+		_currentY += speed * directionY;
+	}
+	
 	if (keyinput)
 	{
-		sc_packet_move sc_packet_move;
+		sc_packet_move sc_packet_move; 
 		sc_packet_move.currentX = _currentX;
 		sc_packet_move.currentY = _currentY;
 		sc_packet_move.currentZ = _currentZ;
 		sc_packet_move.size = sizeof(sc_packet_move);
 		sc_packet_move.type = SC_PACKET_MOVE;
 		send_packet(&sc_packet_move);
-
 	}
 
+	//terrain좌표와 current좌표를 비교하여 100차이가 나는경우 terrain좌표 업데이트
+	bool ischangeTerrainX = false;
+	bool ischangeTerrainY = false;
+
+	if (abs(abs(_terrainX) - abs(_currentX)) >= 100) {
+		ischangeTerrainX = true;
+	}
+	if (abs(abs(_terrainY) - abs(_currentY)) >= 100) {
+		ischangeTerrainY = true;
+	}
+	if (w && a || w && d || s && a || s && d) {
+		if (ischangeTerrainX) {
+			ischangeTerrainY = true;
+			_currentY = int(_currentY) / 100 * 100 + int(_currentX) % 100;
+		}
+		if (ischangeTerrainY) {
+			ischangeTerrainX = true;
+			_currentX = int(_currentX) / 100 * 100 + int(_currentY) % 100;
+		}
+	}
+	
+	//std::cout << ischangeTerrainX << " " << ischangeTerrainY << std::endl;
+	
 	if (ischangeTerrainX)
 	{
 		//Terrain
 		sc_packet_terrainXlocation terrain_packet;
 		terrain_packet.size = sizeof(sc_packet_terrainXlocation);
 		terrain_packet.type = SC_PACKET_TERRAINXLOCATION;
-		terrain_packet.terrainX = _currentX;
+		terrain_packet.terrainX = _x + _currentX;
 		if (_terrainX > _currentX){
 			if (ischangeTerrainY){
 				if(_terrainY > _currentY){
@@ -178,7 +197,7 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 		sc_packet_terrainYlocation terrain_packet;
 		terrain_packet.size = sizeof(sc_packet_terrainYlocation);
 		terrain_packet.type = SC_PACKET_TERRAINYLOCATION;
-		terrain_packet.terrainY = _currentY;
+		terrain_packet.terrainY = _y + _currentY;
 
 		if (_terrainY > _currentY){
 			if (ischangeTerrainX){
@@ -239,24 +258,12 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 		}
 		send_packet(&temperature_packet);
 	}
-	
-	
 
-	
-	if ((int)(_currentX) % 100 == 0)
-	{
-		if ((int)_terrainX / 100 != (int)(_currentX) / 100)
-		{
-			_terrainX = _currentX;
-		}
+	if (abs(abs(_terrainX) - abs(_currentX)) >= 100) {
+		_terrainX = _currentX;
 	}
-	
-	if ((int)(_currentY) % 100 == 0)
-	{
-		if ((int)_terrainY / 100 != (int)(_currentY / 100))
-		{
-			_terrainY = _currentY;
-		}
+	if (abs(abs(_terrainY) - abs(_currentY)) >= 100) {
+		_terrainY = _currentY;
 	}
 
 	delete player_sight_terrain_line[0];

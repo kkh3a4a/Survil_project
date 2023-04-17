@@ -118,6 +118,8 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 	uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
 	Terrain->SetActorLocation(FVector(Player_x, Player_y, 0.0));
 	Temperature->SetActorLocation(FVector(Player_x - SIGHT_X * 100 / 2, Player_y - SIGHT_Y * 100 / 2, 0.0));
+	//Terrain->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	//Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	SetActorLocation(FVector(x, y, z));
 }
 
