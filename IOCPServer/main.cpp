@@ -412,9 +412,16 @@ int main(int argc, char* argv[])
 		}
 		reinterpret_cast<Player*>(objects[i])->set_player_location(x, y, z);
 		//reinterpret_cast<Player*>(objects[i])->player_sight_terrain = total_terrain;
+		
+		for (int line = 0; line != FIRSTCITIZENCREATE / 10; ++line)
+		{
+			for (int j = 0; j < 10; ++j)
+			{
+				reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * PLAYERCITIZENCOUNT + j + (line * 10)])->set_citizen_spwan_location(x + 2000 + (line * 500), y + (j * 500) - 2250, z);
+			}
+		}
 		for (int j = 0; j < 10; ++j)
 		{
-			reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * 200 + j])->set_citizen_spwan_location(x + 2000, y + (j * 500) - 2250,z);
 			reinterpret_cast<Resource*>(objects[RESOURCESTART + i * 10 + j])->set_resource_spwan_location(x, y, z);
 		}
 	}
