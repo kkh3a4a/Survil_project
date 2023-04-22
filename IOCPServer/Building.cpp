@@ -10,6 +10,7 @@ Building::Building(int id)
 {
 	_id = id;
 	_type = -1;
+	_citizencount = 0;
 	for (auto& a : _citizens)
 		a = nullptr;
 }
@@ -128,7 +129,16 @@ bool Building::_create_building(float x, float y, char type,int id)
 	}
 	case 11:
 	{
-		isSuccessCreate = true;
+		if (player->_resource_amount[4] < 20)
+		{
+			isSuccessCreate = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 20;
+			player->send_resource_amount();
+			isSuccessCreate = true;
+		}
 		break;
 	}
 	default:
@@ -147,5 +157,102 @@ bool Building::_create_building(float x, float y, char type,int id)
 		_type = type;
 	}
 	return isSuccessCreate;
+}
+
+void Building::set_building_citizen_placement(int client_id, char isplus)
+{
+	Citizen* placement_citizen = nullptr;
+	int Mindistance = 99999999;
+	int Maxdistance = -99999999;
+	if (isplus)
+	{
+		for (int i = CITIZENSTART + client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
+		{
+			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+			if (citizen->_Job == 0)
+			{
+				int distance = sqrt(pow(_x - citizen->_x, 2) + pow(_y - citizen->_y, 2));
+				if (Mindistance > distance)
+				{
+					Mindistance = distance;
+					placement_citizen = citizen;
+				}
+			}
+		}
+		for (auto& a : _citizens)
+		{
+			if (a == nullptr)
+			{
+				if (placement_citizen != nullptr)
+				{
+					placement_citizen->_Job = 11;
+					placement_citizen->_job_x = _x;
+					placement_citizen->_job_y = _y;
+					placement_citizen->_job_z = _z;
+					if (!IsNight)
+						placement_citizen->set_citizen_arrival_location(_x, _y, _z);
+					a = placement_citizen;
+					_citizencount++;
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		for (auto& a : _citizens)
+		{
+			if (a != nullptr)
+			{
+				int distance = sqrt(pow(_x - a->_x, 2) + pow(_y - a->_y, 2));
+				if (Maxdistance < distance)
+				{
+					Maxdistance = distance;
+					placement_citizen = a;
+				}
+			}
+		}
+		int i = 0;
+		for (auto& a : _citizens)
+		{
+			// 생성될 때 시민을 배치해준다.
+			if (a != nullptr)
+			{
+				if (a == placement_citizen)
+				{
+					if (placement_citizen != nullptr)
+					{
+						if (a->_x == _x && a->_y && !IsNight)
+						{
+							a->_arrival_x = _x + i * 100 - 500;
+							a->_arrival_y = _y + 500;
+						}
+						else
+						{
+							a->_arrival_x = a->_x;
+							a->_arrival_y = a->_y;
+						}
+						a->_Job = 0;
+						a = nullptr;
+						_citizencount--;
+						break;
+					}
+				}
+			}
+			i++;
+		}
+	}
+	
+
+	sc_packet_citizenplacement packet;
+	packet.size = sizeof(sc_packet_citizenplacement);
+	packet.type = SC_PACKET_CITIZENPLACEMENT;
+
+	packet.object_id = _id;
+	
+	packet.workcitizen = _citizencount;
+	Player* player = reinterpret_cast<Player*>(objects[client_id]);
+	packet.playerjobless = player->joblesscitizen();
+	player->send_packet(&packet);
 }
 

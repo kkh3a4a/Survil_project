@@ -34,5 +34,6 @@ public:
 	void send_terrain_All();
 	void send_sunangle(const float sunangle);
 	int playercitizencount();
+	int joblesscitizen();
 
 };

@@ -123,10 +123,10 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 	packet.size = sizeof(sc_packet_citizenplacement);
 	packet.type = SC_PACKET_CITIZENPLACEMENT;
 	
-	packet.resource_id = _id;
-	packet.playerjobless = 10;
+	packet.object_id = _id;
 	packet.workcitizen = _citizencount;
 	Player* player = reinterpret_cast<Player*>(objects[client_id]);
+	packet.playerjobless = player->joblesscitizen();
 
 	player->send_packet(&packet);
 	

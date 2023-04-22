@@ -12,8 +12,9 @@ public:
 					// 11 : HunterHouse
 	char _hp{};
 	char _level{};
-	class Citizen* _citizens[2]{};
-	
+	class Citizen* _citizens[5]{};
+	int _citizencount;
 	bool _create_building(float x, float y, char type, int id);
+	void set_building_citizen_placement(int client_id, char isplus);
 };
 

@@ -169,7 +169,7 @@ struct sc_packet_citizenplacement
 	unsigned char size;
 	unsigned char type;
 
-	int resource_id;
+	int object_id;
 	char playerjobless;
 	char workcitizen;
 };

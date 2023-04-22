@@ -318,3 +318,19 @@ int Player::playercitizencount()
 	}
 	return _citizencount;
 }
+
+int Player::joblesscitizen()
+{
+	int _citizencount = 0;
+	for (int citizen_id = CITIZENSTART + _id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
+	{
+		Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
+		if (citizen->_Job == 0)
+			_citizencount++;
+
+	}
+	return _citizencount;
+	return 0;
+}
+
+

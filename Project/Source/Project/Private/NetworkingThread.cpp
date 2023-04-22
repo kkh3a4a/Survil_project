@@ -165,7 +165,14 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_citizenplacement* packet = reinterpret_cast<sc_packet_citizenplacement*>(buf);
 			playerjobless = packet->playerjobless;
-			_ResourceManager->SetResourcePlacement(packet->resource_id - RESOURCESTART, packet->workcitizen);
+			if (packet->object_id >= RESOURCESTART && packet->object_id < RESOURCESTART + MAXRESOURCE)
+			{
+				_ResourceManager->SetResourcePlacement(packet->object_id - RESOURCESTART, packet->workcitizen);
+			}
+			else if (packet->object_id >= BUILDINGSTART && packet->object_id < BUILDINGSTART + MAXBUILDING)
+			{
+
+			}
 			break;
 		}
 		case SC_PACKET_TERRAINALL:

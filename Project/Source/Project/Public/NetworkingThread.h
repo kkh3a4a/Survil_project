@@ -62,7 +62,7 @@ public:
 	SOCKET s_socket;
 
 	int _prev_size = 0;
-	char playerjobless = { 10 };
+	char playerjobless = { FIRSTCITIZENCREATE };
 
 	char my_id;
 	void processpacket(unsigned char* buf);

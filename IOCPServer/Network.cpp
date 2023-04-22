@@ -59,6 +59,11 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 			Resource* resource = reinterpret_cast<Resource*> (objects[packet->objectid]);
 			resource->set_resource_citizen_placement(client_id, packet->isplus);
 		}
+		else if (packet->objectid >= BUILDINGSTART && packet->objectid < BUILDINGSTART + MAXBUILDING)
+		{
+			Building* building = reinterpret_cast<Building*>(objects[packet->objectid]);
+			building->set_building_citizen_placement(client_id, packet->isplus);
+		}
 		break;
 	}
 	case CS_PACKET_BUILDABLE:
