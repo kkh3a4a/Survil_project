@@ -124,6 +124,11 @@ void ABuildManager::SendBuildPacket()
 	WSASend(Main->Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
+void ABuildManager::SetBuildingPlacement(int Building_id, char work_citizen)
+{
+	buildingWorkCount[Building_id] = work_citizen;
+}
+
 void ABuildManager::UpdateDecalPosition(FVector MouseHitPoint, float CityX, float CityY)
 {
 	FVector CalculatedLocation;

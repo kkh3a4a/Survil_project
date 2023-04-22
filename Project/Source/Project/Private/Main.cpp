@@ -94,6 +94,7 @@ void AMain::BeginPlay()
 	//Newtwork
 	Network = new FSocketThread();
 	Network->_MainClass = this;
+	Network->_BuildManager = BuildManager;
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
 }
 

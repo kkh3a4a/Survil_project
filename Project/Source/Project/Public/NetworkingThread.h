@@ -54,6 +54,7 @@ public:
 	class AMyPlayerController* _MyController;
 	class ACitizenManager* _CitizenManager;
 	class AResourceManager* _ResourceManager;
+	class ABuildManager* _BuildManager;
 
     bool IsRunning = true;
 	bool IsConnected = false;

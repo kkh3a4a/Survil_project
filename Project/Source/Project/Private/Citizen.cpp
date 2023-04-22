@@ -13,8 +13,3 @@ ACitizen::ACitizen(int id)
 {
 	_id = id;
 }
-
-void ACitizen::Spawn_Citizen()
-{
-	
-}

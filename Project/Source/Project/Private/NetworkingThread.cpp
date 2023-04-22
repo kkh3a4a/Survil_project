@@ -171,7 +171,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			}
 			else if (packet->object_id >= BUILDINGSTART && packet->object_id < BUILDINGSTART + MAXBUILDING)
 			{
-
+				_BuildManager->SetBuildingPlacement(packet->object_id - BUILDINGSTART, packet->workcitizen);
 			}
 			break;
 		}

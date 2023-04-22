@@ -26,5 +26,4 @@ public:
 
 	void Spawn_Citizen();
 
-	void Citizen_Moving();
 };

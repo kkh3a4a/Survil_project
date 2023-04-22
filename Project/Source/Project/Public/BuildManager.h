@@ -50,6 +50,7 @@ public:
 	void Build(int obj_id);
 	void SendBuildablePacket();
 	void SendBuildPacket();
+	void SetBuildingPlacement(int Building_id, char work_citizen);
 	class AMain* Main;
 	TMap<int,TSubclassOf<AActor>> BuildingArray;
 	AActor* BuiltBuildings[MAXBUILDING];

@@ -336,6 +336,20 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
         workcitizen = ResourceManager->workCitizens[ObjectId];
         joblessCitizen = Network->playerjobless;
     }
+    else if (BuildingUI == true)
+    {
+        joblessCitizen = Network->playerjobless;
+        ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
+        workcitizen = BuildManager->buildingWorkCount[ObjectId];
+    }
+    else
+    {
+        ClickObjectType = 0;
+        ResourceCount = 0;
+        workcitizen = 0;
+        joblessCitizen = 0;
+    }
+    
     
     if (ResourceActor != NULL)
     {
