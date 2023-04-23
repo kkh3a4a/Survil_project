@@ -155,6 +155,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_ResourceManager->SetResourceAmount(packet->resourceid - RESOURCESTART, packet->amount);
 			break;
 		}
+		case SC_PACKET_CITIZENREMOVE:
+		{
+			sc_packet_citizenremove* packet = reinterpret_cast<sc_packet_citizenremove*>(buf);
+			_CitizenManager->Remove_Citizen(packet->citizenid - CITIZENSTART);
+			break;
+		}
 		case SC_PACKET_PLAYERRESOURCE:
 		{
 			sc_packet_playerresource* packet = reinterpret_cast<sc_packet_playerresource*>(buf);

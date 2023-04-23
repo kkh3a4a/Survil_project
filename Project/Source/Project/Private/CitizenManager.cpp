@@ -74,3 +74,12 @@ void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRo
         }
     }
 }
+
+void ACitizenManager::Remove_Citizen(int citizen_id)
+{
+    if (citizen[citizen_id] != nullptr)
+    {
+        citizen[citizen_id]->Destroy();
+        citizen[citizen_id] = nullptr;
+    }
+}

@@ -37,5 +37,5 @@ public:
 	class FSocketThread* Network;
 	void Spawn_Citizen(int citizen_id, FVector Location);
 	void Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate);
-
+	void Remove_Citizen(int citizen_id);
 };

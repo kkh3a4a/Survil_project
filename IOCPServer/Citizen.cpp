@@ -115,6 +115,15 @@ void Citizen::set_citizen_move()
 
 void Citizen::citizen_dead()
 {
+	sc_packet_citizenremove packet;
+	packet.citizenid = _id;
+	packet.size = sizeof(sc_packet_citizenremove);
+	packet.type = SC_PACKET_CITIZENREMOVE;
+
+	for (int i = 0; i < MAXPLAYER; ++i)
+	{
+		reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
+	}
 	_Job = -1;
 	_HP = 100;
 	_job_x = 0; _job_y = 0; _job_z = 0;
@@ -122,6 +131,7 @@ void Citizen::citizen_dead()
 	_HouseId = -1;
 	_Satiety = 100;
 	_thirst = 100;
+	
 }
 
 bool Citizen::citizen_eat_food()

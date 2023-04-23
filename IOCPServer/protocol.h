@@ -30,6 +30,7 @@
 #define CS_PACKET_CITIZENMOVE		4
 #define CS_PACKET_RESOURCECREATE	5
 #define CS_PACKET_SUNANGLE			6
+#define CS_PACKET_CITIZENREMOVE		7
 
 #define CS_PACKET_CITIZENPLACEMENT	10
 
@@ -53,6 +54,7 @@
 #define SC_PACKET_CITIZENMOVE		4
 #define SC_PACKET_RESOURCECREATE	5
 #define SC_PACKET_SUNANGLE			6
+#define SC_PACKET_CITIZENREMOVE		7
 
 #define SC_PACKET_CITIZENPLACEMENT	10
 #define SC_PACKET_RESOURCEAMOUNT	20
@@ -164,6 +166,14 @@ struct sc_packet_citizencreate
 	int citizenid;
 	float x, y, z;
 };
+
+struct sc_packet_citizenremove
+{
+	unsigned char size;
+	unsigned char type;
+	int citizenid;
+};
+
 struct sc_packet_citizenplacement
 {
 	unsigned char size;
