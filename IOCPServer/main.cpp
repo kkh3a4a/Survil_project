@@ -116,8 +116,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
 			
-			//sun_angle += 2.f * cycle_time / 1000.f;
-			sun_angle = 45.f;
+			sun_angle += 2.f * cycle_time / 1000.f;
+			//sun_angle = 45.f;
 			if (sun_angle >= 360.f) 
 			{
 				sun_angle -= 360.f;
@@ -226,6 +226,11 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			{
 				Resource* resource = reinterpret_cast<Resource*>(objects[i]);
 				resource->collect_resource();
+			}
+			for (int i = BUILDINGSTART; i < MAXBUILDING + BUILDINGSTART; ++i)
+			{
+				Building* building = reinterpret_cast<Building*>(objects[i]);
+				building->WorkBuilding();
 			}
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{

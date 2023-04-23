@@ -14,7 +14,9 @@ public:
 	char _level{};
 	class Citizen* _citizens[5]{};
 	int _citizencount;
+	int _client_id;
 	bool _create_building(float x, float y, char type, int id);
-	void set_building_citizen_placement(int client_id, char isplus);
+	void set_building_citizen_placement(char isplus);
+	void WorkBuilding();
 };
 

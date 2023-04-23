@@ -10,6 +10,7 @@ Building::Building(int id)
 {
 	_id = id;
 	_type = -1;
+	_client_id = (_id - BUILDINGSTART) / PLAYERBUILDINGCOUNT;
 	_citizencount = 0;
 	for (auto& a : _citizens)
 		a = nullptr;
@@ -159,14 +160,14 @@ bool Building::_create_building(float x, float y, char type,int id)
 	return isSuccessCreate;
 }
 
-void Building::set_building_citizen_placement(int client_id, char isplus)
+void Building::set_building_citizen_placement(char isplus)
 {
 	Citizen* placement_citizen = nullptr;
 	int Mindistance = 99999999;
 	int Maxdistance = -99999999;
 	if (isplus)
 	{
-		for (int i = CITIZENSTART + client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
+		for (int i = CITIZENSTART + _client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
 		{
 			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
 			if (citizen->_Job == 0)
@@ -252,8 +253,27 @@ void Building::set_building_citizen_placement(int client_id, char isplus)
 	
 	packet.workcitizen = _citizencount;
 	cout << _citizencount << endl;
-	Player* player = reinterpret_cast<Player*>(objects[client_id]);
+	Player* player = reinterpret_cast<Player*>(objects[_client_id]);
 	packet.playerjobless = player->joblesscitizen();
 	player->send_packet(&packet);
 }
 
+void Building::WorkBuilding()
+{
+	Player* player = reinterpret_cast<Player*>(objects[_client_id]);
+	switch (_type)
+	{
+	case 11:
+	{
+		player->_resource_amount[3] += _citizencount;
+		break;
+	}
+
+
+
+
+	default:
+		break;
+	}
+
+}
