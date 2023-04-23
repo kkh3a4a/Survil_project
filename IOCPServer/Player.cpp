@@ -81,10 +81,10 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 	}
 
 	if (keyinput) {
-		if (usedX && usedY) {
-			//speed = sqrt(pow(speed, 2) / 2);
-			20;
-		}
+		//if (usedX && usedY) {
+		//	//speed = sqrt(pow(speed, 2) / 2);
+		//	speed = 20;
+		//}
 		_currentX += speed * directionX;
 		_currentY += speed * directionY;
 	}
