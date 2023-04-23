@@ -63,28 +63,6 @@ void AMeshTerrain::Tick(float DeltaTime)
 		return;
 	}
 
-	FVector Location = GetActorLocation();
-	bool _MoveX = Work->MoveX;
-	bool _MoveY = Work->MoveY;
-	float _X = Work->x;
-	float _Y = Work->y;
-	if (_MoveX && _MoveY) {
-		SetActorLocation(FVector(_X, _Y, 0.0));
-		UE_LOG(LogTemp, Warning, TEXT("LOG FROM MESHTERRAIN.CPP XY %d"), ticki);
-	}
-	else if (_MoveX) {
-		SetActorLocation(FVector( _X, Location.Y, 0.0));
-		UE_LOG(LogTemp, Warning, TEXT("LOG FROM MESHTERRAIN.CPP X  %d"), ticki);
-	}
-	else if (_MoveY) {
-		SetActorLocation(FVector(Location.X,  _Y, 0.0));
-		UE_LOG(LogTemp, Warning, TEXT("LOG FROM MESHTERRAIN.CPP  Y %d"), ticki);
-
-	}
-	ticki++;
-	Work->MoveX = false;
-	Work->MoveY = false;
-
 	for (int32 i = 0; i < Vertices.Num(); i++) {
 		Vertices[i].Z = Terrain2DArray[i % SIGHT_X][i / SIGHT_X] * 50;
 	}
@@ -122,7 +100,7 @@ uint32_t FTerrainThread::Run()
 				TerrainX = x;
 			}
 			LineX = false;
-			MoveX = true;
+			TerrainClass->ReadyToUpdate = true;
 		}
 		if (LineY) {
 			static float TerrainY = y;
@@ -149,10 +127,8 @@ uint32_t FTerrainThread::Run()
 				TerrainY = y;
 			}
 			LineY = false;
-			MoveY = true;
-		}
-		if(MoveX || MoveY)
 			TerrainClass->ReadyToUpdate = true;
+		}
 		
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Terrain Thread Dead"));

@@ -191,7 +191,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TERRAINXLOCATION:
 		{
 			sc_packet_terrainXlocation* packet = reinterpret_cast<sc_packet_terrainXlocation*>(buf);
-			_MainClass->Terrain->SetActorLocation(FVector(packet->terrainX, _MainClass->Terrain->GetActorLocation().Y,  0.0));
+			_MainClass->Terrain->SetActorLocation(FVector(_MainClass->GetActorLocation().X, _MainClass->GetActorLocation().Y, 0.0));
 
 			_MainClass->Terrain->Work->LineX = true;
 			_MainClass->Terrain->Work->x = packet->terrainX;
@@ -201,7 +201,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TERRAINYLOCATION: 
 		{
 			sc_packet_terrainYlocation* packet = reinterpret_cast<sc_packet_terrainYlocation*>(buf);
-			_MainClass->Terrain->SetActorLocation(FVector(_MainClass->Terrain->GetActorLocation().X, packet->terrainY, 0.0));
+			_MainClass->Terrain->SetActorLocation(FVector(_MainClass->GetActorLocation().X, _MainClass->GetActorLocation().Y, 0.0));
 
 			_MainClass->Terrain->Work->LineY = true;
 			_MainClass->Terrain->Work->y = packet->terrainY;
@@ -243,7 +243,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			if (_MainClass->Temperature->GetIsHidden())
 				break;
 			sc_packet_temperatureX* packet = reinterpret_cast<sc_packet_temperatureX*>(buf);
-			_MainClass->Temperature->SetActorLocation(FVector(_MainClass->Player_x + packet->terrainX, _MainClass->Temperature->GetActorLocation().Y, 0.0));
+			_MainClass->Temperature->SetActorLocation(FVector(_MainClass->GetActorLocation().X, _MainClass->GetActorLocation().Y, 0.0));
 
 			_MainClass->Temperature->Work->LineX = true;
 			_MainClass->Temperature->Work->x = packet->terrainX;
@@ -255,7 +255,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			if (_MainClass->Temperature->GetIsHidden())
 				break;
 			sc_packet_temperatureY* packet = reinterpret_cast<sc_packet_temperatureY*>(buf);
-			_MainClass->Temperature->SetActorLocation(FVector(_MainClass->Temperature->GetActorLocation().X, _MainClass->Player_y + packet->terrainY, 0.0));
+			_MainClass->Temperature->SetActorLocation(FVector(_MainClass->GetActorLocation().X, _MainClass->GetActorLocation().Y, 0.0));
 
 			_MainClass->Temperature->Work->LineY = true;
 			_MainClass->Temperature->Work->y = packet->terrainY;

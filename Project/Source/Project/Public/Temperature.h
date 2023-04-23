@@ -20,8 +20,6 @@ public:
 	bool LineX = false;
 	bool LineY = false;
 
-	/*char* TerrainLineX;
-	char* TerrainLineY;*/
 	char TerrainLineX[SIGHT_X];
 	char TerrainLineY[SIGHT_Y];
 

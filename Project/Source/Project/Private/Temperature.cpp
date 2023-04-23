@@ -70,33 +70,6 @@ void ATemperature::Tick(float DeltaTime)
 			MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGB.X, RGB.Y, RGB.Z, 1));
 		}
 	}
-	//TArray<FVector> RGBArray;
-	//RGBArray.SetNum(SIGHT_X * SIGHT_Y);
-	//for (int y = 0; y < SIGHT_Y; y++) {
-	//	TFunction<void(int32)> MyLambda = [&](int32 Index)
-	//	{
-	//		double scaledTemperature = TerrainTemperature[Index][y] / TemperatureDivide - 20; //20 ~ 60 -> 0 ~ 40
-	//		if (scaledTemperature > 20) {
-	//			RGB.X = scaledTemperature - 20;
-	//			RGB.Y = 20 - RGB.X;
-	//			RGB.Z = 0;
-	//		}
-	//		else {
-	//			RGB.X = 0;
-	//			RGB.Y = scaledTemperature;
-	//			RGB.Z = 20 - RGB.Y;
-	//		}
-	//		RGB.X /= 20;
-	//		RGB.Y /= 20;
-	//		RGB.Z /= 20;
-	//		RGBArray[y * SIGHT_Y + Index] = RGB;
-	//	};
-	//	ParallelFor(SIGHT_X, MyLambda, false);
-	//	for (int x = 0; x < SIGHT_X; x++) {
-	//		int Num = y * SIGHT_Y + x;
-	//		MaterialInstanceArray[(y / 20) * (SIGHT_X / ColorsInDecalX) + (x / 20)]->SetVectorParameterValue(*FString::Printf(TEXT("Color%d"), (x % 20) * 20 + (y % 20)), FLinearColor(RGBArray[Num].X, RGBArray[Num].Y, RGBArray[Num].Z, 1));
-	//	}
-	//}
 
 	ReadyToUpdate = false;
 }
@@ -151,6 +124,10 @@ uint32_t FTemperatureThread::Run()
 	while (1) {
 		if (!Running)
 			break;
+		/*if (TemperatureClass->GetIsHidden()) {
+			FPlatformProcess::Sleep(0.1f);
+			continue;
+		}*/
 
 		if (LineX) {
 			static float TerrainX = x;

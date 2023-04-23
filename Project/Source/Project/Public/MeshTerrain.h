@@ -15,8 +15,6 @@ public:
 
 	bool LineX = false;
 	bool LineY = false;
-	bool BothFromX = false;
-	bool BothFromY = false;
 
 	char TerrainLineX[SIGHT_X];
 	char TerrainLineY[SIGHT_Y];
@@ -24,8 +22,6 @@ public:
 	float x;
 	float y;
 
-	bool MoveX = false;
-	bool MoveY = false;
 	AMeshTerrain* TerrainClass;
 	bool Running = true;
 private:
@@ -63,5 +59,4 @@ public:
 	FRunnableThread* WorkThread;
 	FTerrainThread* Work;
 	bool ReadyToUpdate = false;
-	int ticki;
 };
