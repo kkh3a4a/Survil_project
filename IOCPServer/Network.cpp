@@ -103,6 +103,14 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		player->send_packet(&sc_packet);
 		break;
 	}
+	case CS_PACKET_MINIMAP:
+	{
+		cs_packet_minimap* packet= reinterpret_cast<cs_packet_minimap*>(pk);
+
+		std::cout<<packet->x << ", " << packet->y << std::endl;
+		break;
+	}
+
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

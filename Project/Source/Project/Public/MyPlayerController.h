@@ -57,6 +57,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UIClick(bool isplus);
 
+	UFUNCTION(BlueprintCallable)
+	void SendMinimapPacket(float x, float y);
+
 protected:
 	long long int mouse_cnt = 0;
 
@@ -97,4 +100,5 @@ protected:
 	char Key_w, Key_a, Key_s, Key_d;
 
 	void SendMovePacket();
+	
 };

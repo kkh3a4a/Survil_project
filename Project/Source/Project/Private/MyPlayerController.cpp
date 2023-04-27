@@ -377,3 +377,18 @@ void AMyPlayerController::SendMovePacket()
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
+
+void AMyPlayerController::SendMinimapPacket(float x, float y)
+{
+    cs_packet_minimap packet;
+    packet.type = CS_PACKET_MINIMAP;
+    packet.size = sizeof(cs_packet_minimap);
+    x = (((int)x / 10) * 10);
+    y = (((int)(y - 720) / 10) * 10);
+    packet.x = x;
+    packet.y = y;
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+

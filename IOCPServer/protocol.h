@@ -31,6 +31,7 @@
 #define CS_PACKET_RESOURCECREATE	5
 #define CS_PACKET_SUNANGLE			6
 #define CS_PACKET_CITIZENREMOVE		7
+#define CS_PACKET_MINIMAP			8
 
 #define CS_PACKET_CITIZENPLACEMENT	10
 
@@ -55,6 +56,7 @@
 #define SC_PACKET_RESOURCECREATE	5
 #define SC_PACKET_SUNANGLE			6
 #define SC_PACKET_CITIZENREMOVE		7
+#define SC_PACKET_MINIMAP			8
 
 #define SC_PACKET_CITIZENPLACEMENT	10
 #define SC_PACKET_RESOURCEAMOUNT	20
@@ -137,7 +139,13 @@ struct cs_packet_build
 };
 
 
+struct cs_packet_minimap
+{
+	unsigned char size;
+	unsigned char type;
 
+	float x, y;
+};
 
 
 
