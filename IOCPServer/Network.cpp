@@ -107,7 +107,8 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	{
 		cs_packet_minimap* packet= reinterpret_cast<cs_packet_minimap*>(pk);
 
-		std::cout<<packet->x << ", " << packet->y << std::endl;
+		//std::cout<<packet->x << ", " << packet->y << std::endl;
+		player->playerMinimapLocation(packet->x, packet->y);
 		break;
 	}
 

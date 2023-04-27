@@ -85,8 +85,10 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 		//	//speed = sqrt(pow(speed, 2) / 2);
 		//	speed = 20;
 		//}
-		_currentX += speed * directionX;
-		_currentY += speed * directionY;
+		if((int)(_x + _currentX) / 100 > 100)
+			_currentX += speed * directionX;
+		if ((int)(_y + _currentY) / 100 > 100)
+			_currentY += speed * directionY;
 	}
 	
 	if (keyinput)
@@ -266,15 +268,19 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 		_terrainY = _currentY;
 	}
 
+
+	//최우선 오류 해결 요망
+	/*
 	delete player_sight_terrain_line[0];
 	delete player_sight_terrain_line[1];
 	delete player_sight_terrain_line[2];
 	delete player_sight_terrain_line[3];
 
+
 	delete player_sight_temperature_line[0];
 	delete player_sight_temperature_line[1];
 	delete player_sight_temperature_line[2];
-	delete player_sight_temperature_line[3];
+	delete player_sight_temperature_line[3];*/
 }
 
 void Player::send_resource_amount()
@@ -331,6 +337,22 @@ int Player::joblesscitizen()
 	}
 	return _citizencount;
 	return 0;
+}
+
+void Player::playerMinimapLocation(float mini_x, float mini_y)
+{
+	std::cout << mini_x << ", " << mini_y << std::endl;
+	_currentX = (mini_x - _x) - (SIGHT_X * 100 / 2);
+	_currentY = (mini_y - _y) - (SIGHT_Y * 100 / 2);
+	
+
+	sc_packet_move sc_packet_move;
+	sc_packet_move.currentX = _currentX;
+	sc_packet_move.currentY = _currentY;
+	sc_packet_move.currentZ = _currentZ;
+	sc_packet_move.size = sizeof(sc_packet_move);
+	sc_packet_move.type = SC_PACKET_MOVE;
+	send_packet(&sc_packet_move);
 }
 
 

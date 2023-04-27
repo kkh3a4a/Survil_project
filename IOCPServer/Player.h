@@ -35,5 +35,6 @@ public:
 	void send_sunangle(const float sunangle);
 	int playercitizencount();
 	int joblesscitizen();
+	void playerMinimapLocation(float mini_x, float mini_y);
 
 };

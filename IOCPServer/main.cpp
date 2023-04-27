@@ -21,7 +21,7 @@
 using namespace std;
 using namespace chrono;
 
-uniform_int_distribution <int>map_uid{ 1000, one_side_number - 1000 };
+uniform_int_distribution <int>map_uid{ 100, one_side_number - 100 };
 //함수정의 
 DWORD WINAPI ProcessClient(LPVOID arg);
 DWORD WINAPI ingame_thread(LPVOID arg);
@@ -199,6 +199,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				{
 					char** player_sight_terrain_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) /100, (int)(player->_y + player->_currentY) / 100);
 					char** player_sight_temperature_line = terrain->copy_for_player_temperature_line((int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100);
+				
 
 					player->key_input(player_sight_terrain_line, player_sight_temperature_line);
 					player->send_sunangle(sun_angle);
@@ -406,8 +407,9 @@ int main(int argc, char* argv[])
 	{
 		default_random_engine dre2;
 		dre2.seed(std::chrono::system_clock::now().time_since_epoch().count());
-		retry:		
+	retry:		
 		float x = map_uid(dre) * UNIT, float y = map_uid(dre) * UNIT, float z = 0;
+		
 		for (int j = 0; j < i; ++j)
 		{
 			if (location_distance(objects[j]->_x, objects[j]->_y, x, y) < 7000)

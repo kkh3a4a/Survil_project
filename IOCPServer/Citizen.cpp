@@ -115,6 +115,7 @@ void Citizen::set_citizen_move()
 
 void Citizen::citizen_dead()
 {
+	
 	sc_packet_citizenremove packet;
 	packet.citizenid = _id;
 	packet.size = sizeof(sc_packet_citizenremove);
