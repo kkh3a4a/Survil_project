@@ -2,11 +2,11 @@
 #include"protocol.h"
 #include"Network.h"
 
+
 class Player : public Object
 {
 public:
 	enum class STATE{ ST_FREE, ST_CONNECT, ST_INGAME, ST_DISCONNECT };
-
 
 	STATE _state;
 	SOCKET _socket;
@@ -23,6 +23,9 @@ public:
 
 	char** player_sight_terrain;
 	float _terrainX, _terrainY, _terrainZ;
+
+	volatile int _Minimap_terrainsend = 0;
+	std::mutex _t_l;
 
 	Player(int id, STATE state = STATE::ST_FREE);
 	~Player();

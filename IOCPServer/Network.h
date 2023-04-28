@@ -4,10 +4,14 @@
 #include <array>
 #include "protocol.h"
 #include"Object.h"
+#include<mutex>
+
 
 extern std::array<class Object*, MAXOBJECT> objects;
 extern HANDLE h_iocp;
 extern bool IsNight;
+
+bool CAS(volatile int* addr, int expected, int update);
 
 enum IOCPOP
 {

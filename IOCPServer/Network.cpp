@@ -10,6 +10,9 @@ std::array<Object*, MAXOBJECT> objects;
 HANDLE h_iocp;
 bool IsNight;
 
+
+
+
 WSA_OVER_EX::WSA_OVER_EX()
 {
 	return;
@@ -185,4 +188,10 @@ void WSA_OVER_EX::send_resource_First_create_packet(int client_id)
 void WSA_OVER_EX::set_accept_over()
 {
 	_iocpop = IOCPOP::OP_ACCEPT;
+}
+
+
+bool CAS(volatile int* addr, int expected, int update)
+{
+	return std::atomic_compare_exchange_strong(reinterpret_cast <volatile std::atomic_int*>(addr), &expected, update);
 }

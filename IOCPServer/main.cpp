@@ -239,6 +239,53 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				player->send_resource_amount();
 			}
 		}
+		for (int i = 0; i < MAXPLAYER; ++i)
+		{
+			Player* player = reinterpret_cast<Player*>(objects[i]);
+			if (player->_Minimap_terrainsend == 1)
+			{
+				terrain->copy_for_player_map(II{ (int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100 });
+				if (player->isconnect)
+				{
+					while (1)
+					{
+						//Terrain
+						static unsigned char terrain_x{};
+						if (terrain_x == SIGHT_X)
+						{
+							terrain_x = 0;
+							break;
+						}
+						sc_packet_terrainAll packet;
+						packet.size = sizeof(sc_packet_terrainAll);
+						packet.type = SC_PACKET_TERRAINALL;
+						packet.terrain_X = terrain_x;
+						memcpy(packet.terrain_Y, player_terrain[terrain_x], SIGHT_Y);
+
+						player->send_packet(&packet);
+						terrain_x++;
+					}
+					//Temperature
+					while (1)
+					{
+						static unsigned char terrain_x{};
+						if (terrain_x == SIGHT_X)
+						{
+							terrain_x = 0;
+							break;
+						}
+						sc_packet_temperature packet;
+						packet.terrain_X = terrain_x;
+						memcpy(packet.terrain_Y, player_temperature[terrain_x], SIGHT_Y);
+
+						player->send_packet(&packet);
+						terrain_x++;
+					}
+				}
+				player->_Minimap_terrainsend = 0;
+			}
+		}
+
 		if (Isterrain_change)
 		{
 			for (int i = 0; i < MAXPLAYER; ++i)
@@ -285,6 +332,11 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				}
 			}	
 		}
+
+
+
+
+
 		if (IsNight)
 		{
 			if(IsOnceWork)
@@ -387,6 +439,8 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
 		objects[i] = new Player(i);
+		Player* player = reinterpret_cast<Player*>(objects[i]);
+		
 	}
 	for (int i = MAXPLAYER; i < MAXCITIZEN + MAXPLAYER; ++i)//5~1004±îÁö´Â Citizen
 	{

@@ -270,7 +270,7 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 
 
 	//최우선 오류 해결 요망
-	/*
+	
 	delete player_sight_terrain_line[0];
 	delete player_sight_terrain_line[1];
 	delete player_sight_terrain_line[2];
@@ -280,7 +280,7 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 	delete player_sight_temperature_line[0];
 	delete player_sight_temperature_line[1];
 	delete player_sight_temperature_line[2];
-	delete player_sight_temperature_line[3];*/
+	delete player_sight_temperature_line[3];
 }
 
 void Player::send_resource_amount()
@@ -341,10 +341,16 @@ int Player::joblesscitizen()
 
 void Player::playerMinimapLocation(float mini_x, float mini_y)
 {
-	std::cout << mini_x << ", " << mini_y << std::endl;
+
 	_currentX = (mini_x - _x) - (SIGHT_X * 100 / 2);
 	_currentY = (mini_y - _y) - (SIGHT_Y * 100 / 2);
 	
+retry:
+	int cas_bool = _Minimap_terrainsend;
+	if (cas_bool != 0)
+		goto retry;
+	while (CAS(&_Minimap_terrainsend, cas_bool,1)){}
+	while (_Minimap_terrainsend == 0) {};
 
 	sc_packet_move sc_packet_move;
 	sc_packet_move.currentX = _currentX;
