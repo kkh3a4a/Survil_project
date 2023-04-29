@@ -42,7 +42,6 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		player->send_terrain_All();
 		break;
 	}
-
 	case CS_PACKET_MOVE:
 	{
 		cs_packet_move* packet = reinterpret_cast<cs_packet_move*>(pk);
@@ -154,7 +153,6 @@ void WSA_OVER_EX::send_citizen_First_create_packet(int client_id)
 			packet.z = objects[i * 200 + j + 5]->_z;
 			packet.citizenid = i * 200 + j + 5;
 
-			std::cout << packet.x << ", " << packet.y << std::endl;
 			packet.size = sizeof(sc_packet_citizencreate);
 			packet.type = SC_PACKET_CITIZENCREATE;
 

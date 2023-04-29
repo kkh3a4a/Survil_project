@@ -578,17 +578,17 @@ int main(int argc, char* argv[])
 			n_player->_id = user_id;
 			n_player->_wsa_recv_over._wsabuf.buf = reinterpret_cast<char*>(n_player->_wsa_recv_over._buf);
 			n_player->_wsa_recv_over._wsabuf.len = BUFSIZE;
-			n_player->isconnect = true;
+			
 			//n_player->player_sight_terrain = terrain->get_player_sight_map();
 			DWORD flags = 0;
 			WSARecv(c_socket, &n_player->_wsa_recv_over._wsabuf, 1, NULL, &flags, &n_player->_wsa_recv_over._wsaover, NULL);
-
+			n_player->isconnect = true;
+			n_player->_state = Player::STATE::ST_INGAME;
 			c_socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
 			ZeroMemory(&accept_over, sizeof(accept_over));
 			accept_over.set_accept_over();
 
 			AcceptEx(s_socket, c_socket, accept_over.getbuf(), NULL, sizeof(sockaddr_in) + 16, sizeof(sockaddr_in) + 16, NULL, &accept_over.getWsaOver());
-
 			break;
 		}
 		default:
