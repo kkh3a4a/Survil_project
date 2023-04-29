@@ -191,7 +191,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TERRAINXLOCATION:
 		{
 			sc_packet_terrainXlocation* packet = reinterpret_cast<sc_packet_terrainXlocation*>(buf);
-			_MainClass->Terrain->SetActorLocation(FVector(_MainClass->GetActorLocation().X, _MainClass->GetActorLocation().Y, 0.0));
+			_MainClass->Terrain->SetActorLocation(_MainClass->GetActorLocation());
 
 			_MainClass->Terrain->Work->LineX = true;
 			_MainClass->Terrain->Work->x = packet->terrainX;
@@ -201,7 +201,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TERRAINYLOCATION: 
 		{
 			sc_packet_terrainYlocation* packet = reinterpret_cast<sc_packet_terrainYlocation*>(buf);
-			_MainClass->Terrain->SetActorLocation(FVector(_MainClass->GetActorLocation().X, _MainClass->GetActorLocation().Y, 0.0));
+			_MainClass->Terrain->SetActorLocation(_MainClass->GetActorLocation());
 
 			_MainClass->Terrain->Work->LineY = true;
 			_MainClass->Terrain->Work->y = packet->terrainY;
@@ -231,8 +231,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 		}
 		case SC_PACKET_TEMPERATURE:
 		{
-			if (_MainClass->Temperature->GetIsHidden())
-				break;
+			/*if (_MainClass->Temperature->GetIsHidden())
+				break;*/
 			sc_packet_temperature* packet = reinterpret_cast<sc_packet_temperature*>(buf);
 			memcpy(&_MainClass->Temperature->TerrainTemperature[packet->terrain_X], packet->terrain_Y, SIGHT_Y);
 			_MainClass->Temperature->ReadyToUpdate = true;
@@ -240,10 +240,10 @@ void FSocketThread::processpacket(unsigned char* buf)
 		}
 		case SC_PACKET_TEMPERATUREX:
 		{
-			if (_MainClass->Temperature->GetIsHidden())
-				break;
+			/*if (_MainClass->Temperature->GetIsHidden())
+				break;*/
 			sc_packet_temperatureX* packet = reinterpret_cast<sc_packet_temperatureX*>(buf);
-			_MainClass->Temperature->SetActorLocation(FVector(_MainClass->GetActorLocation().X, _MainClass->GetActorLocation().Y, 0.0));
+			_MainClass->Temperature->SetActorLocation(_MainClass->GetActorLocation());
 
 			_MainClass->Temperature->Work->LineX = true;
 			_MainClass->Temperature->Work->x = packet->terrainX;
@@ -252,10 +252,10 @@ void FSocketThread::processpacket(unsigned char* buf)
 		}
 		case SC_PACKET_TEMPERATUREY:
 		{
-			if (_MainClass->Temperature->GetIsHidden())
-				break;
+			/*if (_MainClass->Temperature->GetIsHidden())
+				break;*/
 			sc_packet_temperatureY* packet = reinterpret_cast<sc_packet_temperatureY*>(buf);
-			_MainClass->Temperature->SetActorLocation(FVector(_MainClass->GetActorLocation().X, _MainClass->GetActorLocation().Y, 0.0));
+			_MainClass->Temperature->SetActorLocation(_MainClass->GetActorLocation());
 
 			_MainClass->Temperature->Work->LineY = true;
 			_MainClass->Temperature->Work->y = packet->terrainY;

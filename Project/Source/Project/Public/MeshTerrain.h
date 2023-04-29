@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "ProceduralMeshComponent.h"
 #include "../../../../IOCPServer/protocol.h"
+#include "Engine/DecalActor.h"
 #include "MeshTerrain.generated.h"
 
 class FTerrainThread : public FRunnable
@@ -55,6 +56,7 @@ public:
 	TArray<FVector> Vertices;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UProceduralMeshComponent* MeshTerrain;
+
 
 	FRunnableThread* WorkThread;
 	FTerrainThread* Work;

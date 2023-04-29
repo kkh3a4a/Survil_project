@@ -127,6 +127,8 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 void AMain::SetCurrentLocation(float current_x, float current_y, float current_z)
 {
 	SetActorLocation(FVector(Player_x + current_x, Player_y + current_y, Player_z + current_z));
+	UE_LOG(LogTemp, Warning, TEXT("%lf, %lf"), Player_x + current_x, Player_y + current_y);
+
 }
 
 void AMain::SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount)

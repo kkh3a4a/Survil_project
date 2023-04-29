@@ -33,7 +33,6 @@ void ATemperature::BeginPlay()
     FRotator Rotation = FRotator(0, 0, 0);
     FActorSpawnParameters SpawnInfo;
 
-
     for (int32 y = 0; y < (SIGHT_Y / ColorsInDecalY); y++) {
         for (int32 x = 0; x < (SIGHT_X / ColorsInDecalX); x++) {
             ADecalActor* Decal = GetWorld()->SpawnActor<ADecalActor>(FVector(2000 * x + 1000, 2000 * y + 1000, 0), Rotation);
@@ -98,6 +97,9 @@ void ATemperature::TemperatureToRGB(double temperature, double& r, double& g, do
 
 void ATemperature::Hide(bool visibility)
 {
+	if (!visibility) {
+		ReadyToUpdate = true;
+	}
 	for (ADecalActor* Decal : DecalArray) {
         Decal->SetActorHiddenInGame(visibility);
 	}
