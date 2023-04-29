@@ -294,17 +294,12 @@ void AMyPlayerController::SelectBuildingHunterHouse()
 }
 
 
-
-
-
-
-
 void AMyPlayerController::MouseScrollUp()
 {
-   if (Main_Class->MyCamera->GetActorLocation().Z <= 1500)
+   if (Main_Class->MyCamera->GetActorLocation().Z <= 1000)
         return;
     Main_Class->MyCamera->SetActorLocation(Main_Class->MyCamera->GetActorLocation() - FVector(0, 100, 500));
-    Main_Class->MyCamera->SetActorRotation(FRotator(Main_Class->MyCamera->GetActorRotation().Pitch + 2.4, Main_Class->MyCamera->GetActorRotation().Yaw, Main_Class->MyCamera->GetActorRotation().Roll));
+    Main_Class->MyCamera->SetActorRotation(FRotator(Main_Class->MyCamera->GetActorRotation().Pitch + 2.45, Main_Class->MyCamera->GetActorRotation().Yaw, Main_Class->MyCamera->GetActorRotation().Roll));
 }
 
 void AMyPlayerController::MouseScrollDown()
@@ -312,7 +307,7 @@ void AMyPlayerController::MouseScrollDown()
     if (Main_Class->MyCamera->GetActorLocation().Z >= 7000)
         return;
     Main_Class->MyCamera->SetActorLocation(Main_Class->MyCamera->GetActorLocation() + FVector(0, 100, 500));
-    Main_Class->MyCamera->SetActorRotation(FRotator(Main_Class->MyCamera->GetActorRotation().Pitch - 2.4, Main_Class->MyCamera->GetActorRotation().Yaw, Main_Class->MyCamera->GetActorRotation().Roll));
+    Main_Class->MyCamera->SetActorRotation(FRotator(Main_Class->MyCamera->GetActorRotation().Pitch - 2.45, Main_Class->MyCamera->GetActorRotation().Yaw, Main_Class->MyCamera->GetActorRotation().Roll));
 }
 
 void AMyPlayerController::PlayerTick(float DeltaTime)
