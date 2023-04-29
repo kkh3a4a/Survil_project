@@ -9,10 +9,6 @@
 //#include<algorithm>
 
 #include"Network.h"
-#include"Player.h"
-#include"Citizen.h"
-#include"Resource.h"
-#include "Building.h"
 #include"terrain.cu"
 
 #pragma comment (lib,"WS2_32.lib")
@@ -38,7 +34,7 @@ Terrain* terrain = new Terrain();
 char** total_terrain = terrain->get_map();
 char** shadow_map = terrain->get_shadow_map();
 unsigned char** temperature_map = terrain->get_temperature_map();
-bool Isterrain_change = false;
+bool is_terrain_changed = false;
 
 DWORD WINAPI terrain_change(LPVOID arg)
 {
@@ -47,12 +43,14 @@ DWORD WINAPI terrain_change(LPVOID arg)
 	auto terrain_start = std::chrono::system_clock::now();
 	while (1){
 		auto terrain_end = std::chrono::system_clock::now();
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(terrain_end - terrain_start).count() > 1000)
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(terrain_end - terrain_start).count() > 1000 && !is_terrain_changed)
 		{
+			clock_t start = clock();
 			terrain_start = std::chrono::system_clock::now();
 			cout << endl << i << "번째" << endl;
 
 			terrain->wind_blow({ 1, 0 }, 1);
+			terrain->add_building_height();
 			terrain->make_shadow_map(sun_angle);
 			terrain->make_tempertature_map(sun_angle);
 			CC retval = terrain->get_highest_lowest(temperature_map);
@@ -68,8 +66,12 @@ DWORD WINAPI terrain_change(LPVOID arg)
 				cout << "SAVED!!!" << endl;
 			}
 			i++;
-			Isterrain_change = true;
+			clock_t end = clock();
+			cout << "걸린시간: " << (double)(end - start) / CLOCKS_PER_SEC << endl;
+			is_terrain_changed = true;
 		}
+		else
+			Sleep(10);
 	}
 }
 
@@ -116,7 +118,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
 			
-			sun_angle += 2.f * cycle_time / 200.f;
+			sun_angle += 2.f * cycle_time / 1000.f;
 			//sun_angle = 45.f;
 			if (sun_angle >= 360.f) 
 			{
@@ -138,6 +140,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			{
 				IsNight = true;
 			}
+			// 건물 온도 업데이트
+			/*for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
+				objects[i]
+			}*/
 
 			if (sun_angle - citizenfoodwatereat > 10)
 			{
@@ -286,7 +292,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			}
 		}
 
-		if (Isterrain_change)
+		if (is_terrain_changed)
 		{
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
@@ -328,15 +334,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						player->send_packet(&packet);
 						terrain_x++;
 					}
-					Isterrain_change = false;
 				}
 			}	
+			is_terrain_changed = false;
 		}
-
-
-
-
-
 		if (IsNight)
 		{
 			if(IsOnceWork)

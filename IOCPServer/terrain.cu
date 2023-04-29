@@ -12,6 +12,10 @@
 #include "device_launch_parameters.h"
 #include "global.h"
 #include"Network.h"
+#include"Player.h"
+#include"Citizen.h"
+#include"Resource.h"
+#include "Building.h"
 
 #define PI 3.1415926
 
@@ -483,6 +487,20 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 }
 
 __global__
+void add_building_height_cuda(char** terrain_array_device, II building_pos, int building_height)
+{
+	II coo;
+	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
+	coo.y = blockIdx.x * blockDim.x + threadIdx.x;
+	/*printf("%d %d %d\n", blockIdx.y, blockDim.y, threadIdx.y);
+	printf("%d %d %d\n", blockIdx.x, blockDim.x, threadIdx.x);*/
+	// 100 + 9 - 5 = 104
+	// 100 + 0 - 5 = 95
+	
+	terrain_array_device[building_pos.x + threadIdx.x - blockDim.x / 2][building_pos.y + threadIdx.y - blockDim.y / 2] += building_height;
+}
+
+__global__
 void heat_conduction_cuda(unsigned char** temperature_map_device)
 {
 	II coo;
@@ -572,6 +590,7 @@ private:
 	
 	II city_location[5];	//나중에 크기 MAXPLAYER로 수정해야 함
 	II* city_location_device;
+	II* building_location_device;
 
 	II* random_array = new II[random_array_size];
 	II* random_array_device;
@@ -615,6 +634,8 @@ public:
 			cudaMemcpy(temperature_map_temp[i], temperature_map_host[i], one_side_number * sizeof(char), cudaMemcpyHostToDevice);
 		}
 
+		cudaMalloc((void**)&city_location_device, 5 * sizeof(II));
+		cudaMalloc((void**)&building_location_device, MAXBUILDING * sizeof(II));
 
 		//Terrain Memory Assignment For Player's Sight===================================================
 		clock_t t_2 = clock();
@@ -712,7 +733,6 @@ public:
 
 	void make_shadow_map(int sun_angle) {
 		clock_t t_0 = clock();
-		
 		
 		if (sun_angle <= 0 || sun_angle >= 180) {
 			if (log)
@@ -898,6 +918,20 @@ public:
 		return all;
 	}
 	
+	void add_building_height()
+	{
+		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
+			Building* building = reinterpret_cast<Building*>(objects[i]);
+			if (building->_type == -1)
+				continue;
+			int building_size = 6;
+			int building_height = 4;
+			dim3 block(building_size, building_size, 1);
+			add_building_height_cuda << <1, block >> > (terrain_array_device, { (int)building->_x / 100, (int)building->_y / 100 }, building_height);
+			cudaDeviceSynchronize();
+		}
+	}
+
 	void except_city_terrain()
 	{
 		/*for (int i = 0; i < 5; i++) {
@@ -913,8 +947,6 @@ public:
 			return;
 		}
 		clock_t t_0 = clock();
-		city_location_device = new II[5];
-		cudaMalloc((void**)&city_location_device, 5 * sizeof(II));
 		cudaMemcpy(city_location_device, city_location, 5 * sizeof(II), cudaMemcpyHostToDevice);
 		
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
