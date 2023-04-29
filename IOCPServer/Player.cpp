@@ -34,7 +34,7 @@ void Player::send_packet(void* packet)
 
 	WSA_OVER_EX* _wsa_send_over = new WSA_OVER_EX(OP_SEND, buf[0], packet);
 
-	if(_socket)
+	if(_state == STATE::ST_INGAME)
 		WSASend(_socket, &_wsa_send_over->_wsabuf, 1, NULL, 0, &_wsa_send_over->_wsaover, NULL);
 }
 
@@ -271,7 +271,7 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 
 	//최우선 오류 해결 요망
 	
-	delete player_sight_terrain_line[0];
+	/*delete player_sight_terrain_line[0];
 	delete player_sight_terrain_line[1];
 	delete player_sight_terrain_line[2];
 	delete player_sight_terrain_line[3];
@@ -280,7 +280,7 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 	delete player_sight_temperature_line[0];
 	delete player_sight_temperature_line[1];
 	delete player_sight_temperature_line[2];
-	delete player_sight_temperature_line[3];
+	delete player_sight_temperature_line[3];*/
 }
 
 void Player::send_resource_amount()
