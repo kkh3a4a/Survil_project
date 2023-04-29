@@ -487,7 +487,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 }
 
 __global__
-void add_building_height_cuda(char** terrain_array_device, II building_pos, int building_height)
+void add_object_height_cuda(char** terrain_array_device, II building_pos, int building_height)
 {
 	II coo;
 	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
@@ -918,8 +918,18 @@ public:
 		return all;
 	}
 	
-	void add_building_height()
+	void add_object_height()
 	{
+		for (int i = RESOURCESTART; i < RESOURCESTART + MAXRESOURCE; ++i) {
+			Resource* resource = reinterpret_cast<Resource*>(objects[i]);
+			if (resource->_type == -1)
+				continue;
+			int resource_size = 4;
+			int resource_height = 2;
+			dim3 block(resource_size, resource_size, 1);
+			add_object_height_cuda << <1, block >> > (terrain_array_device, { (int)resource->_x / 100, (int)resource->_y / 100 }, resource_height);
+			cudaDeviceSynchronize();
+		}
 		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
 			Building* building = reinterpret_cast<Building*>(objects[i]);
 			if (building->_type == -1)
@@ -927,7 +937,7 @@ public:
 			int building_size = 6;
 			int building_height = 4;
 			dim3 block(building_size, building_size, 1);
-			add_building_height_cuda << <1, block >> > (terrain_array_device, { (int)building->_x / 100, (int)building->_y / 100 }, building_height);
+			add_object_height_cuda << <1, block >> > (terrain_array_device, { (int)building->_x / 100, (int)building->_y / 100 }, building_height);
 			cudaDeviceSynchronize();
 		}
 	}

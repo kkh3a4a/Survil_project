@@ -50,7 +50,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 			cout << endl << i << "¹øÂ°" << endl;
 
 			terrain->wind_blow({ 1, 0 }, 1);
-			terrain->add_building_height();
+			terrain->add_object_height();
 			terrain->make_shadow_map(sun_angle);
 			terrain->make_tempertature_map(sun_angle);
 			CC retval = terrain->get_highest_lowest(temperature_map);
