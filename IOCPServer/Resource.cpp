@@ -49,7 +49,7 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 		for (int i = CITIZENSTART + client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
 		{
 			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-			if(citizen->_Job == 0)
+			if(citizen->_job == 0)
 			{
 				int distance = sqrt(pow(_x - citizen->_x, 2) + pow(_y - citizen->_y, 2));
 				if (Mindistance > distance)
@@ -65,7 +65,7 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 			{
 				if (placement_citizen != nullptr)
 				{
-					placement_citizen->_Job = 1;
+					placement_citizen->_job = 1;
 					placement_citizen->_job_x = _x;
 					placement_citizen->_job_y = _y;
 					placement_citizen->_job_z = _z;
@@ -108,7 +108,7 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 						_workcitizens[i]->_arrival_x = _workcitizens[i]->_x;
 						_workcitizens[i]->_arrival_y = _workcitizens[i]->_y;
 					}
-					_workcitizens[i]->_Job = 0;
+					_workcitizens[i]->_job = 0;
 					_workcitizens[i] = nullptr;
 					_citizencount--;
 					break;
@@ -157,7 +157,7 @@ void Resource::collect_resource()
 			{
 				_workcitizens[i]->_arrival_x = _x + i * 100 - 500;
 				_workcitizens[i]->_arrival_y = _y + 200;
-				_workcitizens[i]->_Job = 0;
+				_workcitizens[i]->_job = 0;
 				_workcitizens[i] = nullptr;
 			}
 		}

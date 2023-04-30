@@ -13,7 +13,7 @@ public:
 	WSA_OVER_EX _wsa_recv_over;
 	int _prev_size{};
 	char _packet_buf[BUFSIZE]{};
-	char isconnect;
+	char is_connected;
 	char w, a, s, d;
 	
 	//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무

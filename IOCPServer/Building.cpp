@@ -47,11 +47,11 @@ bool Building::_create_building(float x, float y, char type,int id)
 					for (int citizen_id = CITIZENSTART + player->_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player->_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
 					{
 						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-						if (citizen->_Job == -1)
+						if (citizen->_job == -1)
 							continue;
-						if (citizen->_HouseId == -1)
+						if (citizen->_house_id == -1)
 						{
-							citizen->_HouseId = _id;
+							citizen->_house_id = _id;
 							a = citizen;
 							break;
 						}
@@ -80,11 +80,11 @@ bool Building::_create_building(float x, float y, char type,int id)
 					for (int citizen_id = CITIZENSTART + player->_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player->_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
 					{
 						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-						if (citizen->_Job == -1)
+						if (citizen->_job == -1)
 							continue;
-						if (citizen->_HouseId == -1)
+						if (citizen->_house_id == -1)
 						{
-							citizen->_HouseId = _id;
+							citizen->_house_id = _id;
 							a = citizen;
 							break;
 						}
@@ -113,11 +113,11 @@ bool Building::_create_building(float x, float y, char type,int id)
 					for (int citizen_id = CITIZENSTART + player->_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player->_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
 					{
 						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-						if (citizen->_Job == -1)
+						if (citizen->_job == -1)
 							continue;
-						if (citizen->_HouseId == -1)
+						if (citizen->_house_id == -1)
 						{
-							citizen->_HouseId = _id;
+							citizen->_house_id = _id;
 							a = citizen;
 							break;
 						}
@@ -170,7 +170,7 @@ void Building::set_building_citizen_placement(char isplus)
 		for (int i = CITIZENSTART + _client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
 		{
 			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-			if (citizen->_Job == 0)
+			if (citizen->_job == 0)
 			{
 				int distance = sqrt(pow(_x - citizen->_x, 2) + pow(_y - citizen->_y, 2));
 				if (Mindistance > distance)
@@ -186,7 +186,7 @@ void Building::set_building_citizen_placement(char isplus)
 			{
 				if (placement_citizen != nullptr)
 				{
-					placement_citizen->_Job = 11;
+					placement_citizen->_job = 11;
 					placement_citizen->_job_x = _x;
 					placement_citizen->_job_y = _y;
 					placement_citizen->_job_z = _z;
@@ -233,7 +233,7 @@ void Building::set_building_citizen_placement(char isplus)
 							a->_arrival_x = a->_x;
 							a->_arrival_y = a->_y;
 						}
-						a->_Job = 0;
+						a->_job = 0;
 						a = nullptr;
 						_citizencount--;
 						break;

@@ -9,13 +9,13 @@ public:
 	Citizen(int id);
 	~Citizen();
 
-	char _Job;	//	-1 : 생성안됨, 및 사망  // 0 : 생성 및 무직  // 1 : 자원 채취 // 11 : HunterHouse
+	char _job;	//	-1 : 생성안됨, 및 사망  // 0 : 생성 및 무직  // 1 : 자원 채취 // 11 : HunterHouse
 	float _job_x, _job_y, _job_z;
-	int _HouseId;	// -1 : 집없음, 나머지 : 집 object id
-	char _HP;
+	int _house_id;	// -1 : 집없음, 나머지 : 집 object id
+	char _hp;
 
-	char _Satiety;
-	char _thirst;
+	char _satiety;
+	char _thirsty;
 
 	float _arrival_x, _arrival_y, _arrival_z;
 	int _playerID;

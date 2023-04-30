@@ -96,7 +96,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	bool IsOnceWork = true;
 	char** player_terrain = terrain->get_player_sight_map();
 	char** player_temperature = terrain->get_player_temperature_map();
-	int citizenfoodwatereat = 0;
+	int citizen_eat = 0;
 
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
@@ -125,11 +125,11 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				sun_angle -= 360.f;
 				IsNight = false;
 				IsOnceWork = true;
-				citizenfoodwatereat = 0;
+				citizen_eat = 0;
 				for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 				{
 					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-					if (citizen->_Job == 1)
+					if (citizen->_job == 1)
 					{
 						citizen->_arrival_x = citizen->_job_x;
 						citizen->_arrival_y = citizen->_job_y;
@@ -140,32 +140,46 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			{
 				IsNight = true;
 			}
+			for (int i = 0; i < MAXPLAYER; ++i)
+			{
+				Player* player = reinterpret_cast<Player*>(objects[i]);
+				player->send_sunangle(sun_angle);		//태양 각도 전송
+
+				if (player->is_connected && (player->w || player->a || player->s || player->d))
+				{
+					char** player_sight_terrain_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100);
+					char** player_sight_temperature_line = terrain->copy_for_player_temperature_line((int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100);
+
+					player->key_input(player_sight_terrain_line, player_sight_temperature_line);
+					player->send_sunangle(sun_angle);
+				}
+			}
 			// 건물 온도 업데이트
 			/*for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
 				objects[i]
 			}*/
 
-			if (sun_angle - citizenfoodwatereat > 10)
+			if (sun_angle - citizen_eat > 10)
 			{
-				citizenfoodwatereat = sun_angle;
-				for(int player_id = 0;player_id < MAXPLAYER;++player_id)
+				citizen_eat = sun_angle;
+				for (int player_id = 0; player_id < MAXPLAYER; ++player_id)
 				{
 					Player* player = reinterpret_cast<Player*>(objects[player_id]);
 					int citizencount = player->playercitizencount();
 					for (int citizen_id = CITIZENSTART + player_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
 					{
 						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-						if (citizen->_Job == -1)
+						if (citizen->_job == -1)
 							continue;
-						citizen->_Satiety -= 1;
-						citizen->_thirst -= 1;
+						citizen->_satiety -= 1;
+						citizen->_thirsty -= 1;
 
-						if (citizen->_Satiety == 0)
+						if (citizen->_satiety == 0)
 						{
 							if (!citizen->citizen_eat_food())
 								citizen->citizen_dead();
 						}
-						if (citizen->_thirst == 0)
+						if (citizen->_thirsty == 0)
 						{
 							if (!citizen->citizen_eat_water())
 								citizen->citizen_dead();
@@ -173,23 +187,23 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 						if (player->_resource_amount[3] > citizencount)
 						{
-							if(citizen->_Satiety < 70)
+							if (citizen->_satiety < 70)
 								citizen->citizen_eat_food();
 						}
 						else
 						{
-							if (citizen->_Satiety < 30)
+							if (citizen->_satiety < 30)
 								citizen->citizen_eat_food();
 						}
 
 						if (player->_resource_amount[1] > citizencount)
 						{
-							if (citizen->_thirst < 70)
+							if (citizen->_thirsty < 70)
 								citizen->citizen_eat_water();
 						}
 						else
 						{
-							if (citizen->_thirst < 30)
+							if (citizen->_thirsty < 30)
 								citizen->citizen_eat_water();
 						}
 					}
@@ -197,29 +211,17 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					player->send_resource_amount();
 				}
 			}
-
-			for (int i = 0; i < MAXPLAYER; ++i)
-			{
-				Player* player = reinterpret_cast<Player*>(objects[i]);
-				if (player->isconnect)
-				{
-					char** player_sight_terrain_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) /100, (int)(player->_y + player->_currentY) / 100);
-					char** player_sight_temperature_line = terrain->copy_for_player_temperature_line((int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100);
-				
-
-					player->key_input(player_sight_terrain_line, player_sight_temperature_line);
-					player->send_sunangle(sun_angle);
-				}
-
-			}
 		}
+		
+	
+		
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Citizen_Move_Timer_End).count() > 10)
 		{
 			Citizen_Move_Timer_End = std::chrono::system_clock::now();
 			for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 			{
 				Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-				if (citizen->_Job == -1)
+				if (citizen->_job == -1)
 				{
 					continue;
 				}
@@ -251,7 +253,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			if (player->_Minimap_terrainsend == 1)
 			{
 				terrain->copy_for_player_map(II{ (int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100 });
-				if (player->isconnect)
+				if (player->is_connected)
 				{
 					while (1)
 					{
@@ -298,7 +300,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);
 				terrain->copy_for_player_map(II{ (int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100});
-				if(player->isconnect)
+				if(player->is_connected)
 				{
 					while(1)
 					{
@@ -347,10 +349,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					int player_id = (citizen_id - 5) / 200;
 					Player* player = reinterpret_cast<Player*>(objects[player_id]);
 					Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-					if (citizen->_Job == -1)
+					if (citizen->_job == -1)
 						continue;
 					
-					if (citizen->_HouseId == -1)
+					if (citizen->_house_id == -1)
 					{
 						bool isHouseStaff = false;
 						//만약 빈 HOUSE가 생겼을때 시민을 배치해준다.
@@ -364,10 +366,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 								{
 									if (a == nullptr)
 									{
-										citizen->_HouseId = building->_id;
+										citizen->_house_id = building->_id;
 										a = citizen;
-										citizen->_arrival_x = objects[citizen->_HouseId]->_x;
-										citizen->_arrival_y = objects[citizen->_HouseId]->_y;
+										citizen->_arrival_x = objects[citizen->_house_id]->_x;
+										citizen->_arrival_y = objects[citizen->_house_id]->_y;
 										isHouseStaff = true;
 										break;
 									}
@@ -390,8 +392,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					}
 					else
 					{
-						citizen->_arrival_x = objects[citizen->_HouseId]->_x;
-						citizen->_arrival_y = objects[citizen->_HouseId]->_y;
+						citizen->_arrival_x = objects[citizen->_house_id]->_x;
+						citizen->_arrival_y = objects[citizen->_house_id]->_y;
 					}
 				}
 				IsOnceWork = false;
@@ -582,7 +584,7 @@ int main(int argc, char* argv[])
 			//n_player->player_sight_terrain = terrain->get_player_sight_map();
 			DWORD flags = 0;
 			WSARecv(c_socket, &n_player->_wsa_recv_over._wsabuf, 1, NULL, &flags, &n_player->_wsa_recv_over._wsaover, NULL);
-			n_player->isconnect = true;
+			n_player->is_connected = true;
 			n_player->_state = Player::STATE::ST_INGAME;
 			c_socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
 			ZeroMemory(&accept_over, sizeof(accept_over));

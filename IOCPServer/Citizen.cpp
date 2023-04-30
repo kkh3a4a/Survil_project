@@ -7,14 +7,14 @@ using namespace std;
 
 Citizen::Citizen(int id)
 {
-	_Job = -1;
-	_HP = 100;
+	_job = -1;
+	_hp = 100;
 	_job_x = 0; _job_y = 0; _job_z = 0;
 	_id = id;
 	_playerID = (_id - CITIZENSTART) / 200;
-	_HouseId = -1;
-	_Satiety = 100;
-	_thirst = 100;
+	_house_id = -1;
+	_satiety = 100;
+	_thirsty = 100;
 }
 
 Citizen::~Citizen()
@@ -24,7 +24,7 @@ Citizen::~Citizen()
 
 void Citizen::set_citizen_spwan_location(float x, float y, float z)
 {
-	_Job = 0;
+	_job = 0;
 	_arrival_x = _x = x;
 	_arrival_y = _y = y;
 	_arrival_z = _z = z;
@@ -125,13 +125,13 @@ void Citizen::citizen_dead()
 	{
 		reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
 	}
-	_Job = -1;
-	_HP = 100;
+	_job = -1;
+	_hp = 100;
 	_job_x = 0; _job_y = 0; _job_z = 0;
 	_playerID = (_id - CITIZENSTART) / 200;
-	_HouseId = -1;
-	_Satiety = 100;
-	_thirst = 100;
+	_house_id = -1;
+	_satiety = 100;
+	_thirsty = 100;
 	
 }
 
@@ -141,7 +141,7 @@ bool Citizen::citizen_eat_food()
 	if (player->_resource_amount[3] > 0)
 	{
 		player->_resource_amount[3] -= 1;
-		_Satiety += 30;
+		_satiety += 30;
 		return true;
 	}
 	return false;
@@ -153,7 +153,7 @@ bool Citizen::citizen_eat_water()
 	if (player->_resource_amount[3] > 0)
 	{
 		player->_resource_amount[1] -= 1;
-		_thirst += 30;
+		_thirsty += 30;
 		
 		return true;
 	}

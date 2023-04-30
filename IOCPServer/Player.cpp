@@ -12,7 +12,7 @@ Player::Player(int id, STATE state)
 	_currentX = 0; _currentY = 0; _currentZ = 0;
 	_terrainX = 0; _terrainY = 0; _terrainZ = 0;
 	w = false, a = false, s = false, d = false;
-	isconnect = false;
+	is_connected = false;
 	_id = id;
 	_socket={0};
 
@@ -55,39 +55,27 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 	bool keyinput = false;
 	char directionX{};
 	char directionY{};
-	int speed = 25;
-	bool usedX{};
-	bool usedY{};
+	int speed = 100;
 
 	if (w) {
 		directionY = -1;
 		keyinput = true;
-		usedY = true;
 	}
 	if (s) {
 		directionY = 1;
 		keyinput = true;
-		usedY = true;
 	}
 	if (a) {
 		directionX = -1;
 		keyinput = true;
-		usedX = true;
 	}
 	if (d) {
 		directionX = 1;
 		keyinput = true;
-		usedX = true;
 	}
 
 	if (keyinput) {
-		//if (usedX && usedY) {
-		//	//speed = sqrt(pow(speed, 2) / 2);
-		//	speed = 20;
-		//}
-		//if((int)(_x + _currentX) / 100 > 100)
 		_currentX += speed * directionX;
-		//if ((int)(_y + _currentY) / 100 > 100)
 		_currentY += speed * directionY;
 	}
 	
@@ -269,6 +257,11 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 	}
 
 
+	w = false;
+	a = false;
+	s = false;
+	d = false;
+
 	//최우선 오류 해결 요망
 	
 	/*delete player_sight_terrain_line[0];
@@ -318,7 +311,7 @@ int Player::playercitizencount()
 	for (int citizen_id = CITIZENSTART + _id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
 	{
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-		if (citizen->_Job != -1)
+		if (citizen->_job != -1)
 			_citizencount++;
 
 	}
@@ -331,7 +324,7 @@ int Player::joblesscitizen()
 	for (int citizen_id = CITIZENSTART + _id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
 	{
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-		if (citizen->_Job == 0)
+		if (citizen->_job == 0)
 			_citizencount++;
 
 	}
