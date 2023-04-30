@@ -87,25 +87,21 @@ void AMyPlayerController::SetupInputComponent()
 void AMyPlayerController::InputUpPressed()
 {
     Key_w = true;
-    SendMovePacket();
 }
 
 void AMyPlayerController::InputDownPressed()
 {
     Key_s = true;
-    SendMovePacket();
 }
 
 void AMyPlayerController::InputLeftPressed()
 {
     Key_a = true;
-    SendMovePacket();
 }
 
 void AMyPlayerController::InputRightPressed()
 {
     Key_d = true;
-    SendMovePacket();
 }
 
 
@@ -113,25 +109,21 @@ void AMyPlayerController::InputRightPressed()
 void AMyPlayerController::InputUpReleased()
 {
     Key_w = false;
-    SendMovePacket();
 }
 
 void AMyPlayerController::InputDownReleased()
 {
     Key_s = false;
-    SendMovePacket();
 }
 
 void AMyPlayerController::InputLeftReleased()
 {
     Key_a = false;
-    SendMovePacket();
 }
 
 void AMyPlayerController::InputRightReleased()
 {
     Key_d = false;
-    SendMovePacket();
 }
 
 
@@ -304,7 +296,7 @@ void AMyPlayerController::MouseScrollUp()
 
 void AMyPlayerController::MouseScrollDown()
 {
-    if (Main_Class->MyCamera->GetActorLocation().Z >= 7000)
+    if (Main_Class->MyCamera->GetActorLocation().Z >= 6500)
         return;
     Main_Class->MyCamera->SetActorLocation(Main_Class->MyCamera->GetActorLocation() + FVector(0, 100, 500));
     Main_Class->MyCamera->SetActorRotation(FRotator(Main_Class->MyCamera->GetActorRotation().Pitch - 2.45, Main_Class->MyCamera->GetActorRotation().Yaw, Main_Class->MyCamera->GetActorRotation().Roll));
@@ -357,10 +349,19 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     if (BuildManager->BuildMode) {
         OnBuildMode();
     }
+
+    //key check
+    if (!Main_Class->SentMovePacketFlag) {
+        if (Key_w || Key_a || Key_s || Key_d)
+            SendMovePacket();
+    }
+
 }
 
 void AMyPlayerController::SendMovePacket()
 {
+    UE_LOG(LogTemp, Log, TEXT("send move packet"));
+
     cs_packet_move packet;
     packet.w = Key_w;
     packet.a = Key_a;
@@ -371,6 +372,7 @@ void AMyPlayerController::SendMovePacket()
     //UE_LOG(LogTemp, Log, TEXT("send Move"));
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+    Main_Class->SentMovePacketFlag = true;
 }
 
 void AMyPlayerController::SendMinimapPacket(float x, float y)

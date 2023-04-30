@@ -71,13 +71,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float SunAngle;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
+		UMaterial* HeatHazeMaterial;
+	UMaterialInstanceDynamic* HeatHazeMaterialInstance;
 
 
 	AMeshTerrain* Terrain;
 	ATemperature* Temperature;
 
 	ACameraActor* MyCamera;
+	UCameraComponent* MyCameraComponent;
 	AActor* SunManager;
 	ABuildManager* BuildManager;
 
@@ -85,9 +88,12 @@ public:
 	class FSocketThread* Network;
 	float Player_x, Player_y, Player_z;
 	void SetPlayerLocation(float x, float y, float z);
-	void SetCurrentLocation(float x, float y, float z);
 	void SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount);
 	void SetSunAngle(float s_sunangle);
 	int testterrain = 0;
+
+	FVector DestLocation;
+
+	bool SentMovePacketFlag;
 };
 

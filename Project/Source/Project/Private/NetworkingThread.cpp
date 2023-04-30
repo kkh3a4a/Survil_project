@@ -117,15 +117,21 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_login* packet = reinterpret_cast<sc_packet_login*>(buf);
 			_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
-			_MainClass->SetCurrentLocation(-SIGHT_X * 100 / 2, -SIGHT_Y * 100 / 2, packet->z);
+			_MainClass->DestLocation = FVector(packet->x, packet->y, packet->z) + FVector(-SIGHT_X * 100 / 2, -SIGHT_Y * 100 / 2, packet->z);
 			my_id = packet->player_id;
 			break;
 		}
 		case SC_PACKET_MOVE:
 		{
 			sc_packet_move* packet = reinterpret_cast<sc_packet_move*>(buf);
-			_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
+			//_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
+			
+			_MainClass->DestLocation = FVector(packet->currentX, packet->currentY, packet->currentZ) + FVector(_MainClass->Player_x, _MainClass->Player_y, _MainClass->Player_z);
+			_MainClass->SentMovePacketFlag = false;
+			
 			//UE_LOG(LogTemp, Warning, TEXT("current Location : %f %f %f"), packet->currentX, packet->currentY, packet->currentZ);
+			//UE_LOG(LogTemp, Warning, TEXT("Net"));
+
 			break;
 		}
 		case SC_PACKET_CITIZENCREATE:
@@ -191,8 +197,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TERRAINXLOCATION:
 		{
 			sc_packet_terrainXlocation* packet = reinterpret_cast<sc_packet_terrainXlocation*>(buf);
-			_MainClass->Terrain->SetActorLocation(_MainClass->GetActorLocation());
-
+			//_MainClass->Terrain->SetActorLocation(_MainClass->GetActorLocation());
 			_MainClass->Terrain->Work->LineX = true;
 			_MainClass->Terrain->Work->x = packet->terrainX;
 			memcpy(&_MainClass->Terrain->Work->TerrainLineY, packet->terrainline_Y, SIGHT_Y);
@@ -201,7 +206,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TERRAINYLOCATION: 
 		{
 			sc_packet_terrainYlocation* packet = reinterpret_cast<sc_packet_terrainYlocation*>(buf);
-			_MainClass->Terrain->SetActorLocation(_MainClass->GetActorLocation());
+			//_MainClass->Terrain->SetActorLocation(_MainClass->GetActorLocation());
 
 			_MainClass->Terrain->Work->LineY = true;
 			_MainClass->Terrain->Work->y = packet->terrainY;
@@ -243,7 +248,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			/*if (_MainClass->Temperature->GetIsHidden())
 				break;*/
 			sc_packet_temperatureX* packet = reinterpret_cast<sc_packet_temperatureX*>(buf);
-			_MainClass->Temperature->SetActorLocation(_MainClass->GetActorLocation());
+			//_MainClass->Temperature->SetActorLocation(_MainClass->GetActorLocation());
 
 			_MainClass->Temperature->Work->LineX = true;
 			_MainClass->Temperature->Work->x = packet->terrainX;
@@ -255,7 +260,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			/*if (_MainClass->Temperature->GetIsHidden())
 				break;*/
 			sc_packet_temperatureY* packet = reinterpret_cast<sc_packet_temperatureY*>(buf);
-			_MainClass->Temperature->SetActorLocation(_MainClass->GetActorLocation());
+			//_MainClass->Temperature->SetActorLocation(_MainClass->GetActorLocation());
 
 			_MainClass->Temperature->Work->LineY = true;
 			_MainClass->Temperature->Work->y = packet->terrainY;

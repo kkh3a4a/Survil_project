@@ -9,9 +9,9 @@
 #include "NetworkingThread.h"
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "Camera/CameraComponent.h"
 #include "GenericPlatform/GenericPlatformProcess.h"
 #include "Components/InstancedStaticMeshComponent.h"
-
 
 FRunnableThread* NetworkThread;
 
@@ -78,6 +78,10 @@ void AMain::BeginPlay()
 			UE_LOG(LogTemp, Warning, TEXT("CameraActor_1"));
 		}
 	}
+	MyCameraComponent = MyCamera->GetCameraComponent();
+	HeatHazeMaterialInstance = UMaterialInstanceDynamic::Create(HeatHazeMaterial, this);
+	MyCameraComponent->PostProcessSettings.WeightedBlendables.Array[0].Object = HeatHazeMaterialInstance;
+
 
 	//Get Sun
 	TArray<AActor*> Actors;
@@ -91,6 +95,7 @@ void AMain::BeginPlay()
 		}
 	}
 
+
 	//Newtwork
 	Network = new FSocketThread();
 	Network->_MainClass = this;
@@ -103,7 +108,25 @@ void AMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	
+	MyCameraComponent->PostProcessSettings.VignetteIntensity = abs(0.5 * cos((SunAngle - 90)* PI / 180.0) - 0.5);
+	if(SunAngle < 180)
+		HeatHazeMaterialInstance->SetScalarParameterValue(FName("Strength"), abs(cos((SunAngle + 90) * PI / 180.0)) / 100);
+
+
+	FVector CurrentLocation = GetActorLocation();
+	float DistanceToDest = FVector::Dist(CurrentLocation, DestLocation);
+	float MoveSpeed = DeltaTime * 120 * DistanceToDest / 10;
+	if (DistanceToDest <= 1.0f){
+		return;
+	}
+	FVector NewLocation = FMath::Lerp(CurrentLocation, DestLocation,  MoveSpeed / DistanceToDest);
+	SetActorLocation(NewLocation);
+	Temperature->SetActorLocation(DestLocation);
+	Terrain->SetActorLocation(DestLocation);
+
+	//UE_LOG(LogTemp, Warning, TEXT("%lf, %lf"), DeltaTime, MoveSpeed);
+	//UE_LOG(LogTemp, Warning, TEXT("%lf, %lf, %lf    %lf, %lf, %lf    %lf, %lf, %lf"), CurrentLocation.X, CurrentLocation.Y, CurrentLocation.Z, NewLocation.X, NewLocation.Y, NewLocation.Z, DestLocation.X, DestLocation.Y, DestLocation.Z);
+
 }
 
 void AMain::SetPlayerLocation(float x, float y, float z)
@@ -117,18 +140,11 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 	UWorld* uworld = GetWorld();
 	if(uworld != nullptr)
 	uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
-	Terrain->SetActorLocation(FVector(Player_x, Player_y, 0.0));
-	Temperature->SetActorLocation(FVector(Player_x - SIGHT_X * 100 / 2, Player_y - SIGHT_Y * 100 / 2, 0.0));
+	//Terrain->SetActorLocation(FVector(Player_x, Player_y, 0.0));
+	//Temperature->SetActorLocation(FVector(Player_x - SIGHT_X * 100 / 2, Player_y - SIGHT_Y * 100 / 2, 0.0));
 	//Terrain->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	//Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	SetActorLocation(FVector(x, y, z));
-}
-
-void AMain::SetCurrentLocation(float current_x, float current_y, float current_z)
-{
-	SetActorLocation(FVector(Player_x + current_x, Player_y + current_y, Player_z + current_z));
-	UE_LOG(LogTemp, Warning, TEXT("%lf, %lf"), Player_x + current_x, Player_y + current_y);
-
 }
 
 void AMain::SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount)
