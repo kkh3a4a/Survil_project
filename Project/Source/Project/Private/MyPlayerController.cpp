@@ -351,16 +351,14 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     }
 
     //key check
-    if (!Main_Class->SentMovePacketFlag) {
-        if (Key_w || Key_a || Key_s || Key_d)
-            SendMovePacket();
-    }
+    if (Key_w || Key_a || Key_s || Key_d)
+        SendMovePacket();
 
 }
 
 void AMyPlayerController::SendMovePacket()
 {
-    UE_LOG(LogTemp, Log, TEXT("send move packet"));
+    //UE_LOG(LogTemp, Log, TEXT("send move packet"));
 
     cs_packet_move packet;
     packet.w = Key_w;
@@ -372,7 +370,6 @@ void AMyPlayerController::SendMovePacket()
     //UE_LOG(LogTemp, Log, TEXT("send Move"));
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
-    Main_Class->SentMovePacketFlag = true;
 }
 
 void AMyPlayerController::SendMinimapPacket(float x, float y)

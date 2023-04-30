@@ -93,7 +93,5 @@ public:
 	int testterrain = 0;
 
 	FVector DestLocation;
-
-	bool SentMovePacketFlag;
 };
 

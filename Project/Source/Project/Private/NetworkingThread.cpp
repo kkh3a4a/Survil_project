@@ -127,7 +127,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 			//_MainClass->SetCurrentLocation(packet->currentX, packet->currentY, packet->currentZ);
 			
 			_MainClass->DestLocation = FVector(packet->currentX, packet->currentY, packet->currentZ) + FVector(_MainClass->Player_x, _MainClass->Player_y, _MainClass->Player_z);
-			_MainClass->SentMovePacketFlag = false;
 			
 			//UE_LOG(LogTemp, Warning, TEXT("current Location : %f %f %f"), packet->currentX, packet->currentY, packet->currentZ);
 			//UE_LOG(LogTemp, Warning, TEXT("Net"));

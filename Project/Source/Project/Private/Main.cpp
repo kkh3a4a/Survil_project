@@ -115,7 +115,7 @@ void AMain::Tick(float DeltaTime)
 
 	FVector CurrentLocation = GetActorLocation();
 	float DistanceToDest = FVector::Dist(CurrentLocation, DestLocation);
-	float MoveSpeed = DeltaTime * 120 * DistanceToDest / 10;
+	float MoveSpeed = DeltaTime * 120 * DistanceToDest / 7;
 	if (DistanceToDest <= 1.0f){
 		return;
 	}
