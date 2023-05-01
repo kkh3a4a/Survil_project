@@ -12,5 +12,4 @@ public:
 	float _sx, _sy, _sz;	//size
 	int _id;
 
-	virtual void ResetOBJ();
 };
