@@ -20,8 +20,6 @@
 #define PI 3.1415926
 
 using namespace std;
-II player_sight_size{ SIGHT_X, SIGHT_Y };
-
 
 const int min_height = 1;
 const int max_height = 10;
@@ -583,8 +581,8 @@ private:
 	unsigned char** temperature_map_device;
 	unsigned char* temperature_map_temp[one_side_number];
 	
-	char** terrain_player_sight_host = new char* [player_sight_size.x];
-	char** temperature_player_sight = new char* [player_sight_size.x];
+	char** terrain_player_sight_host = new char* [SIGHT_X];
+	char** temperature_player_sight = new char* [SIGHT_X];
 
 	unsigned __int64 init_total_hill_height = (unsigned __int64)one_side_number * (unsigned __int64)one_side_number * (unsigned __int64)(max_height + min_height) / 2;
 	
@@ -639,12 +637,12 @@ public:
 
 		//Terrain Memory Assignment For Player's Sight===================================================
 		clock_t t_2 = clock();
-		for (int i = 0; i < player_sight_size.x; i++) {
-			terrain_player_sight_host[i] = new char[player_sight_size.y];
-			temperature_player_sight[i] = new char[player_sight_size.y];
+		for (int i = 0; i < SIGHT_X; i++) {
+			terrain_player_sight_host[i] = new char[SIGHT_Y];
+			temperature_player_sight[i] = new char[SIGHT_Y];
 		}
-		for (int i = 0; i < player_sight_size.x; i++) {
-			for (int j = 0; j < player_sight_size.y; j++) {
+		for (int i = 0; i < SIGHT_X; i++) {
+			for (int j = 0; j < SIGHT_Y; j++) {
 				terrain_player_sight_host[i][j] = 0;
 				temperature_player_sight[i][j] = 0;
 			}
@@ -669,7 +667,7 @@ public:
 			delete[] shadow_map_host[i];
 			delete[] temperature_map_host[i];
 		}
-		for (int i = 0; i < player_sight_size.x; i++) {
+		for (int i = 0; i < SIGHT_X; i++) {
 			delete[] terrain_player_sight_host[i];
 		}
 		delete[] terrain_array_host;
@@ -995,8 +993,8 @@ public:
 	{
 		clock_t start_t, end_t;
 		start_t = clock();
-		for (int i = 0; i < player_sight_size.x; i++) {
-			for (int j = 0; j < player_sight_size.y; j++) {
+		for (int i = 0; i < SIGHT_X; i++) {
+			for (int j = 0; j < SIGHT_Y; j++) {
 				if (player_location.x + i < 0 || player_location.x  + i >= one_side_number || player_location.y + j < 0 || player_location.y + j >= one_side_number) {
 					terrain_player_sight_host[i][j] = 0;
 					temperature_player_sight[i][j] = 0;
@@ -1014,18 +1012,18 @@ public:
 	
 	char** copy_for_player_map_line(int player_x, int player_y)
 	{
-		char* terrain_line_x = new char[player_sight_size.x + 2];
-		char* terrain_line_x2 = new char[player_sight_size.x + 2];
-		char* terrain_line_y = new char[player_sight_size.y + 2];
-		char* terrain_line_y2 = new char[player_sight_size.y + 2];
+		char* terrain_line_x = new char[SIGHT_X + 2];
+		char* terrain_line_x2 = new char[SIGHT_X + 2];
+		char* terrain_line_y = new char[SIGHT_Y + 2];
+		char* terrain_line_y2 = new char[SIGHT_Y + 2];
 		char* returnvalue[4] = {};
-		for (int x = -1; x < player_sight_size.x + 1; x++) {
+		for (int x = -1; x < SIGHT_X + 1; x++) {
 			terrain_line_x[x + 1] = terrain_array_host[player_x + x][player_y];
-			terrain_line_x2[x + 1] = terrain_array_host[player_x + x][player_y + player_sight_size.y];
+			terrain_line_x2[x + 1] = terrain_array_host[player_x + x][player_y + SIGHT_Y];
 		}
 
-		memcpy(terrain_line_y, &terrain_array_host[player_x][player_y - 1], player_sight_size.y + 2);
-		memcpy(terrain_line_y2, &terrain_array_host[player_x + player_sight_size.x][player_y - 1], player_sight_size.y + 2);
+		memcpy(terrain_line_y, &terrain_array_host[player_x][player_y - 1], SIGHT_Y + 2);
+		memcpy(terrain_line_y2, &terrain_array_host[player_x + SIGHT_X][player_y - 1], SIGHT_Y + 2);
 
 
 		returnvalue[0] = terrain_line_x;
@@ -1037,18 +1035,18 @@ public:
 
 	char** copy_for_player_temperature_line(int player_x, int player_y)
 	{
-		char* terrain_line_x = new char[player_sight_size.x + 2];
-		char* terrain_line_x2 = new char[player_sight_size.x + 2];
-		char* terrain_line_y = new char[player_sight_size.y + 2];
-		char* terrain_line_y2 = new char[player_sight_size.y + 2];
+		char* terrain_line_x = new char[SIGHT_X + 2];
+		char* terrain_line_x2 = new char[SIGHT_X + 2];
+		char* terrain_line_y = new char[SIGHT_Y + 2];
+		char* terrain_line_y2 = new char[SIGHT_Y + 2];
 		char* returnvalue[4] = {};
-		for (int x = -1; x < player_sight_size.x + 1; x++) {
+		for (int x = -1; x < SIGHT_X + 1; x++) {
 			terrain_line_x[x + 1] = temperature_map_host[player_x + x][player_y];
-			terrain_line_x2[x + 1] = temperature_map_host[player_x + x][player_y + player_sight_size.y];
+			terrain_line_x2[x + 1] = temperature_map_host[player_x + x][player_y + SIGHT_Y];
 		}
 
-		memcpy(terrain_line_y, &temperature_map_host[player_x][player_y - 1], player_sight_size.y + 2);
-		memcpy(terrain_line_y2, &temperature_map_host[player_x + player_sight_size.x][player_y - 1], player_sight_size.y + 2);
+		memcpy(terrain_line_y, &temperature_map_host[player_x][player_y - 1], SIGHT_Y + 2);
+		memcpy(terrain_line_y2, &temperature_map_host[player_x + SIGHT_X][player_y - 1], SIGHT_Y + 2);
 
 		returnvalue[0] = terrain_line_x;
 		returnvalue[1] = terrain_line_x2;

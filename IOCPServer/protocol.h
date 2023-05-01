@@ -1,5 +1,8 @@
 #pragma once
 
+constexpr int one_side_number = 3200;
+constexpr int random_array_size = 10000000;
+constexpr int city_size = 100;
 
 #define BUFSIZE						512
 #define SERVERPORT					9000

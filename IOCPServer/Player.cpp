@@ -5,6 +5,8 @@
 #include <string>
 #include <random>
 
+using namespace std;
+
 Player::Player(int id, STATE state)
 {
 	_x = 0; _y = 0; _z = 0;
@@ -73,14 +75,21 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 		directionX = 1;
 		keyinput = true;
 	}
-
-	if (keyinput) {
-		_currentX += speed * directionX;
-		_currentY += speed * directionY;
+	if ((_x + _currentX + speed * directionX) / 100 < 0 || (_x + _currentX + speed * directionX) / 100 > one_side_number - SIGHT_X)
+	{
+		cout << _x + _currentX + speed * directionX << endl;
+		directionX = 0;
 	}
-	
+	if ((_y + _currentY + speed * directionY) / 100 < 0 || (_y + _currentY + speed * directionY) / 100 >= one_side_number - SIGHT_Y)
+	{
+		cout << _y + _currentY + speed * directionY << endl;
+		directionY = 0;
+	}
 	if (keyinput)
 	{
+		_currentX += speed * directionX;
+		_currentY += speed * directionY;
+		
 		sc_packet_move sc_packet_move; 
 		sc_packet_move.currentX = _currentX;
 		sc_packet_move.currentY = _currentY;
