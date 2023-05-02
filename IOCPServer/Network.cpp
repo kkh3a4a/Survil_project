@@ -135,6 +135,39 @@ void WSA_OVER_EX::send_login_ok_packet(int client_id)
 	packet.size = sizeof(packet);
 	packet.type = SC_PACKET_LOGIN;
 
+	int pl = 0;
+	for (int i = 0; i < MAXPLAYER; ++i)
+	{
+		if(i != player->_id)
+		{
+			if(pl == 0)
+			{
+				packet.p1_x = objects[i]->_x;
+				packet.p1_y = objects[i]->_y;
+				packet.p1_z = objects[i]->_z;
+			}
+			if (pl == 1)
+			{
+				packet.p2_x = objects[i]->_x;
+				packet.p2_y = objects[i]->_y;
+				packet.p2_z = objects[i]->_z;
+			}
+			if (pl == 2)
+			{
+				packet.p3_x = objects[i]->_x;
+				packet.p3_y = objects[i]->_y;
+				packet.p3_z = objects[i]->_z;
+			}
+			if (pl == 3)
+			{
+				packet.p4_x = objects[i]->_x;
+				packet.p4_y = objects[i]->_y;
+				packet.p4_z = objects[i]->_z;
+			}
+			pl++;
+		}
+	}
+
 	player->send_packet(&packet);
 }
 

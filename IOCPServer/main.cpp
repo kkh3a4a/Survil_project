@@ -469,7 +469,7 @@ int main(int argc, char* argv[])
 		
 		for (int j = 0; j < i; ++j)
 		{
-			if (location_distance(objects[j]->_x, objects[j]->_y, x, y) < 7000)
+			if (location_distance(objects[j]->_x, objects[j]->_y, x, y) < 50000)
 			{
 				goto retry;
 			}

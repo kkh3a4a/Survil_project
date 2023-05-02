@@ -159,6 +159,10 @@ struct sc_packet_login
 	unsigned char type;
 	float x, y, z;
 	float rx, ry, rz;
+	float p1_x, p1_y, p1_z;
+	float p2_x, p2_y, p2_z;
+	float p3_x, p3_y, p3_z;
+	float p4_x, p4_y, p4_z;
 	char player_id;
 };
 

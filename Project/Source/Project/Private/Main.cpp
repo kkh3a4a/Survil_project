@@ -147,6 +147,18 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 	SetActorLocation(FVector(x, y, z));
 }
 
+void AMain::SetOtherPlayerLocation(float x, float y, float z)
+{
+	
+	FRotator Rotation(0.0f, 0.0f, 0.0f);
+	FActorSpawnParameters SpawnInfo;
+	UWorld* uworld = GetWorld();
+	FVector Location(x, y, z);
+	if (uworld != nullptr)
+		uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
+
+}
+
 void AMain::SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount)
 {
 	oil_count = oilcount;

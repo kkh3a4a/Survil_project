@@ -88,7 +88,9 @@ public:
 	class FSocketThread* Network;
 	float Player_x, Player_y, Player_z;
 	void SetPlayerLocation(float x, float y, float z);
+	void SetOtherPlayerLocation(float x, float y, float z);
 	void SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount);
+
 	void SetSunAngle(float s_sunangle);
 	int testterrain = 0;
 
