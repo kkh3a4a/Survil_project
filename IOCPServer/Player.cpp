@@ -75,12 +75,12 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 		directionX = 1;
 		keyinput = true;
 	}
-	if ((_x + _currentX + speed * directionX) / 100 < SIGHT_X || (_x + _currentX + speed * directionX) / 100 > one_side_number - SIGHT_X)
+	if ((_x + _currentX + speed * directionX) / 100 <= 0 || (_x + _currentX + speed * directionX) / 100 >= (one_side_number - SIGHT_X))
 	{
 		cout << _x + _currentX + speed * directionX << endl;
 		directionX = 0;
 	}
-	if ((_y + _currentY + speed * directionY) / 100 < SIGHT_Y || (_y + _currentY + speed * directionY) / 100 >= one_side_number - SIGHT_Y)
+	if ((_y + _currentY + speed * directionY) / 100 <= 0 || (_y + _currentY + speed * directionY) / 100 >= (one_side_number - SIGHT_Y))
 	{
 		cout << _y + _currentY + speed * directionY << endl;
 		directionY = 0;
@@ -344,8 +344,8 @@ int Player::joblesscitizen()
 void Player::playerMinimapLocation(float mini_x, float mini_y)
 {
 
-	_currentX = (mini_x - _x) + (SIGHT_X * 100 / 2);
-	_currentY = (mini_y - _y) + (SIGHT_Y * 100 / 2);
+	_currentX = (mini_x - _x) ;
+	_currentY = (mini_y - _y) ;
 	std::cout << _x +_currentX << ", " << _y + _currentY << std::endl;
 	
 retry:
