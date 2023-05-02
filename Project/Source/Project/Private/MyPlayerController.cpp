@@ -379,8 +379,10 @@ void AMyPlayerController::SendMinimapPacket(float x, float y)
     packet.size = sizeof(cs_packet_minimap);
    /* x = (((int)x / 10) * 10);
     y = (((int)(y - 720) / 10) * 10);*/
-    x = ((int)(x) * 1000) + 10000;
-    y = ((int)(y) * 1000) + 10000;
+    if (x > 300)
+        x = 299;
+    x = ((int)(x) * 1000);
+    y = ((int)(y) * 1000);
     packet.x = x;
     packet.y = y;
     UE_LOG(LogTemp, Log, TEXT("%f %f"),x,y);
