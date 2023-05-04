@@ -11,6 +11,8 @@ constexpr int city_size = 100;
 #define MAXOBJECT					5000
 
 #define MAXPLAYER					5
+#define ROOMPLAYER					1
+
 #define CITIZENSTART				MAXPLAYER
 #define FIRSTCITIZENCREATE			20
 

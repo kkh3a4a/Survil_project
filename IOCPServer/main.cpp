@@ -29,12 +29,30 @@ std::mutex player_cnt_lock;
 shared_mutex player_list_lock;
 float sun_angle;
 volatile int player_cnt = 0;
+volatile int room_player_cnt = 0;
 
 Terrain* terrain = new Terrain();
 char** total_terrain = terrain->get_map();
 char** shadow_map = terrain->get_shadow_map();
 unsigned char** temperature_map = terrain->get_temperature_map();
 bool is_terrain_changed = false;
+
+DWORD WINAPI matching_thread(LPVOID arg)
+{
+	HANDLE hThread;
+	while (1)
+	{
+		if (room_player_cnt == ROOMPLAYER)
+		{
+			hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
+			room_player_cnt = 0;
+		}
+	}
+
+	
+
+	return 0;
+}
 
 DWORD WINAPI terrain_change(LPVOID arg)
 {
@@ -492,8 +510,9 @@ int main(int argc, char* argv[])
 
 	//다 지정해주고 thread생성
 	HANDLE hThread;
+
 	hThread = CreateThread(NULL, 0, terrain_change, 0, 0, NULL);
-	hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
+	hThread = CreateThread(NULL, 0, matching_thread, 0, 0, NULL);
 	int user_id = 0;
 
 	while (1) {
@@ -508,7 +527,7 @@ int main(int argc, char* argv[])
 			if (wsa_over_ex->_iocpop == OP_ACCEPT) cout << "Accept Error";
 			else {
 				cout << "GQCS Error on client [" << key << "]\n";
-
+				room_player_cnt--;
 				continue;
 			}
 		}
@@ -571,6 +590,7 @@ int main(int argc, char* argv[])
 		{
 			cout << "ACCEPT!" << endl;
 			user_id = player_cnt++;
+			room_player_cnt++;
 			CreateIoCompletionPort(reinterpret_cast<HANDLE>(c_socket), h_iocp, user_id, 0);
 			Player* n_player = reinterpret_cast<Player*>(objects[user_id]);
 			ZeroMemory(&n_player->_wsa_recv_over, sizeof(n_player->_wsa_recv_over));
