@@ -381,6 +381,9 @@ void AMyPlayerController::SendMinimapPacket(float x, float y)
     y = (((int)(y - 720) / 10) * 10);*/
     if (x > 300)
         x = 299;
+    if (y > 300)
+        y = 299;
+  
     x = ((int)(x) * 1000);
     y = ((int)(y) * 1000);
     packet.x = x;
