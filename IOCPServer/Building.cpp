@@ -27,8 +27,6 @@ bool Building::_create_building(float x, float y, char type,int id)
 	player->_resource_amount[0];//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	switch (type)
 	{
-
-
 	case 1:
 	{
 		if (player->_resource_amount[4] < 10)
