@@ -92,21 +92,21 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	{
 		cs_packet_build* cs_packet = reinterpret_cast<cs_packet_build*>(pk);
 		sc_packet_build sc_packet;
+
+		for (int i = BUILDINGSTART + PLAYERBUILDINGCOUNT * player->_id; i < BUILDINGSTART + PLAYERBUILDINGCOUNT * player->_id + PLAYERBUILDINGCOUNT; ++i) {
+			Building* building = reinterpret_cast<Building*>(objects[i]);
+			if (building->_type != -1)
+				continue;
+			sc_packet.id = building->_id;
+			sc_packet.x = cs_packet->x;
+			sc_packet.y = cs_packet->y;
+			sc_packet.building_type = cs_packet->building_type;
+			sc_packet.do_build = building->_create_building(cs_packet->x, cs_packet->y, cs_packet->building_type, i);
+			break;
+		}
 		
-		for (int player_num; player_num < MAXPLAYER; player_num++) {	//모든 플레이어들에게 전송
+		for (int player_num = 0; player_num < MAXPLAYER; player_num++) {	//모든 플레이어들에게 전송
 			Player* this_player = reinterpret_cast<Player*>(objects[player_num]);
-			
-			for (int i = BUILDINGSTART + PLAYERBUILDINGCOUNT * this_player->_id; i < BUILDINGSTART + PLAYERBUILDINGCOUNT * this_player->_id + PLAYERBUILDINGCOUNT; ++i) {
-				Building* building = reinterpret_cast<Building*>(objects[i]);
-				if (building->_type != -1)
-					continue;
-				sc_packet.id = building->_id;
-				sc_packet.x = cs_packet->x;
-				sc_packet.y = cs_packet->y;
-				sc_packet.building_type = cs_packet->building_type;
-				sc_packet.do_build = building->_create_building(cs_packet->x, cs_packet->y, cs_packet->building_type, i);
-				break;
-			}
 			this_player->send_packet(&sc_packet);
 		}
 		break;

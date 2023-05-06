@@ -376,8 +376,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						//만약 빈 HOUSE가 생겼을때 시민을 배치해준다.
 						for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; building_id++)
 						{
-
 							Building* building = reinterpret_cast<Building*>(objects[building_id]);
+							
 							if (building->_type == 1 || building->_type == 2 || building->_type == 3)
 							{
 								for (auto& a : building->_citizens)
