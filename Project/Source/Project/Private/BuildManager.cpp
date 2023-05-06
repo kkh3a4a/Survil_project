@@ -72,9 +72,9 @@ void ABuildManager::DecalVisibility()
 	SelectedBuilding = 0;
 }
 
-void ABuildManager::Build(int obj_id)
+void ABuildManager::Build(int obj_id, float x , float y, int building_type)
 {
-	UE_LOG(LogTemp, Log, TEXT("Selected Building %d %d"), SelectedBuilding, obj_id);
+	UE_LOG(LogTemp, Log, TEXT("Selected Building %d %d"), building_type, obj_id);
 	 UWorld* uworld = GetWorld();
     if (uworld == nullptr)
         return;
@@ -82,18 +82,12 @@ void ABuildManager::Build(int obj_id)
 	FActorSpawnParameters SpawnInfo;
 	if(BuiltBuildings[obj_id] == nullptr)
 	{
-		AActor * building = uworld->SpawnActor<AActor>(BuildingArray[SelectedBuilding], DecalLocation, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+		AActor * building = uworld->SpawnActor<AActor>(BuildingArray[building_type], FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 		BuiltBuildings[obj_id] = reinterpret_cast<ABuilding*>(building);
 		BuiltBuildings[obj_id]->Tags.Add(TEXT("Building"));
-		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(SelectedBuilding));
+		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(building_type));
 		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id));
 	}
-
-	//uworld->SpawnActor<ACitizen>(MyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	//ABuilding* BuildingActor = reinterpret_cast<ABuilding*>(BuiltBuildings[obj_id]);
-	//BuildingActor->SetMesh(BuildingArray[SelectedBuilding],SelectedBuilding,obj_id);
-	
-	//UE_LOG(LogTemp, Log, TEXT("Built Buildings: %d"), BuiltBuildings.Num());
 }
 
 void ABuildManager::SendBuildablePacket()
