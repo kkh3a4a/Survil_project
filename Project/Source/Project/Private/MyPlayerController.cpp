@@ -216,15 +216,22 @@ void AMyPlayerController::VisibilityTemperature()
 {
     ATemperature* TemperatureClass = Main_Class->Temperature;
 
-    UE_LOG(LogTemp, Log, TEXT("Thermal"));
 
     bool Hidden = TemperatureClass->GetIsHidden();
-    if (Hidden) {
+    if (Hidden) {                                   //켜기
+        UE_LOG(LogTemp, Log, TEXT("Thermal On"));
+
         TemperatureClass->Hide(false);
         Main_Class->SunManager->SetActorHiddenInGame(true);
         TemperatureClass->SetActorLocation(FVector(Main_Class->GetActorLocation().X, Main_Class->GetActorLocation().Y, 0.f));
+
+        if (BuildManager->BuildMode) {      //build모드 켜져있으면 끄기
+            BuildMode();
+        }
 	}
-    else{
+    else{                                           //끄기
+        UE_LOG(LogTemp, Log, TEXT("Thermal Off"));
+
         TemperatureClass->Hide(true);
         Main_Class->SunManager->SetActorHiddenInGame(false);
 	}
@@ -240,6 +247,11 @@ void AMyPlayerController::BuildMode()
     else {
         BuildManager->BuildMode = true;
         UE_LOG(LogTemp, Log, TEXT("BuildMode On"));
+
+        ATemperature* TemperatureClass = Main_Class->Temperature;   //온도 켜져있으면 끄기
+        if (!TemperatureClass->GetIsHidden()) {
+            VisibilityTemperature();
+        }
     }
     BuildManager->DecalVisibility();
 }
