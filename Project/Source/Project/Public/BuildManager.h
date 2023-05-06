@@ -47,7 +47,7 @@ public:
 
 	void UpdateDecalPosition(FVector, float, float);
 	void DecalVisibility();
-	void Build(int obj_id);
+	void Build(int, float, float, int);
 	void SendBuildablePacket();
 	void SendBuildPacket();
 	void SetBuildingPlacement(int Building_id, char work_citizen);
