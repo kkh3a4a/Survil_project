@@ -40,12 +40,14 @@ bool is_terrain_changed = false;
 DWORD WINAPI matching_thread(LPVOID arg)
 {
 	HANDLE hThread;
+	bool isoncecreate = 1;
 	while (1)
 	{
-		if (room_player_cnt == ROOMPLAYER)
+		if (room_player_cnt == ROOMPLAYER && isoncecreate)
 		{
 			hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
 			room_player_cnt = 0;
+			isoncecreate = 0;
 		}
 	}
 
