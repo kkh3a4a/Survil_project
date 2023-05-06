@@ -208,6 +208,7 @@ struct sc_packet_citizenmove
 	int citizenid;
 	float x, y, z;
 	float rx, ry, rz;
+	char citizenstate;
 };
 
 struct sc_packet_resourcecreate

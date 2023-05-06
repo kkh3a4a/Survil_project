@@ -15,6 +15,7 @@ Citizen::Citizen(int id)
 	_house_id = -1;
 	_satiety = 100;
 	_thirsty = 100;
+	_citizenstate = 0;
 }
 
 Citizen::~Citizen()
@@ -41,12 +42,16 @@ void Citizen::set_citizen_move()
 {
 	if (_x != _arrival_x || _y != _arrival_y)
 	{
-
+		_citizenstate = 1;
 		float distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
 		if (distance < 20)
 		{
 			_x = _arrival_x;
 			_y = _arrival_y;
+			if(!IsNight)
+				_citizenstate = 0;
+			else
+				_citizenstate = 2;
 		}
 		bool _isOverlap = false;
 		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i)
@@ -103,6 +108,7 @@ void Citizen::set_citizen_move()
 		packet.ry = (_arrival_y - _y) / distance;
 		packet.rz = (_arrival_z - _z) / distance;
 		packet.citizenid = _id;
+		packet.citizenstate = _citizenstate;
 		packet.size = sizeof(sc_packet_citizenmove);
 		packet.type = SC_PACKET_CITIZENMOVE;
 

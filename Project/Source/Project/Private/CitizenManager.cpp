@@ -63,7 +63,7 @@ void ACitizenManager::Spawn_Citizen(int citizen_id, FVector Location)
     citi->_id = citizen_id;
 }
 
-void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate)
+void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate, char citizenstate)
 {
     if(citizen[citizen_id] != nullptr)
     {

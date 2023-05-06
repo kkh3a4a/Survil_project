@@ -13,7 +13,7 @@ public:
 	float _job_x, _job_y, _job_z;
 	int _house_id;	// -1 : 집없음, 나머지 : 집 object id
 	char _hp;
-
+	char _citizenstate;		// 0 : idle, 1 : wark, 2 : sleep
 	char _satiety;
 	char _thirsty;
 

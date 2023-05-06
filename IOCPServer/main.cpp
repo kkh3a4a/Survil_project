@@ -106,6 +106,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
+	cout << "ingame thread" << endl;
 	auto Player_Move_Timer_End = std::chrono::system_clock::now();
 	auto Citizen_Move_Timer_End = std::chrono::system_clock::now();
 	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
