@@ -50,9 +50,6 @@ DWORD WINAPI matching_thread(LPVOID arg)
 			isoncecreate = 0;
 		}
 	}
-
-	
-
 	return 0;
 }
 
@@ -108,7 +105,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 DWORD WINAPI ingame_thread(LPVOID arg)
 {
-	cout << "ingame thread" << endl;
+	cout << "ingame thread " << ROOMPLAYER <<"명 짜리 생성" << endl;
 	auto Player_Move_Timer_End = std::chrono::system_clock::now();
 	auto Citizen_Move_Timer_End = std::chrono::system_clock::now();
 	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
@@ -130,7 +127,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	while (1)
 	{
 		auto Timer_Start = std::chrono::system_clock::now();
-
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Player_Move_Timer_End).count() > 10)
 		{
 			//sunangle...
