@@ -21,7 +21,7 @@ Player::Player(int id, STATE state)
 	//초기 자원 지정
 	for (auto& a : _resource_amount)
 	{
-		a = 70;
+		a = 200;
 	}
 }
 

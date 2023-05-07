@@ -34,6 +34,7 @@ void ABuildManager::BeginPlay()
 	DecalActor->SetDecalMaterial(MaterialInstance);
 	DecalActor->SetActorHiddenInGame(true);
 
+	BuildingArray.Add(0, Building_WoodenSign);
 	BuildingArray.Add(1, Building_HOUSE);
 	BuildingArray.Add(2, Building_HOUSE2);
 	BuildingArray.Add(3, Building_HOUSE3);
@@ -74,7 +75,7 @@ void ABuildManager::DecalVisibility()
 
 void ABuildManager::Build(int obj_id, float x , float y, int building_type)
 {
-	UE_LOG(LogTemp, Log, TEXT("Selected Building %d %d"), building_type, obj_id);
+	UE_LOG(LogTemp, Log, TEXT("Building %d %d"), building_type, obj_id);
 	 UWorld* uworld = GetWorld();
     if (uworld == nullptr)
         return;
@@ -82,12 +83,29 @@ void ABuildManager::Build(int obj_id, float x , float y, int building_type)
 	FActorSpawnParameters SpawnInfo;
 	if(BuiltBuildings[obj_id] == nullptr)
 	{
-		AActor * building = uworld->SpawnActor<AActor>(BuildingArray[building_type], FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-		BuiltBuildings[obj_id] = reinterpret_cast<ABuilding*>(building);
+		AActor * building = uworld->SpawnActor<AActor>(BuildingArray[0], FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+		BuiltBuildings[obj_id] = building;
 		BuiltBuildings[obj_id]->Tags.Add(TEXT("Building"));
 		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(building_type));
 		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id));
 	}
+}
+
+void ABuildManager::BuildSuccess(int obj_id, float x, float y, int building_type)
+{
+	UE_LOG(LogTemp, Log, TEXT("Building Success %d %d"), building_type, obj_id);
+	UWorld* uworld = GetWorld();
+	if (uworld == nullptr)
+		return;
+	FActorSpawnParameters SpawnInfo;
+	BuiltBuildings[obj_id]->Destroy();
+	BuiltBuildings[obj_id] = nullptr;
+
+	AActor* building = uworld->SpawnActor<AActor>(BuildingArray[building_type], FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+	BuiltBuildings[obj_id] = building;
+	BuiltBuildings[obj_id]->Tags.Add(TEXT("Building"));
+	BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(building_type));
+	BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id));
 }
 
 void ABuildManager::SendBuildablePacket()

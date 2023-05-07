@@ -22,16 +22,18 @@ Building::~Building()
 
 bool Building::_create_building(float x, float y, char type,int id)
 {
-	bool isSuccessCreate = false;
+	bool is_Success_Create = false;
+	bool is_citizen = false;
 	Player* player = reinterpret_cast<Player*>(objects[((id - BUILDINGSTART) / PLAYERBUILDINGCOUNT)]);
 	player->_resource_amount[0];//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
+	
 	switch (type)
 	{
 	case 1:
 	{
 		if (player->_resource_amount[4] < 10)
 		{
-			isSuccessCreate = false;
+			is_Success_Create = false;
 		}
 		else
 		{
@@ -56,7 +58,7 @@ bool Building::_create_building(float x, float y, char type,int id)
 					}
 				}
 			}
-			isSuccessCreate = true;
+			is_Success_Create = true;
 		}
 		break;
 	}
@@ -64,7 +66,7 @@ bool Building::_create_building(float x, float y, char type,int id)
 	{
 		if (player->_resource_amount[4] < 20 || player->_resource_amount[2] < 10)
 		{
-			isSuccessCreate = false;
+			is_Success_Create = false;
 		}
 		else
 		{
@@ -89,7 +91,7 @@ bool Building::_create_building(float x, float y, char type,int id)
 					}
 				}
 			}
-			isSuccessCreate = true;
+			is_Success_Create = true;
 		}
 		break;
 	}
@@ -97,7 +99,7 @@ bool Building::_create_building(float x, float y, char type,int id)
 	{
 		if (player->_resource_amount[4] < 30 || player->_resource_amount[2] < 20)
 		{
-			isSuccessCreate = false;
+			is_Success_Create = false;
 		}
 		else
 		{
@@ -122,22 +124,24 @@ bool Building::_create_building(float x, float y, char type,int id)
 					}
 				}
 			}
-			isSuccessCreate = true;
+			is_Success_Create = true;
 		}
+		
 		break;
 	}
 	case 11:
 	{
 		if (player->_resource_amount[4] < 20)
 		{
-			isSuccessCreate = false;
+			is_Success_Create = false;
 		}
 		else
 		{
 			player->_resource_amount[4] -= 20;
 			player->send_resource_amount();
-			isSuccessCreate = true;
+			is_Success_Create = true;
 		}
+		
 		break;
 	}
 	default:
@@ -148,14 +152,40 @@ bool Building::_create_building(float x, float y, char type,int id)
 
 	}
 
+	if(is_Success_Create)
+	{
+		Citizen* placement_citizen = nullptr;
+		int Mindistance = 99999999;
+		for (int c_id = CITIZENSTART + player->_id * PLAYERCITIZENCOUNT; c_id < CITIZENSTART + (player->_id + 1) * PLAYERCITIZENCOUNT; c_id++)
+		{
+			Citizen* citizen = reinterpret_cast<Citizen*>(objects[c_id]);
+			int distance = sqrt(pow(x - citizen->_x, 2) + pow(y - citizen->_y, 2));
+			if (citizen->_job == 0)
+			{
+				if (Mindistance > distance)
+				{
+					Mindistance = distance;
+					placement_citizen = citizen;
+				}
+			}
+		}
+		if (placement_citizen != nullptr && placement_citizen->_job == 0)
+		{
+			placement_citizen->_job = 2;
+			placement_citizen->_Job_id = _id;
+			placement_citizen->set_citizen_arrival_location(x, y, 0.0f);
+			is_citizen = true;
+		}
+	}
 
-	if (isSuccessCreate)
+
+	if (is_Success_Create)
 	{
 		_x = x;
 		_y = y;
 		_type = type;
 	}
-	return isSuccessCreate;
+	return is_Success_Create && is_citizen;
 }
 
 void Building::set_building_citizen_placement(char isplus)

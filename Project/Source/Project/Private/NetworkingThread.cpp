@@ -151,7 +151,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_citizenmove* packet = reinterpret_cast<sc_packet_citizenmove*>(buf);
 			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
-			UE_LOG(LogTemp, Warning, TEXT("%d"), (int)packet->citizenstate);
+			//UE_LOG(LogTemp, Warning, TEXT("%d"), (int)packet->citizenstate);
 			_CitizenManager->Set_Citizen_Location(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->citizenstate);
 			break;
 		}
@@ -238,6 +238,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 			if (packet->do_build) {
 				_MainClass->BuildManager->Build(packet->id - BUILDINGSTART, packet->x, packet->y, packet->building_type);
 			}
+			break;
+		}
+		case SC_PACKET_BUILDSUCCESS:
+		{
+			sc_packet_buildsuccess* packet = reinterpret_cast<sc_packet_buildsuccess*>(buf);
+			_MainClass->BuildManager->BuildSuccess(packet->id - BUILDINGSTART, packet->x, packet->y, packet->building_type);
 			break;
 		}
 		case SC_PACKET_TEMPERATURE:

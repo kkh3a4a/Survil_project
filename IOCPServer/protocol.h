@@ -73,6 +73,7 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_BUILDABLE			40
 #define SC_PACKET_BUILD				41
+#define SC_PACKET_BUILDSUCCESS		42
 
 #define SC_PACKET_TEMPERATURE		50
 #define SC_PACKET_TEMPERATUREX		51
@@ -291,6 +292,16 @@ struct sc_packet_build
 	bool do_build;
 	char building_type;
 	int id;
+	float x, y;
+};
+
+struct sc_packet_buildsuccess
+{
+	unsigned char size = sizeof(sc_packet_buildsuccess);
+	unsigned char type = SC_PACKET_BUILDSUCCESS;
+
+	int id;
+	char building_type;
 	float x, y;
 };
 

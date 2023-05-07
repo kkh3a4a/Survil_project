@@ -28,6 +28,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
 		UMaterial* BuildingGridMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building_WoodenSign;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building_HOUSE;
@@ -48,6 +50,7 @@ public:
 	void UpdateDecalPosition(FVector, float, float);
 	void DecalVisibility();
 	void Build(int, float, float, int);
+	void BuildSuccess(int obj_id, float x, float y, int building_type);
 	void SendBuildablePacket();
 	void SendBuildPacket();
 	void SetBuildingPlacement(int Building_id, char work_citizen);

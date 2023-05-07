@@ -48,6 +48,30 @@ void Citizen::set_citizen_move()
 		{
 			_x = _arrival_x;
 			_y = _arrival_y;
+			if (_job == 2)
+			{
+				_job = 0;
+				Building* building = reinterpret_cast<Building*>(objects[_Job_id]);
+				_Job_id = 0;
+
+				sc_packet_buildsuccess packet;
+				packet.type = SC_PACKET_BUILDSUCCESS;
+				packet.size = sizeof(sc_packet_buildsuccess);
+
+				packet.building_type = building->_type;
+				packet.id = building->_id;
+				packet.x = building->_x;
+				packet.y = building->_y;
+
+				_arrival_x = _x;
+				_arrival_y = _y + 500;
+
+				for (int player_num = 0; player_num < MAXPLAYER; player_num++) {	//모든 플레이어들에게 전송
+					Player* this_player = reinterpret_cast<Player*>(objects[player_num]);
+					this_player->send_packet(&packet);
+				}
+				
+			}
 			if(!IsNight)
 				_citizenstate = 0;
 			else
