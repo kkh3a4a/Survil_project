@@ -71,6 +71,8 @@ void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRo
         {
             citizen[citizen_id]->SetActorLocation(Location);
             citizen[citizen_id]->SetActorRotation(Rotate);
+            ACitizen* citi = reinterpret_cast<ACitizen*>(citizen[citizen_id]);
+            citi->state = citizenstate;
         }
     }
 }
