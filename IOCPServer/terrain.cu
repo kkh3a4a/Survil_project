@@ -918,6 +918,14 @@ public:
 	
 	void add_object_height()
 	{
+		for (int i = 0; i < MAXPLAYER; ++i) {
+			Player* player = reinterpret_cast<Player*>(objects[i]);
+			int well_pump_height = 5;
+			int well_pump_size = 6;
+			dim3 block(well_pump_size, well_pump_size, 1);
+			add_object_height_cuda << <1, block >> > (terrain_array_device, { (int)player->_x / 100, (int)player->_y / 100 }, well_pump_height);
+			cudaDeviceSynchronize();
+		}
 		for (int i = RESOURCESTART; i < RESOURCESTART + MAXRESOURCE; ++i) {
 			Resource* resource = reinterpret_cast<Resource*>(objects[i]);
 			if (resource->_type == -1)

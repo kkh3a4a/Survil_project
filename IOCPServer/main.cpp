@@ -122,7 +122,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		TF player_city{ player->_x, player->_y };
 		terrain->set_city_location(TF{player->_x, player->_y}, i);
 	}
-	
 
 	while (1)
 	{
