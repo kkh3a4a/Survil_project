@@ -85,9 +85,6 @@ void ABuildManager::Build(int obj_id, float x , float y, int building_type)
 	{
 		AActor * building = uworld->SpawnActor<AActor>(BuildingArray[0], FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 		BuiltBuildings[obj_id] = building;
-		BuiltBuildings[obj_id]->Tags.Add(TEXT("Building"));
-		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(building_type));
-		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id));
 	}
 }
 
