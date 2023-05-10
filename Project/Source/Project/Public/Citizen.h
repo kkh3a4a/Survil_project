@@ -24,6 +24,9 @@ public:
 	float _x, _y, _z;
 	char job;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+	uint8 state;
+
 	void Spawn_Citizen();
 
 };
