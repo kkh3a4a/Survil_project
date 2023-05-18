@@ -79,6 +79,7 @@ void AMyPlayerController::SetupInputComponent()
     InputComponent->BindAction("2", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse2);
     InputComponent->BindAction("3", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse3);
     InputComponent->BindAction("4", IE_Pressed, this, &AMyPlayerController::SelectBuildingHunterHouse);
+    InputComponent->BindAction("5", IE_Pressed, this, &AMyPlayerController::SelectBuildingARMYCAMP);
 
     InputComponent->BindAction("MouseScrollUp", IE_Pressed, this, &AMyPlayerController::MouseScrollUp);
     InputComponent->BindAction("MouseScrollDown", IE_Pressed, this, &AMyPlayerController::MouseScrollDown);
@@ -297,6 +298,12 @@ void AMyPlayerController::SelectBuildingHunterHouse()
     }
 }
 
+void AMyPlayerController::SelectBuildingARMYCAMP()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 21;
+    }
+}
 
 void AMyPlayerController::MouseScrollUp()
 {

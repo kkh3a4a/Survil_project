@@ -39,6 +39,7 @@ void ABuildManager::BeginPlay()
 	BuildingArray.Add(2, Building_HOUSE2);
 	BuildingArray.Add(3, Building_HOUSE3);
 	BuildingArray.Add(11, Building_HUNTERHOUSE);
+	BuildingArray.Add(21, Building_ARMYCAMP);
 
 	for (auto& a : BuiltBuildings)
 	{

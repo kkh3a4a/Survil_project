@@ -29,16 +29,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
 		UMaterial* BuildingGridMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_WoodenSign;
+		TSubclassOf<AActor>Building_WoodenSign;		//type : 0
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_HOUSE;
+		TSubclassOf<AActor>Building_HOUSE;			//type : 1
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_HOUSE2;
+		TSubclassOf<AActor>Building_HOUSE2;			//type : 2
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_HOUSE3;
+		TSubclassOf<AActor>Building_HOUSE3;			//type : 3
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_HUNTERHOUSE;
+		TSubclassOf<AActor>Building_HUNTERHOUSE;	//type : 11
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building_ARMYCAMP;		//type : 21
 
 	UMaterialInstanceDynamic* MaterialInstance;
 	bool BuildMode = false;

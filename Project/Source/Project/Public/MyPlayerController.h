@@ -83,7 +83,7 @@ protected:
 	void SelectBuildingHouse2();
 	void SelectBuildingHouse3();
 	void SelectBuildingHunterHouse();
-
+	void SelectBuildingARMYCAMP();
 	void OnBuildMode();
 	void MouseScrollUp();
 	void MouseScrollDown();

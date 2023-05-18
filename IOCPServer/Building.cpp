@@ -144,6 +144,21 @@ bool Building::_create_building(float x, float y, char type,int id)
 		
 		break;
 	}
+	case 21:
+	{
+		if (player->_resource_amount[4] < 20 && player->_resource_amount[2] < 20 && player->_resource_amount[0] < 20)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 20;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+
+		break;
+	}
 	default:
 	{
 		break;
@@ -193,84 +208,146 @@ void Building::set_building_citizen_placement(char isplus)
 	Citizen* placement_citizen = nullptr;
 	int Mindistance = 99999999;
 	int Maxdistance = -99999999;
-	if (isplus)
+	
+	//여러명 추가
+	if (_type == 21)
 	{
-		for (int i = CITIZENSTART + _client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
+		if (isplus)
 		{
-			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-			if (citizen->_job == 0)
+			int count = 0;
+			Citizen* multi_citizens[5];
+			for(int j = 0 ; j< 5; j++)
 			{
-				int distance = sqrt(pow(_x - citizen->_x, 2) + pow(_y - citizen->_y, 2));
-				if (Mindistance > distance)
+				Mindistance = 99999999;
+				for (int i = CITIZENSTART + _client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
 				{
-					Mindistance = distance;
-					placement_citizen = citizen;
+					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+					if (citizen->_job == 0)
+					{
+						int distance = sqrt(pow(_x - citizen->_x, 2) + pow(_y - citizen->_y, 2));
+						if (Mindistance > distance)
+						{
+							Mindistance = distance;
+							placement_citizen = citizen;
+							
+						}
+					}
 				}
-			}
-		}
-		for (auto& a : _citizens)
-		{
-			if (a == nullptr)
-			{
 				if (placement_citizen != nullptr)
 				{
-					placement_citizen->_job = 11;
-					placement_citizen->_job_x = _x;
-					placement_citizen->_job_y = _y;
-					placement_citizen->_job_z = _z;
+					multi_citizens[j] = placement_citizen;
+					placement_citizen->_job = _type;
+					count++;
+				}
+			}
+			if (count == 5)
+			{
+				for (auto& a_citizen : multi_citizens)
+				{
+					cout << a_citizen->_id << " 배치됨" << endl;
+					a_citizen->_job = _type;
+					a_citizen->_job_x = _x;
+					a_citizen->_job_y = _y;
+					a_citizen->_job_z = _z;
 					if (!IsNight)
-						placement_citizen->set_citizen_arrival_location(_x, _y, _z);
-					a = placement_citizen;
-					_citizencount++;
-					break;
+						a_citizen->set_citizen_arrival_location(_x, _y, _z);
+				}
+			}
+			else
+			{
+				for (auto& a_citizen : multi_citizens)
+				{
+					if(a_citizen != nullptr)
+						a_citizen->_job = 0;
+					
 				}
 			}
 		}
 	}
 	else
 	{
-		for (auto& a : _citizens)
+		if (isplus)
 		{
-			if (a != nullptr)
+			for (int i = CITIZENSTART + _client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
 			{
-				int distance = sqrt(pow(_x - a->_x, 2) + pow(_y - a->_y, 2));
-				if (Maxdistance < distance)
+				Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+				if (citizen->_job == 0)
 				{
-					Maxdistance = distance;
-					placement_citizen = a;
+					int distance = sqrt(pow(_x - citizen->_x, 2) + pow(_y - citizen->_y, 2));
+					if (Mindistance > distance)
+					{
+						Mindistance = distance;
+						placement_citizen = citizen;
+					}
 				}
 			}
-		}
-		int i = 0;
-		for (auto& a : _citizens)
-		{
-			// 생성될 때 시민을 배치해준다.
-			if (a != nullptr)
+			for (auto& a : _citizens)
 			{
-				if (a == placement_citizen)
+				if (a == nullptr)
 				{
 					if (placement_citizen != nullptr)
 					{
-						if (a->_x == _x && a->_y && !IsNight)
-						{
-							a->_arrival_x = _x + i * 100 - 500;
-							a->_arrival_y = _y + 500;
-						}
-						else
-						{
-							a->_arrival_x = a->_x;
-							a->_arrival_y = a->_y;
-						}
-						a->_job = 0;
-						a = nullptr;
-						_citizencount--;
+						placement_citizen->_job = _type;
+						placement_citizen->_job_x = _x;
+						placement_citizen->_job_y = _y;
+						placement_citizen->_job_z = _z;
+						if (!IsNight)
+							placement_citizen->set_citizen_arrival_location(_x, _y, _z);
+						a = placement_citizen;
+						_citizencount++;
 						break;
 					}
 				}
 			}
-			i++;
+		}
+		else
+		{
+			for (auto& a : _citizens)
+			{
+				if (a != nullptr)
+				{
+					int distance = sqrt(pow(_x - a->_x, 2) + pow(_y - a->_y, 2));
+					if (Maxdistance < distance)
+					{
+						Maxdistance = distance;
+						placement_citizen = a;
+					}
+				}
+			}
+			int i = 0;
+			for (auto& a : _citizens)
+			{
+				// 생성될 때 시민을 배치해준다.
+				if (a != nullptr)
+				{
+					if (a == placement_citizen)
+					{
+						if (placement_citizen != nullptr)
+						{
+							if (a->_x == _x && a->_y && !IsNight)
+							{
+								a->_arrival_x = _x + i * 100 - 500;
+								a->_arrival_y = _y + 500;
+							}
+							else
+							{
+								a->_arrival_x = a->_x;
+								a->_arrival_y = a->_y;
+							}
+							a->_job = 0;
+							a = nullptr;
+							_citizencount--;
+							break;
+						}
+					}
+				}
+				i++;
+			}
 		}
 	}
+
+	//한명씩 추가
+	
 	
 
 	sc_packet_citizenplacement packet;
