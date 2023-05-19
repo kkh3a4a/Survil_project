@@ -603,7 +603,7 @@ int main(int argc, char* argv[])
 			DWORD flags = 0;
 			WSARecv(c_socket, &n_player->_wsa_recv_over._wsabuf, 1, NULL, &flags, &n_player->_wsa_recv_over._wsaover, NULL);
 			n_player->is_connected = true;
-			n_player->_state = Player::STATE::ST_INGAME;
+			n_player->_state = STATE::ST_INGAME;
 			c_socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
 			ZeroMemory(&accept_over, sizeof(accept_over));
 			accept_over.set_accept_over();

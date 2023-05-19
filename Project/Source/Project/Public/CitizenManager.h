@@ -28,6 +28,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>EnemyCitizen_MODEL;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>ARMY_MODEL;
+
 	UPROPERTY(EditAnywhere)
 	class AMain* Main;
 
@@ -38,4 +41,5 @@ public:
 	void Spawn_Citizen(int citizen_id, FVector Location);
 	void Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate, char citizenstate);
 	void Remove_Citizen(int citizen_id);
+	void Spawn_Army(void *packet);
 };

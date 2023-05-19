@@ -70,7 +70,15 @@ void Citizen::set_citizen_move()
 					Player* this_player = reinterpret_cast<Player*>(objects[player_num]);
 					this_player->send_packet(&packet);
 				}
-				
+			}
+			else if (_job == 21)
+			{
+				Building* building = reinterpret_cast<Building*>(objects[_Job_id]);
+				building->_citizencount++;
+				if (building->_citizencount == 5)
+				{
+					building->training_amry();
+				}
 			}
 			if(!IsNight)
 				_citizenstate = 0;

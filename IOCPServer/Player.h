@@ -6,7 +6,7 @@
 class Player : public Object
 {
 public:
-	enum class STATE{ ST_FREE, ST_CONNECT, ST_INGAME, ST_DISCONNECT };
+	
 
 	STATE _state;
 	SOCKET _socket;

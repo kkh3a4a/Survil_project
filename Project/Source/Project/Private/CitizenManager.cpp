@@ -85,3 +85,17 @@ void ACitizenManager::Remove_Citizen(int citizen_id)
         citizen[citizen_id] = nullptr;
     }
 }
+
+void ACitizenManager::Spawn_Army(void* buf)
+{
+    sc_packet_trainingarmy* packet = reinterpret_cast<sc_packet_trainingarmy*>(buf);
+    citizen[packet->c_id1 - CITIZENSTART]->SetActorHiddenInGame(true);
+    citizen[packet->c_id2 - CITIZENSTART]->SetActorHiddenInGame(true);
+    citizen[packet->c_id3 - CITIZENSTART]->SetActorHiddenInGame(true);
+    citizen[packet->c_id4 - CITIZENSTART]->SetActorHiddenInGame(true);
+    citizen[packet->c_id5 - CITIZENSTART]->SetActorHiddenInGame(true);
+    FVector Location{ packet->x,packet->y,packet->z };
+    FActorSpawnParameters SpawnInfo;
+    UWorld* uworld = GetWorld();
+    uworld->SpawnActor<AActor>(ARMY_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+}

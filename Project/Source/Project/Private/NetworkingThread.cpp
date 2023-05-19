@@ -11,7 +11,7 @@ using namespace std;
 
 
 FSocketThread* fsocket_thread;
-
+//UE_LOG(LogTemp, Warning, TEXT("%d"), (int)packet->citizenstate);
 NetworkingThread::NetworkingThread()
 {
 	
@@ -277,6 +277,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MainClass->Temperature->Work->LineY = true;
 			_MainClass->Temperature->Work->y = packet->terrainY;
 			memcpy(&_MainClass->Temperature->Work->TerrainLineX, packet->terrainline_X, SIGHT_X);
+			break;
+		}
+		case SC_PACKET_TRAININGARMY:
+		{
+			sc_packet_trainingarmy* packet = reinterpret_cast<sc_packet_trainingarmy*>(buf);
+			//UE_LOG(LogTemp, Warning, TEXT("%d %d %d %d %d"), packet->c_id1, packet->c_id2, packet->c_id3, packet->c_id4, packet->c_id5 );
+			_CitizenManager->Spawn_Army(packet);
 			break;
 		}
 		default:

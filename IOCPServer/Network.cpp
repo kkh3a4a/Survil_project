@@ -232,3 +232,13 @@ bool CAS(volatile int* addr, int expected, int update)
 {
 	return std::atomic_compare_exchange_strong(reinterpret_cast <volatile std::atomic_int*>(addr), &expected, update);
 }
+
+void all_player_sendpacket(void* packet)
+{
+	for (int i = 0; i < MAXPLAYER; ++i)
+	{
+		Player* player = reinterpret_cast<Player*>(objects[i]);
+		if (player->_state != STATE::ST_INGAME) continue;
+		player->send_packet(packet);
+	}
+}

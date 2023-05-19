@@ -23,6 +23,7 @@ constexpr int city_size = 100;
 #define BUILDINGSTART				(MAXRESOURCE + RESOURCESTART)
 #define PLAYERBUILDINGCOUNT			121
 #define MAXBUILDING					(PLAYERBUILDINGCOUNT * MAXPLAYER)
+#define ARMYSTART					(BUILDINGSTART + MAXBUILDING)
 
 
 #define SIGHT_X 200
@@ -52,6 +53,7 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_TEMPERATURE		50
 
+#define CS_PACKET_TRAININGARMY		60
 
 
 #define SC_PACKET_LOGIN				1
@@ -79,6 +81,7 @@ constexpr int city_size = 100;
 #define SC_PACKET_TEMPERATUREX		51
 #define SC_PACKET_TEMPERATUREY		52
 
+#define SC_PACKET_TRAININGARMY		60
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -332,4 +335,12 @@ struct sc_packet_temperatureY
 	char terrainline_X[SIGHT_X];
 };
 
+struct  sc_packet_trainingarmy
+{
+	unsigned char size = sizeof(sc_packet_trainingarmy);
+	unsigned char type = SC_PACKET_TRAININGARMY;
+
+	int c_id1, c_id2, c_id3, c_id4, c_id5;
+	float x, y, z;
+};
 #pragma pack (pop)

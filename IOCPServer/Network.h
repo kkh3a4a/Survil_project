@@ -19,6 +19,7 @@ enum IOCPOP
 	OP_SEND,
 	OP_ACCEPT
 };
+enum class STATE { ST_FREE, ST_CONNECT, ST_INGAME, ST_DISCONNECT };
 
 class WSA_OVER_EX {
 public:
@@ -41,3 +42,5 @@ public:
 	void set_accept_over();
 };
 
+
+void all_player_sendpacket(void* packet);

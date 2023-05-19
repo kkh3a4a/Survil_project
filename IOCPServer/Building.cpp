@@ -210,12 +210,13 @@ void Building::set_building_citizen_placement(char isplus)
 	int Maxdistance = -99999999;
 	
 	//여러명 추가
-	if (_type == 21)
+	if (_type == 21 && training_finish)
 	{
 		if (isplus)
 		{
 			int count = 0;
 			Citizen* multi_citizens[5];
+			Citizen* last_placement_citizen = nullptr;
 			for(int j = 0 ; j< 5; j++)
 			{
 				Mindistance = 99999999;
@@ -229,36 +230,47 @@ void Building::set_building_citizen_placement(char isplus)
 						{
 							Mindistance = distance;
 							placement_citizen = citizen;
-							
+							if (last_placement_citizen == placement_citizen)
+							{
+								placement_citizen = nullptr;
+								break;
+							}
+							last_placement_citizen = citizen;
 						}
 					}
 				}
 				if (placement_citizen != nullptr)
 				{
+
 					multi_citizens[j] = placement_citizen;
 					placement_citizen->_job = _type;
+					placement_citizen = nullptr;
 					count++;
 				}
 			}
 			if (count == 5)
 			{
+				int citizen_cnt = 0;
 				for (auto& a_citizen : multi_citizens)
 				{
-					cout << a_citizen->_id << " 배치됨" << endl;
 					a_citizen->_job = _type;
 					a_citizen->_job_x = _x;
 					a_citizen->_job_y = _y;
 					a_citizen->_job_z = _z;
+					a_citizen->_Job_id = _id;
+					_citizens[citizen_cnt] = a_citizen;
+					citizen_cnt++;
 					if (!IsNight)
 						a_citizen->set_citizen_arrival_location(_x, _y, _z);
 				}
+				training_finish = false;
 			}
 			else
 			{
-				for (auto& a_citizen : multi_citizens)
+				for (int i=0;i<count; ++i)
 				{
-					if(a_citizen != nullptr)
-						a_citizen->_job = 0;
+					multi_citizens[i]->_job = 0;
+					multi_citizens[i] = nullptr;
 					
 				}
 			}
@@ -381,4 +393,32 @@ void Building::WorkBuilding()
 		break;
 	}
 
+}
+
+void Building::training_amry()
+{
+	
+	_citizencount = 0;
+	
+	cout << "traning army" << endl;
+	sc_packet_trainingarmy packet;
+	packet.size = sizeof(sc_packet_trainingarmy);
+	packet.type = SC_PACKET_TRAININGARMY;
+
+	packet.c_id1 = _citizens[0]->_id;
+	packet.c_id2 = _citizens[1]->_id;
+	packet.c_id3 = _citizens[2]->_id;
+	packet.c_id4 = _citizens[3]->_id;
+	packet.c_id5 = _citizens[4]->_id;
+	packet.x = _x;
+	packet.y = _y + 500;
+	packet.z = _z;
+
+	for (auto& a_c : _citizens)
+	{
+		a_c = nullptr;
+	}
+	training_finish = true;
+
+	all_player_sendpacket(&packet);
 }
