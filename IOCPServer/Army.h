@@ -18,4 +18,5 @@ public:
 
 	void SpawnArmy(float x, float y, float z);
 	void set_army_move();
+	void set_army_arrival_location(float x, float y);
 };

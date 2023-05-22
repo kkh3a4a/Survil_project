@@ -65,3 +65,11 @@ void Army::set_army_move()
 		}
 	}
 }
+
+void Army::set_army_arrival_location(float x, float y)
+{
+	int temp_x = x;
+	int temp_y = y;
+	_arrival_x = temp_x;
+	_arrival_y = temp_y;
+}

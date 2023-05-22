@@ -159,6 +159,26 @@ struct cs_packet_minimap
 	float x, y;
 };
 
+struct cs_packet_armymove
+{
+	unsigned char size;
+	unsigned char type;
+
+	float x, y;
+	int a_id;
+
+};
+
+
+
+
+
+
+
+
+
+
+
 
 
 

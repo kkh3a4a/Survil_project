@@ -5,6 +5,7 @@
 #include "Main.h"
 #include "NetworkingThread.h"
 #include "ResourceManager.h"
+//#include "Army.h"
 //#include "Blueprint/AIBlueprintHelperLibrary.h"
 
 AMyPlayerController::AMyPlayerController()
@@ -59,6 +60,7 @@ void AMyPlayerController::SetupInputComponent()
     Super::SetupInputComponent();
 
     InputComponent->BindAction("LeftClick", IE_Pressed, this, &AMyPlayerController::InputLeftMoustButtonPressed);
+    InputComponent->BindAction("RightClick", IE_Pressed, this, &AMyPlayerController::InputRightMoustButtonPressed);
 
     InputComponent->BindAction("Up", IE_Pressed, this, &AMyPlayerController::InputUpPressed);
     InputComponent->BindAction("Up", IE_Released, this, &AMyPlayerController::InputUpReleased);
@@ -151,6 +153,17 @@ void AMyPlayerController::InputLeftMoustButtonPressed()
     }
 }
 
+void AMyPlayerController::InputRightMoustButtonPressed()
+{
+    if (BuildManager->BuildMode) {
+    }
+    else {
+        MoveToActor();
+    }
+}
+
+
+
 void AMyPlayerController::MoveToMouseCursor()
 {
     FHitResult Hit;
@@ -201,6 +214,9 @@ void AMyPlayerController::MoveToMouseCursor()
         else if (hitActor->ActorHasTag("Army"))
         {
             UE_LOG(LogTemp, Log, TEXT("Army"));
+            ObjectType = ARMYSTART;
+            ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
+
             ResourceUI = false;
             BuildingUI = false;
         }
@@ -210,13 +226,33 @@ void AMyPlayerController::MoveToMouseCursor()
             ObjectType = 0;
             ResourceUI = false;
             BuildingUI = false;
+            hitActor = NULL;
         }
     }
 }
 
 void AMyPlayerController::MoveToActor()
 {
-  
+    FHitResult Hit;
+    GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+    if (hitActor != NULL)
+    {
+        if (hitActor->ActorHasTag("Army"))
+        {
+            cs_packet_armymove packet;
+         
+            packet.type = CS_PACKET_ARMYMOVE;
+            packet.size = sizeof(cs_packet_armymove);
+
+            packet.a_id = ObjectId + ObjectType;
+            packet.x = Hit.Location.X;
+            packet.y = Hit.Location.Y;
+
+            WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+            WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+        }
+    }
+    UE_LOG(LogTemp, Log, TEXT("type : %lf"), Hit.Location.X)
 }
 
 void AMyPlayerController::VisibilityTemperature()
@@ -339,38 +375,33 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     mouse_cnt++;
     //UE_LOG(LogTemp, Log, TEXT("%s : %lf, %lf"),  *(ServerClass->MouseInput.name), ServerClass->MouseInput.location.x, ServerClass->MouseInput.location.y);
     //오른쪽 클릭 작업
-    if (ResourceUI == true)
+    if(hitActor != NULL)
     {
-        ResourceActor = hitActor;        
-        ObjectType = RESOURCESTART;
-        ObjectId = FCString::Atoi(*hitActor->Tags[1].ToString());
-        ClickObjectType = ResourceManager->resource_type[ObjectId];
-        ResourceCount = ResourceManager->resource_amount[ObjectId];
-        workcitizen = ResourceManager->workCitizens[ObjectId];
-        joblessCitizen = Network->playerjobless;
-    }
-    else if (BuildingUI == true)
-    {
-        joblessCitizen = Network->playerjobless;
-        ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
-        workcitizen = BuildManager->buildingWorkCount[ObjectId];
-    }
-    else
-    {
-        ClickObjectType = 0;
-        ResourceCount = 0;
-        workcitizen = 0;
-        joblessCitizen = 0;
-    }
-    
-    
-    if (ResourceActor != NULL)
-    {
-        if (ResourceUI)
+        if (ResourceUI == true)
         {
-           
+            ResourceActor = hitActor;
+            ObjectType = RESOURCESTART;
+            ObjectId = FCString::Atoi(*hitActor->Tags[1].ToString());
+            ClickObjectType = ResourceManager->resource_type[ObjectId];
+            ResourceCount = ResourceManager->resource_amount[ObjectId];
+            workcitizen = ResourceManager->workCitizens[ObjectId];
+            joblessCitizen = Network->playerjobless;
+        }
+        else if (BuildingUI == true)
+        {
+            joblessCitizen = Network->playerjobless;
+            ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
+            workcitizen = BuildManager->buildingWorkCount[ObjectId];
+        }
+        else
+        {
+            ClickObjectType = 0;
+            ResourceCount = 0;
+            workcitizen = 0;
+            joblessCitizen = 0;
         }
     }
+    
     if (BuildManager->BuildMode) {
         OnBuildMode();
     }

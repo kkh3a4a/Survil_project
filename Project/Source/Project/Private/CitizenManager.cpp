@@ -99,6 +99,21 @@ void ACitizenManager::Spawn_Army(void* buf)
     UWorld* uworld = GetWorld();
     army[packet->army_id - ARMYSTART] = uworld->SpawnActor<AActor>(ARMY_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
     army[packet->army_id - ARMYSTART]->Tags.Add(TEXT("Army"));
-    army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(0));//추후 타입 넣어줘야함
+    army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(packet->army_id));//추후 타입 넣어줘야함
     army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(packet->army_id - ARMYSTART));
+}
+
+void ACitizenManager::Set_Army_Location(int a_id, FVector Location, FRotator Rotate, char a_state)
+{
+    if (army[a_id] != nullptr)
+    {
+        if (army[a_id]->GetWorld() && army[a_id]->IsValidLowLevel())
+        {
+            army[a_id]->SetActorLocation(Location);
+            army[a_id]->SetActorRotation(Rotate);
+            AArmy* a = reinterpret_cast<AArmy*>(army[a_id]);
+            a->state = a_state;
+        }
+    }
+
 }

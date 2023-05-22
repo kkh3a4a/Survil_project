@@ -67,6 +67,7 @@ protected:
 	bool bLeftClickMouse;
 
 	void InputLeftMoustButtonPressed();
+	void InputRightMoustButtonPressed();
 	void InputUpPressed();
 	void InputDownPressed();
 	void InputLeftPressed();

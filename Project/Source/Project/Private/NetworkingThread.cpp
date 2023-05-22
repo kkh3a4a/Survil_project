@@ -286,6 +286,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_CitizenManager->Spawn_Army(packet);
 			break;
 		}
+		case SC_PACKET_ARMYMOVE:
+		{
+			sc_packet_armymove* packet = reinterpret_cast<sc_packet_armymove*>(buf);
+			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
+			_CitizenManager->Set_Army_Location(packet->a_id -ARMYSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->a_state);
+		}
 		default:
 		{
 			//DebugBreak();

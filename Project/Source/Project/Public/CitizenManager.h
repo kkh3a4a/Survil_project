@@ -44,4 +44,5 @@ public:
 	void Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate, char citizenstate);
 	void Remove_Citizen(int citizen_id);
 	void Spawn_Army(void *packet);
+	void Set_Army_Location(int a_id, FVector Location, FRotator Rotate, char a_state);
 };
