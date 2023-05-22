@@ -24,6 +24,8 @@ constexpr int city_size = 100;
 #define PLAYERBUILDINGCOUNT			121
 #define MAXBUILDING					(PLAYERBUILDINGCOUNT * MAXPLAYER)
 #define ARMYSTART					(BUILDINGSTART + MAXBUILDING)
+#define PLAYERARMYCOUNT				20
+#define ARMYMAX						(PLAYERARMYCOUNT * MAXPLAYER)
 
 
 #define SIGHT_X 200
@@ -53,7 +55,8 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_TEMPERATURE		50
 
-#define CS_PACKET_TRAININGARMY		60
+#define CS_PACKET_ARMYTRAINING		60
+#define CS_PACKET_ARMYMOVE			61
 
 
 #define SC_PACKET_LOGIN				1
@@ -81,8 +84,8 @@ constexpr int city_size = 100;
 #define SC_PACKET_TEMPERATUREX		51
 #define SC_PACKET_TEMPERATUREY		52
 
-#define SC_PACKET_TRAININGARMY		60
-
+#define SC_PACKET_ARMYTRAINING		60
+#define SC_PACKET_ARMYMOVE			61
 #pragma pack (push, 1)
 struct cs_packet_login
 {
@@ -335,12 +338,24 @@ struct sc_packet_temperatureY
 	char terrainline_X[SIGHT_X];
 };
 
-struct  sc_packet_trainingarmy
+struct  sc_packet_armytraining
 {
-	unsigned char size = sizeof(sc_packet_trainingarmy);
-	unsigned char type = SC_PACKET_TRAININGARMY;
+	unsigned char size = sizeof(sc_packet_armytraining);
+	unsigned char type = SC_PACKET_ARMYTRAINING;
 
 	int c_id1, c_id2, c_id3, c_id4, c_id5;
 	float x, y, z;
+	int army_id;
+};
+
+
+struct sc_packet_armymove
+{
+	unsigned char size;
+	unsigned char type;
+	int a_id;
+	float x, y, z;
+	float rx, ry, rz;
+	char  a_state;
 };
 #pragma pack (pop)

@@ -142,6 +142,7 @@
     <CudaCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Army.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="Citizen.h" />
     <ClInclude Include="global.h" />
@@ -158,6 +159,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Army.cpp" />
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="Citizen.cpp" />
     <ClCompile Include="Network.cpp" />

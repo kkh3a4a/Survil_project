@@ -16,6 +16,7 @@
 #include"Citizen.h"
 #include"Resource.h"
 #include "Building.h"
+#include"Army.h"
 
 #define PI 3.1415926
 

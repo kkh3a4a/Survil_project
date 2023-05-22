@@ -237,11 +237,20 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 			{
 				Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-				if (citizen->_job == -1)
+				if (citizen->_job == -1 || citizen->_job == 22)
 				{
 					continue;
 				}
 				citizen->set_citizen_move();
+			}
+			for (int i = ARMYSTART; i < ARMYMAX + ARMYSTART; ++i)
+			{
+				Army* army = reinterpret_cast<Army*>(objects[i]);
+				if (army->_a_state != Army::ST_CONPLETE)
+				{
+					continue;
+				}
+				army->set_army_move();
 			}
 		}
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)	//5000
@@ -472,6 +481,11 @@ int main(int argc, char* argv[])
 	for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i)//1055 ~ 1659까지는 Building	인당 11*11개 = 121개
 	{
 		objects[i] = new Building(i);
+	}
+
+	for (int i = ARMYSTART; i < ARMYSTART + ARMYMAX; ++i)//1055 ~ 1659까지는 Building	인당 11*11개 = 121개
+	{
+		objects[i] = new Army(i);
 	}
 	
 

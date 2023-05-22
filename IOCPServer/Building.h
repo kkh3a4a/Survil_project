@@ -16,7 +16,10 @@ public:
 	class Citizen* _citizens[5]{};
 	int _citizencount;
 	int _client_id;
+	
 	bool training_finish = true;
+	int training_army_id = -1;
+
 	bool _create_building(float x, float y, char type, int id);
 	void set_building_citizen_placement(char isplus);
 	void WorkBuilding();

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Citizen.h"
+#include "Army.h"
 #include "CitizenManager.generated.h"
 
 UCLASS()
@@ -37,6 +38,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	AActor* citizen[1000];
+	AActor* army[100];
 	class FSocketThread* Network;
 	void Spawn_Citizen(int citizen_id, FVector Location);
 	void Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate, char citizenstate);

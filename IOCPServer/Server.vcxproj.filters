@@ -22,6 +22,9 @@
     <ClCompile Include="Network.cpp">
       <Filter>Source\NetWork</Filter>
     </ClCompile>
+    <ClCompile Include="Army.cpp">
+      <Filter>Source\Object\Army</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global.h" />
@@ -46,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="Network.h">
       <Filter>Source\NetWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Army.h">
+      <Filter>Source\Object\Army</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +81,9 @@
     </Filter>
     <Filter Include="Source\NetWork">
       <UniqueIdentifier>{614e4f1c-84a3-4199-814b-0443dd9825ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object\Army">
+      <UniqueIdentifier>{e321a41c-bfcb-4d8c-a6d7-0687a6f4d5c0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

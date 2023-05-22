@@ -198,6 +198,12 @@ void AMyPlayerController::MoveToMouseCursor()
             ResourceUI = false;
             BuildingUI = true;
         }
+        else if (hitActor->ActorHasTag("Army"))
+        {
+            UE_LOG(LogTemp, Log, TEXT("Army"));
+            ResourceUI = false;
+            BuildingUI = false;
+        }
         else
         {
             ObjectId = -1;

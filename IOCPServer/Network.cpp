@@ -4,6 +4,7 @@
 #include "Citizen.h"
 #include"Resource.h"
 #include "Building.h"
+#include"Army.h"
 #include<iostream>
 
 std::array<Object*, MAXOBJECT> objects;

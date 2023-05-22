@@ -88,7 +88,7 @@ void ACitizenManager::Remove_Citizen(int citizen_id)
 
 void ACitizenManager::Spawn_Army(void* buf)
 {
-    sc_packet_trainingarmy* packet = reinterpret_cast<sc_packet_trainingarmy*>(buf);
+    sc_packet_armytraining* packet = reinterpret_cast<sc_packet_armytraining*>(buf);
     citizen[packet->c_id1 - CITIZENSTART]->SetActorHiddenInGame(true);
     citizen[packet->c_id2 - CITIZENSTART]->SetActorHiddenInGame(true);
     citizen[packet->c_id3 - CITIZENSTART]->SetActorHiddenInGame(true);
@@ -97,5 +97,8 @@ void ACitizenManager::Spawn_Army(void* buf)
     FVector Location{ packet->x,packet->y,packet->z };
     FActorSpawnParameters SpawnInfo;
     UWorld* uworld = GetWorld();
-    uworld->SpawnActor<AActor>(ARMY_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+    army[packet->army_id - ARMYSTART] = uworld->SpawnActor<AActor>(ARMY_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+    army[packet->army_id - ARMYSTART]->Tags.Add(TEXT("Army"));
+    army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(0));//추후 타입 넣어줘야함
+    army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(packet->army_id - ARMYSTART));
 }

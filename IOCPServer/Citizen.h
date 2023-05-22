@@ -9,7 +9,7 @@ public:
 	Citizen(int id);
 	~Citizen();
 
-	char _job;	//	-1 : 생성안됨, 및 사망  // 0 : 생성 및 무직  // 1 : 자원 채취 // 2 : 건물 짓기 // 11 : HunterHouse	// 21 : armycamp
+	char _job;	//	-1 : 생성안됨, 및 사망  // 0 : 생성 및 무직  // 1 : 자원 채취 // 2 : 건물 짓기 // 11 : HunterHouse	// 21 : armycampmove	22 : army
 	float _job_x, _job_y, _job_z;
 	int _Job_id;
 	int _house_id;	// -1 : 집없음, 나머지 : 집 object id

@@ -279,9 +279,9 @@ void FSocketThread::processpacket(unsigned char* buf)
 			memcpy(&_MainClass->Temperature->Work->TerrainLineX, packet->terrainline_X, SIGHT_X);
 			break;
 		}
-		case SC_PACKET_TRAININGARMY:
+		case SC_PACKET_ARMYTRAINING:
 		{
-			sc_packet_trainingarmy* packet = reinterpret_cast<sc_packet_trainingarmy*>(buf);
+			sc_packet_armytraining* packet = reinterpret_cast<sc_packet_armytraining*>(buf);
 			//UE_LOG(LogTemp, Warning, TEXT("%d %d %d %d %d"), packet->c_id1, packet->c_id2, packet->c_id3, packet->c_id4, packet->c_id5 );
 			_CitizenManager->Spawn_Army(packet);
 			break;

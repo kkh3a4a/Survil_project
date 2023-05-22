@@ -1,7 +1,7 @@
 #include "Building.h"
 #include "Citizen.h"
 #include "Player.h"
-
+#include"Army.h"
 
 #include<iostream>
 using namespace std;
@@ -212,7 +212,19 @@ void Building::set_building_citizen_placement(char isplus)
 	//여러명 추가
 	if (_type == 21 && training_finish)
 	{
-		if (isplus)
+		bool army_check = false;
+		for (int o_id = ARMYSTART + PLAYERARMYCOUNT * _client_id; o_id < ARMYSTART + PLAYERARMYCOUNT * (1 + _client_id); ++o_id)
+		{
+			Army* army = reinterpret_cast<Army*>(objects[o_id]);
+			if (army->_a_state == Army::ST_FREE)
+			{
+				army->_a_state = Army::ST_TRAINING;
+				training_army_id = o_id;
+				army_check = true;
+				break;
+			}
+		}
+		if (isplus && army_check)
 		{
 			int count = 0;
 			Citizen* multi_citizens[5];
@@ -248,6 +260,8 @@ void Building::set_building_citizen_placement(char isplus)
 					count++;
 				}
 			}
+
+			// army 생성 성공
 			if (count == 5)
 			{
 				int citizen_cnt = 0;
@@ -265,13 +279,16 @@ void Building::set_building_citizen_placement(char isplus)
 				}
 				training_finish = false;
 			}
+			// army 생성 실패
 			else
 			{
 				for (int i=0;i<count; ++i)
 				{
 					multi_citizens[i]->_job = 0;
 					multi_citizens[i] = nullptr;
-					
+					Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
+					army->_a_state = Army::ST_FREE;
+					training_army_id = -1;
 				}
 			}
 		}
@@ -401,9 +418,19 @@ void Building::training_amry()
 	_citizencount = 0;
 	
 	cout << "traning army" << endl;
-	sc_packet_trainingarmy packet;
-	packet.size = sizeof(sc_packet_trainingarmy);
-	packet.type = SC_PACKET_TRAININGARMY;
+	Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
+	army->_a_state = army->ST_CONPLETE;
+
+	
+
+	for (int i = 0; i < 5; ++i)
+	{
+		_citizens[i]->_job = 22;
+		army->_citizens[i] = _citizens[i]->_id;
+	}
+	sc_packet_armytraining packet;
+	packet.size = sizeof(sc_packet_armytraining);
+	packet.type = SC_PACKET_ARMYTRAINING;
 
 	packet.c_id1 = _citizens[0]->_id;
 	packet.c_id2 = _citizens[1]->_id;
@@ -413,6 +440,9 @@ void Building::training_amry()
 	packet.x = _x;
 	packet.y = _y + 500;
 	packet.z = _z;
+	packet.army_id = training_army_id;
+	training_army_id = -1;
+	army->SpawnArmy(_x, _y + 500, _z);
 
 	for (auto& a_c : _citizens)
 	{
