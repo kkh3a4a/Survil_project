@@ -46,3 +46,5 @@ public:
 
 
 void all_player_sendpacket(void* packet);
+
+bool overlap_check(int id1, int id2, float range);

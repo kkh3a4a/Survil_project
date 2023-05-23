@@ -487,6 +487,10 @@ int main(int argc, char* argv[])
 	{
 		objects[i] = new Army(i);
 	}
+	for (int i = EVENTSTART; i < EVENTMAX + EVENTSTART; ++i)
+	{
+		objects[i] = new GameEvent(i);
+	}
 	
 
 	//player, citizen, resource 초기 위치 지정 한번 하고 안쓸거라 main에 둠
@@ -518,6 +522,8 @@ int main(int argc, char* argv[])
 		{
 			reinterpret_cast<Resource*>(objects[RESOURCESTART + i * 10 + j])->set_resource_spwan_location(x, y, z);
 		}
+		for (int e_id = EVENTSTART; e_id < EVENTMAX + EVENTSTART; ++e_id)
+			reinterpret_cast<GameEvent*>(objects[e_id])->random_create();
 	}
 
 	//다 지정해주고 thread생성

@@ -145,6 +145,7 @@
     <ClInclude Include="Army.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="Citizen.h" />
+    <ClInclude Include="GameEvent.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="NewGlobal.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Army.cpp" />
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="Citizen.cpp" />
+    <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />

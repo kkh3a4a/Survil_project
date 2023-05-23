@@ -15,6 +15,7 @@ public:
 
 	float _arrival_x, _arrival_y, _arrival_z;
 	int _playerID;
+	int _resource_amount[5] = {};
 
 	void SpawnArmy(float x, float y, float z);
 	void set_army_move();

@@ -386,7 +386,6 @@ void Building::set_building_citizen_placement(char isplus)
 	packet.object_id = _id;
 	
 	packet.workcitizen = _citizencount;
-	cout << _citizencount << endl;
 	Player* player = reinterpret_cast<Player*>(objects[_client_id]);
 	packet.playerjobless = player->joblesscitizen();
 	player->send_packet(&packet);

@@ -346,7 +346,6 @@ void Player::playerMinimapLocation(float mini_x, float mini_y)
 
 	_currentX = (mini_x - _x) ;
 	_currentY = (mini_y - _y) ;
-	std::cout << _x +_currentX << ", " << _y + _currentY << std::endl;
 	
 retry:
 	int cas_bool = _Minimap_terrainsend;

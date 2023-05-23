@@ -1,4 +1,5 @@
 #include "Army.h"
+#include "GameEvent.h"
 #include<iostream>
 Army::Army(int i)
 {
@@ -9,6 +10,9 @@ Army::Army(int i)
 	{
 		a = -1;
 	}
+	_arrival_x = _x = 0;
+	_arrival_y = _y = 0;
+	_arrival_z = _z = 0;
 }
 
 Army::~Army()

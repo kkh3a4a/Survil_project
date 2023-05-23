@@ -17,6 +17,7 @@
 #include"Resource.h"
 #include "Building.h"
 #include"Army.h"
+#include "GameEvent.h"
 
 #define PI 3.1415926
 

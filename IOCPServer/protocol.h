@@ -26,6 +26,8 @@ constexpr int city_size = 100;
 #define ARMYSTART					(BUILDINGSTART + MAXBUILDING)
 #define PLAYERARMYCOUNT				20
 #define ARMYMAX						(PLAYERARMYCOUNT * MAXPLAYER)
+#define EVENTSTART					(ARMYSTART + ARMYMAX)
+#define EVENTMAX					200
 
 
 #define SIGHT_X 200
@@ -58,6 +60,7 @@ constexpr int city_size = 100;
 #define CS_PACKET_ARMYTRAINING		60
 #define CS_PACKET_ARMYMOVE			61
 
+#define CS_PACKET_VIEWEVENT			70
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -86,6 +89,9 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_ARMYTRAINING		60
 #define SC_PACKET_ARMYMOVE			61
+
+#define SC_PACKET_VIEWEVENT			70
+
 #pragma pack (push, 1)
 struct cs_packet_login
 {
@@ -379,3 +385,11 @@ struct sc_packet_armymove
 	char  a_state;
 };
 #pragma pack (pop)
+
+struct sc_packet_viewevnet
+{
+	unsigned char size;
+	unsigned char type;
+
+	float x, y, z;
+};

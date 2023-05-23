@@ -25,6 +25,9 @@
     <ClCompile Include="Army.cpp">
       <Filter>Source\Object\Army</Filter>
     </ClCompile>
+    <ClCompile Include="GameEvent.cpp">
+      <Filter>Source\Object\GameEvent</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global.h" />
@@ -52,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="Army.h">
       <Filter>Source\Object\Army</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEvent.h">
+      <Filter>Source\Object\GameEvent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +90,9 @@
     </Filter>
     <Filter Include="Source\Object\Army">
       <UniqueIdentifier>{e321a41c-bfcb-4d8c-a6d7-0687a6f4d5c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object\GameEvent">
+      <UniqueIdentifier>{dd25e0e1-8603-4b88-b069-4f542512d445}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
