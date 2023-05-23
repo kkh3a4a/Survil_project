@@ -10,6 +10,8 @@
 extern std::array<class Object*, MAXOBJECT> objects;
 extern HANDLE h_iocp;
 extern bool IsNight;
+extern char** object_z;
+
 
 bool CAS(volatile int* addr, int expected, int update);
 

@@ -10,7 +10,7 @@
 std::array<Object*, MAXOBJECT> objects;
 HANDLE h_iocp;
 bool IsNight;
-
+char** object_z;
 
 
 

@@ -1,5 +1,5 @@
 #include "Army.h"
-
+#include<iostream>
 Army::Army(int i)
 {
 	_id = i;
@@ -47,13 +47,21 @@ void Army::set_army_move()
 			_x += ((_arrival_x - _x) / distance) * 10;
 			_y += ((_arrival_y - _y) / distance) * 10;
 		}
+		int _i_x = _x; int _i_y = _y;
+		_arrival_z = ((float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_x) % 100) / 100) + (float)object_z[(_i_x + 100) / 100][_i_y / 100] * (((_i_x / 100) % 100) / 100) + (float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_y) % 100) / 100) + (float)object_z[_i_x / 100][(_i_y + 100) / 100] * ((_i_y) % 100) / 100) * 20;
+		//if (abs(_arrival_z - _z) > 10)
+		{
+			_z = _arrival_z;
+		}
+		
+		//_z = (object_z[_i_x / 100][_i_y / 100]) * 50;
 		sc_packet_armymove packet;
 		packet.x = _x;
 		packet.y = _y;
 		packet.z = _z;
 		packet.rx = (_arrival_x - _x) / distance;
 		packet.ry = (_arrival_y - _y) / distance;
-		packet.rz = (_arrival_z - _z) / distance;
+		packet.rz = 0;
 		packet.a_id = _id;
 		packet.a_state = state;
 		packet.size = sizeof(sc_packet_armymove);

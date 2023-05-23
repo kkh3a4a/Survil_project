@@ -110,7 +110,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	auto Citizen_Move_Timer_End = std::chrono::system_clock::now();
 	auto Resource_Collect_Timer_End = std::chrono::system_clock::now();
 	auto TerrainSend_Timer_End = std::chrono::system_clock::now();
-	
+	object_z = terrain->get_map();
 	bool IsOnceWork = true;
 	char** player_terrain = terrain->get_player_sight_map();
 	char** player_temperature = terrain->get_player_temperature_map();
