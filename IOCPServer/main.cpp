@@ -120,7 +120,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	{
 		Player* player = reinterpret_cast<Player*>(objects[i]);
 		TF player_city{ player->_x, player->_y };
-		terrain->set_city_location(TF{player->_x, player->_y}, i);
+		terrain->set_city_location(TF{player->_x, player->_y}, i); 
+		
 	}
 
 	while (1)

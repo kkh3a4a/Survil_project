@@ -4,6 +4,7 @@
 #include <array>
 #include "protocol.h"
 #include"Object.h"
+#include<set>
 #include<mutex>
 
 
@@ -48,3 +49,5 @@ public:
 void all_player_sendpacket(void* packet);
 
 bool overlap_check(int id1, int id2, float range);
+
+bool object_find_check(int id1, int id2, float range);

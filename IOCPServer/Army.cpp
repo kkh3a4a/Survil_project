@@ -1,5 +1,6 @@
 #include "Army.h"
 #include "GameEvent.h"
+#include"Player.h"
 #include<iostream>
 Army::Army(int i)
 {
@@ -57,6 +58,24 @@ void Army::set_army_move()
 		{
 			_z = _arrival_z;
 		}
+		for (int e_id = EVENTSTART; e_id < EVENTSTART + EVENTMAX; ++e_id)
+		{
+			GameEvent* g_event = reinterpret_cast<GameEvent*>(objects[e_id]);
+			if(g_event->ev_type != GameEvent::EV_FREE && g_event->ev_type != GameEvent::EV_COUNT)
+			{
+				if (object_find_check(e_id, _id, 10000))
+				{
+					Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+					if (object_find_check(e_id, _id, 500))
+					{
+						g_event->check_event(_playerID);
+					}
+					else
+						player->find_event(e_id);
+				}
+			}
+		}
+
 		
 		//_z = (object_z[_i_x / 100][_i_y / 100]) * 50;
 		sc_packet_armymove packet;

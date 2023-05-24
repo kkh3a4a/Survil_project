@@ -363,4 +363,24 @@ retry:
 	send_packet(&sc_packet_move);
 }
 
+void Player::find_event(int e_id)
+{
+	if (view_list.count(e_id) != 0)
+		return;
+
+	view_list.insert(e_id);
+
+
+	sc_packet_viewevnet packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_PACKET_VIEWEVENT;
+
+	packet.e_id = e_id;
+	packet.x = objects[e_id]->_x;
+	packet.y = objects[e_id]->_y;
+	packet.z = objects[e_id]->_z;
+
+	send_packet(&packet);
+}
+
 

@@ -45,11 +45,15 @@ public:
 		bool BuildingUI = false;
 
 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int workcitizen = 10;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int joblessCitizen = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool GameEventUI = false;
 
 
 	AActor* ResourceActor;
