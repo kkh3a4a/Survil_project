@@ -76,3 +76,13 @@ void AResourceManager::SetResourcePlacement(int Resource_id, char work_citizen)
     workCitizens[Resource_id] = work_citizen;
 }
 
+void AResourceManager::Spawn_Event(int e_id, FVector Location)
+{
+    FActorSpawnParameters SpawnInfo;
+    GameEvent[e_id] = GetWorld()->SpawnActor<AActor>(GameEventActor, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+}
+
+void AResourceManager::remove_Event(int e_id)
+{
+}
+

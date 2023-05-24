@@ -7,7 +7,8 @@ class GameEvent : public Object
 {
 public:
 	GameEvent(int id);
-
+	wchar_t summary[30];
+	wchar_t first[20], second[20], third[20];
 
 	enum EV_TYPE
 	{
@@ -34,6 +35,7 @@ public:
 	EV_TYPE ev_type;
 
 	void random_create();
-	void do_event();
+	void check_event(int p_id);
+	void do_event(int select_num);
 	
 };

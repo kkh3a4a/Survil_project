@@ -18,6 +18,8 @@ public:
 
 	Policy _policy;
 	
+	std::set<int> view_list;
+
 	//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	int _resource_amount[5] = {};
 
@@ -41,5 +43,6 @@ public:
 	int playercitizencount();
 	int joblesscitizen();
 	void playerMinimapLocation(float mini_x, float mini_y);
+	void find_event(int e_id);
 
 };

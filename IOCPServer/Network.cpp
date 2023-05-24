@@ -257,3 +257,12 @@ bool overlap_check(int id1, int id2, float range)
 	if(abs(objects[id1]->_y - objects[id2]->_y) < range) return false;
 	return true;
 }
+
+bool object_find_check(int id1, int id2, float range)
+{
+	if (abs(objects[id1]->_x - objects[id2]->_x) > range) return false;
+	if (abs(objects[id1]->_y - objects[id2]->_y) > range) return false;
+	return true;
+}
+
+

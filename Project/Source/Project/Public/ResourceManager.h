@@ -51,7 +51,7 @@ public:
 	char resource_type[50]{};	//type도 마찬가지
 	char workCitizens[50]{};		// 몇명 일하는것도 마찬가지
 
-	//resourceManager의 재활용 초기 생성후 할게 없으니 gameEvent도 같이 관리하자 어차피 gameEvent도 자원이 주 요인이니깐
+	//resourceManager의 재활용 초기 생성후 할게 없으니 gameEvent도 같이 관리하자 어차피 gameEvent도 자원획득이 주 요인이니깐
 	AActor* GameEvent[200];
 
 
@@ -59,4 +59,6 @@ public:
 	void Spawn_Resource(int Resource_id, FVector Location, int amount, char resourcetype);
 	void SetResourceAmount(int Resource_id, int amount);
 	void SetResourcePlacement(int Resource_id, char work_citizen);
+	void Spawn_Event(int e_id, FVector Location);
+	void remove_Event(int e_id);
 };
