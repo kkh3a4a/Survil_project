@@ -191,14 +191,14 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						if (citizen->_job == -1)
 							continue;
 
-						if (citizen->_satiety - 20 >= 0) {	//배고파지기
-							citizen->_satiety -= 20;
+						if (citizen->_satiety - 2 >= 0) {	//배고파지기
+							citizen->_satiety -= 2;
 						}
 						else {
 							citizen->_satiety = 0;
 						}
-						if (citizen->_thirsty - 20 >= 0) {	//목말라지기
-							citizen->_thirsty -= 20;
+						if (citizen->_thirsty - 4 >= 0) {	//목말라지기
+							citizen->_thirsty -= 4;
 						}
 						else {
 							citizen->_thirsty = 0;
