@@ -175,61 +175,44 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				objects[i]
 			}*/
 
-			if (sun_angle - citizen_eat > 10)
+			if (sun_angle - citizen_eat > 10)	//각도 10도에 한번씩 배고픔이 생김
 			{
 				citizen_eat = sun_angle;
 				for (int player_id = 0; player_id < MAXPLAYER; ++player_id)
 				{
 					Player* player = reinterpret_cast<Player*>(objects[player_id]);
 					int citizencount = player->playercitizencount();
+					
+					int num_citizen{};
 					for (int citizen_id = CITIZENSTART + player_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
 					{
 						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
 						if (citizen->_job == -1)
 							continue;
-						citizen->_satiety -= 1;
-						citizen->_thirsty -= 1;
 
-						if (citizen->_satiety == 0)
-						{
-							if (!citizen->citizen_eat_food())
-								citizen->citizen_dead();
+						if (citizen->_satiety - 20 >= 0) {	//배고파지기
+							citizen->_satiety -= 20;
 						}
-						if (citizen->_thirsty == 0)
-						{
-							if (!citizen->citizen_eat_water())
-								citizen->citizen_dead();
+						else {
+							citizen->_satiety = 0;
 						}
-
-						if (player->_resource_amount[3] > citizencount)
-						{
-							if (citizen->_satiety < 70)
-								citizen->citizen_eat_food();
+						if (citizen->_thirsty - 20 >= 0) {	//목말라지기
+							citizen->_thirsty -= 20;
 						}
-						else
-						{
-							if (citizen->_satiety < 30)
-								citizen->citizen_eat_food();
+						else {
+							citizen->_thirsty = 0;
 						}
 
-						if (player->_resource_amount[1] > citizencount)
-						{
-							if (citizen->_thirsty < 70)
-								citizen->citizen_eat_water();
-						}
-						else
-						{
-							if (citizen->_thirsty < 30)
-								citizen->citizen_eat_water();
-						}
+						citizen->citizen_eat_food();	//먹기
+						citizen->citizen_eat_water();	//마시기
+						cout << (int)citizen->_thirsty << ", " << (int)citizen->_satiety << ", " << (int)citizen->_hp << endl;
+						num_citizen++;
 					}
-
+					cout << "num_citizen : " << num_citizen << endl;
 					player->send_resource_amount();
 				}
 			}
 		}
-		
-	
 		
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Citizen_Move_Timer_End).count() > 10)
 		{

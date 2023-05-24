@@ -1,7 +1,7 @@
 #pragma once
 #include"protocol.h"
 #include"Network.h"
-
+#include "Policy.h"
 
 class Player : public Object
 {
@@ -15,6 +15,8 @@ public:
 	char _packet_buf[BUFSIZE]{};
 	char is_connected;
 	char w, a, s, d;
+
+	Policy _policy;
 	
 	//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	int _resource_amount[5] = {};

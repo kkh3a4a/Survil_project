@@ -13,10 +13,15 @@ public:
 	float _job_x, _job_y, _job_z;
 	int _Job_id;
 	int _house_id;	// -1 : 집없음, 나머지 : 집 object id
-	char _hp;
 	char _citizenstate;		// 0 : idle, 1 : wark, 2 : sleep
-	char _satiety;
-	char _thirsty;
+	
+	char _satiety;	//0~100
+	char _thirsty;	//0~100
+	
+	char _hp;			//0~100
+	char _alcoholic;	//0~100
+	bool _disabled;
+	char _dissatisfaction; //불만 0~100
 
 	float _arrival_x, _arrival_y, _arrival_z;
 	int _playerID;
@@ -24,7 +29,7 @@ public:
 	void set_citizen_arrival_location(float ax, float ay, float az);
 	void set_citizen_move();
 	void citizen_dead();
-	bool citizen_eat_food();
-	bool citizen_eat_water();
+	void citizen_eat_food();
+	void citizen_eat_water();
 };
 
