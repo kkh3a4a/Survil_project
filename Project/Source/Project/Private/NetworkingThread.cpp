@@ -299,6 +299,17 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_ResourceManager->Spawn_Event(packet->e_id - EVENTSTART, FVector(packet->x, packet->y, packet->z));
 			break;
 		}
+		case SC_PACKET_REMOVEEVENT:
+		{
+			sc_packet_removeevent* packet = reinterpret_cast<sc_packet_removeevent*>(buf);
+			_ResourceManager->remove_Event(packet->e_id - EVENTSTART);
+			break;
+		}
+		case SC_PACKET_EVENTSELECT:
+		{
+			break;
+		}
+
 		default:
 		{
 			//DebugBreak();

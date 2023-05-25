@@ -206,10 +206,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 						citizen->citizen_eat_food();	//¸Ô±â
 						citizen->citizen_eat_water();	//¸¶½Ã±â
-						cout << (int)citizen->_thirsty << ", " << (int)citizen->_satiety << ", " << (int)citizen->_hp << endl;
+						//cout << (int)citizen->_thirsty << ", " << (int)citizen->_satiety << ", " << (int)citizen->_hp << endl;
 						num_citizen++;
 					}
-					cout << "num_citizen : " << num_citizen << endl;
+					//cout << "num_citizen : " << num_citizen << endl;
 					player->send_resource_amount();
 				}
 			}

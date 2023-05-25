@@ -1,5 +1,6 @@
 #include "GameEvent.h"
 #include"random"
+#include<iostream>
 
 GameEvent::GameEvent(int id)
 {
@@ -18,9 +19,9 @@ void GameEvent::random_create()
 	_x = map_uid(dre) * 100;
 	_y = map_uid(dre) * 100;
 	_z = 10;
-	for (int id = 0; id < MAXPLAYER; ++id)
+	for (int p_id = 0; p_id < MAXPLAYER; ++p_id)
 	{
-		if (!overlap_check(id, _id, 5000))
+		if (!overlap_check(p_id, _id, 10000))
 			goto retry;
 	}
 	ev_type = random_ev[rand() % (static_cast<int>(EV_COUNT) - 1) + 1];
@@ -31,56 +32,103 @@ void GameEvent::random_create()
 
 void GameEvent::check_event(int p_id)
 {
+	std::cout << p_id << " : check_event" << std::endl;
+	sc_packet_eventselect packet;
+	int s_option = 1;
+
 	switch (ev_type)
 	{
 	case GameEvent::EV_FREE:
 	{
-
+		DebugBreak();
 		break;
 	}
 	case GameEvent::EV_GETOIL:
 	{
-		wcscpy(summary, L"석유을 발견했습니다.");
-
+		wcscpy(packet.summary, L"석유을 발견했습니다.");
+		resource_count[0] = rand() % 30 + 13;
+		swprintf(packet.first, L"석유 %d 개 획득하였습니다", resource_count[0]);
 		break;
 	}
 	case GameEvent::EV_GETWATER:
 	{
-		wcscpy(summary, L"물을 발견했습니다.");
-		break;
-	}
-	case GameEvent::EV_GETFOOD:
-	{
-		wcscpy(summary, L"식량을 발견했습니다.");
+		wcscpy(packet.summary, L"물을 발견했습니다.");
+		resource_count[1] = rand() % 30 + 13;
+		swprintf(packet.first, L"물 %d 개 획득하였습니다", resource_count[1]);
 		break;
 	}
 	case GameEvent::EV_GETIRON:
 	{
-		wcscpy(summary, L"철을 발견했습니다.");
+		wcscpy(packet.summary, L"철을 발견했습니다.");
+		resource_count[2] = rand() % 30 + 13;
+		swprintf(packet.first, L"철 %d 개 획득하였습니다", resource_count[2]);
+		break;
+	}
+	case GameEvent::EV_GETFOOD:
+	{
+		wcscpy(packet.summary, L"식량을 발견했습니다.");
+		resource_count[3] = rand() % 30 + 13;
+		swprintf(packet.first, L"식량 %d 개 획득하였습니다", resource_count[3]);
 		break;
 	}
 	case GameEvent::EV_GETWOOD:
 	{
-		wcscpy(summary, L"나무를 발견했습니다.");
+		wcscpy(packet.summary, L"나무를 발견했습니다.");
+		resource_count[4] = rand() % 30 + 13;
+		swprintf(packet.first, L"나무 %d 개 획득하였습니다", resource_count[4]);
 		break;
 	}
 	case GameEvent::EV_GETCITIZEN:
 	{
-		wcscpy(summary, L"시민을 발견했습니다.");
+		wcscpy(packet.summary, L"시민을 발견했습니다.");
+		citizen_count = rand() % 5 + 13;
+		resource_count[3] = rand() % 50 + 25;
+		resource_count[1] = rand() % 50 + 25;
+		swprintf(packet.first, L"시민 %d명을 마을까지 호위합니다.", citizen_count);
+		swprintf(packet.second, L"식량 %d 물 %d 를 약탈합니다", resource_count[3], resource_count[1]);
+		s_option = 2;
 		break;
 	}
 	case GameEvent::EV_COUNT:
 	{
-		wcscpy(summary, L"자원을 발견했습니다.");
+		DebugBreak();
 		break;
 	}
 	default:
+	{
+		DebugBreak();
 		break;
 	}
+	}
+	packet.type = SC_PACKET_EVENTSELECT;
+	packet.size = sizeof(sc_packet_eventselect);
+	packet.s_option = s_option;
 
+	Player* player = reinterpret_cast<Player*>(objects[p_id]);
+	player->send_packet(&packet);
+
+	remove_event();
 }
 
 void GameEvent::do_event(int select_num)
 {
 
+}
+
+void GameEvent::remove_event()
+{
+	ev_type = EV_FREE;
+	sc_packet_removeevent packet;
+	packet.type = SC_PACKET_REMOVEEVENT;
+	packet.size = sizeof(packet);
+	packet.e_id = _id;
+	
+	for (int p_id = 0; p_id < MAXPLAYER; ++p_id)
+	{
+		Player* player = reinterpret_cast<Player*>(objects[p_id]);
+		if (player->view_list.count(_id) != 0)
+		{
+			player->send_packet(&packet);
+		}
+	}
 }

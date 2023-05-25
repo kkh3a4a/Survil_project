@@ -62,6 +62,7 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_VIEWEVENT			70
 #define CS_PACKET_REMOVEEVENT		71
+#define CS_PACKET_EVENTSELECT		72
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -93,6 +94,8 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_VIEWEVENT			70
 #define SC_PACKET_REMOVEEVENT		71
+#define SC_PACKET_EVENTSELECT		72
+
 #pragma pack (push, 1)
 struct cs_packet_login
 {
@@ -402,5 +405,14 @@ struct sc_packet_removeevent
 	unsigned char type;
 
 	int e_id;
-	float x, y, z;
+};
+
+struct sc_packet_eventselect
+{
+	unsigned char size;
+	unsigned char type;
+
+	int s_option;
+	wchar_t summary[30]{};
+	wchar_t first[20]{}, second[20]{}, third[20]{};
 };

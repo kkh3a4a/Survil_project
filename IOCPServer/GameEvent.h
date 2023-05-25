@@ -7,9 +7,9 @@ class GameEvent : public Object
 {
 public:
 	GameEvent(int id);
-	wchar_t summary[30];
-	wchar_t first[20], second[20], third[20];
 
+	int resource_count[5] = {};
+	int citizen_count = 0;
 	enum EV_TYPE
 	{
 		EV_FREE,
@@ -37,5 +37,6 @@ public:
 	void random_create();
 	void check_event(int p_id);
 	void do_event(int select_num);
+	void remove_event();
 	
 };

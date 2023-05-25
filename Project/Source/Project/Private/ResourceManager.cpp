@@ -84,5 +84,10 @@ void AResourceManager::Spawn_Event(int e_id, FVector Location)
 
 void AResourceManager::remove_Event(int e_id)
 {
+    if (GameEvent[e_id] != nullptr)
+    {
+        GameEvent[e_id]->Destroy();
+    }
+    GameEvent[e_id] = nullptr;
 }
 
