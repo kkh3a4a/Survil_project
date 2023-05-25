@@ -44,6 +44,8 @@ public:
 		TSubclassOf<AActor>Building_ARMYCAMP;		//type : 21
 
 	UMaterialInstanceDynamic* MaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool BuildMode = false;
 	bool Buildable = false;
 

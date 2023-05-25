@@ -103,6 +103,8 @@ protected:
 	void MoveToMouseCursor();
 	void MoveToActor();
 	void VisibilityTemperature();
+
+	UFUNCTION(BlueprintCallable)
 	void BuildMode();
 	void SelectBuildingHouse();
 	void SelectBuildingHouse2();
