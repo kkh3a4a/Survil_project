@@ -370,6 +370,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     if(Network == nullptr)
     {
         Network = reinterpret_cast<FSocketThread*>(Main_Class->Network);
+        Network->_MyController = this;
     }
 
     mouse_cnt++;
@@ -447,4 +448,14 @@ void AMyPlayerController::SendMinimapPacket(float x, float y)
     UE_LOG(LogTemp, Log, TEXT("%f %f"),x,y);
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+
+void AMyPlayerController::select_event(sc_packet_eventselect* packet)
+{
+    GameEventUI = true;
+    Summary_text = FText::FromString(packet->summary);
+    First_text = FText::FromString(packet->first);
+    Second_text = FText::FromString(packet->second);
+    Third_text = FText::FromString(packet->third);
+    e_select = packet->s_option;
 }

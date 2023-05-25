@@ -415,4 +415,5 @@ struct sc_packet_eventselect
 	int s_option;
 	wchar_t summary[30]{};
 	wchar_t first[20]{}, second[20]{}, third[20]{};
+	int e_id;
 };
