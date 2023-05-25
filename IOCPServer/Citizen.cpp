@@ -181,47 +181,29 @@ void Citizen::citizen_dead()
 void Citizen::citizen_eat_food()
 {
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-	if (player->_resource_amount[3] > 0) {		//음식이 있을 때
-		bool had_meal = false;
-		
-		if (player->_policy.hearty_meal) {	//든든한 식사
-			if (_satiety + 40 <= 100) {			//100안넘게
-				player->_resource_amount[3] -= 2;
-				_satiety += 40;
-				had_meal = true;
-			}
-		}
-		else if (player->_policy.soup) {	//수프 밥
-			if (_satiety + 40 <= 100) {		//100안넘게
-				player->_resource_amount[3] -= 1;
-				_satiety += 40;
-				had_meal = true;
-			}
-		}
-		else {								//일반
-			if (_satiety + 20 <= 100) {		//100안넘게
-				player->_resource_amount[3] -= 1;
-				_satiety += 20;
-				had_meal = true;
-			}
+	
+	char meal_consume = player->_policy.get_meal_resource_consume();
+	char meal_satiety = player->_policy.get_meal_satiety();
+	char meal_alcoholic = player->_policy.get_meal_alcoholic();
+	
+	if (player->_resource_amount[3] > meal_consume) {		//음식이 있을 때
+		if (_satiety + meal_satiety <= 100) {
+			player->_resource_amount[3] -= meal_consume;
+			_satiety += meal_satiety;
+			_alcoholic += meal_alcoholic;
 		}
 		
-		if (had_meal) {
-			if (player->_policy.alcohol) {		//밀주
-				if (_alcoholic + 10 <= 100)
-					_alcoholic += 10;
-			}
-			if (_alcoholic >= 100) {			//알콜중독이면 hp 깎기
-				_hp -= 20;
-			}
-		}
 	}
 	else {	//음식이 없을 때
-		if (_satiety == 0) {
-			_hp -= 20;
-		}
+		
 	}
 	
+	if (_satiety == 0) {
+		_hp -= 20;
+	}
+	if (_alcoholic >= 100) {			//알콜중독이면 hp 깎기
+		_hp -= 10;
+	}
 	if (_hp <= 0) {						//죽기
 		citizen_dead();
 	}
@@ -230,18 +212,19 @@ void Citizen::citizen_eat_food()
 void Citizen::citizen_eat_water()
 {
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-	if (player->_resource_amount[3] > 0){	//물 있을 때
+	if (player->_resource_amount[1] > 0){	//물 있을 때
 		if (_thirsty + 20 <= 100) {		//100안넘게
 			player->_resource_amount[1] -= 1;
 			_thirsty += 20;
 		}
 	}
 	else {	//물 없을 때
-		if (_thirsty == 0) {
-			_hp -= 25;
-		}
+		
 	}
 	
+	if (_thirsty == 0) {
+		_hp -= 25;
+	}
 	if (_hp <= 0) {						//죽기
 		citizen_dead();
 	}

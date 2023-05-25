@@ -35,6 +35,9 @@ public:
 	bool hearty_meal = false;						//든든한 식사
 	bool soup = false;								//스프 밥
 	bool alcohol = false;							//밀주
+	char get_meal_resource_consume();
+	char get_meal_satiety();
+	char get_meal_alcoholic();
 	
 	
 	bool life_sustaining_treatment = false;			//연명치료
