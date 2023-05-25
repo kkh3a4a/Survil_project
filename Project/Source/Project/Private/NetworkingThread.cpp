@@ -307,6 +307,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 		}
 		case SC_PACKET_EVENTSELECT:
 		{
+			sc_packet_eventselect* packet = reinterpret_cast<sc_packet_eventselect*>(buf);
+			_MyController->select_event(packet);
 			break;
 		}
 

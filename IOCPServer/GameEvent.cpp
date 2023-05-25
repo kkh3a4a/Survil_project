@@ -35,7 +35,7 @@ void GameEvent::check_event(int p_id)
 	std::cout << p_id << " : check_event" << std::endl;
 	sc_packet_eventselect packet;
 	int s_option = 1;
-
+	packet.e_id = _id;
 	switch (ev_type)
 	{
 	case GameEvent::EV_FREE:
@@ -45,42 +45,42 @@ void GameEvent::check_event(int p_id)
 	}
 	case GameEvent::EV_GETOIL:
 	{
-		wcscpy(packet.summary, L"석유을 발견했습니다.");
+		swprintf(packet.summary, L"석유을 발견했습니다.");
 		resource_count[0] = rand() % 30 + 13;
 		swprintf(packet.first, L"석유 %d 개 획득하였습니다", resource_count[0]);
 		break;
 	}
 	case GameEvent::EV_GETWATER:
 	{
-		wcscpy(packet.summary, L"물을 발견했습니다.");
+		swprintf(packet.summary, L"물을 발견했습니다.");
 		resource_count[1] = rand() % 30 + 13;
 		swprintf(packet.first, L"물 %d 개 획득하였습니다", resource_count[1]);
 		break;
 	}
 	case GameEvent::EV_GETIRON:
 	{
-		wcscpy(packet.summary, L"철을 발견했습니다.");
+		swprintf(packet.summary, L"철을 발견했습니다.");
 		resource_count[2] = rand() % 30 + 13;
 		swprintf(packet.first, L"철 %d 개 획득하였습니다", resource_count[2]);
 		break;
 	}
 	case GameEvent::EV_GETFOOD:
 	{
-		wcscpy(packet.summary, L"식량을 발견했습니다.");
+		swprintf(packet.summary, L"식량을 발견했습니다.");
 		resource_count[3] = rand() % 30 + 13;
 		swprintf(packet.first, L"식량 %d 개 획득하였습니다", resource_count[3]);
 		break;
 	}
 	case GameEvent::EV_GETWOOD:
 	{
-		wcscpy(packet.summary, L"나무를 발견했습니다.");
+		swprintf(packet.summary, L"나무를 발견했습니다.");
 		resource_count[4] = rand() % 30 + 13;
 		swprintf(packet.first, L"나무 %d 개 획득하였습니다", resource_count[4]);
 		break;
 	}
 	case GameEvent::EV_GETCITIZEN:
 	{
-		wcscpy(packet.summary, L"시민을 발견했습니다.");
+		swprintf(packet.summary, L"시민을 발견했습니다.");
 		citizen_count = rand() % 5 + 13;
 		resource_count[3] = rand() % 50 + 25;
 		resource_count[1] = rand() % 50 + 25;

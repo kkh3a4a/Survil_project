@@ -52,10 +52,27 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int joblessCitizen = 0;
 
+	/// <summary>
+	/// ///////////////////////////////
+	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool GameEventUI = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FText Summary_text {};
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FText First_text {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FText Second_text {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FText Third_text {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int e_select = 0;
+	/// //////////////////////////////////////////
 	AActor* ResourceActor;
 
 	UFUNCTION(BlueprintCallable)
@@ -63,6 +80,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SendMinimapPacket(float x, float y);
+
+	void select_event(sc_packet_eventselect* );
+
 
 protected:
 	long long int mouse_cnt = 0;
