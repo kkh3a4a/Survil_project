@@ -11,6 +11,11 @@ AGameEvent::AGameEvent()
 
 }
 
+void AGameEvent::set_event_id(int event_id)
+{
+	e_id = event_id;
+}
+
 
 
 

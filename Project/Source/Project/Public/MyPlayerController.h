@@ -72,6 +72,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int e_select = 0;
+
+	int e_id = 0;
 	/// //////////////////////////////////////////
 	AActor* ResourceActor;
 
@@ -83,6 +85,8 @@ public:
 
 	void select_event(sc_packet_eventselect* );
 
+	UFUNCTION(BlueprintCallable)
+	void do_event(int o_select);
 
 protected:
 	long long int mouse_cnt = 0;

@@ -32,7 +32,7 @@ void GameEvent::random_create()
 
 void GameEvent::check_event(int p_id)
 {
-	std::cout << p_id << " : check_event" << std::endl;
+	std::cout << p_id << " : check_event : "  << _id << std::endl;
 	sc_packet_eventselect packet;
 	int s_option = 1;
 	packet.e_id = _id;
@@ -112,6 +112,7 @@ void GameEvent::check_event(int p_id)
 
 void GameEvent::do_event(int select_num)
 {
+	std::cout<< _id << " select number :  " << select_num << std::endl;
 
 }
 

@@ -77,12 +77,12 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 	}
 	if ((_x + _currentX + speed * directionX) / 100 <= 0 || (_x + _currentX + speed * directionX) / 100 >= (one_side_number - SIGHT_X))
 	{
-		cout << _x + _currentX + speed * directionX << endl;
+		//cout << _x + _currentX + speed * directionX << endl;
 		directionX = 0;
 	}
 	if ((_y + _currentY + speed * directionY) / 100 <= 0 || (_y + _currentY + speed * directionY) / 100 >= (one_side_number - SIGHT_Y))
 	{
-		cout << _y + _currentY + speed * directionY << endl;
+		//cout << _y + _currentY + speed * directionY << endl;
 		directionY = 0;
 	}
 	if (keyinput)

@@ -5,6 +5,7 @@
 #include"Resource.h"
 #include "Building.h"
 #include"Army.h"
+#include"GameEvent.h"
 #include<iostream>
 
 std::array<Object*, MAXOBJECT> objects;
@@ -125,6 +126,14 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		cs_packet_armymove* packet = reinterpret_cast<cs_packet_armymove*>(pk);
 		Army* army = reinterpret_cast<Army*>(objects[packet->a_id]);
 		army->set_army_arrival_location(packet->x, packet->y);
+		break;
+	}
+	case CS_PACKET_EVENTSELECT:
+	{
+		cs_packet_eventselect* packet = reinterpret_cast<cs_packet_eventselect*>(pk);
+		GameEvent* g_event = reinterpret_cast<GameEvent*>(objects[packet->e_id]);
+		g_event->do_event(packet->s_option);
+
 		break;
 	}
 

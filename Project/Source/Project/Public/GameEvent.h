@@ -20,7 +20,10 @@ protected:
 	//virtual void BeginPlay() override;
 
 public:	
+
+	int e_id = 0;
 	// Called every frame
 	//virtual void Tick(float DeltaTime) override;
+	void set_event_id(int event_id);
 
 };

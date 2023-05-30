@@ -179,7 +179,14 @@ struct cs_packet_armymove
 
 };
 
+struct cs_packet_eventselect
+{
+	unsigned char size;
+	unsigned char type;
 
+	int s_option;
+	int e_id;
+};
 
 
 

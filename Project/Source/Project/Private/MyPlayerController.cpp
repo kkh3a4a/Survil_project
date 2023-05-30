@@ -457,5 +457,21 @@ void AMyPlayerController::select_event(sc_packet_eventselect* packet)
     First_text = FText::FromString(packet->first);
     Second_text = FText::FromString(packet->second);
     Third_text = FText::FromString(packet->third);
+    e_id = packet->e_id;
     e_select = packet->s_option;
+}
+
+void AMyPlayerController::do_event(int o_select)
+{
+    cs_packet_eventselect packet;
+    packet.e_id = e_id;
+    packet.s_option = o_select;
+
+    packet.size = sizeof(packet);
+    packet.type = CS_PACKET_EVENTSELECT;
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+
+    GameEventUI = false;
 }
