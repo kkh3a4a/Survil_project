@@ -1,11 +1,13 @@
 #include "GameEvent.h"
 #include"random"
+#include"Army.h"
 #include<iostream>
 
 GameEvent::GameEvent(int id)
 {
 	_id = id;
 	ev_type = EV_TYPE::EV_FREE;
+	g_player_id = -1;
 }
 
 void GameEvent::random_create()
@@ -13,8 +15,8 @@ void GameEvent::random_create()
 	std::uniform_int_distribution <int>map_uid{ 100, one_side_number - 100 };
 	std::default_random_engine dre;
 	dre.seed(rand() * _id);
-
-	
+	ev_type = random_ev[rand() % (static_cast<int>(EV_COUNT) - 1) + 1];
+	g_player_id = -1;
 	retry:
 	_x = map_uid(dre) * 100;
 	_y = map_uid(dre) * 100;
@@ -30,12 +32,14 @@ void GameEvent::random_create()
 
 }
 
-void GameEvent::check_event(int p_id)
+void GameEvent::check_event(int player_id, int army_id)
 {
 	//std::cout << p_id << " : check_event : "  << _id << std::endl;
 	sc_packet_eventselect packet;
 	int s_option = 1;
 	packet.e_id = _id;
+	a_id = army_id;
+	g_player_id = player_id;
 	switch (ev_type)
 	{
 	case GameEvent::EV_FREE:
@@ -104,16 +108,77 @@ void GameEvent::check_event(int p_id)
 	packet.size = sizeof(sc_packet_eventselect);
 	packet.s_option = s_option;
 
-	Player* player = reinterpret_cast<Player*>(objects[p_id]);
+	Player* player = reinterpret_cast<Player*>(objects[g_player_id]);
 	player->send_packet(&packet);
 
-	remove_event();
 }
 
 void GameEvent::do_event(int select_num)
 {
 	//std::cout<< _id << " select number :  " << select_num << std::endl;
-
+	Army* army = reinterpret_cast<Army*>(objects[a_id]);
+	switch (ev_type)
+	{
+	case GameEvent::EV_FREE:
+	{
+		DebugBreak();
+		break;
+	}
+	case GameEvent::EV_GETOIL:
+	{
+		if (select_num == 0)
+			army->_resource_amount[0] += resource_count[0];
+		break;
+	}
+	case GameEvent::EV_GETWATER:
+	{
+		if (select_num == 0)
+			army->_resource_amount[1] += resource_count[1];
+		break;
+	}
+	case GameEvent::EV_GETIRON:
+	{
+		if (select_num == 0)
+			army->_resource_amount[2] += resource_count[2];
+		break;
+	}
+	case GameEvent::EV_GETFOOD:
+	{
+		if (select_num == 0)
+			army->_resource_amount[3] += resource_count[3];
+		break;
+	}
+	case GameEvent::EV_GETWOOD:
+	{
+		if (select_num == 0)
+			army->_resource_amount[4] += resource_count[4];
+		break;
+	}
+	case GameEvent::EV_GETCITIZEN:
+	{
+		if (select_num == 0)
+		{
+			//½Ã¹ÎÀÌ¶û °°ÀÌ ¸¶À» ÀÌµ¿
+		}
+		else if (select_num == 1)
+		{
+			army->_resource_amount[3] += resource_count[3];
+			army->_resource_amount[3] += resource_count[1];
+		}
+		break;
+	}
+	case GameEvent::EV_COUNT:
+	{
+		DebugBreak();
+		break;
+	}
+	default:
+	{
+		DebugBreak();
+		break;
+	}
+	}
+	remove_event();
 }
 
 void GameEvent::remove_event()
@@ -132,4 +197,31 @@ void GameEvent::remove_event()
 			player->send_packet(&packet);
 		}
 	}
+}
+
+void GameEvent::reset_event()
+{
+	for (auto& a : resource_count)
+		a = 0;
+	citizen_count = 0;
+	a_id = 0;
+	g_player_id = -1;
+
+	std::uniform_int_distribution <int>map_uid{ 100, one_side_number - 100 };
+	std::default_random_engine dre;
+	dre.seed(rand() * _id);
+	ev_type = random_ev[rand() % (static_cast<int>(EV_COUNT) - 1) + 1];
+
+retry:
+	_x = map_uid(dre) * 100;
+	_y = map_uid(dre) * 100;
+	_z = 10;
+	for (int p_id = 0; p_id < MAXPLAYER; ++p_id)
+	{
+		if (!overlap_check(p_id, _id, 10000))
+			goto retry;
+	}
+	ev_type = random_ev[rand() % (static_cast<int>(EV_COUNT) - 1) + 1];
+	if (ev_type == EV_FREE || ev_type == EV_COUNT)
+		DebugBreak();
 }

@@ -136,6 +136,13 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 
 		break;
 	}
+	case CS_PACKET_ARMYRETURN:
+	{
+		cs_packet_armyreturn* packet = reinterpret_cast<cs_packet_armyreturn*>(pk);
+		Army* army = reinterpret_cast<Army*>(objects[packet->a_id]);
+		army->set_army_return_home();
+		break;
+	}
 
 	default:
 	{

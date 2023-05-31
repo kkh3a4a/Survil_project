@@ -53,6 +53,13 @@ public:
 	int joblessCitizen = 0;
 
 	/// <summary>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool ArmyUI = false;
+
+
+
+
+
 	/// ///////////////////////////////
 	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -87,6 +94,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void do_event(int o_select);
+
+	UFUNCTION(BlueprintCallable)
+	void Army_Return();
+
+	UFUNCTION(BlueprintCallable)
+	void Army_Remove();
+
 
 protected:
 	long long int mouse_cnt = 0;

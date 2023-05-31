@@ -186,6 +186,7 @@ void AMyPlayerController::MoveToMouseCursor()
             }
             ResourceUI = false;
             BuildingUI = false;
+            ArmyUI = false;
         }
         else if (hitActor->ActorHasTag("Resource"))
         {
@@ -197,19 +198,25 @@ void AMyPlayerController::MoveToMouseCursor()
             ResourceCount = ResourceManager->resource_amount[ObjectId];
             workcitizen = ResourceManager->workCitizens[ObjectId];
             joblessCitizen = Network->playerjobless;
+
+
             ResourceUI = true;
             BuildingUI = false;
+            ArmyUI = false;
         }
         else if (hitActor->ActorHasTag("Building"))
         {
             UE_LOG(LogTemp, Log, TEXT("type : %d"), FCString::Atoi(*hitActor->Tags[1].ToString()));
             ObjectType = BUILDINGSTART;
+
             ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
             ClickObjectType = FCString::Atoi(*hitActor->Tags[1].ToString());
             workcitizen = BuildManager->buildingWorkCount[ObjectId];
             joblessCitizen = Network->playerjobless;
+
             ResourceUI = false;
             BuildingUI = true;
+            ArmyUI = false;
         }
         else if (hitActor->ActorHasTag("Army"))
         {
@@ -219,6 +226,7 @@ void AMyPlayerController::MoveToMouseCursor()
 
             ResourceUI = false;
             BuildingUI = false;
+            ArmyUI = true;
         }
         else
         {
@@ -226,6 +234,7 @@ void AMyPlayerController::MoveToMouseCursor()
             ObjectType = 0;
             ResourceUI = false;
             BuildingUI = false;
+            ArmyUI = false;
             hitActor = NULL;
         }
     }
@@ -378,12 +387,8 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     //오른쪽 클릭 작업
     if(hitActor != NULL)
     {
-        if (ResourceUI == true)
+       if (ResourceUI == true)
         {
-            ResourceActor = hitActor;
-            ObjectType = RESOURCESTART;
-            ObjectId = FCString::Atoi(*hitActor->Tags[1].ToString());
-            ClickObjectType = ResourceManager->resource_type[ObjectId];
             ResourceCount = ResourceManager->resource_amount[ObjectId];
             workcitizen = ResourceManager->workCitizens[ObjectId];
             joblessCitizen = Network->playerjobless;
@@ -391,7 +396,6 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
         else if (BuildingUI == true)
         {
             joblessCitizen = Network->playerjobless;
-            ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
             workcitizen = BuildManager->buildingWorkCount[ObjectId];
         }
         else
@@ -474,4 +478,20 @@ void AMyPlayerController::do_event(int o_select)
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 
     GameEventUI = false;
+}
+
+void AMyPlayerController::Army_Return()
+{
+    cs_packet_armyreturn packet;
+    packet.size = sizeof(packet);
+    packet.type = CS_PACKET_ARMYRETURN;
+    packet.a_id = ObjectId + ObjectType;
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+
+}
+
+void AMyPlayerController::Army_Remove()
+{
 }

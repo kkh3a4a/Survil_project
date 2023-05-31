@@ -66,9 +66,9 @@ void Army::set_army_move()
 				if (object_find_check(e_id, _id, 10000))
 				{
 					Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-					if (object_find_check(e_id, _id, 500))
+					if (object_find_check(e_id, _id, 500) && g_event->g_player_id == -1)
 					{
-						g_event->check_event(_playerID);
+						g_event->check_event(_playerID, _id);
 					}
 					else
 						player->find_event(e_id);
@@ -103,4 +103,12 @@ void Army::set_army_arrival_location(float x, float y)
 	int temp_y = y;
 	_arrival_x = temp_x;
 	_arrival_y = temp_y;
+}
+
+void Army::set_army_return_home()
+{
+	float distance = sqrt(pow(_x - objects[_playerID]->_x, 2) + pow(_y - objects[_playerID]->_y, 2));
+	float ar_x = objects[_playerID]->_x - ((objects[_playerID]->_x - _x) / distance) * 1000;
+	float ar_y = objects[_playerID]->_y - ((objects[_playerID]->_y - _y) / distance) * 1000;
+	set_army_arrival_location(ar_x, ar_y);
 }

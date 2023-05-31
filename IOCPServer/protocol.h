@@ -59,10 +59,13 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_ARMYTRAINING		60
 #define CS_PACKET_ARMYMOVE			61
+#define CS_PACKET_ARMYRETURN		62
+#define CS_PACKET_ARMYREMOVE		63
 
 #define CS_PACKET_VIEWEVENT			70
 #define CS_PACKET_REMOVEEVENT		71
 #define CS_PACKET_EVENTSELECT		72
+
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -189,7 +192,13 @@ struct cs_packet_eventselect
 };
 
 
+struct cs_packet_armyreturn
+{
+	unsigned char size;
+	unsigned char type;
 
+	int a_id;
+};
 
 
 
