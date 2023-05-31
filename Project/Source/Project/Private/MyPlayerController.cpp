@@ -463,6 +463,7 @@ void AMyPlayerController::select_event(sc_packet_eventselect* packet)
     Third_text = FText::FromString(packet->third);
     e_id = packet->e_id;
     e_select = packet->s_option;
+
 }
 
 void AMyPlayerController::do_event(int o_select)

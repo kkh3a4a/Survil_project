@@ -432,4 +432,5 @@ struct sc_packet_eventselect
 	wchar_t summary[30]{};
 	wchar_t first[20]{}, second[20]{}, third[20]{};
 	int e_id;
+	int e_type;
 };

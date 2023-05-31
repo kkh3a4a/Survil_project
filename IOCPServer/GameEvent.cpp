@@ -40,6 +40,7 @@ void GameEvent::check_event(int player_id, int army_id)
 	packet.e_id = _id;
 	a_id = army_id;
 	g_player_id = player_id;
+	packet.e_type = static_cast<int>(ev_type);
 	switch (ev_type)
 	{
 	case GameEvent::EV_FREE:

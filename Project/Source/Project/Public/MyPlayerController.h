@@ -80,6 +80,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int e_select = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int e_type = 0;
+
 	int e_id = 0;
 	/// //////////////////////////////////////////
 	AActor* ResourceActor;
@@ -100,6 +103,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Army_Remove();
+
 
 
 protected:
