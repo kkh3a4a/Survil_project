@@ -102,7 +102,7 @@ public:
 	void Army_Return();
 
 	UFUNCTION(BlueprintCallable)
-	void Army_Remove();
+	void Army_Disband();
 
 
 

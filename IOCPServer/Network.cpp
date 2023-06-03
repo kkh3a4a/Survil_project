@@ -143,7 +143,13 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		army->set_army_return_home();
 		break;
 	}
-
+	case CS_PACKET_ARMYDISBAND:
+	{
+		cs_packet_armydisband* packet = reinterpret_cast<cs_packet_armydisband*>(pk);
+		Army* army = reinterpret_cast<Army*>(objects[packet->a_id]);
+		army->set_army_disband();
+		break;
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

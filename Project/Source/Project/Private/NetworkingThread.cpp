@@ -311,6 +311,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MyController->select_event(packet);
 			break;
 		}
+		case SC_PACKET_ARMYDISBAND:
+		{
+			sc_packet_armydisband* packet = reinterpret_cast<sc_packet_armydisband*>(buf);
+			if (packet->issuccess)
+				_CitizenManager->Set_Army_Disband(packet->a_id - ARMYSTART);
+		}
 
 		default:
 		{

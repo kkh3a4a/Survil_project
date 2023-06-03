@@ -60,7 +60,7 @@ constexpr int city_size = 100;
 #define CS_PACKET_ARMYTRAINING		60
 #define CS_PACKET_ARMYMOVE			61
 #define CS_PACKET_ARMYRETURN		62
-#define CS_PACKET_ARMYREMOVE		63
+#define CS_PACKET_ARMYDISBAND		63
 
 #define CS_PACKET_VIEWEVENT			70
 #define CS_PACKET_REMOVEEVENT		71
@@ -94,6 +94,7 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_ARMYTRAINING		60
 #define SC_PACKET_ARMYMOVE			61
+#define SC_PACKET_ARMYDISBAND		63
 
 #define SC_PACKET_VIEWEVENT			70
 #define SC_PACKET_REMOVEEVENT		71
@@ -200,6 +201,13 @@ struct cs_packet_armyreturn
 	int a_id;
 };
 
+struct cs_packet_armydisband
+{
+	unsigned char size;
+	unsigned char type;
+
+	int a_id;
+};
 
 
 
@@ -393,7 +401,14 @@ struct  sc_packet_armytraining
 	float x, y, z;
 	int army_id;
 };
+struct sc_packet_armydisband
+{
+	unsigned char size;
+	unsigned char type;
 
+	int issuccess;
+	int a_id;
+};
 
 struct sc_packet_armymove
 {
@@ -404,7 +419,6 @@ struct sc_packet_armymove
 	float rx, ry, rz;
 	char  a_state;
 };
-#pragma pack (pop)
 
 struct sc_packet_viewevnet
 {
@@ -434,3 +448,6 @@ struct sc_packet_eventselect
 	int e_id;
 	int e_type;
 };
+
+
+#pragma pack (pop)

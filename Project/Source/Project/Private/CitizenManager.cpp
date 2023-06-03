@@ -54,10 +54,18 @@ void ACitizenManager::Spawn_Citizen(int citizen_id, FVector Location)
     UWorld* uworld = GetWorld();
     if (uworld == nullptr)
         return;
-    if(Network->my_id == (citizen_id / 200))
-         citizen[citizen_id] = uworld->SpawnActor<ACitizen>(MyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-    else  if (Network->my_id != (citizen_id / 200))
-         citizen[citizen_id] = uworld->SpawnActor<ACitizen>(EnemyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+    if(citizen[citizen_id] == nullptr)
+    {
+        if (Network->my_id == (citizen_id / 200))
+            citizen[citizen_id] = uworld->SpawnActor<ACitizen>(MyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+        else  if (Network->my_id != (citizen_id / 200))
+            citizen[citizen_id] = uworld->SpawnActor<ACitizen>(EnemyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+    }
+    else
+    {
+        citizen[citizen_id]->SetActorHiddenInGame(false);
+        citizen[citizen_id]->SetActorLocation(Location);
+    }
 
     ACitizen* citi = reinterpret_cast<ACitizen*>(citizen[citizen_id]);
     citi->_id = citizen_id;
@@ -114,6 +122,16 @@ void ACitizenManager::Set_Army_Location(int a_id, FVector Location, FRotator Rot
             AArmy* a = reinterpret_cast<AArmy*>(army[a_id]);
             a->state = a_state;
         }
+    }
+
+}
+
+void ACitizenManager::Set_Army_Disband(int a_id)
+{
+    if (army[a_id] != nullptr)
+    {
+        army[a_id]->Destroy();
+        army[a_id] = nullptr;
     }
 
 }

@@ -21,4 +21,5 @@ public:
 	void set_army_move();
 	void set_army_arrival_location(float x, float y);
 	void set_army_return_home();
+	void set_army_disband();
 };
