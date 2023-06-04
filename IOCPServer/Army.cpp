@@ -36,6 +36,7 @@ void Army::SpawnArmy(float x, float y, float z)
 
 void Army::set_army_move()
 {
+	
 	if (_x != _arrival_x || _y != _arrival_y)
 	{
 		char state = 1;
@@ -74,9 +75,32 @@ void Army::set_army_move()
 					else
 						player->find_event(e_id);
 				}
+				if (g_event->ev_type == g_event->EV_GETCITIZEN)
+				{
+					Player* player = reinterpret_cast<Player*>(objects[0]);
+					player->find_event(g_event->_id);
+				}
 			}
 		}
+		if (object_find_check(_id, _playerID, 7500))
+		{
+			Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 
+			for(int i=0;i < 5;++i)
+			{
+				if (_resource_amount[i] > 0)
+				{
+					player->_resource_amount[i] += _resource_amount[i];
+					_resource_amount[i] = 0;
+				}
+			}
+			if (_Gypsy_citizen > 0)
+			{
+				player->create_citizen(_Gypsy_citizen);
+				_Gypsy_citizen = 0;
+				is_escort = false;
+			}
+		}
 		
 		//_z = (object_z[_i_x / 100][_i_y / 100]) * 50;
 		sc_packet_armymove packet;
@@ -122,6 +146,8 @@ void Army::set_army_disband()
 
 	packet.issuccess = object_find_check(_id, _playerID, 7500);
 	packet.a_id = _id;
+
+	_Gypsy_citizen = 0;
 	if (packet.issuccess == false)
 	{
 		reinterpret_cast<Player*>(objects[_playerID])->send_packet(&packet);

@@ -10,12 +10,14 @@ public:
 
 	enum A_STATE { ST_FREE, ST_TRAINING, ST_CONPLETE };
 	int _citizens[5]{};
-	A_STATE _a_state;	//-1 : 배정 X, 0 : 배정대기, 1 : army
+	A_STATE _a_state;	
 	
 
 	float _arrival_x, _arrival_y, _arrival_z;
 	int _playerID;
 	int _resource_amount[5] = {};
+	int _Gypsy_citizen = 0;
+	bool is_escort = false;
 
 	void SpawnArmy(float x, float y, float z);
 	void set_army_move();

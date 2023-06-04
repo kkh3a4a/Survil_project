@@ -26,7 +26,8 @@ void GameEvent::random_create()
 		if (!overlap_check(p_id, _id, 10000))
 			goto retry;
 	}
-	ev_type = random_ev[rand() % (static_cast<int>(EV_COUNT) - 1) + 1];
+	ev_type = EV_GETCITIZEN;
+	
 	if (ev_type == EV_FREE || ev_type == EV_COUNT)
 		DebugBreak();
 
@@ -159,12 +160,15 @@ void GameEvent::do_event(int select_num)
 	{
 		if (select_num == 0)
 		{
+			army->set_army_return_home();
+			army->_Gypsy_citizen = citizen_count;
+			army->is_escort = true;
 			//½Ã¹ÎÀÌ¶û °°ÀÌ ¸¶À» ÀÌµ¿
 		}
 		else if (select_num == 1)
 		{
 			army->_resource_amount[3] += resource_count[3];
-			army->_resource_amount[3] += resource_count[1];
+			army->_resource_amount[1] += resource_count[1];
 		}
 		break;
 	}

@@ -45,4 +45,6 @@ public:
 	void playerMinimapLocation(float mini_x, float mini_y);
 	void find_event(int e_id);
 
+	void create_citizen(int num);
+
 };

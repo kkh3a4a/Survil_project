@@ -125,7 +125,8 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	{
 		cs_packet_armymove* packet = reinterpret_cast<cs_packet_armymove*>(pk);
 		Army* army = reinterpret_cast<Army*>(objects[packet->a_id]);
-		army->set_army_arrival_location(packet->x, packet->y);
+		if (!army->is_escort)	//  시민 호위중엔 마을로만 직진
+			army->set_army_arrival_location(packet->x, packet->y);
 		break;
 	}
 	case CS_PACKET_EVENTSELECT:

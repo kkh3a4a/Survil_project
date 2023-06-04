@@ -383,4 +383,45 @@ void Player::find_event(int e_id)
 	send_packet(&packet);
 }
 
+void Player::create_citizen(int num)
+{
+	int count = 0;
+	int line = 0;
+	for (int c_id = CITIZENSTART + PLAYERCITIZENCOUNT * _id; c_id < CITIZENSTART + PLAYERCITIZENCOUNT * (_id + 1); c_id++)
+	{
+		Citizen* citizen = reinterpret_cast<Citizen*>(objects[c_id]);
+		if (citizen->_job == -1)
+		{
+			if ((count + 1) % 10 != 0)
+			{
+				citizen->set_citizen_spwan_location(_x + (count - 5 - (line * 10)) * 200 , _y + 500 +line * 200, _z);
+			}
+			else
+			{
+				line++;
+				citizen->set_citizen_spwan_location(_x + (count - 5 - (line * 10)) * 200, _y + 500 + line * 200, _z);
+			}
+			for (int i = 0; i < MAXPLAYER; ++i)
+			{
+				sc_packet_citizencreate packet;
+				packet.x = citizen->_x;
+				packet.y = citizen->_y;
+				packet.z = citizen->_z;
+				packet.citizenid = citizen->_id;
+
+				packet.size = sizeof(sc_packet_citizencreate);
+				packet.type = SC_PACKET_CITIZENCREATE;
+				Player* player = reinterpret_cast<Player*>(objects[i]);
+				player->send_packet(&packet);
+			}
+			count++;
+		}
+		
+
+
+		if (num == count)
+			break;
+	}
+}
+
 
