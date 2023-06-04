@@ -102,6 +102,9 @@ constexpr int city_size = 100;
 #define SC_PACKET_REMOVEEVENT		71
 #define SC_PACKET_EVENTSELECT		72
 
+#define SC_PACKET_POLICY_TICKET		80
+
+
 #pragma pack (push, 1)
 struct cs_packet_login
 {
@@ -459,6 +462,14 @@ struct sc_packet_eventselect
 	wchar_t first[20]{}, second[20]{}, third[20]{};
 	int e_id;
 	int e_type;
+};
+
+struct sc_packet_policy_ticket
+{
+	unsigned char size = sizeof(sc_packet_policy_ticket);
+	unsigned char type = SC_PACKET_POLICY_TICKET;
+
+	int num_of_ticket;	//서버와 동기화되어있어야함
 };
 
 
