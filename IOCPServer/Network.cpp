@@ -151,6 +151,12 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		army->set_army_disband();
 		break;
 	}
+	case CS_PACKET_POLICY:
+	{
+		cs_packet_policy* packet = reinterpret_cast<cs_packet_policy*>(pk);
+		player->_policy.set_policy(packet->policy_id);
+		break;
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

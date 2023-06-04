@@ -6,8 +6,6 @@
 class Player : public Object
 {
 public:
-	
-
 	STATE _state;
 	SOCKET _socket;
 	WSA_OVER_EX _wsa_recv_over;
@@ -46,5 +44,4 @@ public:
 	void find_event(int e_id);
 
 	void create_citizen(int num);
-
 };

@@ -66,6 +66,8 @@ constexpr int city_size = 100;
 #define CS_PACKET_REMOVEEVENT		71
 #define CS_PACKET_EVENTSELECT		72
 
+#define CS_PACKET_POLICY			80
+
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -126,6 +128,7 @@ struct cs_packet_citizenmove
 	unsigned char size;
 	unsigned char type;
 	int citizenid;
+	
 	float x, y, z;
 };
 
@@ -141,6 +144,7 @@ struct cs_packet_citizenplacement
 {
 	unsigned char size;
 	unsigned char type;
+	
 	int objectid;
 	char isplus;
 
@@ -164,7 +168,6 @@ struct cs_packet_build
 	float x, y;
 };
 
-
 struct cs_packet_minimap
 {
 	unsigned char size;
@@ -180,7 +183,6 @@ struct cs_packet_armymove
 
 	float x, y;
 	int a_id;
-
 };
 
 struct cs_packet_eventselect
@@ -191,7 +193,6 @@ struct cs_packet_eventselect
 	int s_option;
 	int e_id;
 };
-
 
 struct cs_packet_armyreturn
 {
@@ -209,9 +210,19 @@ struct cs_packet_armydisband
 	int a_id;
 };
 
+struct cs_packet_policy
+{
+	unsigned char size = sizeof(cs_packet_policy);
+	unsigned char type = CS_PACKET_POLICY;
 
-
-
+	int policy_id;
+	// 0: 든든한 식사, 1:스프밥, 2: 밀주
+	// 3: 연명치료, 4: 극약처방, 5: 과잉수용, 6: 환자추가배식, 7: 마약치료 8: 요양원, 9: 의수족
+	// 10: 장례식, 11: 시체저장소, 12: 장기이식, 13: 식인, 14: 추모비
+	// 15: 자경단, 16: 경비초소, 17: 교도소, 18: 계엄령, 19: 독재자
+	// 20: 비상교대근무, 21: 연장근무, 22: 감찰관, 23: 강제노동
+	// 24: 아동노동, 25: 보육원, 26: 학도병징집, 27: 작업지원
+};
 
 
 
@@ -292,6 +303,7 @@ struct sc_packet_resourceamount
 	int resourceid;
 	int amount;
 };
+
 struct sc_packet_playerresource
 {
 	unsigned char size;
@@ -299,7 +311,6 @@ struct sc_packet_playerresource
 
 	int resources_acount[5];
 };
-
 
 struct sc_packet_terrainAll
 {
@@ -401,6 +412,7 @@ struct  sc_packet_armytraining
 	float x, y, z;
 	int army_id;
 };
+
 struct sc_packet_armydisband
 {
 	unsigned char size;

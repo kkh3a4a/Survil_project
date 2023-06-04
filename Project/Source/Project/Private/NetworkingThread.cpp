@@ -22,7 +22,6 @@ NetworkingThread::~NetworkingThread()
 	
 }
 
-
 WSA_OVER_EX::WSA_OVER_EX()
 {
 	//exit(-1);

@@ -1,9 +1,13 @@
 #pragma once
+#include <iostream>
+
 class Policy
 {
 public:
 	Policy();
 	~Policy();
+
+	void set_policy(int policy_id);
 	
 	
 	bool police = false;							//ÀÚ°æ´Ü
