@@ -154,7 +154,32 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	case CS_PACKET_POLICY:
 	{
 		cs_packet_policy* packet = reinterpret_cast<cs_packet_policy*>(pk);
-		player->_policy.set_policy(packet->policy_id);
+		if (player->_policy.policy_ticket > 0) {
+			std::cout << "정책 적용\n";
+			int duplication = player->_policy.set_policy(packet->policy_id);
+			if (duplication) {
+				std::cout << "정책 중복\n";
+				sc_packet_policy_accept sc_packet;
+				sc_packet.ticket = player->_policy.policy_ticket;
+				sc_packet.accept = false;
+				player->send_packet(&sc_packet);
+				break;
+			}
+			
+			player->_policy.policy_ticket--;
+
+			sc_packet_policy_accept sc_packet;
+			sc_packet.ticket = player->_policy.policy_ticket;
+			sc_packet.accept = true;
+			player->send_packet(&sc_packet);
+		}
+		else {
+			std::cout << "정책 티켓 부족\n";
+			sc_packet_policy_accept sc_packet;
+			sc_packet.ticket = player->_policy.policy_ticket;
+			sc_packet.accept = false;
+			player->send_packet(&sc_packet);
+		}
 		break;
 	}
 	default:
@@ -293,5 +318,3 @@ bool object_find_check(int id1, int id2, float range)
 	if (abs(objects[id1]->_y - objects[id2]->_y) > range) return false;
 	return true;
 }
-
-

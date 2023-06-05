@@ -179,9 +179,14 @@ void AMain::SetSunAngle(float s_sunangle)
 
 void AMain::SendPolicyPacket(int PolicyID)
 {
-	cs_packet_policy packet;
-	packet.policy_id = PolicyID;
-	//UE_LOG(LogTemp, Log, TEXT("send Policy"));
-	WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
-	WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+	if (policy_ticket > 0) {
+		cs_packet_policy packet;
+		packet.policy_id = PolicyID;
+		//UE_LOG(LogTemp, Log, TEXT("send Policy"));
+		WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+		WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+	}
+	else {
+		//∫Œ¡∑
+	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "Network.h"
 
 class Policy
 {
@@ -7,7 +8,8 @@ public:
 	Policy();
 	~Policy();
 
-	void set_policy(int policy_id);
+	bool set_policy(int policy_id);
+	int policy_ticket{10};
 	
 	
 	bool police = false;							//ÀÚ°æ´Ü

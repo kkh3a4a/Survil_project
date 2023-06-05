@@ -90,12 +90,14 @@ public:
 	void SetPlayerLocation(float x, float y, float z);
 	void SetOtherPlayerLocation(float x, float y, float z);
 	void SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount);
-	UFUNCTION(BlueprintCallable, Category = "My Category")
-	void SendPolicyPacket(int PolicyID);
 
 	void SetSunAngle(float s_sunangle);
 	int testterrain = 0;
 
 	FVector DestLocation;
+
+	UFUNCTION(BlueprintCallable, Category = "Policy")
+	void SendPolicyPacket(int PolicyID);
+	int policy_ticket{0};
 };
 

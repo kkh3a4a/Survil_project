@@ -315,8 +315,28 @@ void FSocketThread::processpacket(unsigned char* buf)
 			sc_packet_armydisband* packet = reinterpret_cast<sc_packet_armydisband*>(buf);
 			if (packet->issuccess)
 				_CitizenManager->Set_Army_Disband(packet->a_id - ARMYSTART);
+			break;
 		}
+		case SC_PACKET_POLICY_TICKET:
+		{
+			sc_packet_policy_ticket* packet = reinterpret_cast<sc_packet_policy_ticket*>(buf);
+			UE_LOG(LogTemp, Warning, TEXT("%dpolicy tickets left"), packet->ticket);
 
+			break;
+		}
+		case SC_PACKET_POLICY_ACCEPT:
+		{
+			sc_packet_policy_accept* packet = reinterpret_cast<sc_packet_policy_accept*>(buf);
+			UE_LOG(LogTemp, Warning, TEXT("%d policy tickets left"), packet->ticket);
+			
+			if (packet->accept) {
+				UE_LOG(LogTemp, Warning, TEXT("policy allowed"));
+			}
+			else {
+				UE_LOG(LogTemp, Warning, TEXT("policy not allowed"));
+			}
+			break;
+		}
 		default:
 		{
 			//DebugBreak();

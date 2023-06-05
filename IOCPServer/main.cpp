@@ -64,7 +64,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		{
 			clock_t start = clock();
 			terrain_start = std::chrono::system_clock::now();
-			cout << endl << i << "번째" << endl;
+			//cout << endl << i << "번째" << endl;
 
 			terrain->wind_blow({ 1, 0 }, 1);
 			terrain->add_object_height();
@@ -72,7 +72,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 			terrain->make_tempertature_map(sun_angle);
 			CC retval = terrain->get_highest_lowest(temperature_map);
 
-			cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
+			//cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
 
 			//terrain->show_array(total_terrain, 320);
 			//terrain->show_array(shadow_map, 320);
@@ -84,7 +84,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 			}
 			i++;
 			clock_t end = clock();
-			cout << "걸린시간: " << (double)(end - start) / CLOCKS_PER_SEC << endl;
+			//cout << "걸린시간: " << (double)(end - start) / CLOCKS_PER_SEC << endl;
 			is_terrain_changed = true;
 		}
 		else
@@ -137,7 +137,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			
 			sun_angle += 2.f * cycle_time / 1000.f;
 			//sun_angle = 45.f;
-			if (sun_angle >= 360.f) 
+			if (sun_angle >= 360.f)		//하루에 한번 하는거
 			{
 				sun_angle -= 360.f;
 				IsNight = false;
@@ -151,6 +151,15 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						citizen->_arrival_x = citizen->_job_x;
 						citizen->_arrival_y = citizen->_job_y;
 					}
+				}
+
+				//정책 한번 주기
+				for (int i = 0; i < MAXPLAYER; ++i)
+				{
+					Player* player = reinterpret_cast<Player*>(objects[i]);
+					sc_packet_policy_ticket packet;
+					packet.ticket = ++player->_policy.policy_ticket;
+					player->send_packet(&packet);
 				}
 			}
 			else if (sun_angle >= 180.f)
@@ -206,10 +215,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 						citizen->citizen_eat_food();	//먹기
 						citizen->citizen_eat_water();	//마시기
-						cout << (int)citizen->_thirsty << ", " << (int)citizen->_satiety << ", " << (int)citizen->_hp << endl;
-						num_citizen++;
+						//cout << (int)citizen->_thirsty << ", " << (int)citizen->_satiety << ", " << (int)citizen->_hp << endl;
+						//num_citizen++;
 					}
-					cout << "num_citizen : " << num_citizen << endl;
+					//cout << "num_citizen : " << num_citizen << endl;
 					player->send_resource_amount();
 				}
 			}
