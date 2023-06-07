@@ -219,7 +219,7 @@ struct cs_packet_policy
 	unsigned char size = sizeof(cs_packet_policy);
 	unsigned char type = CS_PACKET_POLICY;
 
-	int policy_id;
+	char policy_id;
 	// 0: 든든한 식사, 1:스프밥, 2: 밀주
 	// 3: 연명치료, 4: 극약처방, 5: 과잉수용, 6: 환자추가배식, 7: 마약치료 8: 요양원, 9: 의수족
 	// 10: 장례식, 11: 시체저장소, 12: 장기이식, 13: 식인, 14: 추모비
@@ -470,7 +470,7 @@ struct sc_packet_policy_ticket
 	unsigned char size = sizeof(sc_packet_policy_ticket);
 	unsigned char type = SC_PACKET_POLICY_TICKET;
 
-	int ticket;
+	char ticket;
 };
 
 struct sc_packet_policy_accept
@@ -478,8 +478,9 @@ struct sc_packet_policy_accept
 	unsigned char size = sizeof(sc_packet_policy_accept);
 	unsigned char type = SC_PACKET_POLICY_ACCEPT;
 
+	char policy_id;
 	bool accept;
-	int ticket;
+	char ticket;
 };
 
 #pragma pack (pop)

@@ -30,6 +30,6 @@ public:
 	void set_citizen_move();
 	void citizen_dead();
 	void citizen_eat_food();
-	void citizen_eat_water();
+	void  citizen_eat_water();
 };
 

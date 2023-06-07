@@ -101,6 +101,8 @@ void AMain::BeginPlay()
 	Network->_MainClass = this;
 	Network->_BuildManager = BuildManager;
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
+
+	applied_policy.SetNum(28);
 }
 
 // Called every frame
@@ -156,7 +158,6 @@ void AMain::SetOtherPlayerLocation(float x, float y, float z)
 	FVector Location(x, y, z);
 	if (uworld != nullptr)
 		uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
-
 }
 
 void AMain::SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount)
@@ -177,16 +178,40 @@ void AMain::SetSunAngle(float s_sunangle)
 	}
 }
 
-void AMain::SendPolicyPacket(int PolicyID)
+bool AMain::SendPolicyPacket(int PolicyID)
 {
 	if (policy_ticket > 0) {
+		switch (PolicyID) {
+		case 2: if (!applied_policy[0] && !applied_policy[1]) return false; break;
+		case 5: if (!applied_policy[3] && !applied_policy[4]) return false; break;
+		case 6: if (!applied_policy[3] && !applied_policy[4]) return false; break;
+		case 7: if (!applied_policy[5] && !applied_policy[6]) return false; break;
+		case 8: if (!applied_policy[3] && !applied_policy[4]) return false; break;
+		case 9: if (!applied_policy[8]) return false; break;
+		case 12: if (!applied_policy[10] && !applied_policy[11]) return false; break;
+		case 13: if (!applied_policy[12]) return false; break;
+		case 14: if (!applied_policy[10] && !applied_policy[11]) return false; break;
+		case 16: if (!applied_policy[15]) return false; break;
+		case 17: if (!applied_policy[16]) return false; break;
+		case 18: if (!applied_policy[16]) return false; break;
+		case 19: if (!applied_policy[18]) return false; break;
+		case 21: if (!applied_policy[20]) return false; break;
+		case 22: if (!applied_policy[20]) return false; break;
+		case 23: if (!applied_policy[22]) return false; break;
+		case 26: if (!applied_policy[24] && !applied_policy[25]) return false; break;
+		case 27: if (!applied_policy[24] && !applied_policy[25]) return false; break;
+		}
+
 		cs_packet_policy packet;
 		packet.policy_id = PolicyID;
-		//UE_LOG(LogTemp, Log, TEXT("send Policy"));
+		UE_LOG(LogTemp, Log, TEXT("send Policy"));
 		WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
 		WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+		return true;
 	}
 	else {
 		//∫Œ¡∑
+		UE_LOG(LogTemp, Log, TEXT("no policy ticket"));
+		return false;
 	}
 }

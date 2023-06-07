@@ -8,9 +8,9 @@ public:
 	Policy();
 	~Policy();
 
-	bool set_policy(int policy_id);
+	int set_policy(int policy_id);
 	int policy_ticket{10};
-	
+	bool policy_array[28];
 	
 	bool police = false;							//자경단
 	bool guard_post = false;						//경비 초소

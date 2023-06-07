@@ -19,6 +19,7 @@
 #include "Camera/CameraActor.h"
 #include "Camera/CameraComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "UMGEditor/Public/WidgetBlueprint.h"
 #include "Main.generated.h"
 
 using namespace std;
@@ -97,7 +98,11 @@ public:
 	FVector DestLocation;
 
 	UFUNCTION(BlueprintCallable, Category = "Policy")
-	void SendPolicyPacket(int PolicyID);
-	int policy_ticket{0};
-};
+	bool SendPolicyPacket(int PolicyID);
+	int policy_ticket{10};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray <bool> applied_policy;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UWidgetBlueprint* PolicyUI;
 
+};

@@ -9,7 +9,7 @@ public class Project : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Landscape", "Networking", "ProceduralMeshComponent", "Sockets" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "Landscape", "Networking", "ProceduralMeshComponent", "Sockets", "UMGEditor" });
 
 
         PrivateDependencyModuleNames.AddRange(new string[] {  });

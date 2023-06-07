@@ -8,10 +8,32 @@ Policy::~Policy()
 {
 }
 
-bool Policy::set_policy(int policy_id)
+int Policy::set_policy(int policy_id)
 {
 
 	std::cout << "set_policy " << policy_id << std::endl;
+	
+	switch (policy_id) {
+	case 2: if (!policy_array[0] && !policy_array[1]) return 2; break;
+	case 5: if (!policy_array[3] && !policy_array[4]) return 2; break;
+	case 6: if (!policy_array[3] && !policy_array[4]) return 2; break;
+	case 7: if (!policy_array[5] && !policy_array[6]) return 2; break;
+	case 8: if (!policy_array[3] && !policy_array[4]) return 2; break;
+	case 9: if (!policy_array[8]) return 2; break;
+	case 12: if (!policy_array[10] && !policy_array[11]) return 2; break;
+	case 13: if (!policy_array[12]) return 2; break;
+	case 14: if (!policy_array[10] && !policy_array[11]) return 2; break;
+	case 16: if (!policy_array[15]) return 2; break;
+	case 17: if (!policy_array[16]) return 2; break;
+	case 18: if (!policy_array[16]) return 2; break;
+	case 19: if (!policy_array[18]) return 2; break;
+	case 21: if (!policy_array[20]) return 2; break;
+	case 22: if (!policy_array[20]) return 2; break;
+	case 23: if (!policy_array[22]) return 2; break;
+	case 26: if (!policy_array[24] && !policy_array[25]) return 2; break;
+	case 27: if (!policy_array[24] && !policy_array[25]) return 2; break;
+	}
+	
 	bool duplication = false;
  	switch (policy_id)
 	{
@@ -130,6 +152,7 @@ bool Policy::set_policy(int policy_id)
 	default:
 		break;
 	}
+	policy_array[policy_id] = true;
 	return duplication;
 
 	// 0: 든든한 식사, 1:스프밥, 2: 밀주
