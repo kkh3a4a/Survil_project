@@ -26,7 +26,6 @@ void GameEvent::random_create()
 		if (!overlap_check(p_id, _id, 10000))
 			goto retry;
 	}
-	ev_type = EV_GETCITIZEN;
 	
 	if (ev_type == EV_FREE || ev_type == EV_COUNT)
 		DebugBreak();

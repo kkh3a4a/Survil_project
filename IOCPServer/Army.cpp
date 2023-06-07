@@ -75,14 +75,14 @@ void Army::set_army_move()
 					else
 						player->find_event(e_id);
 				}
-				if (g_event->ev_type == g_event->EV_GETCITIZEN)
+				/*if (g_event->ev_type == g_event->EV_GETCITIZEN)
 				{
 					Player* player = reinterpret_cast<Player*>(objects[0]);
 					player->find_event(g_event->_id);
-				}
+				}*/
 			}
 		}
-		if (object_find_check(_id, _playerID, 7500))
+		if (object_find_check(_id, _playerID, 5500))
 		{
 			Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 
@@ -144,7 +144,7 @@ void Army::set_army_disband()
 	packet.size = sizeof(packet);
 	packet.type = SC_PACKET_ARMYDISBAND;
 
-	packet.issuccess = object_find_check(_id, _playerID, 7500);
+	packet.issuccess = object_find_check(_id, _playerID, 6500);
 	packet.a_id = _id;
 
 	_Gypsy_citizen = 0;
