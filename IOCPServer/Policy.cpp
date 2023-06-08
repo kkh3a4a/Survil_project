@@ -78,15 +78,15 @@ int Policy::set_policy(int policy_id)
 		prosthetic_limb = true;
 		break;
 	case 10:
-		if (police) duplication = true;
+		if (funeral) duplication = true;
 		funeral = true;
 		break;
 	case 11:
-		if (memorial) duplication = true;
+		if (body_storage) duplication = true;
 		body_storage = true;
 		break;
 	case 12:
-		if (body_storage) duplication = true;
+		if (organ_transplant) duplication = true;
 		organ_transplant = true;
 		break;
 	case 13:

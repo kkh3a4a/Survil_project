@@ -99,7 +99,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Policy")
 	bool SendPolicyPacket(int PolicyID);
-	int policy_ticket{10};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int policy_ticket = 10;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray <bool> applied_policy;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -181,6 +181,8 @@ void AMain::SetSunAngle(float s_sunangle)
 bool AMain::SendPolicyPacket(int PolicyID)
 {
 	if (policy_ticket > 0) {
+		if (applied_policy[PolicyID]) return false;
+
 		switch (PolicyID) {
 		case 2: if (!applied_policy[0] && !applied_policy[1]) return false; break;
 		case 5: if (!applied_policy[3] && !applied_policy[4]) return false; break;
