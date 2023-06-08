@@ -78,8 +78,8 @@ void AMyPlayerController::SetupInputComponent()
 
     InputComponent->BindAction("Build", IE_Pressed, this, &AMyPlayerController::BuildMode);
     InputComponent->BindAction("1", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse);
-    InputComponent->BindAction("2", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse2);
-    InputComponent->BindAction("3", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse3);
+    InputComponent->BindAction("2", IE_Pressed, this, &AMyPlayerController::SelectBuildingWaterDrill);
+    InputComponent->BindAction("3", IE_Pressed, this, &AMyPlayerController::SelectBuildingLaboratory);
     InputComponent->BindAction("4", IE_Pressed, this, &AMyPlayerController::SelectBuildingHunterHouse);
     InputComponent->BindAction("5", IE_Pressed, this, &AMyPlayerController::SelectBuildingARMYCAMP);
 
@@ -328,19 +328,97 @@ void AMyPlayerController::SelectBuildingHouse()
     }
 }
 
-void AMyPlayerController::SelectBuildingHouse2()
+void AMyPlayerController::SelectBuildingOilDrill()
 {
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 2;
     }
 }
 
-void AMyPlayerController::SelectBuildingHouse3()
+void AMyPlayerController::SelectBuildingWaterDrill()
 {
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 3;
     }
 }
+
+void AMyPlayerController::SelectBuildingSawMill()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 4;
+    }
+}
+
+void AMyPlayerController::SelectBuildingSteelMill()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 5;
+    }
+}
+
+void AMyPlayerController::SelectBuildingLaboratory()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 6;
+    }
+}
+
+void AMyPlayerController::SelectBuildingWarehouse()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 7;
+    }
+}
+
+void AMyPlayerController::SelectBuildingNursery()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 8;
+    }
+}
+
+void AMyPlayerController::SelectBuildingMedicalCenter()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 9;
+    }
+}
+
+void AMyPlayerController::SelectBuildingArmyCenter()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 10;
+    }
+}
+
+void AMyPlayerController::SelectBuildingGuardPost()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 11;
+    }
+}
+
+void AMyPlayerController::SelectBuildingExchangeStation()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 12;
+    }
+}
+
+void AMyPlayerController::SelectBuildingGreenHouse()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 13;
+    }
+}
+
+void AMyPlayerController::SelectBuildingFactory()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 14;
+    }
+}
+
 
 void AMyPlayerController::SelectBuildingHunterHouse()
 {

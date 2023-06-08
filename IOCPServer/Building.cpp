@@ -29,7 +29,7 @@ bool Building::_create_building(float x, float y, char type,int id)
 	
 	switch (type)
 	{
-	case 1:
+	case 1:	// house
 	{
 		if (player->_resource_amount[4] < 10)
 		{
@@ -62,7 +62,7 @@ bool Building::_create_building(float x, float y, char type,int id)
 		}
 		break;
 	}
-	case 2:
+	case 2:	// oil drill
 	{
 		if (player->_resource_amount[4] < 20 || player->_resource_amount[2] < 10)
 		{
@@ -95,7 +95,7 @@ bool Building::_create_building(float x, float y, char type,int id)
 		}
 		break;
 	}
-	case 3:
+	case 3:	// water drill
 	{
 		if (player->_resource_amount[4] < 30 || player->_resource_amount[2] < 20)
 		{
@@ -129,7 +129,105 @@ bool Building::_create_building(float x, float y, char type,int id)
 		
 		break;
 	}
-	case 11:
+	case 4:	// saw mill
+	{
+		if (player->_resource_amount[4] < 10)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 10;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+	case 5: // steel mill
+	{
+		if (player->_resource_amount[4] < 30)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 30;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+	case 6: // laboratory
+	{
+		if (player->_resource_amount[4] < 15 || player->_resource_amount[2] < 5)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -=15; player->_resource_amount[2] -= 5;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+	case 7: // warehouse
+	{
+		if (player->_resource_amount[4] < 20 || player->_resource_amount[2] < 5)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 20; player->_resource_amount[2] -= 5;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+	case 8: // nursery
+	{
+		if (player->_resource_amount[4] < 20 || player->_resource_amount[2] < 10)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 20; player->_resource_amount[2] -= 10;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+	case 9: // medical center
+	{
+		if (player->_resource_amount[4] < 20)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 20;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+	case 10: // army center
+	{
+		if (player->_resource_amount[4] < 30)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 30;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+	case 11: // HUNTERHOUSE -> guard post
 	{
 		if (player->_resource_amount[4] < 20)
 		{
@@ -144,6 +242,49 @@ bool Building::_create_building(float x, float y, char type,int id)
 		
 		break;
 	}
+	case 12: // exchange station
+	{
+		if (player->_resource_amount[4] < 50)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 50;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+	case 13: // green house
+	{
+		if (player->_resource_amount[4] < 20)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 20;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+	case 14: // factory
+	{
+		if (player->_resource_amount[4] < 20 || player->_resource_amount[2] < 20)
+		{
+			is_Success_Create = false;
+		}
+		else
+		{
+			player->_resource_amount[4] -= 20; player->_resource_amount[2] -= 20;
+			player->send_resource_amount();
+			is_Success_Create = true;
+		}
+		break;
+	}
+
 	case 21:
 	{
 		if (player->_resource_amount[4] < 20 && player->_resource_amount[2] < 20 && player->_resource_amount[0] < 20)

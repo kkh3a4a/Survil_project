@@ -128,9 +128,36 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void BuildMode();
+	UFUNCTION(BlueprintCallable)
 	void SelectBuildingHouse();
-	void SelectBuildingHouse2();
-	void SelectBuildingHouse3();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingOilDrill();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingWaterDrill();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingSawMill();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingSteelMill();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingLaboratory();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingWarehouse();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingNursery();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingMedicalCenter();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingArmyCenter();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingGuardPost();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingExchangeStation();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingGreenHouse();
+	UFUNCTION(BlueprintCallable)
+	void SelectBuildingFactory();
+	
+
 	void SelectBuildingHunterHouse();
 	void SelectBuildingARMYCAMP();
 	void OnBuildMode();

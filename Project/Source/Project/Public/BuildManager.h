@@ -29,19 +29,39 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
 		UMaterial* BuildingGridMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_WoodenSign;		//type : 0
+		TSubclassOf<AActor>Building_WoodenSign;				//type : 0
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_HOUSE;			//type : 1
+		TSubclassOf<AActor>Building01_HOUSE;				//type : 1 / house
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_HOUSE2;			//type : 2
+		TSubclassOf<AActor>Building02_OIL_DRILL;			//type : 2 / oil drill
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_HOUSE3;			//type : 3
+		TSubclassOf<AActor>Building03_WATER_DRILL;			//type : 3 / water drill
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_HUNTERHOUSE;	//type : 11
-
+		TSubclassOf<AActor>Building04_SAW_MILL;				//type : 4 / saw mill
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building_ARMYCAMP;		//type : 21
+		TSubclassOf<AActor>Building05_STEEL_MILL;			//type : 5 / steel mill
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building06_LABORATORY;			//type : 6 / laboratory
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building07_WAREHOUSE;			//type : 7 / warehouse
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building08_NURSERY;				//type : 8 / nursery
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building09_MEDICAL_CENTER;		//type : 9 / medical center
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building10_ARMY_CENTER;			//type : 10 / army center
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building11_HUNTERHOUSE;			//type : 11 / hunterhouose->guard post
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building12_EXCHANGE_STATION;		//type : 12 / exchange station
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building13_GREEN_HOUSE;			//type : 13 / green house
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building14_FACTORY;				//type : 14 / factory
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>Building21_ARMYCAMP;			//type : 21
 
 	UMaterialInstanceDynamic* MaterialInstance;
 

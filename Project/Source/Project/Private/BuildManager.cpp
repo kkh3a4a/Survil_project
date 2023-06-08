@@ -35,11 +35,21 @@ void ABuildManager::BeginPlay()
 	DecalActor->SetActorHiddenInGame(true);
 
 	BuildingArray.Add(0, Building_WoodenSign);
-	BuildingArray.Add(1, Building_HOUSE);
-	BuildingArray.Add(2, Building_HOUSE2);
-	BuildingArray.Add(3, Building_HOUSE3);
-	BuildingArray.Add(11, Building_HUNTERHOUSE);
-	BuildingArray.Add(21, Building_ARMYCAMP);
+	BuildingArray.Add(1, Building01_HOUSE);
+	BuildingArray.Add(2, Building02_OIL_DRILL);
+	BuildingArray.Add(3, Building03_WATER_DRILL);
+	BuildingArray.Add(4, Building04_SAW_MILL);
+	BuildingArray.Add(5, Building05_STEEL_MILL);
+	BuildingArray.Add(6, Building06_LABORATORY);
+	BuildingArray.Add(7, Building07_WAREHOUSE);
+	BuildingArray.Add(8, Building08_NURSERY);
+	BuildingArray.Add(9, Building09_MEDICAL_CENTER);
+	BuildingArray.Add(10, Building10_ARMY_CENTER);
+	BuildingArray.Add(11, Building11_HUNTERHOUSE);
+	BuildingArray.Add(12, Building12_EXCHANGE_STATION);
+	BuildingArray.Add(13, Building13_GREEN_HOUSE);
+	BuildingArray.Add(14, Building14_FACTORY);
+	BuildingArray.Add(21, Building21_ARMYCAMP);
 
 	for (auto& a : BuiltBuildings)
 	{
