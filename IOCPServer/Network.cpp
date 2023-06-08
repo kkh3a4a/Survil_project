@@ -154,42 +154,33 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	case CS_PACKET_POLICY:
 	{
 		cs_packet_policy* cs_packet = reinterpret_cast<cs_packet_policy*>(pk);
+		sc_packet_policy_accept sc_packet;
 		if (player->_policy.policy_ticket > 0) {
-			std::cout << "정책 적용\n";
 			int duplication = player->_policy.set_policy(cs_packet->policy_id);
 			if (duplication == 1) {
 				std::cout << "정책 중복\n";
-				sc_packet_policy_accept sc_packet;
-				sc_packet.ticket = player->_policy.policy_ticket;
 				sc_packet.accept = false;
-				player->send_packet(&sc_packet);
-				break;
 			}
-			if (duplication == 2) {
+			else if (duplication == 2) {
 				std::cout << "정책 순서 안됨\n";
-				sc_packet_policy_accept sc_packet;
-				sc_packet.ticket = player->_policy.policy_ticket;
 				sc_packet.accept = false;
-				player->send_packet(&sc_packet);
-				break;
 			}
-			
-			player->_policy.policy_ticket--;
-
-			sc_packet_policy_accept sc_packet;
-			sc_packet.ticket = player->_policy.policy_ticket;
-			sc_packet.policy_id = cs_packet->policy_id;
-			sc_packet.accept = true;
-			player->send_packet(&sc_packet);
+			else {
+				std::cout << "정책 적용\n";
+				player->_policy.policy_ticket--;
+				sc_packet.accept = true;
+			}
 		}
 		else {
 			std::cout << "정책 티켓 부족\n";
-			sc_packet_policy_accept sc_packet;
-			sc_packet.ticket = player->_policy.policy_ticket;
-			sc_packet.policy_id = cs_packet->policy_id;
 			sc_packet.accept = false;
-			player->send_packet(&sc_packet);
 		}
+		
+		sc_packet.policy_id = cs_packet->policy_id;
+		sc_packet.ticket = player->_policy.policy_ticket;
+		player->send_packet(&sc_packet);
+
+		std::cout << "정책 티켓 : " << player->_policy.policy_ticket << std::endl;
 		break;
 	}
 	default:
