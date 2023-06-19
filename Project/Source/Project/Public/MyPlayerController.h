@@ -56,8 +56,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool ArmyUI = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool TradeUI = false;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool Trade_access = false;
 
 
 	/// ///////////////////////////////
@@ -104,7 +107,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Army_Disband();
 
+	UFUNCTION(BlueprintCallable)
+	void Trade_Request(int player_num);
 
+	UFUNCTION(BlueprintCallable)
+	void Trade_Access(bool access);
+
+	void Trade_Request_UI(int player_num);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText Trade_Text{};
 
 protected:
 	long long int mouse_cnt = 0;

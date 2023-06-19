@@ -44,4 +44,5 @@ public:
 	void find_event(int e_id);
 
 	void create_citizen(int num);
+	void Trade_Request(int p_num);
 };

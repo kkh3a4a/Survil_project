@@ -183,6 +183,15 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		std::cout << "정책 티켓 : " << player->_policy.policy_ticket << std::endl;
 		break;
 	}
+	case CS_PACKET_TRADEREQUEST:
+	{
+		cs_packet_traderequest* packet = reinterpret_cast<cs_packet_traderequest*>(pk);
+		Player* request_player = reinterpret_cast<Player*>(objects[packet->request_player]);
+		request_player->Trade_Request(client_id);
+
+		break;
+	}
+
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

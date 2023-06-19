@@ -340,6 +340,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 			}
 			break;
 		}
+		case SC_PACKET_TRADEREQUEST:
+		{
+			sc_packet_traderequest* packet = reinterpret_cast<sc_packet_traderequest*>(buf);
+			
+
+			break;
+		}
 		default:
 		{
 			//DebugBreak();

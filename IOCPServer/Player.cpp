@@ -424,4 +424,13 @@ void Player::create_citizen(int num)
 	}
 }
 
+void Player::Trade_Request(int p_num)
+{
+	sc_packet_traderequest packet;
+	packet.request_player = p_num;
+	packet.size = sizeof(packet);
+	packet.type = SC_PACKET_TRADEREQUEST;
+	send_packet(&packet);
+}
+
 

@@ -62,6 +62,8 @@ constexpr int city_size = 100;
 #define CS_PACKET_ARMYRETURN		62
 #define CS_PACKET_ARMYDISBAND		63
 
+#define CS_PACKET_TRADEREQUEST		66
+
 #define CS_PACKET_VIEWEVENT			70
 #define CS_PACKET_REMOVEEVENT		71
 #define CS_PACKET_EVENTSELECT		72
@@ -97,6 +99,8 @@ constexpr int city_size = 100;
 #define SC_PACKET_ARMYTRAINING		60
 #define SC_PACKET_ARMYMOVE			61
 #define SC_PACKET_ARMYDISBAND		63
+
+#define SC_PACKET_TRADEREQUEST		66
 
 #define SC_PACKET_VIEWEVENT			70
 #define SC_PACKET_REMOVEEVENT		71
@@ -214,6 +218,14 @@ struct cs_packet_armydisband
 	int a_id;
 };
 
+struct cs_packet_traderequest
+{
+	unsigned char size;
+	unsigned char type;
+
+	int request_player;
+};
+
 struct cs_packet_policy
 {
 	unsigned char size = sizeof(cs_packet_policy);
@@ -227,7 +239,6 @@ struct cs_packet_policy
 	// 20: 비상교대근무, 21: 연장근무, 22: 감찰관, 23: 강제노동
 	// 24: 아동노동, 25: 보육원, 26: 학도병징집, 27: 작업지원
 };
-
 
 
 
@@ -481,6 +492,14 @@ struct sc_packet_policy_accept
 	char policy_id;
 	bool accept;
 	char ticket;
+};
+
+struct sc_packet_traderequest
+{
+	unsigned char size;
+	unsigned char type;
+
+	int request_player;
 };
 
 #pragma pack (pop)

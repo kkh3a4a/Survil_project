@@ -582,3 +582,24 @@ void AMyPlayerController::Army_Disband()
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
+
+void AMyPlayerController::Trade_Request(int player_num)
+{
+    cs_packet_traderequest packet;
+    packet.request_player = player_num;
+    packet.size = sizeof(cs_packet_traderequest);
+    packet.type = CS_PACKET_TRADEREQUEST;
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+
+void AMyPlayerController::Trade_Access(bool access)
+{
+}
+
+void AMyPlayerController::Trade_Request_UI(int player_num)
+{
+    Trade_Text = FText::FromString(FString::Printf(TEXT("player %d"), player_num));
+    TradeUI = true;
+}
