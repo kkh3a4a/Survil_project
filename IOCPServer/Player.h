@@ -45,4 +45,5 @@ public:
 
 	void create_citizen(int num);
 	void Trade_Request(int p_num);
+	void Trade_Request_Agree(int p_num, int agree);
 };

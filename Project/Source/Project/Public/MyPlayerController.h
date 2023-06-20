@@ -111,12 +111,28 @@ public:
 	void Trade_Request(int player_num);
 
 	UFUNCTION(BlueprintCallable)
-	void Trade_Access(bool access);
+	void Trade_Access_send(int access);
+
+	int Trade_Request_player;
+	int Trade_player;
+
+	void Trade_DisAccess_send(int access, int player_num);
 
 	void Trade_Request_UI(int player_num);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int my_id{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int diplomacy_player_id{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText Trade_Text{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool Trade_UI_visible;
+
+	UFUNCTION(BlueprintCallable)
+		void diplomacy_player_click(int a);
 
 protected:
 	long long int mouse_cnt = 0;

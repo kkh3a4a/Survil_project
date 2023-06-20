@@ -594,12 +594,48 @@ void AMyPlayerController::Trade_Request(int player_num)
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
-void AMyPlayerController::Trade_Access(bool access)
+void AMyPlayerController::Trade_Access_send(int access)
 {
+    cs_packet_tradeagree packet;
+    packet.isagree = access;
+    packet.size = sizeof(packet);
+    packet.type = CS_PACKET_TRADEAGREE;
+    packet.request_player = Trade_Request_player;
+    if (access == 1)
+    {
+        Trade_player = Trade_Request_player;
+        Trade_UI_visible;
+    }
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+    TradeUI = false;
+}
+
+void AMyPlayerController::Trade_DisAccess_send(int access, int player_num)
+{
+    cs_packet_tradeagree packet;
+    packet.isagree = access;
+    packet.size = sizeof(packet);
+    packet.type = CS_PACKET_TRADEAGREE;
+    packet.request_player = player_num;
+
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
 void AMyPlayerController::Trade_Request_UI(int player_num)
 {
-    Trade_Text = FText::FromString(FString::Printf(TEXT("player %d"), player_num));
+    Trade_Text = FText::FromString(FString::Printf(TEXT("player %d Trade"), player_num));
+    Trade_Request_player = player_num;
     TradeUI = true;
+}
+
+void AMyPlayerController::diplomacy_player_click(int click_player)
+{
+    if (click_player == my_id)
+        return;
+
+    diplomacy_player_id = click_player;
 }

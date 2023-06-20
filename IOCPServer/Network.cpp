@@ -191,7 +191,19 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 
 		break;
 	}
+	case CS_PACKET_TRADEAGREE:
+	{
+		cs_packet_tradeagree* packet = reinterpret_cast<cs_packet_tradeagree*>(pk);
+		if (packet->isagree == 1)
+			break;
+		else
+		{
+			Player* request_player = reinterpret_cast<Player*>(objects[packet->request_player]);
 
+			request_player->Trade_Request_Agree(client_id, packet->isagree);
+		}
+		break;
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

@@ -433,4 +433,14 @@ void Player::Trade_Request(int p_num)
 	send_packet(&packet);
 }
 
+void Player::Trade_Request_Agree(int p_num, int agree)
+{
+	sc_packet_tradeagree packet;
+	packet.isagree = agree;
+	packet.request_player = p_num;
+	packet.size = sizeof(packet);
+	packet.type = SC_PACKET_TRADEAGREE;
+	send_packet(&packet);
+}
+
 

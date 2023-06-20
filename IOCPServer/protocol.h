@@ -63,6 +63,7 @@ constexpr int city_size = 100;
 #define CS_PACKET_ARMYDISBAND		63
 
 #define CS_PACKET_TRADEREQUEST		66
+#define CS_PACKET_TRADEAGREE		67
 
 #define CS_PACKET_VIEWEVENT			70
 #define CS_PACKET_REMOVEEVENT		71
@@ -101,6 +102,7 @@ constexpr int city_size = 100;
 #define SC_PACKET_ARMYDISBAND		63
 
 #define SC_PACKET_TRADEREQUEST		66
+#define SC_PACKET_TRADEAGREE		67
 
 #define SC_PACKET_VIEWEVENT			70
 #define SC_PACKET_REMOVEEVENT		71
@@ -240,6 +242,15 @@ struct cs_packet_policy
 	// 24: 아동노동, 25: 보육원, 26: 학도병징집, 27: 작업지원
 };
 
+
+struct cs_packet_tradeagree
+{
+	unsigned char size = sizeof(cs_packet_tradeagree);
+	unsigned char type = CS_PACKET_TRADEAGREE;
+
+	int isagree;		// 0 : 거래거절, 타임아웃, 1 : 거래동의, 2 : 다른 작업중
+	int request_player;
+};
 
 
 struct sc_packet_login
@@ -502,4 +513,12 @@ struct sc_packet_traderequest
 	int request_player;
 };
 
+struct sc_packet_tradeagree
+{
+	unsigned char size = sizeof(sc_packet_tradeagree);
+	unsigned char type = SC_PACKET_TRADEAGREE;
+
+	int isagree;		// 0 : 거래거절, 타임아웃, 1 : 거래동의, 2 : 다른 작업중
+	int request_player;
+};
 #pragma pack (pop)

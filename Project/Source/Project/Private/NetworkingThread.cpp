@@ -45,7 +45,7 @@ FSocketThread::FSocketThread()
 	int ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
 	if (ret != 0)
 	{
-		exit(-1);
+		//exit(-1);
 	}
 	s_socket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, 0, 0, WSA_FLAG_OVERLAPPED);
 	SOCKADDR_IN server_addr;
@@ -56,7 +56,7 @@ FSocketThread::FSocketThread()
 	ret = connect(s_socket, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr));
 	if (ret != 0)
 	{
-		exit(-1);
+	//	exit(-1);
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Network Thread connect!!"));
 
@@ -124,7 +124,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MainClass->DestLocation = FVector(packet->x, packet->y, packet->z) + FVector(-SIGHT_X * 100 / 2, -SIGHT_Y * 100 / 2, packet->z);
 
 
-			my_id = packet->player_id;
+			_MyController->my_id = my_id = packet->player_id;
 			break;
 		}
 		case SC_PACKET_MOVE:
@@ -343,8 +343,21 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TRADEREQUEST:
 		{
 			sc_packet_traderequest* packet = reinterpret_cast<sc_packet_traderequest*>(buf);
-			
-
+			if (_MyController->TradeUI)
+			{
+				_MyController->Trade_DisAccess_send(2, packet->request_player);
+				break;
+			}
+			_MyController->Trade_Request_UI(packet->request_player);
+			break;
+		}
+		case SC_PACKET_TRADEAGREE:
+		{
+			sc_packet_tradeagree* packet = reinterpret_cast<sc_packet_tradeagree*>(buf);
+			if (packet->isagree == 0 || packet->isagree == 2)
+			{
+				_MyController->Trade_UI_visible = false;
+			}
 			break;
 		}
 		default:
