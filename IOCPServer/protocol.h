@@ -64,6 +64,7 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_TRADEREQUEST		66
 #define CS_PACKET_TRADEAGREE		67
+#define CS_PACKET_TRADERESOURCE		68
 
 #define CS_PACKET_VIEWEVENT			70
 #define CS_PACKET_REMOVEEVENT		71
@@ -103,6 +104,7 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_TRADEREQUEST		66
 #define SC_PACKET_TRADEAGREE		67
+#define SC_PACKET_TRADERESOURCE		68
 
 #define SC_PACKET_VIEWEVENT			70
 #define SC_PACKET_REMOVEEVENT		71
@@ -252,6 +254,14 @@ struct cs_packet_tradeagree
 	int request_player;
 };
 
+struct cs_packet_traderesource {
+	unsigned char size = sizeof(cs_packet_traderesource);
+	unsigned char type = CS_PACKET_TRADERESOURCE;
+
+	int resource_num;
+	int resource_amount;
+
+};
 
 struct sc_packet_login
 {
@@ -521,4 +531,13 @@ struct sc_packet_tradeagree
 	int isagree;		// 0 : 거래거절, 타임아웃, 1 : 거래동의, 2 : 다른 작업중
 	int request_player;
 };
+
+struct sc_packet_traderesource {
+	unsigned char size = sizeof(sc_packet_traderesource);
+	unsigned char type = SC_PACKET_TRADERESOURCE;
+
+	int resource_num;
+	int resource_amount;
+};
+
 #pragma pack (pop)

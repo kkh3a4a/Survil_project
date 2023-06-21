@@ -360,6 +360,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 			}
 			break;
 		}
+		case SC_PACKET_TRADERESOURCE:
+		{
+			sc_packet_traderesource* packet = reinterpret_cast<sc_packet_traderesource*>(buf);
+			_MyController->trade_change_resource(packet->resource_num, packet->resource_amount);
+			break;
+		}
 		default:
 		{
 			//DebugBreak();

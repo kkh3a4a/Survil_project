@@ -143,6 +143,65 @@ void AMyPlayerController::UIClick(bool isplus)
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
+void AMyPlayerController::trade_change_resource(int resource_num, int amount)
+{
+    switch (resource_num)
+    {
+    case 0:
+    {
+        trade_my_oil = amount;
+        break;
+    }
+    case 1:
+    {
+        trade_my_water = amount;
+        break;
+    }
+    case 2:
+    {
+        trade_my_iron = amount;
+        break;
+    }
+    case 3:
+    {
+        trade_my_food = amount;
+        break;
+    }
+    case 4:
+    {
+        trade_my_wood = amount;
+        break;
+    }
+    case 5:
+    {
+        trade_other_oil = amount;
+        break;
+    }
+    case 6:
+    {
+        trade_other_water = amount;
+        break;
+    }
+    case 7:
+    {
+        trade_other_iron = amount;
+        break;
+    }
+    case 8:
+    {
+        trade_other_food = amount;
+        break;
+    }
+    case 9:
+    {
+        trade_other_wood = amount;
+        break;
+    }
+    default:
+        break;
+    }
+}
+
 void AMyPlayerController::InputLeftMoustButtonPressed()
 {
     if (BuildManager->BuildMode) {
@@ -638,4 +697,71 @@ void AMyPlayerController::diplomacy_player_click(int click_player)
         return;
 
     diplomacy_player_id = click_player;
+}
+
+void AMyPlayerController::send_trade_resource_amount(int resource_num, int amount)
+{
+    switch (resource_num)
+    {
+    case 0:
+    {
+        trade_my_oil = amount;
+        break;
+    }
+    case 1:
+    {
+        trade_my_water = amount;
+        break;
+    }
+    case 2:
+    {
+        trade_my_iron = amount;
+        break;
+    }
+    case 3:
+    {
+        trade_my_food = amount;
+        break;
+    }
+    case 4:
+    {
+        trade_my_wood = amount;
+        break;
+    }
+    case 5:
+    {
+        trade_other_oil = amount;
+        break;
+    }
+    case 6:
+    {
+        trade_other_water = amount;
+        break;
+    }
+    case 7:
+    {
+        trade_other_iron = amount;
+        break;
+    }
+    case 8:
+    {
+        trade_other_food = amount;
+        break;
+    }
+    case 9:
+    {
+        trade_other_wood = amount;
+        break;
+    }
+    default:
+        break;
+    }
+    cs_packet_traderesource packet;
+    packet.resource_num = resource_num;
+    packet.resource_amount = amount;
+    packet.size = sizeof(packet);
+    packet.type = CS_PACKET_TRADERESOURCE;
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }

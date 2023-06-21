@@ -134,6 +134,33 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void diplomacy_player_click(int a);
 
+	UFUNCTION(BlueprintCallable)
+		void send_trade_resource_amount(int resource_num, int amount);
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_my_oil{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_my_water{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_my_iron{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_my_food{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_my_wood{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_other_oil{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_other_water{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_other_iron{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_other_food{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int trade_other_wood{};
+
+	void trade_change_resource(int resource_num, int amount);
 protected:
 	long long int mouse_cnt = 0;
 

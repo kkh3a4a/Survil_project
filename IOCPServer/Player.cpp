@@ -443,4 +443,19 @@ void Player::Trade_Request_Agree(int p_num, int agree)
 	send_packet(&packet);
 }
 
+void Player::change_trade_resource(int trade_resource_num, int resource_amount)
+{
+	trade_resource[trade_resource_num] = resource_amount;
+}
+
+void Player::send_change_trade_resource(int trade_resource_num, int amount)
+{
+	sc_packet_traderesource packet;
+	packet.resource_num = trade_resource_num;
+	packet.resource_amount = amount;
+	packet.size = sizeof(packet);
+	packet.type = SC_PACKET_TRADERESOURCE;
+	send_packet(&packet);
+}
+
 

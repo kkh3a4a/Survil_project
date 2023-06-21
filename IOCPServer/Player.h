@@ -29,6 +29,9 @@ public:
 	volatile int _Minimap_terrainsend = 0;
 	std::mutex _t_l;
 
+	int trade_player_id{};
+	int trade_resource[5]{};			//0,1,2,3,4
+
 	Player(int id, STATE state = STATE::ST_FREE);
 	~Player();
 
@@ -46,4 +49,6 @@ public:
 	void create_citizen(int num);
 	void Trade_Request(int p_num);
 	void Trade_Request_Agree(int p_num, int agree);
+	void change_trade_resource(int trade_resource_num, int resource_amount);
+	void send_change_trade_resource(int trade_resource_num, int amount);
 };

@@ -187,20 +187,39 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	{
 		cs_packet_traderequest* packet = reinterpret_cast<cs_packet_traderequest*>(pk);
 		Player* request_player = reinterpret_cast<Player*>(objects[packet->request_player]);
+		player->trade_player_id = packet->request_player;
 		request_player->Trade_Request(client_id);
-
 		break;
 	}
 	case CS_PACKET_TRADEAGREE:
 	{
 		cs_packet_tradeagree* packet = reinterpret_cast<cs_packet_tradeagree*>(pk);
+		Player* request_player = reinterpret_cast<Player*>(objects[packet->request_player]);
 		if (packet->isagree == 1)
+		{
+			
+			player->trade_player_id = packet->request_player;
 			break;
+		}
 		else
 		{
-			Player* request_player = reinterpret_cast<Player*>(objects[packet->request_player]);
-
 			request_player->Trade_Request_Agree(client_id, packet->isagree);
+		}
+		break;
+	}
+	case CS_PACKET_TRADERESOURCE:
+	{
+		cs_packet_traderesource* packet = reinterpret_cast<cs_packet_traderesource*>(pk);
+		Player* request_player = reinterpret_cast<Player*>(objects[player->trade_player_id]);
+		if (packet->resource_num < 5)
+		{
+			player->change_trade_resource(packet->resource_num, packet->resource_amount);
+			request_player->send_change_trade_resource(packet->resource_num + 5, packet->resource_amount);
+		}
+		else if (packet->resource_num < 10)
+		{
+			request_player->change_trade_resource(packet->resource_num - 5, packet->resource_amount);
+			request_player->send_change_trade_resource(packet->resource_num - 5, packet->resource_amount);
 		}
 		break;
 	}
