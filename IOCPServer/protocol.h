@@ -62,9 +62,6 @@ constexpr int city_size = 100;
 #define CS_PACKET_ARMYRETURN		62
 #define CS_PACKET_ARMYDISBAND		63
 
-#define CS_PACKET_TRADEREQUEST		66
-#define CS_PACKET_TRADEAGREE		67
-#define CS_PACKET_TRADERESOURCE		68
 
 #define CS_PACKET_VIEWEVENT			70
 #define CS_PACKET_REMOVEEVENT		71
@@ -72,6 +69,12 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_POLICY			80
 
+
+#define CS_PACKET_TRADEREQUEST		90
+#define CS_PACKET_TRADEAGREE		91
+#define CS_PACKET_TRADERESOURCE		92
+#define CS_PACKET_TRADEDEAL			93
+#define CS_PACKET_TRADESUCCESS		94
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -102,9 +105,7 @@ constexpr int city_size = 100;
 #define SC_PACKET_ARMYMOVE			61
 #define SC_PACKET_ARMYDISBAND		63
 
-#define SC_PACKET_TRADEREQUEST		66
-#define SC_PACKET_TRADEAGREE		67
-#define SC_PACKET_TRADERESOURCE		68
+
 
 #define SC_PACKET_VIEWEVENT			70
 #define SC_PACKET_REMOVEEVENT		71
@@ -113,6 +114,11 @@ constexpr int city_size = 100;
 #define SC_PACKET_POLICY_ACCEPT 	80
 #define SC_PACKET_POLICY_TICKET 	81
 
+#define SC_PACKET_TRADEREQUEST		90
+#define SC_PACKET_TRADEAGREE		91
+#define SC_PACKET_TRADERESOURCE		92
+#define SC_PACKET_TRADEDEAL			93
+#define SC_PACKET_TRADESUCCESS		94
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -261,6 +267,20 @@ struct cs_packet_traderesource {
 	int resource_num;
 	int resource_amount;
 
+};
+
+struct cs_packet_tradedeal {
+	unsigned char size = sizeof(cs_packet_tradedeal);
+	unsigned char type = CS_PACKET_TRADEDEAL;
+
+	int deal_boolean;
+};
+
+struct cs_packet_tradesuccess {
+	unsigned char size = sizeof(cs_packet_tradesuccess);
+	unsigned char type = CS_PACKET_TRADESUCCESS;
+
+	int success_boolean;
 };
 
 struct sc_packet_login
@@ -540,4 +560,17 @@ struct sc_packet_traderesource {
 	int resource_amount;
 };
 
+struct sc_packet_tradedeal {
+	unsigned char size = sizeof(sc_packet_tradedeal);
+	unsigned char type = SC_PACKET_TRADEDEAL;
+
+	int deal_boolean;
+};
+
+struct sc_packet_tradesuccess {
+	unsigned char size = sizeof(sc_packet_tradesuccess);
+	unsigned char type = SC_PACKET_TRADESUCCESS;
+
+	int success_boolean;
+};
 #pragma pack (pop)

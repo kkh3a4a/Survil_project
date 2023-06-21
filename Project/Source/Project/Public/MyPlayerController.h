@@ -160,6 +160,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int trade_other_wood{};
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool my_trade_deal = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool other_trade_deal = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool my_trade_success = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool other_trade_success = false;
+
+	UFUNCTION(BlueprintCallable)
+		void send_trade_deal();
+
+	UFUNCTION(BlueprintCallable)
+		void send_trade_success();
+
+	UFUNCTION(BlueprintCallable)
+		void trade_complete();
+
 	void trade_change_resource(int resource_num, int amount);
 protected:
 	long long int mouse_cnt = 0;

@@ -223,6 +223,39 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		}
 		break;
 	}
+	case CS_PACKET_TRADEDEAL:
+	{
+		cs_packet_tradedeal* packet = reinterpret_cast<cs_packet_tradedeal*>(pk);
+		Player* request_player = reinterpret_cast<Player*>(objects[player->trade_player_id]);
+
+		sc_packet_tradedeal s_packet;
+		s_packet.deal_boolean = packet->deal_boolean;
+		s_packet.size = sizeof(s_packet);
+		s_packet.type = SC_PACKET_TRADEDEAL;
+
+		request_player->send_packet(&s_packet);
+
+		break;
+	}
+	case CS_PACKET_TRADESUCCESS:
+	{
+		cs_packet_tradesuccess* packet = reinterpret_cast<cs_packet_tradesuccess*>(pk);
+		Player* request_player = reinterpret_cast<Player*>(objects[player->trade_player_id]);
+
+		
+		sc_packet_tradesuccess s_packet;
+		s_packet.success_boolean = packet->success_boolean;
+		s_packet.size = sizeof(s_packet);
+		s_packet.type = SC_PACKET_TRADESUCCESS;
+		request_player->send_packet(&s_packet);
+		player->trade_success = packet->success_boolean;
+		if (request_player->trade_success && player->trade_success)
+		{
+			player->trade_clear();
+			request_player->trade_clear();
+		}
+		break;
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

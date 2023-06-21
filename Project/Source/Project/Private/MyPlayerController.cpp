@@ -143,6 +143,58 @@ void AMyPlayerController::UIClick(bool isplus)
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
+void AMyPlayerController::send_trade_deal()
+{
+    if (my_trade_deal)
+        my_trade_deal = false;
+    else
+        my_trade_deal = 1;
+
+    cs_packet_tradedeal packet;
+    packet.deal_boolean = my_trade_deal;
+    packet.size = sizeof(packet);
+    packet.type = CS_PACKET_TRADEDEAL;
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+
+void AMyPlayerController::send_trade_success()
+{
+    if (my_trade_success)
+        my_trade_success = false;
+    else
+        my_trade_success = 1;
+
+    cs_packet_tradesuccess packet;
+    packet.size = sizeof(packet);
+    packet.type = CS_PACKET_TRADESUCCESS;
+    packet.success_boolean = my_trade_success;
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+
+}
+
+void AMyPlayerController::trade_complete()
+{
+    trade_my_oil = 0;
+    trade_my_water = 0;
+    trade_my_iron = 0;
+    trade_my_food = 0;
+    trade_my_wood = 0;
+    trade_other_oil = 0;
+    trade_other_water = 0;
+    trade_other_iron = 0;
+    trade_other_food = 0;
+    trade_other_wood = 0;
+    my_trade_deal = false;
+    my_trade_success = false;
+    other_trade_deal = false;
+    other_trade_success = false;
+
+}
+
 void AMyPlayerController::trade_change_resource(int resource_num, int amount)
 {
     switch (resource_num)
@@ -200,6 +252,7 @@ void AMyPlayerController::trade_change_resource(int resource_num, int amount)
     default:
         break;
     }
+    other_trade_deal = false;
 }
 
 void AMyPlayerController::InputLeftMoustButtonPressed()

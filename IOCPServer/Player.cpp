@@ -21,7 +21,7 @@ Player::Player(int id, STATE state)
 	//초기 자원 지정
 	for (auto& a : _resource_amount)
 	{
-		a = 200;
+		a = 1000;
 	}
 }
 
@@ -456,6 +456,19 @@ void Player::send_change_trade_resource(int trade_resource_num, int amount)
 	packet.size = sizeof(packet);
 	packet.type = SC_PACKET_TRADERESOURCE;
 	send_packet(&packet);
+}
+
+void Player::trade_clear()
+{
+	Player* o_player = reinterpret_cast<Player*>(objects[trade_player_id]);
+	for (int i = 0; i < 5; ++i)
+	{
+		o_player->_resource_amount[i] += trade_resource[i];
+		_resource_amount[i] -= trade_resource[i];
+		trade_resource[i] = 0;
+	}
+	trade_success = false;
+	send_resource_amount();
 }
 
 

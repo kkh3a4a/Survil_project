@@ -366,6 +366,19 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MyController->trade_change_resource(packet->resource_num, packet->resource_amount);
 			break;
 		}
+		case SC_PACKET_TRADEDEAL:
+		{
+			sc_packet_tradedeal* packet = reinterpret_cast<sc_packet_tradedeal*>(buf);
+			_MyController->other_trade_deal = (bool)packet->deal_boolean;
+			break;
+		}
+		case SC_PACKET_TRADESUCCESS:
+		{
+			sc_packet_tradesuccess* packet = reinterpret_cast<sc_packet_tradesuccess*>(buf);
+			_MyController->other_trade_success = (bool)packet->success_boolean;
+
+			break;
+		}
 		default:
 		{
 			//DebugBreak();
