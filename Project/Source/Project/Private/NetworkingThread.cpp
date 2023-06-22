@@ -322,7 +322,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_policy_ticket* packet = reinterpret_cast<sc_packet_policy_ticket*>(buf);
 			UE_LOG(LogTemp, Warning, TEXT("%dpolicy tickets left"), packet->ticket);
-
+			_MainClass->policy_ticket = packet->ticket;
 			break;
 		}
 		case SC_PACKET_POLICY_ACCEPT:

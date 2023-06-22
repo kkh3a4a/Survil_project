@@ -273,16 +273,16 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 
 	//최우선 오류 해결 요망
 	
-	/*delete player_sight_terrain_line[0];
-	delete player_sight_terrain_line[1];
-	delete player_sight_terrain_line[2];
-	delete player_sight_terrain_line[3];
+	delete[] player_sight_terrain_line[0];
+	delete[] player_sight_terrain_line[1];
+	delete[] player_sight_terrain_line[2];
+	delete[] player_sight_terrain_line[3];
 
 
-	delete player_sight_temperature_line[0];
-	delete player_sight_temperature_line[1];
-	delete player_sight_temperature_line[2];
-	delete player_sight_temperature_line[3];*/
+	delete[] player_sight_temperature_line[0];
+	delete[] player_sight_temperature_line[1];
+	delete[] player_sight_temperature_line[2];
+	delete[] player_sight_temperature_line[3];
 }
 
 void Player::send_resource_amount()

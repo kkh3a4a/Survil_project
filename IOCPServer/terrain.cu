@@ -1035,7 +1035,6 @@ public:
 		memcpy(terrain_line_y, &terrain_array_host[player_x][player_y - 1], SIGHT_Y + 2);
 		memcpy(terrain_line_y2, &terrain_array_host[player_x + SIGHT_X][player_y - 1], SIGHT_Y + 2);
 
-
 		returnvalue[0] = terrain_line_x;
 		returnvalue[1] = terrain_line_x2;
 		returnvalue[2] = terrain_line_y;

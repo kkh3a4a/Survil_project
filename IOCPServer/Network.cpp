@@ -81,11 +81,13 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 			if (obj->_x == 0) {
 				continue;
 			}
-			if (obj->_x < cs_packet->x + 800 && obj->_x > cs_packet->x - 800 && obj->_y < cs_packet->y + 800 && obj->_y > cs_packet->y - 800) {
-				sc_packet.buildable = false;
-				break;
+			if (obj->_id >= BUILDINGSTART && obj->_id < BUILDINGSTART + MAXBUILDING || obj->_id >= RESOURCESTART && obj->_id < RESOURCESTART + MAXRESOURCE || obj->_id >= 0 && obj->_id < MAXPLAYER) {
+				if (obj->_x < cs_packet->x + 800 && obj->_x > cs_packet->x - 800 && obj->_y < cs_packet->y + 800 && obj->_y > cs_packet->y - 800) {
+					sc_packet.buildable = false;
+					break;
+				}
+				sc_packet.buildable = true;
 			}
-			sc_packet.buildable = true;
 		}
 		player->send_packet(&sc_packet);
 		break;
