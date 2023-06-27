@@ -13,8 +13,6 @@ HANDLE h_iocp;
 bool IsNight;
 char** object_z;
 
-
-
 WSA_OVER_EX::WSA_OVER_EX()
 {
 	return;

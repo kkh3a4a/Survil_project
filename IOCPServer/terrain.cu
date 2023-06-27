@@ -301,6 +301,17 @@ void add_scarce_cuda(char** terrain_array_device, II* random_seed_device, int si
 }
 
 __global__
+void sub_scarce_cuda(char** terrain_array_device, II* random_seed_device, int size) {
+	int id = blockIdx.x * blockDim.x + threadIdx.x;
+
+	II my_seed;
+	my_seed.x = random_seed_device[id].x;
+	my_seed.y = random_seed_device[id].y;
+
+	terrain_array_device[my_seed.x][my_seed.y]--;
+}
+
+__global__
 void player_terrain_update_cuda(char** terrain_player_sight_device, HI* hill_location_device, int num_of_hills, II player_location, FF wind_direction, int wind_speed)
 {
 	int x = threadIdx.x;
@@ -798,11 +809,28 @@ public:
 			cout << "Terrain Flatten : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
-	void add_scarce()
+	void make_big_hills()
 	{
-		unsigned __int64 curr_total = add_all();
-		unsigned __int64 scarce_blocks;
-		if (curr_total > init_total_hill_height) {
+		// add scarce에서 블럭 넘치면 빼고 부족하면 채우는 함수로 변경할지  --깔끔한것 이것
+		// 아니면 여기서 랜덤으로 블럭들을 빼고 새로운 곳에 언덕을 생성할지
+
+		
+		clock_t t_0 = clock();
+		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
+		dim3 block(32, 32, 1);
+		//make_big_hills_cuda <<<grid, block >>> (terrain_array_device);
+		cudaDeviceSynchronize();
+
+		clock_t t_1 = clock();
+		if (log)
+			cout << "Make Big Hills : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+	}
+
+	void adjust_num_blocks()
+	{
+		__int64 curr_total = add_all();
+		__int64 scarce_blocks = init_total_hill_height - curr_total;
+		/*if (curr_total > init_total_hill_height) {
 			scarce_blocks = 0;
 		}
 		else {
@@ -812,11 +840,11 @@ public:
 			if (log)
 				cout << "No scarce_blocks" << endl;
 			return;
-		}
+		}*/
+		
 		if (log)
 			cout<< "Scarce_blocks: " << scarce_blocks << endl;
 
-		//==================================================================================
 		clock_t t_0 = clock();
 
 		while (random_array_used) {
@@ -828,37 +856,42 @@ public:
 
 		cudaMalloc((void**)&random_array_device, random_array_size * sizeof(II));
 		cudaMemcpy(random_array_device, random_array, random_array_size * sizeof(II), cudaMemcpyHostToDevice);
-		
+
 		int grid, block;
-		if (scarce_blocks <= 1024) {
+		if (abs(scarce_blocks) <= 1024) {	//절댓값이 1024보다 작다면
+			if (scarce_blocks == 0) {	//부족하거나 많은게 없다면
+				if (log)
+					cout << "No scarce_blocks" << endl;
+				return;
+			}
 			grid = 1;
-			block = scarce_blocks;
+			block = abs(scarce_blocks);
 		}
-		else {
-			grid = scarce_blocks / 1024;
+		else {									//절댓값이 1024보다 크다면
+			grid = abs(scarce_blocks) / 1024;
 			block = 1024;
 		}
+		cout << "Scarce_blocks: " << scarce_blocks << endl;
 
-		if (scarce_blocks > random_array_size) {
+
+		if (abs(scarce_blocks) > random_array_size) {
 			cout << "FATAL ERROR: scarce_blocks is bigger than random_array_size !!!\n";
 			scarce_blocks = random_array_size;
 		}
-		add_scarce_cuda << <grid, block >> > (terrain_array_device, random_array_device, scarce_blocks);
+
+		if (scarce_blocks > 0) {
+			add_scarce_cuda << <grid, block >> > (terrain_array_device, random_array_device, scarce_blocks);
+		}
+		else {
+			sub_scarce_cuda << <grid, block >> > (terrain_array_device, random_array_device, scarce_blocks);
+		}
+
 		cudaDeviceSynchronize();
-		/*for (int i = 0; i < one_side_number; i++) {
-			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}*/
 		
 		random_array_used = true;
 		
-		//메모리 삭제
 		cudaFree(random_array_device);
-		//==================================================================================
-
 		clock_t t_2 = clock();
-		
-		/*scarce_blocks = init_total_hill_height - add_all();
-		cout << "after_add_blocks: " << scarce_blocks << endl;*/
 
 		if (log) {
 			cout << "Waiting Time for Random Thread: " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
@@ -879,7 +912,7 @@ public:
 			//cout << "__________________________" << endl;
 			t_1 = clock();
 
-			add_scarce();
+			adjust_num_blocks();
 
 			t_2 = clock();
 			wind_blow_cuda << <grid, block >> > (terrain_array_device, wind_direction);
