@@ -13,6 +13,7 @@ public:
 	char _packet_buf[BUFSIZE]{};
 	char is_connected;
 	char w, a, s, d;
+	int count_lab = 0;
 
 	Policy _policy;
 	

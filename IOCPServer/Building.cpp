@@ -168,6 +168,7 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -=15; player->_resource_amount[2] -= 5;
 			player->send_resource_amount();
 			is_Success_Create = true;
+			player->count_lab++;
 		}
 		break;
 	}

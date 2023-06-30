@@ -244,10 +244,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_buildsuccess* packet = reinterpret_cast<sc_packet_buildsuccess*>(buf);
 			_MainClass->BuildManager->BuildSuccess(packet->id - BUILDINGSTART, packet->x, packet->y, packet->building_type);
-			if (packet->building_type == 6) //연구소일시 연구소 수량 증가, 연구 버튼 활성화
-			{
-				_MyController->count_lab ++;
-			}
 			break;
 		}
 		case SC_PACKET_TEMPERATURE:
