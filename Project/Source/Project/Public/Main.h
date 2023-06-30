@@ -20,6 +20,7 @@
 #include "Camera/CameraComponent.h"
 #include "Math/UnrealMathUtility.h"
 #include "UMGEditor/Public/WidgetBlueprint.h"
+#include "Research.h"
 #include "Main.generated.h"
 
 using namespace std;
@@ -85,6 +86,8 @@ public:
 	AActor* SunManager;
 	ABuildManager* BuildManager;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AResearch* Research;
 	//////////////////////////////////////////
 	class FSocketThread* Network;
 	float Player_x, Player_y, Player_z;

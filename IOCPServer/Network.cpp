@@ -256,6 +256,31 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		}
 		break;
 	}
+	case CS_PACKET_TECHNOLOGY:
+	{
+		cs_packet_technology* packet = reinterpret_cast<cs_packet_technology*>(pk);
+	
+		player->_research.set_tech_upgrade(packet->tech_type, packet->tech_level);
+		sc_packet_technology s_packet;
+		s_packet.size = sizeof(s_packet);
+		s_packet.type = SC_PACKET_TECHNOLOGY;
+		s_packet.tech_level = player->_research.tech[packet->tech_type];
+		s_packet.tech_type = packet->tech_type;
+		player->send_packet(&s_packet);
+		break;
+	}
+	case CS_PACKET_TECHPHASE:
+	{
+		cs_packet_techphase* packet = reinterpret_cast<cs_packet_techphase*>(pk);
+		player->_research.set_tech_phase(packet->tech_phase);
+		std::cout << "tech_phase : " << player->_research.tech_phase << "\n";
+		sc_packet_techphase s_packet;
+		s_packet.size = sizeof(s_packet);
+		s_packet.type = SC_PACKET_TECHPHASE;
+		s_packet.tech_phase = player->_research.tech_phase;
+		player->send_packet(&s_packet);
+		break;
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

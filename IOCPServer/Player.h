@@ -2,6 +2,7 @@
 #include"protocol.h"
 #include"Network.h"
 #include "Policy.h"
+#include"research.h"
 
 class Player : public Object
 {
@@ -13,10 +14,9 @@ public:
 	char _packet_buf[BUFSIZE]{};
 	char is_connected;
 	char w, a, s, d;
-	int count_lab = 0;
 
 	Policy _policy;
-	
+	Research _research;
 	std::set<int> view_list;
 
 	//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무

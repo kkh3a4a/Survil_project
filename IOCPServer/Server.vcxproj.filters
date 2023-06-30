@@ -28,6 +28,10 @@
     <ClCompile Include="GameEvent.cpp">
       <Filter>Source\Object\GameEvent</Filter>
     </ClCompile>
+    <ClCompile Include="Policy.cpp" />
+    <ClCompile Include="Research.cpp">
+      <Filter>Source\Object\Research</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global.h" />
@@ -58,6 +62,10 @@
     </ClInclude>
     <ClInclude Include="GameEvent.h">
       <Filter>Source\Object\GameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="Policy.h" />
+    <ClInclude Include="Research.h">
+      <Filter>Source\Object\Research</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +101,9 @@
     </Filter>
     <Filter Include="Source\Object\GameEvent">
       <UniqueIdentifier>{dd25e0e1-8603-4b88-b069-4f542512d445}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object\Research">
+      <UniqueIdentifier>{d34bf95b-a42e-430e-8b73-4b77af431d5e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

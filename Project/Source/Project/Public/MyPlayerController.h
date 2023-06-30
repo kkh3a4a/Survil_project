@@ -170,8 +170,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool other_trade_success = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int count_lab = 0;
+	
 
 	UFUNCTION(BlueprintCallable)
 		void send_trade_deal();

@@ -67,7 +67,7 @@ void AMain::BeginPlay()
 	if (Terrain == nullptr) {
 		return;
 	}
-
+	
 	//Get Camera
 	TArray<AActor*> CameraActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), CameraActors);
@@ -101,7 +101,8 @@ void AMain::BeginPlay()
 	Network->_MainClass = this;
 	Network->_BuildManager = BuildManager;
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
-
+	Research = reinterpret_cast<AResearch*>(Research);
+	Research->set_NetWork(Network);
 	applied_policy.SetNum(28);
 }
 

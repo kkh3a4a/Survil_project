@@ -76,6 +76,9 @@ constexpr int city_size = 100;
 #define CS_PACKET_TRADEDEAL			93
 #define CS_PACKET_TRADESUCCESS		94
 
+#define CS_PACKET_TECHNOLOGY		100
+#define CS_PACKET_TECHPHASE			101
+
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
 #define SC_PACKET_CITIZENCREATE		3
@@ -119,6 +122,11 @@ constexpr int city_size = 100;
 #define SC_PACKET_TRADERESOURCE		92
 #define SC_PACKET_TRADEDEAL			93
 #define SC_PACKET_TRADESUCCESS		94
+
+
+#define SC_PACKET_TECHNOLOGY		100
+#define SC_PACKET_TECHPHASE			101
+
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -282,6 +290,26 @@ struct cs_packet_tradesuccess {
 
 	int success_boolean;
 };
+
+struct cs_packet_technology
+{
+	unsigned char size = sizeof(cs_packet_technology);
+	unsigned char type = CS_PACKET_TECHNOLOGY;
+
+	int tech_type;
+	int tech_level;
+};
+
+struct cs_packet_techphase
+{
+	unsigned char size = sizeof(cs_packet_techphase);
+	unsigned char type = CS_PACKET_TECHPHASE;
+
+	int tech_phase;
+};
+
+
+
 
 struct sc_packet_login
 {
@@ -572,5 +600,21 @@ struct sc_packet_tradesuccess {
 	unsigned char type = SC_PACKET_TRADESUCCESS;
 
 	int success_boolean;
+};
+
+struct sc_packet_technology
+{
+	unsigned char size = sizeof(sc_packet_technology);
+	unsigned char type = SC_PACKET_TECHNOLOGY;
+
+	int tech_type;
+	int tech_level;
+};
+struct sc_packet_techphase
+{
+	unsigned char size = sizeof(sc_packet_techphase);
+	unsigned char type = SC_PACKET_TECHPHASE;
+
+	int tech_phase;
 };
 #pragma pack (pop)

@@ -246,7 +246,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MainClass->BuildManager->BuildSuccess(packet->id - BUILDINGSTART, packet->x, packet->y, packet->building_type);
 			if (packet->building_type == 6) //연구소일시 연구소 수량 증가, 연구 버튼 활성화
 			{
-				_MyController->count_lab ++;
+				_MainClass->Research->count_lab++;
 			}
 			break;
 		}
@@ -381,6 +381,19 @@ void FSocketThread::processpacket(unsigned char* buf)
 			sc_packet_tradesuccess* packet = reinterpret_cast<sc_packet_tradesuccess*>(buf);
 			_MyController->other_trade_success = (bool)packet->success_boolean;
 
+			break;
+		}
+		case SC_PACKET_TECHNOLOGY:
+		{
+			sc_packet_technology* packet = reinterpret_cast<sc_packet_technology*>(buf);
+			_MainClass->Research->set_technology(packet->tech_type, packet->tech_level);
+			UE_LOG(LogTemp, Warning, TEXT("technology : %d, %d"), packet->tech_type, packet->tech_level);
+			break;
+		}
+		case SC_PACKET_TECHPHASE:
+		{
+			sc_packet_techphase* packet = reinterpret_cast<sc_packet_techphase*>(buf);
+			_MainClass->Research->set_tech_phase(packet->tech_phase);
 			break;
 		}
 		default:

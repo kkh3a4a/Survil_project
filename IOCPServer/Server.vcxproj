@@ -153,6 +153,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Policy.h" />
     <ClInclude Include="protocol.h" />
+    <ClInclude Include="Research.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Policy.cpp" />
+    <ClCompile Include="Research.cpp" />
     <ClCompile Include="Resource.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
