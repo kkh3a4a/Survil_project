@@ -66,6 +66,9 @@ void Citizen::set_citizen_move()
 				packet.x = building->_x;
 				packet.y = building->_y;
 
+				Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+				player->_research->change_lab_count(player->_research->lab_count + 1);
+
 				_arrival_x = _x;
 				_arrival_y = _y + 500;
 

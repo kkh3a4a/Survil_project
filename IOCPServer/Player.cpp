@@ -17,7 +17,7 @@ Player::Player(int id, STATE state)
 	is_connected = false;
 	_id = id;
 	_socket={0};
-
+	_research = new Research(id);
 	//초기 자원 지정
 	for (auto& a : _resource_amount)
 	{

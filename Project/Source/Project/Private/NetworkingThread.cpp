@@ -396,6 +396,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MainClass->Research->set_tech_phase(packet->tech_phase);
 			break;
 		}
+		case SC_PACKET_TECHTIMER:
+		{
+			sc_packet_techtimer* packet = reinterpret_cast<sc_packet_techtimer*>(buf);
+			_MainClass->Research->tech_timer = packet->tech_timer_second;
+			break;
+		}
 		default:
 		{
 			//DebugBreak();

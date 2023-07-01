@@ -126,6 +126,7 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_TECHNOLOGY		100
 #define SC_PACKET_TECHPHASE			101
+#define SC_PACKET_TECHTIMER			102
 
 
 #pragma pack (push, 1)
@@ -616,5 +617,13 @@ struct sc_packet_techphase
 	unsigned char type = SC_PACKET_TECHPHASE;
 
 	int tech_phase;
+};
+
+struct sc_packet_techtimer
+{
+	unsigned char size = sizeof(sc_packet_techtimer);
+	unsigned char type = SC_PACKET_TECHTIMER;
+
+	int tech_timer_second;
 };
 #pragma pack (pop)

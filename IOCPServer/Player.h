@@ -16,7 +16,7 @@ public:
 	char w, a, s, d;
 
 	Policy _policy;
-	Research _research;
+	Research* _research;
 	std::set<int> view_list;
 
 	//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무

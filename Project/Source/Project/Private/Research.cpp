@@ -93,10 +93,4 @@ void AResearch::set_tech_phase(int phase)
 
 
 //
-//// Called every frame
-//void AResearch::Tick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
-//
-//}
-
+// Called every frame

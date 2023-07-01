@@ -110,7 +110,10 @@ void AMain::BeginPlay()
 void AMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (Research->tech_timer >= 0)
+	{
+		Research->tech_timer -= DeltaTime;
+	}
 	MyCameraComponent->PostProcessSettings.VignetteIntensity = abs(0.5 * cos((SunAngle - 90)* PI / 180.0) - 0.5);
 	if(SunAngle < 180)
 		HeatHazeMaterialInstance->SetScalarParameterValue(FName("Strength"), abs(cos((SunAngle + 90) * PI / 180.0)) / 100);
