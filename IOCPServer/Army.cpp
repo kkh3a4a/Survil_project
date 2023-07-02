@@ -51,8 +51,9 @@ void Army::set_army_move()
 		
 		if (!_isOverlap)
 		{
-			_x += ((_arrival_x - _x) / distance) * 10;
-			_y += ((_arrival_y - _y) / distance) * 10;
+			Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+			_x += ((_arrival_x - _x) / distance) * 10 * player->_adventure_speed;
+			_y += ((_arrival_y - _y) / distance) * 10 * player->_adventure_speed;
 		}
 		int _i_x = _x; int _i_y = _y;
 		_arrival_z = ((float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_x) % 100) / 100) + (float)object_z[(_i_x + 100) / 100][_i_y / 100] * (((_i_x / 100) % 100) / 100) + (float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_y) % 100) / 100) + (float)object_z[_i_x / 100][(_i_y + 100) / 100] * ((_i_y) % 100) / 100) * 20;
