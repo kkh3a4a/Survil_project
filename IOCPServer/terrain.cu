@@ -24,7 +24,8 @@
 using namespace std;
 
 const int min_height = 1;
-const int max_height = 10;
+const int init_max_height = 10;
+const int max_height = 30;
 const int base_floor = 1;
 const int temperature_divide = 4;
 
@@ -55,7 +56,7 @@ default_random_engine dre(rd());
 uniform_int_distribution <int>terrain_distance(0, one_side_number - 1);
 uniform_int_distribution <int>number_of_hills_uid(one_side_number / 10, one_side_number / 10);
 uniform_int_distribution <int>hill_size_uid(one_side_number / 20, one_side_number / 10);
-uniform_int_distribution <int>height_uid(min_height, max_height);
+uniform_int_distribution <int>height_uid(min_height, init_max_height);
 
 uniform_int_distribution <int>wind_speed_uid(0, 50);
 uniform_int_distribution <int>wind_angle_uid(0, 360);
@@ -76,20 +77,6 @@ void make_random_array(II* random_array, bool& random_array_used)
 		else {
 			Sleep(10);
 		}
-	}
-}
-
-__global__
-void make_hills_cuda(char** terrain_array_device, HI* hill_location_device, int num_of_hills)
-{
-	II terrain;
-	terrain.x = blockIdx.x * blockDim.x + threadIdx.x;
-	terrain.y = blockIdx.y * blockDim.y + threadIdx.y;
-	HI hill;
-	int distance;
-
-	if (terrain.x % 5 == 0 && terrain.y % 5 == 0) {
-		terrain_array_device[terrain.x][terrain.y] += 4;
 	}
 }
 
@@ -579,6 +566,28 @@ void heat_conduction_cuda(unsigned char** temperature_map_device)
 	//temperature_map_device[coo.x][coo.y] = sum / 9;
 }
 
+__global__
+void make_big_hill_cuda(char** terrain_array_device, II hill_pos, int hill_size)
+{
+	II coo;
+	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
+	coo.y = blockIdx.x * blockDim.x + threadIdx.x;
+
+	//if (coo.x < hill_pos.x - hill_size || coo.x > hill_pos.x + hill_size || coo.y < hill_pos.y - hill_size || coo.y > hill_pos.y + hill_size)
+	//	return;
+
+	int distance = sqrt(pow(coo.y - hill_pos.y, 2) + pow(coo.x - hill_pos.x, 2));
+	if (distance <= hill_size / 2) {
+		terrain_array_device[coo.x][coo.y] += hill_size * (hill_size / 2 - distance) / hill_size / 2;
+		if (terrain_array_device[coo.x][coo.y] > max_height) {
+			terrain_array_device[coo.x][coo.y] = max_height;
+		}
+		else if (terrain_array_device[coo.x][coo.y] < base_floor) {
+			terrain_array_device[coo.x][coo.y] = base_floor;
+		}
+	}
+}
+
 class Terrain
 {
 private:
@@ -597,7 +606,7 @@ private:
 	char** terrain_player_sight_host = new char* [SIGHT_X];
 	char** temperature_player_sight = new char* [SIGHT_X];
 
-	unsigned __int64 init_total_hill_height = (unsigned __int64)one_side_number * (unsigned __int64)one_side_number * (unsigned __int64)(max_height + min_height) / 2;
+	unsigned __int64 init_total_hill_height = (unsigned __int64)one_side_number * (unsigned __int64)one_side_number * (unsigned __int64)(init_max_height + min_height) / 2;
 	
 	II city_location[5];	//나중에 크기 MAXPLAYER로 수정해야 함
 	II* city_location_device;
@@ -608,6 +617,7 @@ private:
 	bool random_array_used = true;
 	
 	bool log = false;
+	bool can_make_big_hill = false;
 	
 public:
 	Terrain()  
@@ -617,7 +627,6 @@ public:
 		//랜덤배열 제작 쓰레드 가동===================================================
 		thread t1 = thread(make_random_array, random_array, ref(random_array_used));
 		t1.detach();
-
 
 		//Terrain Memory Assignement===================================================
 		clock_t t_1 = clock();
@@ -809,38 +818,42 @@ public:
 			cout << "Terrain Flatten : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
-	void make_big_hills()
+	void make_big_hill()
 	{
-		// add scarce에서 블럭 넘치면 빼고 부족하면 채우는 함수로 변경할지  --깔끔한것 이것
-		// 아니면 여기서 랜덤으로 블럭들을 빼고 새로운 곳에 언덕을 생성할지
-
+		if (!can_make_big_hill)
+			return;
 		
 		clock_t t_0 = clock();
+		uniform_int_distribution <int>random_pos(0, one_side_number);
+		uniform_int_distribution <int>random_size(100, 200);
+		
+		II hill_pos = { random_pos(dre), random_pos(dre) };
+		int hill_size = random_size(dre);
+		
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
-		//make_big_hills_cuda <<<grid, block >>> (terrain_array_device);
+		make_big_hill_cuda <<<grid, block >>> (terrain_array_device, hill_pos, hill_size);
 		cudaDeviceSynchronize();
-
+		/*for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
+		}*/
+		cout << "Big Hill Location: " << hill_pos.x << " " << hill_pos.y << " Size: " << hill_size << endl;
 		clock_t t_1 = clock();
-		if (log)
-			cout << "Make Big Hills : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		//if (log)
+		cout << "Make Big Hills : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
 	void adjust_num_blocks()
 	{
 		__int64 curr_total = add_all();
 		__int64 scarce_blocks = init_total_hill_height - curr_total;
-		/*if (curr_total > init_total_hill_height) {
-			scarce_blocks = 0;
-		}
-		else {
-			scarce_blocks = init_total_hill_height - curr_total;
-		}
-		if (scarce_blocks == 0) {
+		
+		if (scarce_blocks <= 0) {	//부족하거나 많은게 없다면
 			if (log)
 				cout << "No scarce_blocks" << endl;
+			can_make_big_hill = false;
 			return;
-		}*/
+		}
 		
 		if (log)
 			cout<< "Scarce_blocks: " << scarce_blocks << endl;
@@ -859,11 +872,6 @@ public:
 
 		int grid, block;
 		if (abs(scarce_blocks) <= 1024) {	//절댓값이 1024보다 작다면
-			if (scarce_blocks == 0) {	//부족하거나 많은게 없다면
-				if (log)
-					cout << "No scarce_blocks" << endl;
-				return;
-			}
 			grid = 1;
 			block = abs(scarce_blocks);
 		}
@@ -874,22 +882,20 @@ public:
 		cout << "Scarce_blocks: " << scarce_blocks << endl;
 
 
-		if (abs(scarce_blocks) > random_array_size) {
+		if (scarce_blocks > random_array_size) {
 			cout << "FATAL ERROR: scarce_blocks is bigger than random_array_size !!!\n";
 			scarce_blocks = random_array_size;
 		}
 
-		if (scarce_blocks > 0) {
+		if (scarce_blocks > 0)
 			add_scarce_cuda << <grid, block >> > (terrain_array_device, random_array_device, scarce_blocks);
-		}
-		else {
+		else
 			sub_scarce_cuda << <grid, block >> > (terrain_array_device, random_array_device, scarce_blocks);
-		}
 
 		cudaDeviceSynchronize();
 		
 		random_array_used = true;
-		
+		can_make_big_hill = true;
 		cudaFree(random_array_device);
 		clock_t t_2 = clock();
 
@@ -913,6 +919,7 @@ public:
 			t_1 = clock();
 
 			adjust_num_blocks();
+			make_big_hill();
 
 			t_2 = clock();
 			wind_blow_cuda << <grid, block >> > (terrain_array_device, wind_direction);
