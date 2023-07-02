@@ -66,7 +66,7 @@ void Research::set_tech_upgrade(int type, int level)
 				player->_resource_amount[2] -= level * 200;
 				player->_resource_amount[4] -= level * 200;
 				player->send_resource_amount();
-				auto t = std::chrono::seconds((int)((10.0) * (float)level));
+				auto t = std::chrono::seconds((int)((100.0) * (float)level));
 				change_tech_timer((std::chrono::system_clock::now() + t - std::chrono::duration_cast<std::chrono::seconds>(t * (efficiency - 1))));
 				tech[type] = level;
 
@@ -163,7 +163,7 @@ void Research::set_tech_phase(int phase)
 				player->_resource_amount[4] -= phase * 200;
 				player->send_resource_amount();
 
-				auto t = std::chrono::seconds((int)((10.0) * (float)(phase + 0.5)));
+				auto t = std::chrono::seconds((int)((100.0) * (float)(phase + 0.5)));
 				change_tech_timer((std::chrono::system_clock::now() + t - std::chrono::duration_cast<std::chrono::seconds>(t * (efficiency - 1))));
 
 				tech_phase = phase;
