@@ -144,7 +144,7 @@ void Resource::collect_resource()
 			{
 				_amount--;
 				Player* player = reinterpret_cast<Player*>(objects[_workcitizens[i]->_playerID]);
-				player->_resource_amount[_type]++;
+				player->_resource_amount[_type] += 1 * player->_work_efficiency;
 				change_Resource_amount = true;
 			}
 		}

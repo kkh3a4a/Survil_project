@@ -20,7 +20,12 @@ public:
 	std::set<int> view_list;
 
 	//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
-	int _resource_amount[5] = {};
+	float _resource_amount[5] = {};
+	float _adventure_efficiency = {1.0};
+	float _work_efficiency = {1.0};
+	float _adventure_speed = { 1.0 };
+	float _oil_efficiency = { 1.0 };
+	float _building_insulation = { 1.0 };
 
 	float _currentX, _currentY, _currentZ;
 

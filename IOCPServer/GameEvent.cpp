@@ -35,6 +35,7 @@ void GameEvent::random_create()
 void GameEvent::check_event(int player_id, int army_id)
 {
 	//std::cout << p_id << " : check_event : "  << _id << std::endl;
+	Player* player = reinterpret_cast<Player*>(objects[g_player_id]);
 	sc_packet_eventselect packet;
 	int s_option = 1;
 	packet.e_id = _id;
@@ -51,35 +52,35 @@ void GameEvent::check_event(int player_id, int army_id)
 	case GameEvent::EV_GETOIL:
 	{
 		swprintf(packet.summary, L"석유을 발견했습니다.");
-		resource_count[0] = rand() % 30 + 13;
+		resource_count[0] = (rand() % 30 + 13) * player->_adventure_efficiency;
 		swprintf(packet.first, L"석유 %d 개 획득하였습니다", resource_count[0]);
 		break;
 	}
 	case GameEvent::EV_GETWATER:
 	{
 		swprintf(packet.summary, L"물을 발견했습니다.");
-		resource_count[1] = rand() % 30 + 13;
+		resource_count[1] = (rand() % 30 + 13) * player->_adventure_efficiency;
 		swprintf(packet.first, L"물 %d 개 획득하였습니다", resource_count[1]);
 		break;
 	}
 	case GameEvent::EV_GETIRON:
 	{
 		swprintf(packet.summary, L"철을 발견했습니다.");
-		resource_count[2] = rand() % 30 + 13;
+		resource_count[2] = (rand() % 30 + 13) * player->_adventure_efficiency;
 		swprintf(packet.first, L"철 %d 개 획득하였습니다", resource_count[2]);
 		break;
 	}
 	case GameEvent::EV_GETFOOD:
 	{
 		swprintf(packet.summary, L"식량을 발견했습니다.");
-		resource_count[3] = rand() % 30 + 13;
+		resource_count[3] = (rand() % 30 + 13) * player->_adventure_efficiency;
 		swprintf(packet.first, L"식량 %d 개 획득하였습니다", resource_count[3]);
 		break;
 	}
 	case GameEvent::EV_GETWOOD:
 	{
 		swprintf(packet.summary, L"나무를 발견했습니다.");
-		resource_count[4] = rand() % 30 + 13;
+		resource_count[4] = (rand() % 30 + 13) * player->_adventure_efficiency;
 		swprintf(packet.first, L"나무 %d 개 획득하였습니다", resource_count[4]);
 		break;
 	}
@@ -87,8 +88,8 @@ void GameEvent::check_event(int player_id, int army_id)
 	{
 		swprintf(packet.summary, L"시민을 발견했습니다.");
 		citizen_count = rand() % 5 + 13;
-		resource_count[3] = rand() % 50 + 25;
-		resource_count[1] = rand() % 50 + 25;
+		resource_count[3] = (rand() % 50 + 25) * player->_adventure_efficiency;
+		resource_count[1] = (rand() % 50 + 25) * player->_adventure_efficiency;
 		swprintf(packet.first, L"시민 %d명을 마을까지 호위합니다.", citizen_count);
 		swprintf(packet.second, L"식량 %d 물 %d 를 약탈합니다", resource_count[3], resource_count[1]);
 		s_option = 2;
@@ -109,7 +110,7 @@ void GameEvent::check_event(int player_id, int army_id)
 	packet.size = sizeof(sc_packet_eventselect);
 	packet.s_option = s_option;
 
-	Player* player = reinterpret_cast<Player*>(objects[g_player_id]);
+	
 	player->send_packet(&packet);
 
 }

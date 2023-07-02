@@ -539,7 +539,7 @@ void Building::WorkBuilding()
 	{
 	case 11:
 	{
-		player->_resource_amount[3] += _citizencount;
+		player->_resource_amount[3] += player->_work_efficiency * _citizencount ;
 		break;
 	}
 
