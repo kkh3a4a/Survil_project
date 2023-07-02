@@ -33,26 +33,15 @@ void Research::change_lab_count(int i)
 		efficiency = 1.0;
 		break;
 	}
-	case 2:
-	{
-		efficiency = 1.1;
-		break;
-	}
-	case 3:
-	{
-		efficiency = 1.2;
-		break;
-	}
 	default:
 	{
-		if (i > 3)
+		if (i > 0)
 		{
-			efficiency += 0.05;
+			efficiency += pow((1.0 / i), 2);
 		}
 		break;
 	}
 	}
-	printf("before : %d", (std::chrono::duration_cast<std::chrono::seconds>(Timer_Start - std::chrono::system_clock::now())).count());
 	auto temp_timer = Timer_Start;
 	
 	float a = (float)std::chrono::duration_cast<std::chrono::seconds>(Timer_Start - std::chrono::system_clock::now()).count();
@@ -61,7 +50,6 @@ void Research::change_lab_count(int i)
 		std::chrono::seconds((int)(a * b));
 
 	change_tech_timer(temp_timer2);
-	printf("after : %d", (std::chrono::duration_cast<std::chrono::seconds>(Timer_Start - std::chrono::system_clock::now())).count());
 }
 
 
@@ -72,7 +60,8 @@ void Research::set_tech_upgrade(int type, int level)
 
 		if (tech[type] == level - 1)
 		{
-			change_tech_timer((std::chrono::system_clock::now() + std::chrono::seconds( (int)((100.0) * (float)level / efficiency))));
+			auto t = std::chrono::seconds((int)((100.0) * (float)level));
+			change_tech_timer((std::chrono::system_clock::now() + t - std::chrono::duration_cast<std::chrono::seconds>(t * (efficiency - 1))));
 			tech[type] = level;
 		}
 	}
