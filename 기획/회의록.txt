@@ -708,3 +708,14 @@ https://docs.google.com/presentation/d/1FchpIadTJxtuOZUm9QAFtYQZ0KmarfQbwC1OrYaZ
 
 3. 다음미팅
  - 7월 3일 월요일 오후 3시 
+
+
+2023-07-03
+----------
+1. 진행상황
+ - 연구 UI 제작, 연구 효과 구현
+ - 모래언덕 비주얼 개선 => 좀더 플레이어에게 멋있게 보일 방법은 없는가?
+
+2. 다음미팅
+ - 7월 17일 월요일 오후 3시
+ - 전쟁, 건축, 정책
