@@ -165,6 +165,10 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 				std::cout << "정책 순서 안됨\n";
 				sc_packet.accept = false;
 			}
+			else if (duplication == 3) {
+				std::cout << "정책 둘중 하나만 가능\n";
+				sc_packet.accept = false;
+			}
 			else {
 				std::cout << "정책 적용\n";
 				player->_policy.policy_ticket--;

@@ -10,13 +10,22 @@ Policy::~Policy()
 
 int Policy::set_policy(int policy_id)
 {
-
+	// 0: 든든한 식사, 1:스프밥, 2: 밀주
+	// 3: 연명치료, 4: 극약처방, 5: 과잉수용, 6: 환자추가배식, 7: 마약치료 8: 요양원, 9: 의수족
+	// 10: 장례식, 11: 시체저장소, 12: 장기이식, 13: 식인, 14: 추모비
+	// 15: 자경단, 16: 경비초소, 17: 교도소, 18: 계엄령, 19: 독재자
+	// 20: 비상교대근무, 21: 연장근무, 22: 감찰관, 23: 강제노동
+	// 24: 아동노동, 25: 보육원, 26: 학도병징집, 27: 작업지원
 	std::cout << "set_policy " << policy_id << std::endl;
 	
 	switch (policy_id) {
 	case 2: if (!policy_array[0] && !policy_array[1]) return 2; break;
-	case 5: if (!policy_array[3] && !policy_array[4]) return 2; break;
-	case 6: if (!policy_array[3] && !policy_array[4]) return 2; break;
+	case 5: if (!policy_array[3] && !policy_array[4]) return 2; 
+			if (policy_array[6]) return 3;
+			break;
+	case 6: if (!policy_array[3] && !policy_array[4]) return 2; 
+			if (policy_array[5]) return 3;
+			break;
 	case 7: if (!policy_array[5] && !policy_array[6]) return 2; break;
 	case 8: if (!policy_array[3] && !policy_array[4]) return 2; break;
 	case 9: if (!policy_array[8]) return 2; break;
@@ -32,6 +41,16 @@ int Policy::set_policy(int policy_id)
 	case 23: if (!policy_array[22]) return 2; break;
 	case 26: if (!policy_array[24] && !policy_array[25]) return 2; break;
 	case 27: if (!policy_array[24] && !policy_array[25]) return 2; break;
+
+
+	case 0: if (policy_array[1]) return 3; break;
+	case 1: if (policy_array[0]) return 3; break;
+	case 3: if (policy_array[4]) return 3; break;
+	case 4: if (policy_array[3]) return 3; break;
+	case 10: if (policy_array[11]) return 3; break;
+	case 11: if (policy_array[10]) return 3; break;
+	case 24: if (policy_array[25]) return 3; break;
+	case 25: if (policy_array[24]) return 3; break;
 	}
 	
 	bool duplication = false;
@@ -155,12 +174,7 @@ int Policy::set_policy(int policy_id)
 	policy_array[policy_id] = true;
 	return duplication;
 
-	// 0: 든든한 식사, 1:스프밥, 2: 밀주
-// 3: 연명치료, 4: 극약처방, 5: 과잉수용, 6: 환자추가배식, 7: 마약치료 8: 요양원, 9: 의수족
-// 10: 장례식, 11: 시체저장소, 12: 장기이식, 13: 식인, 14: 추모비
-// 15: 자경단, 16: 경비초소, 17: 교도소, 18: 계엄령, 19: 독재자
-// 20: 비상교대근무, 21: 연장근무, 22: 감찰관, 23: 강제노동
-// 24: 아동노동, 25: 보육원, 26: 학도병징집, 27: 작업지원
+	
 }
 
 char Policy::get_meal_resource_consume()

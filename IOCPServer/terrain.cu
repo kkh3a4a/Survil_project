@@ -837,10 +837,11 @@ public:
 		/*for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(terrain_array_host[i], terrain_array_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
 		}*/
-		cout << "Big Hill Location: " << hill_pos.x << " " << hill_pos.y << " Size: " << hill_size << endl;
 		clock_t t_1 = clock();
-		//if (log)
-		cout << "Make Big Hills : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		if (log) {
+			cout << "Big Hill Location: " << hill_pos.x << " " << hill_pos.y << " Size: " << hill_size << endl;
+			cout << "Make Big Hills : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
+		}
 	}
 
 	void adjust_num_blocks()
