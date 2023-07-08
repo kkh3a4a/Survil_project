@@ -461,7 +461,6 @@ int main(int argc, char* argv[])
 	{
 		objects[i] = new Player(i);
 		Player* player = reinterpret_cast<Player*>(objects[i]);
-		
 	}
 	for (int i = MAXPLAYER; i < MAXCITIZEN + MAXPLAYER; ++i)//5~1004±îÁö´Â Citizen
 	{
@@ -548,7 +547,6 @@ int main(int argc, char* argv[])
 
 		if (user_id < MAXPLAYER)
 		{
-			
 			player = reinterpret_cast<Player*>(objects[user_id]);
 		}
 		else if (user_id == 99999)

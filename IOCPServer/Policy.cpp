@@ -173,8 +173,6 @@ int Policy::set_policy(int policy_id)
 	}
 	policy_array[policy_id] = true;
 	return duplication;
-
-	
 }
 
 char Policy::get_meal_resource_consume()
