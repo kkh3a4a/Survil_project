@@ -292,6 +292,9 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		player->War_Players[packet->player_num] = true;
 		Player* war_player = reinterpret_cast<Player*>(objects[packet->player_num]);
 		war_player->War_Players[client_id] = true;
+		player->send_declaration_war(packet->player_num, true);
+		war_player->send_declaration_war(client_id, true);
+
 		break;
 	}
 

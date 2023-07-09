@@ -53,6 +53,7 @@ AMyPlayerController::AMyPlayerController()
     Key_a = false;
     Key_s = false;
     Key_d = false;
+    War_players.Init(false, 5);
 }
 
 void AMyPlayerController::SetupInputComponent()
@@ -141,6 +142,11 @@ void AMyPlayerController::UIClick(bool isplus)
     UE_LOG(LogTemp, Log, TEXT("UIClick"));
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+
+void AMyPlayerController::set_war_player(int p_num, int is_war)
+{
+    War_players[p_num] = is_war;
 }
 
 void AMyPlayerController::send_trade_deal()

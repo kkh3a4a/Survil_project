@@ -642,6 +642,7 @@ struct sc_packet_declaration_war
 	unsigned char type = SC_PACKET_DECLARATION_WAR;
 
 	int player_num;
+	int is_war;
 };
 
 

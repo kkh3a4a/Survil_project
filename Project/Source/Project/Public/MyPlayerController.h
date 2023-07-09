@@ -170,7 +170,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool other_trade_success = false;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool War_player0{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool War_player1{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool War_player2{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool War_player3{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool War_player4{};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TArray<uint8> War_players;
+
+	void set_war_player(int p_num, int is_war);
 
 	UFUNCTION(BlueprintCallable)
 		void send_trade_deal();
@@ -184,6 +198,8 @@ public:
 	//¿¸¿Ô
 	UFUNCTION(BlueprintCallable)
 		void War_Player(int player_num);
+
+
 
 	void trade_change_resource(int resource_num, int amount);
 protected:

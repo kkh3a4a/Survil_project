@@ -463,6 +463,17 @@ void Player::send_change_trade_resource(int trade_resource_num, int amount)
 	send_packet(&packet);
 }
 
+void Player::send_declaration_war(int p_num, bool is_war)
+{
+	sc_packet_declaration_war packet;
+	packet.size = sizeof(sc_packet_declaration_war);
+	packet.type = SC_PACKET_DECLARATION_WAR;
+	packet.player_num = p_num;
+	packet.is_war = is_war;
+
+	send_packet(&packet);
+}
+
 void Player::trade_clear()
 {
 	Player* o_player = reinterpret_cast<Player*>(objects[trade_player_id]);
@@ -472,6 +483,9 @@ void Player::trade_clear()
 		_resource_amount[i] -= trade_resource[i];
 		trade_resource[i] = 0;
 	}
+	War_Players[trade_player_id] = false;
+	send_declaration_war(trade_player_id, false);
+
 	trade_success = false;
 	send_resource_amount();
 }

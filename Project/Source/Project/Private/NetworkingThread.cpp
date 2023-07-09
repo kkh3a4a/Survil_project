@@ -402,6 +402,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MainClass->Research->tech_timer = packet->tech_timer_second;
 			break;
 		}
+		case SC_PACKET_DECLARATION_WAR:
+		{
+			sc_packet_declaration_war* packet = reinterpret_cast<sc_packet_declaration_war*>(buf);
+			_MyController->set_war_player(packet->player_num, packet->is_war);
+			break;
+		}
 		default:
 		{
 			//DebugBreak();
