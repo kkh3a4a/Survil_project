@@ -39,6 +39,9 @@ public:
 	int trade_resource[5]{};			//0,1,2,3,4
 	bool trade_success = false;
 
+
+	bool War_Players[5] = {};			//false = Peace, true = War
+
 	Player(int id, STATE state = STATE::ST_FREE);
 	~Player();
 

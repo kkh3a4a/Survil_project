@@ -79,6 +79,8 @@ constexpr int city_size = 100;
 #define CS_PACKET_TECHNOLOGY		100
 #define CS_PACKET_TECHPHASE			101
 
+#define CS_PACKET_DECLARATION_WAR	110
+
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
 #define SC_PACKET_CITIZENCREATE		3
@@ -128,6 +130,7 @@ constexpr int city_size = 100;
 #define SC_PACKET_TECHPHASE			101
 #define SC_PACKET_TECHTIMER			102
 
+#define SC_PACKET_DECLARATION_WAR	110
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -309,7 +312,13 @@ struct cs_packet_techphase
 	int tech_phase;
 };
 
+struct cs_packet_declaration_war
+{
+	unsigned char size = sizeof(cs_packet_declaration_war);
+	unsigned char type = CS_PACKET_DECLARATION_WAR;
 
+	int player_num;
+};
 
 
 struct sc_packet_login
@@ -626,4 +635,16 @@ struct sc_packet_techtimer
 
 	int tech_timer_second;
 };
+
+struct sc_packet_declaration_war
+{
+	unsigned char size = sizeof(sc_packet_declaration_war);
+	unsigned char type = SC_PACKET_DECLARATION_WAR;
+
+	int player_num;
+};
+
+
+
+
 #pragma pack (pop)

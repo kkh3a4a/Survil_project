@@ -195,6 +195,17 @@ void AMyPlayerController::trade_complete()
 
 }
 
+void AMyPlayerController::War_Player(int player_num)
+{
+    cs_packet_declaration_war packet;
+    packet.size = sizeof(cs_packet_declaration_war);
+    packet.type = CS_PACKET_DECLARATION_WAR;
+    packet.player_num = player_num;
+
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+
 void AMyPlayerController::trade_change_resource(int resource_num, int amount)
 {
     switch (resource_num)

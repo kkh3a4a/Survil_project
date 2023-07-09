@@ -285,6 +285,16 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		player->send_packet(&s_packet);
 		break;
 	}
+	case CS_PACKET_DECLARATION_WAR:
+	{
+		cs_packet_declaration_war* packet = reinterpret_cast<cs_packet_declaration_war*>(pk);
+		std::cout << player->_id << " is War : " << packet->player_num << "\n";
+		player->War_Players[packet->player_num] = true;
+		Player* war_player = reinterpret_cast<Player*>(objects[packet->player_num]);
+		war_player->War_Players[client_id] = true;
+		break;
+	}
+
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

@@ -181,6 +181,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void trade_complete();
 
+	//¿¸¿Ô
+	UFUNCTION(BlueprintCallable)
+		void War_Player(int player_num);
+
 	void trade_change_resource(int resource_num, int amount);
 protected:
 	long long int mouse_cnt = 0;
