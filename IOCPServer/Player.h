@@ -39,6 +39,10 @@ public:
 	int trade_resource[5]{};			//0,1,2,3,4
 	bool trade_success = false;
 
+	//ºÒ¸¸ Èñ¸Á
+	float dissatisfaction = 0.0;
+	float hope = 1.0;
+
 
 	bool War_Players[5] = {};			//false = Peace, true = War
 
