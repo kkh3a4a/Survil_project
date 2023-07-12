@@ -31,6 +31,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>ARMY_MODEL;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>ARMY_MODEL1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AActor>ARMY_MODEL2;
 
 	UPROPERTY(EditAnywhere)
 	class AMain* Main;

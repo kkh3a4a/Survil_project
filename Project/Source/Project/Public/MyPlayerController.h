@@ -94,6 +94,9 @@ public:
 	void UIClick(bool isplus);
 
 	UFUNCTION(BlueprintCallable)
+		void UIClick_army(bool isplus, int armyType);
+
+	UFUNCTION(BlueprintCallable)
 	void SendMinimapPacket(float x, float y);
 
 	void select_event(sc_packet_eventselect* );
