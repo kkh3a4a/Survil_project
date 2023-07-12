@@ -30,7 +30,6 @@ public:
 		UMaterial* BuildingGridMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building_WoodenSign;				//type : 0
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building01_HOUSE;				//type : 1 / house
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -59,9 +58,11 @@ public:
 		TSubclassOf<AActor>Building13_GREEN_HOUSE;			//type : 13 / green house
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building14_FACTORY;				//type : 14 / factory
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building21_ARMYCAMP;			//type : 21
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)				//type : 31 / springkler
+		TSubclassOf<AActor>Building31_Sprinkler;
+
 
 	UMaterialInstanceDynamic* MaterialInstance;
 
