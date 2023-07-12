@@ -1012,7 +1012,7 @@ public:
 				continue;
 			int springkler_size = 6;
 			dim3 block(springkler_size, springkler_size, 1);
-			springkler_cool_cuda << <1, block >> > (terrain_array_device, { (int)player->_x / 100, (int)player->_y / 100 });
+			//springkler_cool_cuda << <1, block >> > (terrain_array_device, { (int)player->_x / 100, (int)player->_y / 100 });
 			cudaDeviceSynchronize();
 		}
 	}
