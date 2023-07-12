@@ -144,6 +144,19 @@ void AMyPlayerController::UIClick(bool isplus)
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
+void AMyPlayerController::UIClick_army(bool isplus, int armyType)
+{
+    cs_packet_citizenplacement packet;
+    packet.size = sizeof(cs_packet_citizenplacement);
+    packet.type = CS_PACKET_CITIZENPLACEMENT;
+    packet.objectid = ObjectId + ObjectType;
+    packet.isplus = isplus;
+    packet.army_type = armyType;
+    UE_LOG(LogTemp, Log, TEXT("UIClick"));
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+
 void AMyPlayerController::set_war_player(int p_num, int is_war)
 {
     War_players[p_num] = is_war;
@@ -336,7 +349,18 @@ void AMyPlayerController::MoveToMouseCursor()
         else if (hitActor->ActorHasTag("Building"))
         {
             UE_LOG(LogTemp, Log, TEXT("type : %d"), FCString::Atoi(*hitActor->Tags[1].ToString()));
+            if (FCString::Atoi(*hitActor->Tags[3].ToString()) != my_id)
+            {
+                ObjectId = -1;
+                ObjectType = 0;
+                ResourceUI = false;
+                BuildingUI = false;
+                ArmyUI = false;
+                hitActor = NULL;
+                return;
+            }
             ObjectType = BUILDINGSTART;
+
 
             ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
             ClickObjectType = FCString::Atoi(*hitActor->Tags[1].ToString());
@@ -350,9 +374,21 @@ void AMyPlayerController::MoveToMouseCursor()
         else if (hitActor->ActorHasTag("Army"))
         {
             UE_LOG(LogTemp, Log, TEXT("Army"));
+            if (FCString::Atoi(*hitActor->Tags[3].ToString()) != my_id)
+            {
+                ObjectId = -1;
+                ObjectType = 0;
+                ResourceUI = false;
+                BuildingUI = false;
+                ArmyUI = false;
+                hitActor = NULL;
+                return;
+            }
             ObjectType = ARMYSTART;
             ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
-
+            
+            ClickObjectType = FCString::Atoi(*hitActor->Tags[1].ToString());
+            UE_LOG(LogTemp, Log, TEXT("type : %d"), ClickObjectType);
             ResourceUI = false;
             BuildingUI = false;
             ArmyUI = true;
@@ -605,6 +641,10 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
             joblessCitizen = Network->playerjobless;
             workcitizen = BuildManager->buildingWorkCount[ObjectId];
         }
+        else if (ArmyUI == true)
+       {
+           joblessCitizen = Network->playerjobless;
+       }
         else
         {
             ClickObjectType = 0;

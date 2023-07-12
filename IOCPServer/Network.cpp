@@ -64,7 +64,7 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		else if (packet->objectid >= BUILDINGSTART && packet->objectid < BUILDINGSTART + MAXBUILDING)
 		{
 			Building* building = reinterpret_cast<Building*>(objects[packet->objectid]);
-			building->set_building_citizen_placement(packet->isplus);
+			building->set_building_citizen_placement(packet->isplus, packet->army_type);
 		}
 		break;
 	}

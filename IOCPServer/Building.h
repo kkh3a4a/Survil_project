@@ -19,9 +19,10 @@ public:
 	
 	bool training_finish = true;
 	int training_army_id = -1;
+	int _army_type = {};
 
 	bool _create_building(float x, float y, char type, int id);
-	void set_building_citizen_placement(char isplus);
+	void set_building_citizen_placement(char isplus, int armytype);
 	void WorkBuilding();
 	void training_amry();
 };

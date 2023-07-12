@@ -176,6 +176,7 @@ struct cs_packet_citizenplacement
 	unsigned char type;
 	
 	int objectid;
+	int army_type = 0;
 	char isplus;
 
 };
@@ -505,6 +506,7 @@ struct  sc_packet_armytraining
 	int c_id1, c_id2, c_id3, c_id4, c_id5;
 	float x, y, z;
 	int army_id;
+	int  _army_type;
 };
 
 struct sc_packet_armydisband

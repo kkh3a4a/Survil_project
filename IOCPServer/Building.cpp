@@ -344,12 +344,13 @@ bool Building::_create_building(float x, float y, char type,int id)
 	return is_Success_Create && is_citizen;
 }
 
-void Building::set_building_citizen_placement(char isplus)
+void Building::set_building_citizen_placement(char isplus, int armytype)
 {
 	Citizen* placement_citizen = nullptr;
 	int Mindistance = 99999999;
 	int Maxdistance = -99999999;
-	
+	Player* player = reinterpret_cast<Player*>(objects[_client_id]);
+
 	//여러명 추가
 	if (_type == 21 && training_finish)
 	{
@@ -405,20 +406,39 @@ void Building::set_building_citizen_placement(char isplus)
 			// army 생성 성공
 			if (count == 5)
 			{
-				int citizen_cnt = 0;
-				for (auto& a_citizen : multi_citizens)
+				if(player->_resource_amount[0] >= _army_type * 50 && player->_resource_amount[2] >= _army_type * 50 && player->_resource_amount[4] >= _army_type * 50)
 				{
-					a_citizen->_job = _type;
-					a_citizen->_job_x = _x;
-					a_citizen->_job_y = _y;
-					a_citizen->_job_z = _z;
-					a_citizen->_Job_id = _id;
-					_citizens[citizen_cnt] = a_citizen;
-					citizen_cnt++;
-					if (!IsNight)
-						a_citizen->set_citizen_arrival_location(_x, _y, _z);
+					int citizen_cnt = 0;
+					for (auto& a_citizen : multi_citizens)
+					{
+						a_citizen->_job = _type;
+						a_citizen->_job_x = _x;
+						a_citizen->_job_y = _y;
+						a_citizen->_job_z = _z;
+						a_citizen->_Job_id = _id;
+						_citizens[citizen_cnt] = a_citizen;
+						citizen_cnt++;
+						_army_type = armytype;
+						if (!IsNight)
+							a_citizen->set_citizen_arrival_location(_x, _y, _z);
+					}
+					player->_resource_amount[0] -= _army_type * 50;
+					player->_resource_amount[2] -= _army_type * 50;
+					player->_resource_amount[4] -= _army_type * 50;
+					player->send_resource_amount();
+					training_finish = false;
 				}
-				training_finish = false;
+				else
+				{
+					for (int i = 0; i < count; ++i)
+					{
+						multi_citizens[i]->_job = 0;
+						multi_citizens[i] = nullptr;
+						Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
+						army->_a_state = Army::ST_FREE;
+						training_army_id = -1;
+					}
+				}
 			}
 			// army 생성 실패
 			else
@@ -527,7 +547,7 @@ void Building::set_building_citizen_placement(char isplus)
 	packet.object_id = _id;
 	
 	packet.workcitizen = _citizencount;
-	Player* player = reinterpret_cast<Player*>(objects[_client_id]);
+	
 	packet.playerjobless = player->joblesscitizen();
 	player->send_packet(&packet);
 }
@@ -560,7 +580,7 @@ void Building::training_amry()
 	cout << "traning army" << endl;
 	Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
 	army->_a_state = army->ST_CONPLETE;
-
+	army->_army_type = _army_type;
 	
 
 	for (int i = 0; i < 5; ++i)
@@ -571,7 +591,7 @@ void Building::training_amry()
 	sc_packet_armytraining packet;
 	packet.size = sizeof(sc_packet_armytraining);
 	packet.type = SC_PACKET_ARMYTRAINING;
-
+	packet._army_type = _army_type;
 	packet.c_id1 = _citizens[0]->_id;
 	packet.c_id2 = _citizens[1]->_id;
 	packet.c_id3 = _citizens[2]->_id;

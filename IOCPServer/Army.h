@@ -18,6 +18,7 @@ public:
 	int _resource_amount[5] = {};
 	int _Gypsy_citizen = 0;
 	bool is_escort = false;
+	int _army_type = {};
 
 	void SpawnArmy(float x, float y, float z);
 	void set_army_move();
