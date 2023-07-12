@@ -349,7 +349,18 @@ void AMyPlayerController::MoveToMouseCursor()
         else if (hitActor->ActorHasTag("Building"))
         {
             UE_LOG(LogTemp, Log, TEXT("type : %d"), FCString::Atoi(*hitActor->Tags[1].ToString()));
+            if (FCString::Atoi(*hitActor->Tags[3].ToString()) != my_id)
+            {
+                ObjectId = -1;
+                ObjectType = 0;
+                ResourceUI = false;
+                BuildingUI = false;
+                ArmyUI = false;
+                hitActor = NULL;
+                return;
+            }
             ObjectType = BUILDINGSTART;
+
 
             ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
             ClickObjectType = FCString::Atoi(*hitActor->Tags[1].ToString());
@@ -363,6 +374,16 @@ void AMyPlayerController::MoveToMouseCursor()
         else if (hitActor->ActorHasTag("Army"))
         {
             UE_LOG(LogTemp, Log, TEXT("Army"));
+            if (FCString::Atoi(*hitActor->Tags[3].ToString()) != my_id)
+            {
+                ObjectId = -1;
+                ObjectType = 0;
+                ResourceUI = false;
+                BuildingUI = false;
+                ArmyUI = false;
+                hitActor = NULL;
+                return;
+            }
             ObjectType = ARMYSTART;
             ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
             

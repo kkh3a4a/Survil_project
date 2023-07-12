@@ -114,7 +114,7 @@ void ABuildManager::BuildSuccess(int obj_id, float x, float y, int building_type
 	BuiltBuildings[obj_id]->Tags.Add(TEXT("Building"));
 	BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(building_type));
 	BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id));
-	
+	BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id / PLAYERBUILDINGCOUNT));
 }
 
 void ABuildManager::SendBuildablePacket()

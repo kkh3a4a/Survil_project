@@ -109,22 +109,26 @@ void ACitizenManager::Spawn_Army(void* buf)
     {
         army[packet->army_id - ARMYSTART] = uworld->SpawnActor<AActor>(ARMY_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
         army[packet->army_id - ARMYSTART]->Tags.Add(TEXT("Army"));
-        army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(0));//추후 타입 넣어줘야함
+        army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(0));
+        
     }
     else if (packet->_army_type == 1)
     {
         army[packet->army_id - ARMYSTART] = uworld->SpawnActor<AActor>(ARMY_MODEL1, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
         army[packet->army_id - ARMYSTART]->Tags.Add(TEXT("Army"));
-        army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(packet->_army_type));//추후 타입 넣어줘야함
+        army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(packet->_army_type));
+
     }
     else if (packet->_army_type == 2)
     {
         army[packet->army_id - ARMYSTART] = uworld->SpawnActor<AActor>(ARMY_MODEL2, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
         army[packet->army_id - ARMYSTART]->Tags.Add(TEXT("Army"));
-        army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(packet->_army_type));//추후 타입 넣어줘야함
+        army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(packet->_army_type));
+
     }
     
     army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(packet->army_id - ARMYSTART));
+    army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt((packet->army_id - ARMYSTART) / (ARMYMAX / 5)));
 }
 
 void ACitizenManager::Set_Army_Location(int a_id, FVector Location, FRotator Rotate, char a_state)
