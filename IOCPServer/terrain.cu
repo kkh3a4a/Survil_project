@@ -499,6 +499,19 @@ void add_object_height_cuda(char** terrain_array_device, II building_pos, int bu
 }
 
 __global__
+void springkler_cool_cuda(char** temperature_map_device, II springkler_pos)
+{
+	II coo;
+	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
+	coo.y = blockIdx.x * blockDim.x + threadIdx.x;
+
+	int distance = abs(coo.x - springkler_pos.x) + abs(coo.y - springkler_pos.y);
+	if (distance <= 6) {
+		temperature_map_device[coo.x][coo.y] -= 10 * temperature_divide;
+	}
+}
+
+__global__
 void heat_conduction_cuda(unsigned char** temperature_map_device)
 {
 	II coo;
@@ -990,6 +1003,19 @@ public:
 			cudaDeviceSynchronize();
 		}
 	}
+	
+	void springkler_cool()
+	{
+		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
+			Building* building = reinterpret_cast<Building*>(objects[i]);
+			if (building->_type != 31)
+				continue;
+			int springkler_size = 6;
+			dim3 block(springkler_size, springkler_size, 1);
+			springkler_cool_cuda << <1, block >> > (terrain_array_device, { (int)player->_x / 100, (int)player->_y / 100 });
+			cudaDeviceSynchronize();
+		}
+	}
 
 	void except_city_terrain()
 	{
@@ -1032,11 +1058,8 @@ public:
 				else
 					//printf("%4d", terrain_array_host[x][y]);
 					printf("%d ", terrain_array_host[x][y]);
-
 			}
 			printf("\n");
-			//printf("\n");
-
 		}
 	}
 
@@ -1105,11 +1128,13 @@ public:
 		return returnvalue;
 	}
 		
-	char** get_map() {
+	char** get_map() 
+	{
 		return terrain_array_host;
 	}
 
-	char** get_shadow_map() {
+	char** get_shadow_map() 
+	{
 		return shadow_map_host;
 	}
 	
