@@ -70,10 +70,10 @@ DWORD WINAPI terrain_change(LPVOID arg)
 			terrain->add_object_height();
 			terrain->make_shadow_map(sun_angle);
 			terrain->make_tempertature_map(sun_angle);
+			terrain->springkler_cool();
 			CC retval = terrain->get_highest_lowest(temperature_map);
-
+			
 			//cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
-
 			//terrain->show_array(total_terrain, 320);
 			//terrain->show_array(shadow_map, 320);
 			//terrain->show_array(temperature_map, 320);

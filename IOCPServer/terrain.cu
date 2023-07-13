@@ -499,15 +499,16 @@ void add_object_height_cuda(char** terrain_array_device, II building_pos, int bu
 }
 
 __global__
-void springkler_cool_cuda(char** temperature_map_device, II springkler_pos)
+void springkler_cool_cuda(unsigned char** temperature_map_device, II springkler_pos)
 {
 	II coo;
 	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
 	coo.y = blockIdx.x * blockDim.x + threadIdx.x;
 
-	int distance = abs(coo.x - springkler_pos.x) + abs(coo.y - springkler_pos.y);
-	if (distance <= 6) {
-		temperature_map_device[coo.x][coo.y] -= 10 * temperature_divide;
+	int distance = sqrt(pow(coo.x - (int)blockDim.x / 2, 2) + pow(coo.y - (int)blockDim.y / 2, 2));
+	if (distance <= blockDim.x / 2) {
+		//회당 1도씩 낮춤
+		temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] -= 1 * temperature_divide;
 	}
 }
 
@@ -801,11 +802,11 @@ public:
 		dim3 grid(one_side_number / 32, one_side_number / 32, 1);
 		dim3 block(32, 32, 1);
 		make_temperature_map_cuda << <grid, block >> > (terrain_array_device, shadow_map_device, temperature_map_device, sun_angle);
-		/*cudaDeviceSynchronize();
-		heat_conduction_cuda << <grid, block >> > (temperature_map_device);*/
-		for (int i = 0; i < one_side_number; i++) {
+		cudaDeviceSynchronize();
+		/*for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(char), cudaMemcpyDeviceToHost);
-		}
+		}*/
+		
 		clock_t t_1 = clock();
 		if(log)
 			cout << "Make Temperature Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
@@ -893,8 +894,6 @@ public:
 			grid = abs(scarce_blocks) / 1024;
 			block = 1024;
 		}
-		cout << "Scarce_blocks: " << scarce_blocks << endl;
-
 
 		if (scarce_blocks > random_array_size) {
 			cout << "FATAL ERROR: scarce_blocks is bigger than random_array_size !!!\n";
@@ -1008,12 +1007,15 @@ public:
 	{
 		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
 			Building* building = reinterpret_cast<Building*>(objects[i]);
-			if (building->_type != 31)
-				continue;
-			int springkler_size = 6;
+			if (building->_type != 31) continue;	//스프링클러일 때만
+			cout << "Sprinkler Cool " << i << endl;
+			int springkler_size = 21;	//사이즈 홀수로 해야 함
 			dim3 block(springkler_size, springkler_size, 1);
-			//springkler_cool_cuda << <1, block >> > (terrain_array_device, { (int)player->_x / 100, (int)player->_y / 100 });
-			cudaDeviceSynchronize();
+			springkler_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
+			//cudaDeviceSynchronize();
+			for (int i = 0; i < one_side_number; i++) {
+				cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(unsigned char), cudaMemcpyDeviceToHost);
+			}
 		}
 	}
 

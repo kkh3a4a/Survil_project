@@ -38,7 +38,7 @@ void ATemperature::BeginPlay()
             ADecalActor* Decal = GetWorld()->SpawnActor<ADecalActor>(FVector(2000 * x + 1000, 2000 * y + 1000, 0), Rotation);
             UDecalComponent* DecalComponent = Decal->GetDecal();
 			DecalComponent->DecalSize = FVector(100, 100, 100);
-            Decal->SetActorScale3D(FVector(10, _DecalSize, _DecalSize));
+            Decal->SetActorScale3D(FVector(30, _DecalSize, _DecalSize));
             Decal->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
             Decal->SetDecalMaterial(MaterialInstanceArray[y * (SIGHT_X / ColorsInDecalX) + x]);
             DecalArray.Add(Decal);
