@@ -24,4 +24,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	uint8 state;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float Army_HP {};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float  Army_MAXHP {100};
+
 };

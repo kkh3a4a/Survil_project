@@ -507,6 +507,7 @@ struct  sc_packet_armytraining
 	float x, y, z;
 	int army_id;
 	int  _army_type;
+	int hp;
 };
 
 struct sc_packet_armydisband

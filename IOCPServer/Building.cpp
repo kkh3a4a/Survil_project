@@ -601,6 +601,7 @@ void Building::training_amry()
 	packet.y = _y + 500;
 	packet.z = _z;
 	packet.army_id = training_army_id;
+	packet.hp = 100;
 	training_army_id = -1;
 	army->SpawnArmy(_x, _y + 500, _z);
 

@@ -129,6 +129,8 @@ void ACitizenManager::Spawn_Army(void* buf)
     
     army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt(packet->army_id - ARMYSTART));
     army[packet->army_id - ARMYSTART]->Tags.Add(*FString::FromInt((packet->army_id - ARMYSTART) / (ARMYMAX / 5)));
+    AArmy* army_class = reinterpret_cast<AArmy*>(army[packet->army_id - ARMYSTART]);
+    army_class->Army_HP = packet->hp;
 }
 
 void ACitizenManager::Set_Army_Location(int a_id, FVector Location, FRotator Rotate, char a_state)
