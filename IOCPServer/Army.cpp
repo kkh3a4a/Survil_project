@@ -8,6 +8,7 @@ Army::Army(int i)
 	_id = i;
 	_a_state = A_STATE::ST_FREE;
 	_playerID = (i - ARMYSTART) / (ARMYMAX / 5);
+	last_attack = std::chrono::system_clock::now();
 	for (auto& a : _citizens)
 	{
 		a = -1;

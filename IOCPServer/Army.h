@@ -11,7 +11,7 @@ public:
 	enum A_STATE { ST_FREE, ST_TRAINING, ST_CONPLETE };
 	int _citizens[5]{};
 	A_STATE _a_state;	
-	
+	std::chrono::system_clock::time_point last_attack;
 
 	float _arrival_x, _arrival_y, _arrival_z;
 	int _playerID;
@@ -19,6 +19,7 @@ public:
 	int _Gypsy_citizen = 0;
 	bool is_escort = false;
 	int _army_type = {};
+
 
 	void SpawnArmy(float x, float y, float z);
 	void set_army_move();

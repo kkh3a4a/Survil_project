@@ -35,7 +35,7 @@ void GameEvent::random_create()
 void GameEvent::check_event(int player_id, int army_id)
 {
 	//std::cout << p_id << " : check_event : "  << _id << std::endl;
-	Player* player = reinterpret_cast<Player*>(objects[g_player_id]);
+	Player* player = reinterpret_cast<Player*>(objects[player_id]);
 	sc_packet_eventselect packet;
 	int s_option = 1;
 	packet.e_id = _id;
