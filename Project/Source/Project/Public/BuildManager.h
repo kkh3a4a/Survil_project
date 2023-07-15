@@ -61,8 +61,6 @@ public:
 		TSubclassOf<AActor>Building14_FACTORY;				//type : 14 / factory
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building21_ARMYCAMP;			//type : 21
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)				//type : 31 / sprinkler
-		TSubclassOf<AActor>Building31_Sprinkler;
 
 
 	UMaterialInstanceDynamic* MaterialInstance;

@@ -993,7 +993,7 @@ public:
 		}
 		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
 			Building* building = reinterpret_cast<Building*>(objects[i]);
-			if (building->_type == -1)
+			if (building->_type == -1) 
 				continue;
 			int building_size = 6;
 			int building_height = 4;
@@ -1007,7 +1007,7 @@ public:
 	{
 		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
 			Building* building = reinterpret_cast<Building*>(objects[i]);
-			if (building->_type != 31) continue;	//스프링클러일 때만
+			if (building->_type != 8) continue;	//스프링클러일 때만
 			cout << "Sprinkler Cool " << i << endl;
 			int springkler_size = 21;	//사이즈 홀수로 해야 함
 			dim3 block(springkler_size, springkler_size, 1);
