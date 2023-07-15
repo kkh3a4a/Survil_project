@@ -37,12 +37,52 @@ void Army::SpawnArmy(float x, float y, float z)
 
 void Army::set_army_move()
 {
-	
+	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_attack).count() > 5000)
+	{
+		for (int a_id = ARMYSTART; a_id < ARMYSTART + ARMYMAX; ++a_id)
+		{
+			if ((a_id - ARMYSTART) / PLAYERARMYCOUNT == _playerID)
+				continue;
+			Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+			if (player->War_Players[((a_id - ARMYSTART) / PLAYERARMYCOUNT)] == 0)
+				continue;
+
+			Army* enemy_army = reinterpret_cast<Army*>(objects[a_id]);
+			if (enemy_army->_a_state != ST_CONPLETE)
+				continue;
+			if (object_find_check(a_id, _id, 5000))
+			{
+				last_attack = std::chrono::system_clock::now();
+
+				enemy_army->_hp -= 5 + _army_type * 10;
+				if (enemy_army->_hp < 0)
+				{
+					sc_packet_armydead packet;
+					packet.size = sizeof(packet);
+					packet.type = SC_PACKET_ARMYDEAD;
+					packet.army_id = enemy_army->_id;
+					all_player_sendpacket(&packet);
+					enemy_army->_a_state = ST_FREE;
+					return;
+				}
+
+
+				sc_packet_armychangehp packet;
+				packet.army_id = enemy_army->_id;
+				packet.hp = enemy_army->_hp;
+				packet.size = sizeof(packet);
+				packet.type = SC_PACKET_ARMYCHANGEHP;
+				all_player_sendpacket(&packet);
+				return;
+			}
+		}
+	}
+
 	if (_x != _arrival_x || _y != _arrival_y)
 	{
 		char state = 1;
 		float distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
-		if (distance < 20)
+		if (distance < 500)
 		{
 			_x = _arrival_x;
 			_y = _arrival_y;
@@ -53,8 +93,8 @@ void Army::set_army_move()
 		if (!_isOverlap)
 		{
 			Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-			_x += ((_arrival_x - _x) / distance) * 10 * player->_adventure_speed;
-			_y += ((_arrival_y - _y) / distance) * 10 * player->_adventure_speed;
+			_x += ((_arrival_x - _x) / distance) * 10 * player->_adventure_speed * 100;
+			_y += ((_arrival_y - _y) / distance) * 10 * player->_adventure_speed * 100;
 		}
 		int _i_x = _x; int _i_y = _y;
 		_arrival_z = ((float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_x) % 100) / 100) + (float)object_z[(_i_x + 100) / 100][_i_y / 100] * (((_i_x / 100) % 100) / 100) + (float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_y) % 100) / 100) + (float)object_z[_i_x / 100][(_i_y + 100) / 100] * ((_i_y) % 100) / 100) * 20;

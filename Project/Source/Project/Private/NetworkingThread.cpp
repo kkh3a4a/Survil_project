@@ -297,6 +297,18 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_CitizenManager->Set_Army_Location(packet->a_id -ARMYSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->a_state);
 			break;
 		}
+		case SC_PACKET_ARMYCHANGEHP:
+		{
+			sc_packet_armychangehp* packet = reinterpret_cast<sc_packet_armychangehp*>(buf);
+			_CitizenManager->Set_Army_Hp(packet->hp, packet->army_id - ARMYSTART);
+			break;
+		}
+		case SC_PACKET_ARMYDEAD:
+		{
+			sc_packet_armydead* packet = reinterpret_cast<sc_packet_armydead*>(buf);
+			_CitizenManager->Army_Dead(packet->army_id - ARMYSTART);
+			break;
+		}
 		case SC_PACKET_VIEWEVENT:
 		{
 			sc_packet_viewevnet* packet = reinterpret_cast<sc_packet_viewevnet*>(buf);

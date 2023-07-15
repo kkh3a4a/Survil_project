@@ -23,7 +23,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	uint8 state;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	uint8 state;	// 0 : 서있기, 1 : 이동, 2 : 공격, 3 : 사망
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Army_HP {};

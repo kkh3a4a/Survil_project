@@ -19,6 +19,8 @@ public:
 	int _Gypsy_citizen = 0;
 	bool is_escort = false;
 	int _army_type = {};
+	int _hp = 100;
+	//std::set<int> enemy_v_list;
 
 
 	void SpawnArmy(float x, float y, float z);

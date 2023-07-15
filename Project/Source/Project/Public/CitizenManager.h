@@ -50,4 +50,6 @@ public:
 	void Spawn_Army(void *packet);
 	void Set_Army_Location(int a_id, FVector Location, FRotator Rotate, char a_state);
 	void Set_Army_Disband(int a_id);
+	void Set_Army_Hp(int Hp, int a_id);
+	void Army_Dead(int a_id);
 };

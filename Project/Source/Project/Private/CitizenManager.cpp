@@ -157,3 +157,22 @@ void ACitizenManager::Set_Army_Disband(int a_id)
     }
 
 }
+
+void ACitizenManager::Set_Army_Hp(int Hp, int a_id)
+{
+    if (army[a_id] != nullptr)
+    {
+        AArmy* army_class = reinterpret_cast<AArmy*>(army[a_id]);
+        army_class->Army_HP = Hp;
+    }
+}
+
+void ACitizenManager::Army_Dead(int a_id)
+{
+    if (army[a_id] != nullptr)
+    {
+        AArmy* army_class = reinterpret_cast<AArmy*>(army[a_id]);
+        army_class->Army_HP = 0;
+        army_class->state = 3;
+    }
+}
