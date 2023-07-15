@@ -26,13 +26,23 @@ void ABuildManager::BeginPlay()
 
 	FVector Location = FVector(0, 0, 0);
 	DecalActor = GetWorld()->SpawnActor<ADecalActor>(Location, FRotator(0.f, -90.f, 0.f));
-	DecalActor->SetActorScale3D(FVector(10.f, 2.f, 2.f));
+	DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
 
 	MaterialInstance = UMaterialInstanceDynamic::Create(BuildingGridMaterial, this);
 	MaterialInstance->SetVectorParameterValue(TEXT("Color"), FLinearColor(0, 1, 0, 1));
 
 	DecalActor->SetDecalMaterial(MaterialInstance);
 	DecalActor->SetActorHiddenInGame(true);
+
+	// 스프링클러
+	SprinklerDecal = GetWorld()->SpawnActor<ADecalActor>(Location, FRotator(0.f, -90.f, 0.f));
+	SprinklerDecal->SetActorScale3D(FVector(10.f, 0.4f, 0.4f));
+
+	SprinklerMaterialInstance = UMaterialInstanceDynamic::Create(SprinklerGridMaterial, this);
+	SprinklerMaterialInstance->SetVectorParameterValue(TEXT("Color"), FLinearColor(0, 1, 0, 1));
+
+	SprinklerDecal->SetDecalMaterial(MaterialInstance);
+	SprinklerDecal->SetActorHiddenInGame(true);
 
 	BuildingArray.Add(0, Building_WoodenSign);
 	BuildingArray.Add(1, Building01_HOUSE);
@@ -42,7 +52,7 @@ void ABuildManager::BeginPlay()
 	BuildingArray.Add(5, Building05_STEEL_MILL);
 	BuildingArray.Add(6, Building06_LABORATORY);
 	BuildingArray.Add(7, Building07_WAREHOUSE);
-	BuildingArray.Add(8, Building08_NURSERY);
+	BuildingArray.Add(8, Building08_SPRINKLER);
 	BuildingArray.Add(9, Building09_MEDICAL_CENTER);
 	BuildingArray.Add(10, Building10_ARMY_CENTER);
 	BuildingArray.Add(11, Building11_HUNTERHOUSE);
@@ -71,10 +81,22 @@ void ABuildManager::Tick(float DeltaTime)
 			MaterialInstance->SetVectorParameterValue(TEXT("Color"), FLinearColor(1, 0, 0, 1));
 		}
 	}
+	else if (BuildSprinklerMode) {
+		SprinklerDecal->SetActorLocation(SprinklerDecalLocation);
+		SendBuildablePacket();
+		if (Buildable) {
+			MaterialInstance->SetVectorParameterValue(TEXT("Color"), FLinearColor(0, 1, 0, 1));
+		}
+		else {
+			MaterialInstance->SetVectorParameterValue(TEXT("Color"), FLinearColor(1, 0, 0, 1));
+		}
+	}
 }
 
 void ABuildManager::DecalVisibility()
 {
+	SprinklerDecal->SetActorHiddenInGame(true);
+
 	if (BuildMode) {
 		DecalActor->SetActorHiddenInGame(false);
 	}
@@ -84,6 +106,20 @@ void ABuildManager::DecalVisibility()
 	SelectedBuilding = 0;
 }
 
+void ABuildManager::SprinklerDecalVisibility()
+{
+	DecalActor->SetActorHiddenInGame(true);
+
+	if (BuildSprinklerMode) {
+		SprinklerDecal->SetActorHiddenInGame(false);
+	}
+	else {
+		SprinklerDecal->SetActorHiddenInGame(true);
+	}
+	SelectedBuilding = 8;
+}
+
+
 void ABuildManager::Build(int obj_id, float x , float y, int building_type)
 {
 	UE_LOG(LogTemp, Log, TEXT("Building %d %d"), building_type, obj_id);
@@ -92,7 +128,13 @@ void ABuildManager::Build(int obj_id, float x , float y, int building_type)
         return;
 
 	FActorSpawnParameters SpawnInfo;
-	if(BuiltBuildings[obj_id] == nullptr)
+
+	if (building_type == 8)
+	{
+		AActor* sprinkler = uworld->SpawnActor<AActor>(BuildingArray[0], FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+		Sprinklers[obj_id] = sprinkler;
+	}
+	else if(BuiltBuildings[obj_id] == nullptr)
 	{
 		AActor * building = uworld->SpawnActor<AActor>(BuildingArray[0], FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
 		BuiltBuildings[obj_id] = building;
@@ -105,16 +147,32 @@ void ABuildManager::BuildSuccess(int obj_id, float x, float y, int building_type
 	UWorld* uworld = GetWorld();
 	if (uworld == nullptr)
 		return;
-	FActorSpawnParameters SpawnInfo;
-	BuiltBuildings[obj_id]->Destroy();
-	BuiltBuildings[obj_id] = nullptr;
 
-	AActor* building = uworld->SpawnActor<AActor>(BuildingArray[building_type], FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-	BuiltBuildings[obj_id] = building;
-	BuiltBuildings[obj_id]->Tags.Add(TEXT("Building"));
-	BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(building_type));
-	BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id));
-	BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id / PLAYERBUILDINGCOUNT));
+	if (building_type == 8)
+	{
+		FActorSpawnParameters SpawnInfo;
+		Sprinklers[obj_id]->Destroy();
+		Sprinklers[obj_id] = nullptr;
+
+		AActor* sprinkler = uworld->SpawnActor<AActor>(Building08_SPRINKLER, FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+		Sprinklers[obj_id] = sprinkler;
+		Sprinklers[obj_id]->Tags.Add(TEXT("Building sprinkler"));
+		Sprinklers[obj_id]->Tags.Add(*FString::FromInt(building_type));
+		Sprinklers[obj_id]->Tags.Add(*FString::FromInt(obj_id));
+		Sprinklers[obj_id]->Tags.Add(*FString::FromInt(obj_id / 1000));
+	}
+	else {
+		FActorSpawnParameters SpawnInfo;
+		BuiltBuildings[obj_id]->Destroy();
+		BuiltBuildings[obj_id] = nullptr;
+
+		AActor* building = uworld->SpawnActor<AActor>(BuildingArray[building_type], FVector(x, y, 0.f), FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+		BuiltBuildings[obj_id] = building;
+		BuiltBuildings[obj_id]->Tags.Add(TEXT("Building"));
+		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(building_type));
+		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id));
+		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id / PLAYERBUILDINGCOUNT));
+	}
 }
 
 void ABuildManager::SendBuildablePacket()
@@ -123,6 +181,11 @@ void ABuildManager::SendBuildablePacket()
 	Packet.building_type = SelectedBuilding;
 	Packet.x = DecalLocation.X;
 	Packet.y = DecalLocation.Y;
+	if (Packet.building_type == 8)
+	{
+		Packet.x = SprinklerDecalLocation.X;
+		Packet.y = SprinklerDecalLocation.Y;
+	}
 	WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, Packet.size, &Packet);
 	WSASend(Main->Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
@@ -141,6 +204,11 @@ void ABuildManager::SendBuildPacket()
 	Packet.building_type = SelectedBuilding;
 	Packet.x = DecalLocation.X;
 	Packet.y = DecalLocation.Y;
+	if (Packet.building_type == 8)
+	{
+		Packet.x = SprinklerDecalLocation.X;
+		Packet.y = SprinklerDecalLocation.Y;
+	}
 	WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, Packet.size, &Packet);
 	WSASend(Main->Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
@@ -160,3 +228,15 @@ void ABuildManager::UpdateDecalPosition(FVector MouseHitPoint, float CityX, floa
 	CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000 + 500, (uint64)CalculatedLocation.Y / 1000 * 1000 + 500, 0);
 	DecalLocation = CalculatedLocation;
 }
+
+void ABuildManager::UpdateSprinklerDecalPosition(FVector MouseHitPoint, float CityX, float CityY)
+{
+	FVector CalculatedLocation;
+	CalculatedLocation.X = min((int64)CityX + (int64)(CITYSIZE * 100 / 2), (int64)MouseHitPoint.X);
+	CalculatedLocation.X = max((int64)CityX - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.X);
+	CalculatedLocation.Y = min((int64)CityY + (int64)(CITYSIZE * 100 / 2), (int64)MouseHitPoint.Y);
+	CalculatedLocation.Y = max((int64)CityY - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.Y);
+	CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000, (uint64)CalculatedLocation.Y / 1000 * 1000, 0);
+	SprinklerDecalLocation = CalculatedLocation;
+}
+

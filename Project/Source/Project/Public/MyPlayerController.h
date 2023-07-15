@@ -227,6 +227,12 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void BuildMode();
+
+
+	// sprinkler
+	void BuildSprinklerMode();
+	void OnSprinklerMode();
+
 	UFUNCTION(BlueprintCallable)
 	void SelectBuildingHouse();
 	UFUNCTION(BlueprintCallable)
@@ -242,7 +248,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SelectBuildingWarehouse();
 	UFUNCTION(BlueprintCallable)
-	void SelectBuildingNursery();
+	void SelectBuildingSprinkler();
 	UFUNCTION(BlueprintCallable)
 	void SelectBuildingMedicalCenter();
 	UFUNCTION(BlueprintCallable)
@@ -266,6 +272,7 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void PlayerTick(float DeltaTime) override;
 	
+
 
 	//////////////////////
 	class AMain* Main_Class;

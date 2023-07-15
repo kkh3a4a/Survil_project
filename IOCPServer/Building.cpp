@@ -185,7 +185,7 @@ bool Building::_create_building(float x, float y, char type,int id)
 		}
 		break;
 	}
-	case 8: // nursery
+	case 8: // sprinkler
 	{
 		if (player->_resource_amount[4] < 20 || player->_resource_amount[2] < 10)
 		{

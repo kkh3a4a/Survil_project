@@ -80,7 +80,7 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 				continue;
 			}
 			if (obj->_id >= BUILDINGSTART && obj->_id < BUILDINGSTART + MAXBUILDING || obj->_id >= RESOURCESTART && obj->_id < RESOURCESTART + MAXRESOURCE || obj->_id >= 0 && obj->_id < MAXPLAYER) {
-				if (obj->_x < cs_packet->x + 800 && obj->_x > cs_packet->x - 800 && obj->_y < cs_packet->y + 800 && obj->_y > cs_packet->y - 800) {
+				if (obj->_x < cs_packet->x + 500 && obj->_x > cs_packet->x - 500 && obj->_y < cs_packet->y + 500 && obj->_y > cs_packet->y - 500) {		// test ¿ø·¡´Â 800
 					sc_packet.buildable = false;
 					break;
 				}

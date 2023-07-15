@@ -21,6 +21,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	ADecalActor* DecalActor;
+	ADecalActor* SprinklerDecal;
 
 public:
 	// Called every frame
@@ -45,7 +46,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building07_WAREHOUSE;			//type : 7 / warehouse
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building08_NURSERY;				//type : 8 / nursery
+		TSubclassOf<AActor>Building08_SPRINKLER;				//type : 8 / sprinkler
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building09_MEDICAL_CENTER;		//type : 9 / medical center
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -60,7 +61,7 @@ public:
 		TSubclassOf<AActor>Building14_FACTORY;				//type : 14 / factory
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building21_ARMYCAMP;			//type : 21
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)				//type : 31 / springkler
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)				//type : 31 / sprinkler
 		TSubclassOf<AActor>Building31_Sprinkler;
 
 
@@ -84,4 +85,21 @@ public:
 	TMap<int,TSubclassOf<AActor>> BuildingArray;
 	AActor* BuiltBuildings[MAXBUILDING];
 	int buildingWorkCount[MAXBUILDING] = {};
+
+	// test 스프링클러 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
+	UMaterial* SprinklerGridMaterial;
+
+	UMaterialInstanceDynamic* SprinklerMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool BuildSprinklerMode = false;
+
+	FVector SprinklerDecalLocation;
+
+	void UpdateSprinklerDecalPosition(FVector, float, float);
+	void SprinklerDecalVisibility();
+
+	AActor* Sprinklers[1000];
+
 };
