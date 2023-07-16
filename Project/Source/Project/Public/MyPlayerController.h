@@ -229,10 +229,6 @@ protected:
 	void BuildMode();
 
 
-	// sprinkler
-	void BuildSprinklerMode();
-	void OnSprinklerMode();
-
 	UFUNCTION(BlueprintCallable)
 	void SelectBuildingHouse();
 	UFUNCTION(BlueprintCallable)

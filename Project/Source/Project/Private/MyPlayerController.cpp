@@ -287,7 +287,7 @@ void AMyPlayerController::trade_change_resource(int resource_num, int amount)
 
 void AMyPlayerController::InputLeftMoustButtonPressed()
 {
-    if (BuildManager->BuildMode || BuildManager->BuildSprinklerMode) {
+    if (BuildManager->BuildMode) {
         BuildManager->SendBuildPacket();
     }
     else {
@@ -461,10 +461,6 @@ void AMyPlayerController::BuildMode()
         BuildManager->BuildMode = false;
         UE_LOG(LogTemp, Log, TEXT("BuildMode Off"));
     }
-    else if (BuildManager->BuildSprinklerMode) {
-        BuildManager->BuildSprinklerMode = false;
-        BuildManager->BuildMode = true;
-    }
     else {
         BuildManager->BuildMode = true;
         UE_LOG(LogTemp, Log, TEXT("BuildMode On"));
@@ -486,106 +482,68 @@ void AMyPlayerController::OnBuildMode()
         BuildManager->UpdateDecalPosition(Hit.ImpactPoint, Main_Class->Player_x, Main_Class->Player_y);
     }
 }
-void AMyPlayerController::OnSprinklerMode()
-{
-    FHitResult Hit;
-    GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-    if (Hit.bBlockingHit)
-    {
-        BuildManager->UpdateSprinklerDecalPosition(Hit.ImpactPoint, Main_Class->Player_x, Main_Class->Player_y);
-    }
-}
-
-void AMyPlayerController::BuildSprinklerMode()
-{
-    BuildManager->BuildMode = false;
-    
-    BuildManager->BuildSprinklerMode = true;
-    BuildManager->SprinklerDecalVisibility();
-}
-
 
 void AMyPlayerController::SelectBuildingHouse()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 1;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingOilDrill()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 2;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingWaterDrill()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 3;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingSawMill()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 4;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingSteelMill()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 5;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingLaboratory()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 6;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
+
     }
 }
 
 void AMyPlayerController::SelectBuildingWarehouse()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 7;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
@@ -593,103 +551,80 @@ void AMyPlayerController::SelectBuildingSprinkler()
 {
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 8;
-        BuildSprinklerMode();
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 0.4f, 0.4f));
     }
 }
 
 void AMyPlayerController::SelectBuildingMedicalCenter()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 9;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingArmyCenter()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 21;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingGuardPost()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 11;       
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingExchangeStation()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 12;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingGreenHouse()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 13;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingFactory()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 14;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingHunterHouse()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 11;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
 void AMyPlayerController::SelectBuildingARMYCAMP()
 {
-    if (BuildManager->BuildSprinklerMode)
-    {
-        BuildMode();
-    }
-
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 21;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
@@ -750,9 +685,6 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     
     if (BuildManager->BuildMode) {
         OnBuildMode();
-    }
-    else if (BuildManager->BuildSprinklerMode) {
-        OnSprinklerMode();
     }
 
     //key check

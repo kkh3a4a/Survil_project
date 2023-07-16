@@ -54,7 +54,6 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_BUILDABLE			40
 #define CS_PACKET_BUILD				41
-#define CS_PACKET_SPRINKLER			44		// sprinkler
 
 #define CS_PACKET_TEMPERATURE		50
 
@@ -199,15 +198,6 @@ struct cs_packet_build
 	unsigned char type = CS_PACKET_BUILD;
 	
 	char building_type;
-	float x, y;
-};
-
-struct cs_packet_sprinkler
-{
-	unsigned char size = sizeof(cs_packet_sprinkler);
-	unsigned char type = CS_PACKET_SPRINKLER;
-
-	char building_type = 8;
 	float x, y;
 };
 

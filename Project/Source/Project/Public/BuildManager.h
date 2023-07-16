@@ -20,10 +20,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	ADecalActor* DecalActor;
-	ADecalActor* SprinklerDecal;
-
 public:
+	ADecalActor* DecalActor;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -83,21 +82,4 @@ public:
 	TMap<int,TSubclassOf<AActor>> BuildingArray;
 	AActor* BuiltBuildings[MAXBUILDING];
 	int buildingWorkCount[MAXBUILDING] = {};
-
-	// test 스프링클러 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
-	UMaterial* SprinklerGridMaterial;
-
-	UMaterialInstanceDynamic* SprinklerMaterialInstance;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool BuildSprinklerMode = false;
-
-	FVector SprinklerDecalLocation;
-
-	void UpdateSprinklerDecalPosition(FVector, float, float);
-	void SprinklerDecalVisibility();
-
-	AActor* Sprinklers[1000];
-
 };
