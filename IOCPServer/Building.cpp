@@ -213,18 +213,19 @@ bool Building::_create_building(float x, float y, char type,int id)
 		}
 		break;
 	}
-	case 10: // army center
+	case 21: // army center
 	{
-		if (player->_resource_amount[4] < 30)
+		if (player->_resource_amount[4] < 20 && player->_resource_amount[2] < 20 && player->_resource_amount[0] < 20)
 		{
 			is_Success_Create = false;
 		}
 		else
 		{
-			player->_resource_amount[4] -= 30;
+			player->_resource_amount[4] -= 20;
 			player->send_resource_amount();
 			is_Success_Create = true;
 		}
+
 		break;
 	}
 	case 11: // HUNTERHOUSE -> guard post
@@ -284,22 +285,6 @@ bool Building::_create_building(float x, float y, char type,int id)
 		}
 		break;
 	}
-
-	case 21:
-	{
-		if (player->_resource_amount[4] < 20 && player->_resource_amount[2] < 20 && player->_resource_amount[0] < 20)
-		{
-			is_Success_Create = false;
-		}
-		else
-		{
-			player->_resource_amount[4] -= 20;
-			player->send_resource_amount();
-			is_Success_Create = true;
-		}
-
-		break;
-	}
 	default:
 	{
 		break;
@@ -352,7 +337,7 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 	Player* player = reinterpret_cast<Player*>(objects[_client_id]);
 
 	//여러명 추가
-	if (_type == 21 && training_finish)
+	if (_type == 10 && training_finish)
 	{
 		bool army_check = false;
 		for (int o_id = ARMYSTART + PLAYERARMYCOUNT * _client_id; o_id < ARMYSTART + PLAYERARMYCOUNT * (1 + _client_id); ++o_id)

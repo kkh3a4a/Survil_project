@@ -248,7 +248,7 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SelectBuildingMedicalCenter();
 	UFUNCTION(BlueprintCallable)
-	void SelectBuildingArmyCenter();
+	void SelectBuildingArmyCamp();
 	UFUNCTION(BlueprintCallable)
 	void SelectBuildingGuardPost();
 	UFUNCTION(BlueprintCallable)
@@ -259,8 +259,6 @@ protected:
 	void SelectBuildingFactory();
 	
 
-	void SelectBuildingHunterHouse();
-	void SelectBuildingARMYCAMP();
 	void OnBuildMode();
 	void MouseScrollUp();
 	void MouseScrollDown();

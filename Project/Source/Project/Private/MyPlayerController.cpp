@@ -77,12 +77,12 @@ void AMyPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Thermal", IE_Pressed, this, &AMyPlayerController::VisibilityTemperature);
 
-    InputComponent->BindAction("Build", IE_Pressed, this, &AMyPlayerController::BuildMode);
+    /*InputComponent->BindAction("Build", IE_Pressed, this, &AMyPlayerController::BuildMode);
     InputComponent->BindAction("1", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse);
     InputComponent->BindAction("2", IE_Pressed, this, &AMyPlayerController::SelectBuildingWaterDrill);
     InputComponent->BindAction("3", IE_Pressed, this, &AMyPlayerController::SelectBuildingLaboratory);
-    InputComponent->BindAction("4", IE_Pressed, this, &AMyPlayerController::SelectBuildingHunterHouse);
-    InputComponent->BindAction("5", IE_Pressed, this, &AMyPlayerController::SelectBuildingARMYCAMP);
+    InputComponent->BindAction("4", IE_Pressed, this, &AMyPlayerController::SelectBuildingGuardPost);
+    InputComponent->BindAction("5", IE_Pressed, this, &AMyPlayerController::SelectBuildingArmyCamp);*/
 
     InputComponent->BindAction("MouseScrollUp", IE_Pressed, this, &AMyPlayerController::MouseScrollUp);
     InputComponent->BindAction("MouseScrollDown", IE_Pressed, this, &AMyPlayerController::MouseScrollDown);
@@ -565,7 +565,7 @@ void AMyPlayerController::SelectBuildingMedicalCenter()
     }
 }
 
-void AMyPlayerController::SelectBuildingArmyCenter()
+void AMyPlayerController::SelectBuildingArmyCamp()
 {
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 21;
@@ -605,24 +605,6 @@ void AMyPlayerController::SelectBuildingFactory()
 {
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 14;
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
-    }
-}
-
-void AMyPlayerController::SelectBuildingHunterHouse()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 11;
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
-    }
-}
-
-void AMyPlayerController::SelectBuildingARMYCAMP()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 21;
 
         BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }

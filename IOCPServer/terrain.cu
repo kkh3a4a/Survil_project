@@ -1008,7 +1008,7 @@ public:
 		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
 			Building* building = reinterpret_cast<Building*>(objects[i]);
 			if (building->_type != 8) continue;	//스프링클러일 때만
-			cout << "Sprinkler Cool " << i << endl;
+			//cout << "Sprinkler Cool " << i << endl;
 			int springkler_size = 21;	//사이즈 홀수로 해야 함
 			dim3 block(springkler_size, springkler_size, 1);
 			springkler_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
