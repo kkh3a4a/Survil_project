@@ -304,8 +304,6 @@ void AMyPlayerController::InputRightMoustButtonPressed()
     }
 }
 
-
-
 void AMyPlayerController::MoveToMouseCursor()
 {
     FHitResult Hit;
