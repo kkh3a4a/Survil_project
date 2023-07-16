@@ -49,7 +49,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building09_MEDICAL_CENTER;		//type : 9 / medical center
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building10_ARMY_CENTER;			//type : 10 / army center
+		TSubclassOf<AActor>Building10_ARMY_ARMYCAMP;			//type : 10 / army camp
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building11_HUNTERHOUSE;			//type : 11 / hunterhouose->guard post
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -58,8 +58,6 @@ public:
 		TSubclassOf<AActor>Building13_GREEN_HOUSE;			//type : 13 / green house
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building14_FACTORY;				//type : 14 / factory
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building21_ARMYCAMP;			//type : 21
 
 
 	UMaterialInstanceDynamic* MaterialInstance;

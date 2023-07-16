@@ -44,12 +44,11 @@ void ABuildManager::BeginPlay()
 	BuildingArray.Add(7, Building07_WAREHOUSE);
 	BuildingArray.Add(8, Building08_SPRINKLER);
 	BuildingArray.Add(9, Building09_MEDICAL_CENTER);
-	BuildingArray.Add(10, Building10_ARMY_CENTER);
+	BuildingArray.Add(10, Building10_ARMY_ARMYCAMP);
 	BuildingArray.Add(11, Building11_HUNTERHOUSE);
 	BuildingArray.Add(12, Building12_EXCHANGE_STATION);
 	BuildingArray.Add(13, Building13_GREEN_HOUSE);
 	BuildingArray.Add(14, Building14_FACTORY);
-	BuildingArray.Add(21, Building21_ARMYCAMP);
 
 	for (auto& a : BuiltBuildings)
 	{
