@@ -99,7 +99,7 @@ void Army::set_army_move()
 		{
 			char state = 1;
 			float distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
-			int testspeed = 100;
+			int testspeed = 1;
 			_rx = (_arrival_x - _x) / distance;
 			_ry = (_arrival_y - _y) / distance;
 			_rz = 0;
