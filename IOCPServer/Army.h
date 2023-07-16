@@ -10,8 +10,9 @@ public:
 
 	enum A_STATE { ST_FREE, ST_TRAINING, ST_CONPLETE };
 	int _citizens[5]{};
-	A_STATE _a_state;	
+	A_STATE _a_state;			
 	std::chrono::system_clock::time_point last_attack;
+	std::chrono::system_clock::time_point last_plunder;
 
 	float _arrival_x, _arrival_y, _arrival_z;
 	int _playerID;
@@ -28,4 +29,6 @@ public:
 	void set_army_arrival_location(float x, float y);
 	void set_army_return_home();
 	void set_army_disband();
+	void set_army_plunder(int p_id);
+
 };

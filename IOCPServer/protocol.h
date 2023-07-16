@@ -112,6 +112,7 @@ constexpr int city_size = 100;
 #define SC_PACKET_ARMYDISBAND		63
 #define SC_PACKET_ARMYCHANGEHP		64
 #define SC_PACKET_ARMYDEAD			65
+#define SC_PACKET_ARMYATTACK		66
 
 
 #define SC_PACKET_VIEWEVENT			70
@@ -537,7 +538,7 @@ struct sc_packet_armymove
 	int a_id;
 	float x, y, z;
 	float rx, ry, rz;
-	char  a_state;
+	int  a_state;
 };
 
 struct sc_packet_armychangehp
@@ -552,6 +553,15 @@ struct sc_packet_armydead
 	unsigned char size = sizeof(sc_packet_armydead);
 	unsigned char type = SC_PACKET_ARMYDEAD;
 	int army_id;
+};
+
+struct sc_packet_armyattack
+{
+	unsigned char size = sizeof(sc_packet_armyattack);
+	unsigned char type = SC_PACKET_ARMYATTACK;
+	int army_id;
+	float rx, ry, rz;
+	int a_state;
 };
 
 struct sc_packet_viewevnet

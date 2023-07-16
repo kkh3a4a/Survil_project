@@ -309,6 +309,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_CitizenManager->Army_Dead(packet->army_id - ARMYSTART);
 			break;
 		}
+		case SC_PACKET_ARMYATTACK:
+		{
+			sc_packet_armyattack* packet = reinterpret_cast<sc_packet_armyattack*>(buf);
+			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
+			_CitizenManager->Set_Army_Attack(packet->army_id - ARMYSTART, Rotation, packet->a_state);
+			break;
+		}
 		case SC_PACKET_VIEWEVENT:
 		{
 			sc_packet_viewevnet* packet = reinterpret_cast<sc_packet_viewevnet*>(buf);

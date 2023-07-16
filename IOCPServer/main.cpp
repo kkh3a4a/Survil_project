@@ -244,7 +244,17 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					continue;
 				}
 				army->set_army_move();
+				Player* e_player = reinterpret_cast<Player*>(objects[army->_playerID]);
+				for (int i = 0; i < MAXPLAYER; ++i)
+				{
+					if (e_player->War_Players[i])
+					{
+						army->set_army_plunder(i);
+					}
+				}
 			}
+			
+				
 		}
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)	//5000
 		{	

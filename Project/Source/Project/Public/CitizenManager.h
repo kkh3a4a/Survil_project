@@ -52,4 +52,5 @@ public:
 	void Set_Army_Disband(int a_id);
 	void Set_Army_Hp(int Hp, int a_id);
 	void Army_Dead(int a_id);
+	void Set_Army_Attack(int a_id, FRotator Rotate, int a_state);
 };

@@ -9,6 +9,7 @@ Army::Army(int i)
 	_a_state = A_STATE::ST_FREE;
 	_playerID = (i - ARMYSTART) / (ARMYMAX / 5);
 	last_attack = std::chrono::system_clock::now();
+	last_plunder = std::chrono::system_clock::now();
 	for (auto& a : _citizens)
 	{
 		a = -1;
@@ -37,6 +38,7 @@ void Army::SpawnArmy(float x, float y, float z)
 
 void Army::set_army_move()
 {
+
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_attack).count() > 5000)
 	{
 		for (int a_id = ARMYSTART; a_id < ARMYSTART + ARMYMAX; ++a_id)
@@ -65,101 +67,121 @@ void Army::set_army_move()
 					enemy_army->_a_state = ST_FREE;
 					return;
 				}
+				{
+					float distance = sqrt(pow(_x - enemy_army->_x, 2) + pow(_y - enemy_army->_y, 2));
 
+					sc_packet_armyattack packet;
+					packet.size = sizeof(packet);
+					packet.type = SC_PACKET_ARMYATTACK;
+					packet.a_state = 2;
+					packet.army_id = _id;
+					packet.rx = (enemy_army->_x - _x) / distance;
+					packet.ry = (enemy_army->_y - _y) / distance;
+					packet.rz = 0;
+					all_player_sendpacket(&packet);
+				}
 
-				sc_packet_armychangehp packet;
-				packet.army_id = enemy_army->_id;
-				packet.hp = enemy_army->_hp;
-				packet.size = sizeof(packet);
-				packet.type = SC_PACKET_ARMYCHANGEHP;
-				all_player_sendpacket(&packet);
+				{
+					sc_packet_armychangehp packet;
+					packet.army_id = enemy_army->_id;
+					packet.hp = enemy_army->_hp;
+					packet.size = sizeof(packet);
+					packet.type = SC_PACKET_ARMYCHANGEHP;
+					all_player_sendpacket(&packet);
+				}
 				return;
 			}
 		}
 	}
-
-	if (_x != _arrival_x || _y != _arrival_y)
+	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_attack).count() > 1000)
 	{
-		char state = 1;
-		float distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
-		if (distance < 500)
+		if (_x != _arrival_x || _y != _arrival_y)
 		{
-			_x = _arrival_x;
-			_y = _arrival_y;
-			state = 0;
-		}
-		bool _isOverlap = false;
-		
-		if (!_isOverlap)
-		{
-			Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-			_x += ((_arrival_x - _x) / distance) * 10 * player->_adventure_speed;
-			_y += ((_arrival_y - _y) / distance) * 10 * player->_adventure_speed;
-		}
-		int _i_x = _x; int _i_y = _y;
-		_arrival_z = ((float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_x) % 100) / 100) + (float)object_z[(_i_x + 100) / 100][_i_y / 100] * (((_i_x / 100) % 100) / 100) + (float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_y) % 100) / 100) + (float)object_z[_i_x / 100][(_i_y + 100) / 100] * ((_i_y) % 100) / 100) * 20;
-		//if (abs(_arrival_z - _z) > 10)
-		{
-			_z = _arrival_z;
-		}
-		for (int e_id = EVENTSTART; e_id < EVENTSTART + EVENTMAX; ++e_id)
-		{
-			GameEvent* g_event = reinterpret_cast<GameEvent*>(objects[e_id]);
-			if(g_event->ev_type != GameEvent::EV_FREE && g_event->ev_type != GameEvent::EV_COUNT)
+			char state = 1;
+			float distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
+			int testspeed = 100;
+			_rx = (_arrival_x - _x) / distance;
+			_ry = (_arrival_y - _y) / distance;
+			_rz = 0;
+			if (distance < 20 * testspeed)
 			{
-				if (object_find_check(e_id, _id, 10000))
+				_x = _arrival_x;
+				_y = _arrival_y;
+				state = 0;
+			}
+			bool _isOverlap = false;
+
+			if (!_isOverlap)
+			{
+				Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+				_x += ((_arrival_x - _x) / distance) * 10 * player->_adventure_speed * testspeed;
+				_y += ((_arrival_y - _y) / distance) * 10 * player->_adventure_speed * testspeed;
+			}
+			int _i_x = _x; int _i_y = _y;
+			_arrival_z = ((float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_x) % 100) / 100) + (float)object_z[(_i_x + 100) / 100][_i_y / 100] * (((_i_x / 100) % 100) / 100) + (float)object_z[_i_x / 100][_i_y / 100] * (1 - ((_i_y) % 100) / 100) + (float)object_z[_i_x / 100][(_i_y + 100) / 100] * ((_i_y) % 100) / 100) * 20;
+			//if (abs(_arrival_z - _z) > 10)
+			{
+				_z = _arrival_z;
+			}
+			for (int e_id = EVENTSTART; e_id < EVENTSTART + EVENTMAX; ++e_id)
+			{
+				GameEvent* g_event = reinterpret_cast<GameEvent*>(objects[e_id]);
+				if (g_event->ev_type != GameEvent::EV_FREE && g_event->ev_type != GameEvent::EV_COUNT)
 				{
-					Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-					if (object_find_check(e_id, _id, 500) && g_event->g_player_id == -1)
+					if (object_find_check(e_id, _id, 10000))
 					{
-						g_event->check_event(_playerID, _id);
+						Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+						if (object_find_check(e_id, _id, 500) && g_event->g_player_id == -1)
+						{
+							g_event->check_event(_playerID, _id);
+						}
+						else
+							player->find_event(e_id);
 					}
-					else
-						player->find_event(e_id);
-				}
-				/*if (g_event->ev_type == g_event->EV_GETCITIZEN)
-				{
-					Player* player = reinterpret_cast<Player*>(objects[0]);
-					player->find_event(g_event->_id);
-				}*/
-			}
-		}
-		if (object_find_check(_id, _playerID, 5500))
-		{
-			Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-
-			for(int i=0;i < 5;++i)
-			{
-				if (_resource_amount[i] > 0)
-				{
-					player->_resource_amount[i] += _resource_amount[i];
-					_resource_amount[i] = 0;
+					/*if (g_event->ev_type == g_event->EV_GETCITIZEN)
+					{
+						Player* player = reinterpret_cast<Player*>(objects[0]);
+						player->find_event(g_event->_id);
+					}*/
 				}
 			}
-			if (_Gypsy_citizen > 0)
+			if (object_find_check(_id, _playerID, 5500))
 			{
-				player->create_citizen(_Gypsy_citizen);
-				_Gypsy_citizen = 0;
-				is_escort = false;
-			}
-		}
-		
-		//_z = (object_z[_i_x / 100][_i_y / 100]) * 50;
-		sc_packet_armymove packet;
-		packet.x = _x;
-		packet.y = _y;
-		packet.z = _z;
-		packet.rx = (_arrival_x - _x) / distance;
-		packet.ry = (_arrival_y - _y) / distance;
-		packet.rz = 0;
-		packet.a_id = _id;
-		packet.a_state = state;
-		packet.size = sizeof(sc_packet_armymove);
-		packet.type = SC_PACKET_ARMYMOVE;
+				Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 
-		for (int i = 0; i < MAXPLAYER; ++i)
-		{
-			reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
+				for (int i = 0; i < 5; ++i)
+				{
+					if (_resource_amount[i] > 0)
+					{
+						player->_resource_amount[i] += _resource_amount[i];
+						_resource_amount[i] = 0;
+					}
+				}
+				if (_Gypsy_citizen > 0)
+				{
+					player->create_citizen(_Gypsy_citizen);
+					_Gypsy_citizen = 0;
+					is_escort = false;
+				}
+			}
+
+			//_z = (object_z[_i_x / 100][_i_y / 100]) * 50;
+			sc_packet_armymove packet;
+			packet.x = _x;
+			packet.y = _y;
+			packet.z = _z;
+			packet.rx = _rx;
+			packet.ry = _ry;
+			packet.rz = 0;
+			packet.a_id = _id;
+			packet.a_state = state;
+			packet.size = sizeof(sc_packet_armymove);
+			packet.type = SC_PACKET_ARMYMOVE;
+
+			for (int i = 0; i < MAXPLAYER; ++i)
+			{
+				reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
+			}
 		}
 	}
 }
@@ -219,6 +241,32 @@ void Army::set_army_disband()
 			reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
 		}
 	}
+}
+
+void Army::set_army_plunder(int p_id)
+{
+	if(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_plunder).count() > 5000)
+	{
+		if (object_find_check(p_id, _id, 10000))
+		{
+			last_plunder = std::chrono::system_clock::now();
+			Player* enemy_player = reinterpret_cast<Player*>(objects[p_id]);
+			Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+			for (int i = 0; i < 5; ++i)
+			{
+				if (enemy_player->_resource_amount[i] > 10)
+				{
+					enemy_player->_resource_amount[i] -= 10;
+					player->_resource_amount[i] += 10;
+					enemy_player->send_resource_amount();
+					player->send_resource_amount();
+				}
+			}
+		}
+	}
+	
+
+
 }
 
 

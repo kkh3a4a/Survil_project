@@ -176,3 +176,13 @@ void ACitizenManager::Army_Dead(int a_id)
         army_class->state = 3;
     }
 }
+
+void ACitizenManager::Set_Army_Attack(int a_id, FRotator Rotate, int a_state)
+{
+    if (army[a_id] != nullptr)
+    {
+        army[a_id]->SetActorRotation(Rotate);
+        AArmy* a = reinterpret_cast<AArmy*>(army[a_id]);
+        a->state = a_state;
+    }
+}
