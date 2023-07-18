@@ -152,8 +152,8 @@ void ACitizenManager::Set_Army_Disband(int a_id)
 {
     if (army[a_id] != nullptr)
     {
-        army[a_id]->Destroy();
-        army[a_id] = nullptr;
+        AArmy* army_class = reinterpret_cast<AArmy*>(army[a_id]);
+        army_class->state = 3;
     }
 
 }
