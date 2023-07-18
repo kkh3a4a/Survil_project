@@ -193,7 +193,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					Player* player = reinterpret_cast<Player*>(objects[player_id]);
 					int citizencount = player->playercitizencount();
 					
-					int num_citizen{};
 					for (int citizen_id = CITIZENSTART + player_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
 					{
 						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
@@ -212,13 +211,35 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						else {
 							citizen->_thirsty = 0;
 						}
-
 						citizen->citizen_eat_food();	//먹기
 						citizen->citizen_eat_water();	//마시기
-						//cout << (int)citizen->_thirsty << ", " << (int)citizen->_satiety << ", " << (int)citizen->_hp << endl;
-						//num_citizen++;
 					}
-					//cout << "num_citizen : " << num_citizen << endl;
+
+					//스프링클러 물 부족하면 꺼지게끔
+					if(player->_resource_amount[1] < 1){
+						for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; ++building_id)
+						{
+							Building* building = reinterpret_cast<Building*>(objects[building_id]);
+							if (building->_type == 8 && building->activated){
+								building->activated = false;
+							}
+						}
+						//플레이어에게 스프링클러 끄기 보내기
+						
+						
+					}
+					else {
+						//10도 차이마다 스프링클러 개당 물 소비
+						for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; ++building_id) {
+							Building* building = reinterpret_cast<Building*>(objects[building_id]);
+							if (building->_type == 8 && building->activated) {
+								// 물 소비
+								player->_resource_amount[1] -= -1;
+							}
+						}
+					}
+					
+					
 					player->send_resource_amount();
 				}
 			}

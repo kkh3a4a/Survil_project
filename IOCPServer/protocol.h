@@ -81,6 +81,9 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_DECLARATION_WAR	110
 
+#define CS_PACKET_SPRINKLER_OFF		120
+#define CS_PACKET_SPRINKLER_ON		121
+
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
 #define SC_PACKET_CITIZENCREATE		3
@@ -133,6 +136,8 @@ constexpr int city_size = 100;
 #define SC_PACKET_TECHTIMER			102
 
 #define SC_PACKET_DECLARATION_WAR	110
+
+#define SC_PACKET_SPRINKLER_OFF_ALL		120
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -323,6 +328,21 @@ struct cs_packet_declaration_war
 	int player_num;
 };
 
+struct cs_packet_sprinkler_off
+{
+	unsigned char size = sizeof(cs_packet_sprinkler_off);
+	unsigned char type = CS_PACKET_SPRINKLER_OFF;
+
+	int sprinkler_id;
+};
+
+struct cs_packet_sprinkler_on
+{
+	unsigned char size = sizeof(cs_packet_sprinkler_on);
+	unsigned char type = CS_PACKET_SPRINKLER_ON;
+
+	int sprinkler_id;
+};
 
 struct sc_packet_login
 {
@@ -673,7 +693,10 @@ struct sc_packet_declaration_war
 	int is_war;
 };
 
-
-
+struct sc_packet_sprinkler_off_all
+{
+	unsigned char size = sizeof(sc_packet_sprinkler_off_all);
+	unsigned char type = SC_PACKET_SPRINKLER_OFF_ALL;
+};
 
 #pragma pack (pop)
