@@ -112,7 +112,6 @@ void ABuildManager::BuildSuccess(int obj_id, float x, float y, int building_type
 	UWorld* uworld = GetWorld();
 	if (uworld == nullptr)
 		return;
-
 	else {
 		FActorSpawnParameters SpawnInfo;
 		BuiltBuildings[obj_id]->Destroy();
@@ -184,4 +183,3 @@ void ABuildManager::UpdateDecalPosition(FVector MouseHitPoint, float CityX, floa
 	CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000 + 500, (uint64)CalculatedLocation.Y / 1000 * 1000 + 500, 0);
 	DecalLocation = CalculatedLocation;
 }
-

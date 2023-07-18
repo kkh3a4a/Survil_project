@@ -215,30 +215,22 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						citizen->citizen_eat_water();	//마시기
 					}
 
-					//스프링클러 물 부족하면 꺼지게끔
-					if(player->_resource_amount[1] < 1){
-						for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; ++building_id)
-						{
-							Building* building = reinterpret_cast<Building*>(objects[building_id]);
-							if (building->_type == 8 && building->activated){
+					//10도 차이마다 스프링클러 개당 물 소비
+					for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; ++building_id) {
+						Building* building = reinterpret_cast<Building*>(objects[building_id]);
+						if (building->_type == 8 && building->activated) {
+							// 물 소비
+							if (player->_resource_amount[1] > 0) {	//물 있으면
+								player->_resource_amount[1]--;
+							}
+							else {	//물 없으면
 								building->activated = false;
-							}
-						}
-						//플레이어에게 스프링클러 끄기 보내기
-						
-						
-					}
-					else {
-						//10도 차이마다 스프링클러 개당 물 소비
-						for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; ++building_id) {
-							Building* building = reinterpret_cast<Building*>(objects[building_id]);
-							if (building->_type == 8 && building->activated) {
-								// 물 소비
-								player->_resource_amount[1] -= -1;
+								//플레이어에게 스프링클러 끄기 보내기
+								sc_packet_sprinkler_off packet;
+								packet.sprinkler_id = building_id;
 							}
 						}
 					}
-					
 					
 					player->send_resource_amount();
 				}

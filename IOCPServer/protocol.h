@@ -21,7 +21,7 @@ constexpr int city_size = 100;
 #define RESOURCESTART				(MAXCITIZEN + CITIZENSTART)
 #define MAXRESOURCE					50
 #define BUILDINGSTART				(MAXRESOURCE + RESOURCESTART)
-#define PLAYERBUILDINGCOUNT			121
+#define PLAYERBUILDINGCOUNT			484
 #define MAXBUILDING					(PLAYERBUILDINGCOUNT * MAXPLAYER)
 #define ARMYSTART					(BUILDINGSTART + MAXBUILDING)
 #define PLAYERARMYCOUNT				20
@@ -137,7 +137,7 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_DECLARATION_WAR	110
 
-#define SC_PACKET_SPRINKLER_OFF_ALL		120
+#define SC_PACKET_SPRINKLER_OFF		120
 
 #pragma pack (push, 1)
 struct cs_packet_login
@@ -693,10 +693,12 @@ struct sc_packet_declaration_war
 	int is_war;
 };
 
-struct sc_packet_sprinkler_off_all
+struct sc_packet_sprinkler_off
 {
-	unsigned char size = sizeof(sc_packet_sprinkler_off_all);
-	unsigned char type = SC_PACKET_SPRINKLER_OFF_ALL;
+	unsigned char size = sizeof(sc_packet_sprinkler_off);
+	unsigned char type = SC_PACKET_SPRINKLER_OFF;
+
+	int sprinkler_id;
 };
 
 #pragma pack (pop)

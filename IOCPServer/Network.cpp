@@ -297,7 +297,20 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 
 		break;
 	}
-
+	case CS_PACKET_SPRINKLER_ON:
+	{
+		cs_packet_sprinkler_on* packet = reinterpret_cast<cs_packet_sprinkler_on*>(pk);
+		Building* building = reinterpret_cast<Building*>(objects[packet->sprinkler_id]);
+		building->activated = true;
+		break;
+	}
+	case CS_PACKET_SPRINKLER_OFF:
+	{
+		cs_packet_sprinkler_off* packet = reinterpret_cast<cs_packet_sprinkler_off*>(pk);
+		Building* building = reinterpret_cast<Building*>(objects[packet->sprinkler_id]);
+		building->activated = false;
+		break;
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

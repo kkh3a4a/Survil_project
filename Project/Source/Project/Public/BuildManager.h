@@ -59,7 +59,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building14_FACTORY;				//type : 14 / factory
 
-
 	UMaterialInstanceDynamic* MaterialInstance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
