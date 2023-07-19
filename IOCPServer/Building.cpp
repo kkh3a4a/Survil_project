@@ -199,20 +199,6 @@ bool Building::_create_building(float x, float y, char type,int id)
 		}
 		break;
 	}
-	case 9: // medical center
-	{
-		if (player->_resource_amount[4] < 20)
-		{
-			is_Success_Create = false;
-		}
-		else
-		{
-			player->_resource_amount[4] -= 20;
-			player->send_resource_amount();
-			is_Success_Create = true;
-		}
-		break;
-	}
 	case 21: // army center
 	{
 		if (player->_resource_amount[4] < 20 && player->_resource_amount[2] < 20 && player->_resource_amount[0] < 20)
@@ -242,20 +228,6 @@ bool Building::_create_building(float x, float y, char type,int id)
 		
 		break;
 	}
-	case 12: // exchange station
-	{
-		if (player->_resource_amount[4] < 50)
-		{
-			is_Success_Create = false;
-		}
-		else
-		{
-			player->_resource_amount[4] -= 50;
-			player->send_resource_amount();
-			is_Success_Create = true;
-		}
-		break;
-	}
 	case 13: // green house
 	{
 		if (player->_resource_amount[4] < 20)
@@ -265,20 +237,6 @@ bool Building::_create_building(float x, float y, char type,int id)
 		else
 		{
 			player->_resource_amount[4] -= 20;
-			player->send_resource_amount();
-			is_Success_Create = true;
-		}
-		break;
-	}
-	case 14: // factory
-	{
-		if (player->_resource_amount[4] < 20 || player->_resource_amount[2] < 20)
-		{
-			is_Success_Create = false;
-		}
-		else
-		{
-			player->_resource_amount[4] -= 20; player->_resource_amount[2] -= 20;
 			player->send_resource_amount();
 			is_Success_Create = true;
 		}
@@ -542,12 +500,41 @@ void Building::WorkBuilding()
 	Player* player = reinterpret_cast<Player*>(objects[_client_id]);
 	switch (_type)
 	{
-	case 11:
+	// oil drill
+	case 2:
 	{
-		player->_resource_amount[3] += player->_work_efficiency * _citizencount ;
+		player->_resource_amount[0] += player->_work_efficiency * _citizencount;
 		break;
 	}
 
+	// water drill
+	case 3:
+	{
+		player->_resource_amount[1] += player->_work_efficiency * _citizencount;
+		break;
+	}
+
+	// saw mill
+	case 4:
+	{
+		player->_resource_amount[4] += player->_work_efficiency * _citizencount;
+		break;
+	}
+
+	// steel mill
+	case 5:
+	{
+		player->_resource_amount[2] += player->_work_efficiency * _citizencount;
+		break;
+	}
+
+
+	// ¿Â½Ç
+	case 13:
+	{
+		player->_resource_amount[3] += player->_work_efficiency * _citizencount;
+		break;
+	}
 
 
 

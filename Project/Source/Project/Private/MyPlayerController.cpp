@@ -569,30 +569,12 @@ void AMyPlayerController::SelectBuildingLaboratory()
     }
 }
 
-void AMyPlayerController::SelectBuildingWarehouse()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 7;
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
-    }
-}
-
 void AMyPlayerController::SelectBuildingSprinkler()
 {
     if (BuildManager->BuildMode) {
         BuildManager->SelectedBuilding = 8;
 
         BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 0.4f, 0.4f));
-    }
-}
-
-void AMyPlayerController::SelectBuildingMedicalCenter()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 9;
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
     }
 }
 
@@ -614,15 +596,6 @@ void AMyPlayerController::SelectBuildingGuardPost()
     }
 }
 
-void AMyPlayerController::SelectBuildingExchangeStation()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 12;
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
-    }
-}
-
 void AMyPlayerController::SelectBuildingGreenHouse()
 {
     if (BuildManager->BuildMode) {
@@ -632,14 +605,6 @@ void AMyPlayerController::SelectBuildingGreenHouse()
     }
 }
 
-void AMyPlayerController::SelectBuildingFactory()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 14;
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
-    }
-}
 
 void AMyPlayerController::MouseScrollUp()
 {

@@ -43,21 +43,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building06_LABORATORY;			//type : 6 / laboratory
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building07_WAREHOUSE;			//type : 7 / warehouse
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building08_SPRINKLER;				//type : 8 / sprinkler
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building09_MEDICAL_CENTER;		//type : 9 / medical center
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building21_ARMY_CAMP;			//type : 21 / army camp
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building11_HUNTERHOUSE;			//type : 11 / hunterhouose->guard post
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building12_EXCHANGE_STATION;		//type : 12 / exchange station
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building13_GREEN_HOUSE;			//type : 13 / green house
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building14_FACTORY;				//type : 14 / factory
 
 	UMaterialInstanceDynamic* MaterialInstance;
 

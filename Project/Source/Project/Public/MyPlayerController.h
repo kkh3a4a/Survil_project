@@ -252,21 +252,13 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void SelectBuildingLaboratory();
 	UFUNCTION(BlueprintCallable)
-	void SelectBuildingWarehouse();
-	UFUNCTION(BlueprintCallable)
 	void SelectBuildingSprinkler();
-	UFUNCTION(BlueprintCallable)
-	void SelectBuildingMedicalCenter();
 	UFUNCTION(BlueprintCallable)
 	void SelectBuildingArmyCamp();
 	UFUNCTION(BlueprintCallable)
 	void SelectBuildingGuardPost();
 	UFUNCTION(BlueprintCallable)
-	void SelectBuildingExchangeStation();
-	UFUNCTION(BlueprintCallable)
 	void SelectBuildingGreenHouse();
-	UFUNCTION(BlueprintCallable)
-	void SelectBuildingFactory();
 	
 
 	void OnBuildMode();
