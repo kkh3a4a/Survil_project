@@ -178,6 +178,8 @@ void Citizen::citizen_dead()
 	_alcoholic = 0;
 	_disabled = false;
 	_dissatisfaction = 0;
+	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+	player->dissatisfaction += 0.01;
 }
 
 void Citizen::citizen_eat_food()
@@ -194,13 +196,14 @@ void Citizen::citizen_eat_food()
 			_satiety += meal_satiety;
 			_alcoholic += meal_alcoholic;
 		}
-		
+		player->dissatisfaction -= 0.001;
 	}
 	else {	//음식이 없을 때
 		
 	}
 	
 	if (_satiety == 0) {
+		player->dissatisfaction += 0.005;
 		_hp -= 20;
 	}
 	if (_alcoholic >= 100) {			//알콜중독이면 hp 깎기
@@ -219,12 +222,14 @@ void Citizen::citizen_eat_water()
 			player->_resource_amount[1] -= 1;
 			_thirsty += 20;
 		}
+		player->dissatisfaction -= 0.001;
 	}
 	else {	//물 없을 때
 		
 	}
 	
 	if (_thirsty == 0) {
+		player->dissatisfaction += 0.005;
 		_hp -= 25;
 	}
 	if (_hp <= 0) {						//죽기

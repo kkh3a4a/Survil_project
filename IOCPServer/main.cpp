@@ -179,6 +179,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					player->key_input(player_sight_terrain_line, player_sight_temperature_line);
 					player->send_sunangle(sun_angle);
 				}
+				if (player->dissatisfaction < 0)
+					player->dissatisfaction = 0;
+				else if (player->dissatisfaction > 1)
+					player->dissatisfaction = 1;
 			}
 			// 건물 온도 업데이트
 			/*for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
@@ -395,6 +399,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					
 					if (citizen->_house_id == -1)
 					{
+						player->dissatisfaction += 0.01;
 						bool isHouseStaff = false;
 						//만약 빈 HOUSE가 생겼을때 시민을 배치해준다.
 						for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; building_id++)
@@ -433,6 +438,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					}
 					else
 					{
+						player->dissatisfaction -= 0.002;
 						citizen->_arrival_x = objects[citizen->_house_id]->_x;
 						citizen->_arrival_y = objects[citizen->_house_id]->_y;
 					}

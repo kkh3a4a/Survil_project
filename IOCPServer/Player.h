@@ -41,7 +41,6 @@ public:
 	std::set<int> enemy_army_list;
 	//ºÒ¸¸ Èñ¸Á
 	float dissatisfaction = 0.0;
-	float hope = 1.0;
 
 
 	bool War_Players[5] = {};			//false = Peace, true = War

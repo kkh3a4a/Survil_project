@@ -315,6 +315,7 @@ void Army::set_army_plunder(int p_id)
 					player->send_resource_amount();
 				}
 			}
+			enemy_player->dissatisfaction += 0.01;
 		}
 	}
 	
