@@ -44,6 +44,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool BuildingUI = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool SprinklerUI = false;
+
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

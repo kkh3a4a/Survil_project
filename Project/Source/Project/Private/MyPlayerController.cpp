@@ -326,6 +326,7 @@ void AMyPlayerController::MoveToMouseCursor()
             }
             ResourceUI = false;
             BuildingUI = false;
+            SprinklerUI = false;
             ArmyUI = false;
         }
         else if (hitActor->ActorHasTag("Resource"))
@@ -342,6 +343,7 @@ void AMyPlayerController::MoveToMouseCursor()
 
             ResourceUI = true;
             BuildingUI = false;
+            SprinklerUI = false;
             ArmyUI = false;
         }
         else if (hitActor->ActorHasTag("Building"))
@@ -353,6 +355,7 @@ void AMyPlayerController::MoveToMouseCursor()
                 ObjectType = 0;
                 ResourceUI = false;
                 BuildingUI = false;
+                SprinklerUI = false;
                 ArmyUI = false;
                 hitActor = NULL;
                 return;
@@ -366,8 +369,17 @@ void AMyPlayerController::MoveToMouseCursor()
             joblessCitizen = Network->playerjobless;
 
             ResourceUI = false;
-            BuildingUI = true;
             ArmyUI = false;
+            if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 8) {
+                SprinklerUI = true;
+                UE_LOG(LogTemp, Log, TEXT("sprinkler\n"));
+                BuildingUI = false;
+            }
+            else {
+                BuildingUI = true;
+                SprinklerUI = false;
+            }
+
         }
         else if (hitActor->ActorHasTag("Army"))
         {
@@ -378,6 +390,7 @@ void AMyPlayerController::MoveToMouseCursor()
                 ObjectType = 0;
                 ResourceUI = false;
                 BuildingUI = false;
+                SprinklerUI = false;
                 ArmyUI = false;
                 hitActor = NULL;
                 return;
@@ -397,6 +410,7 @@ void AMyPlayerController::MoveToMouseCursor()
             ObjectType = 0;
             ResourceUI = false;
             BuildingUI = false;
+            SprinklerUI = false;
             ArmyUI = false;
             hitActor = NULL;
         }
