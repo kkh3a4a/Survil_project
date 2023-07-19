@@ -95,11 +95,12 @@ void Army::set_army_move()
 	}
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_attack).count() > 1000)
 	{
+		Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 		if (_x != _arrival_x || _y != _arrival_y)
 		{
 			char state = 1;
 			float distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
-			int testspeed = 1;
+			int testspeed = 5;
 			_rx = (_arrival_x - _x) / distance;
 			_ry = (_arrival_y - _y) / distance;
 			_rz = 0;
@@ -113,7 +114,6 @@ void Army::set_army_move()
 
 			if (!_isOverlap)
 			{
-				Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 				_x += ((_arrival_x - _x) / distance) * 10 * player->_adventure_speed * testspeed;
 				_y += ((_arrival_y - _y) / distance) * 10 * player->_adventure_speed * testspeed;
 			}
@@ -130,7 +130,7 @@ void Army::set_army_move()
 				{
 					if (object_find_check(e_id, _id, 10000))
 					{
-						Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+						
 						if (object_find_check(e_id, _id, 500) && g_event->g_player_id == -1)
 						{
 							g_event->check_event(_playerID, _id);
@@ -147,7 +147,6 @@ void Army::set_army_move()
 			}
 			if (object_find_check(_id, _playerID, 5500))
 			{
-				Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 
 				for (int i = 0; i < 5; ++i)
 				{
@@ -181,6 +180,55 @@ void Army::set_army_move()
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
+			}
+		}
+		else if (player->enemy_army_list.size() != 0)
+		{
+			if(object_find_check(_id, _playerID, 10000))
+			{
+				int near_enemy = -1;
+				float min_distance = 50000.0;
+				std::set<int> delete_list;
+				for (auto a : player->enemy_army_list)
+				{
+					Army* enemy_army = reinterpret_cast<Army*>(objects[a]);
+					if (enemy_army->_a_state != ST_CONPLETE)
+					{
+						delete_list.insert(a);
+						continue;
+					}
+					if (object_find_check(a, _playerID, 10000))
+					{
+						float distance = sqrt(pow(_x - objects[_playerID]->_x, 2) + pow(_y - objects[_playerID]->_y, 2));
+						if (distance < min_distance)
+						{
+							min_distance = distance;
+							near_enemy = a;
+						}
+					}
+					else
+					{
+						delete_list.insert(a);
+					}
+				}
+				for (auto a : delete_list)
+				{
+					if (player->enemy_army_list.count(a) > 0)
+					{
+						player->enemy_army_list.erase(a);
+					}
+				}
+				if (near_enemy != -1)
+				{
+					float ar_x = _x;
+					float ar_y = _y;
+					if (abs(objects[near_enemy]->_x - _x) > 5000)
+						ar_x = objects[near_enemy]->_x - ((objects[near_enemy]->_x - _x) / min_distance) * 1500;
+					if (abs(objects[near_enemy]->_y - _y) > 5000)
+						ar_y = objects[near_enemy]->_y - ((objects[near_enemy]->_y - _y) / min_distance) * 1500;
+
+					set_army_arrival_location(ar_x, ar_y);
+				}
 			}
 		}
 	}
@@ -252,10 +300,15 @@ void Army::set_army_plunder(int p_id)
 			last_plunder = std::chrono::system_clock::now();
 			Player* enemy_player = reinterpret_cast<Player*>(objects[p_id]);
 			Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+			if (enemy_player->enemy_army_list.count(_id) == 0)
+			{
+				enemy_player->enemy_army_list.insert(_id);
+			}
 			for (int i = 0; i < 5; ++i)
 			{
 				if (enemy_player->_resource_amount[i] > 10)
 				{
+					
 					enemy_player->_resource_amount[i] -= 10;
 					player->_resource_amount[i] += 10;
 					enemy_player->send_resource_amount();

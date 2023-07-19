@@ -336,80 +336,95 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 	//咯矾疙 眠啊
 	if (_type == 21 && training_finish)
 	{
-		bool army_check = false;
-		for (int o_id = ARMYSTART + PLAYERARMYCOUNT * _client_id; o_id < ARMYSTART + PLAYERARMYCOUNT * (1 + _client_id); ++o_id)
+		if (!IsNight)
 		{
-			Army* army = reinterpret_cast<Army*>(objects[o_id]);
-			if (army->_a_state == Army::ST_FREE)
+			bool army_check = false;
+			for (int o_id = ARMYSTART + PLAYERARMYCOUNT * _client_id; o_id < ARMYSTART + PLAYERARMYCOUNT * (1 + _client_id); ++o_id)
 			{
-				army->_a_state = Army::ST_TRAINING;
-				training_army_id = o_id;
-				army_check = true;
-				break;
-			}
-		}
-		if (isplus && army_check)
-		{
-			int count = 0;
-			Citizen* multi_citizens[5];
-			Citizen* last_placement_citizen = nullptr;
-			for(int j = 0 ; j< 5; j++)
-			{
-				Mindistance = 99999999;
-				for (int i = CITIZENSTART + _client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
+				Army* army = reinterpret_cast<Army*>(objects[o_id]);
+				if (army->_a_state == Army::ST_FREE)
 				{
-					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-					if (citizen->_job == 0)
+					army->_a_state = Army::ST_TRAINING;
+					training_army_id = o_id;
+					army_check = true;
+					break;
+				}
+			}
+			if (isplus && army_check)
+			{
+				int count = 0;
+				Citizen* multi_citizens[5];
+				Citizen* last_placement_citizen = nullptr;
+				for (int j = 0; j < 5; j++)
+				{
+					Mindistance = 99999999;
+					for (int i = CITIZENSTART + _client_id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _client_id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
 					{
-						int distance = sqrt(pow(_x - citizen->_x, 2) + pow(_y - citizen->_y, 2));
-						if (Mindistance > distance)
+						Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+						if (citizen->_job == 0)
 						{
-							Mindistance = distance;
-							placement_citizen = citizen;
-							if (last_placement_citizen == placement_citizen)
+							int distance = sqrt(pow(_x - citizen->_x, 2) + pow(_y - citizen->_y, 2));
+							if (Mindistance > distance)
 							{
-								placement_citizen = nullptr;
-								break;
+								Mindistance = distance;
+								placement_citizen = citizen;
+								if (last_placement_citizen == placement_citizen)
+								{
+									placement_citizen = nullptr;
+									break;
+								}
+								last_placement_citizen = citizen;
 							}
-							last_placement_citizen = citizen;
+						}
+					}
+					if (placement_citizen != nullptr)
+					{
+
+						multi_citizens[j] = placement_citizen;
+						placement_citizen->_job = _type;
+						placement_citizen = nullptr;
+						count++;
+					}
+				}
+
+				// army 积己 己傍
+				if (count == 5)
+				{
+					if (player->_resource_amount[0] >= _army_type * 50 && player->_resource_amount[2] >= _army_type * 50 && player->_resource_amount[4] >= _army_type * 50)
+					{
+						int citizen_cnt = 0;
+						for (auto& a_citizen : multi_citizens)
+						{
+							a_citizen->_job = _type;
+							a_citizen->_job_x = _x;
+							a_citizen->_job_y = _y;
+							a_citizen->_job_z = _z;
+							a_citizen->_Job_id = _id;
+							_citizens[citizen_cnt] = a_citizen;
+							citizen_cnt++;
+							_army_type = armytype;
+							if (!IsNight)
+								a_citizen->set_citizen_arrival_location(_x, _y, _z);
+						}
+						player->_resource_amount[0] -= _army_type * 50;
+						player->_resource_amount[2] -= _army_type * 50;
+						player->_resource_amount[4] -= _army_type * 50;
+						player->send_resource_amount();
+						training_finish = false;
+					}
+					else
+					{
+						for (int i = 0; i < count; ++i)
+						{
+							multi_citizens[i]->_job = 0;
+							multi_citizens[i] = nullptr;
+							Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
+							army->_a_state = Army::ST_FREE;
+							training_army_id = -1;
 						}
 					}
 				}
-				if (placement_citizen != nullptr)
-				{
-
-					multi_citizens[j] = placement_citizen;
-					placement_citizen->_job = _type;
-					placement_citizen = nullptr;
-					count++;
-				}
-			}
-
-			// army 积己 己傍
-			if (count == 5)
-			{
-				if(player->_resource_amount[0] >= _army_type * 50 && player->_resource_amount[2] >= _army_type * 50 && player->_resource_amount[4] >= _army_type * 50)
-				{
-					int citizen_cnt = 0;
-					for (auto& a_citizen : multi_citizens)
-					{
-						a_citizen->_job = _type;
-						a_citizen->_job_x = _x;
-						a_citizen->_job_y = _y;
-						a_citizen->_job_z = _z;
-						a_citizen->_Job_id = _id;
-						_citizens[citizen_cnt] = a_citizen;
-						citizen_cnt++;
-						_army_type = armytype;
-						if (!IsNight)
-							a_citizen->set_citizen_arrival_location(_x, _y, _z);
-					}
-					player->_resource_amount[0] -= _army_type * 50;
-					player->_resource_amount[2] -= _army_type * 50;
-					player->_resource_amount[4] -= _army_type * 50;
-					player->send_resource_amount();
-					training_finish = false;
-				}
+				// army 积己 角菩
 				else
 				{
 					for (int i = 0; i < count; ++i)
@@ -420,18 +435,6 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 						army->_a_state = Army::ST_FREE;
 						training_army_id = -1;
 					}
-				}
-			}
-			// army 积己 角菩
-			else
-			{
-				for (int i=0;i<count; ++i)
-				{
-					multi_citizens[i]->_job = 0;
-					multi_citizens[i] = nullptr;
-					Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
-					army->_a_state = Army::ST_FREE;
-					training_army_id = -1;
 				}
 			}
 		}
