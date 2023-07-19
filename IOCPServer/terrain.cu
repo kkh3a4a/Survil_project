@@ -1013,10 +1013,10 @@ public:
 			int springkler_size = 21;	//사이즈 홀수로 해야 함
 			dim3 block(springkler_size, springkler_size, 1);
 			springkler_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
-			//cudaDeviceSynchronize();
-			for (int i = 0; i < one_side_number; i++) {
-				cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(unsigned char), cudaMemcpyDeviceToHost);
-			}
+			cudaDeviceSynchronize();
+		}
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(unsigned char), cudaMemcpyDeviceToHost);
 		}
 	}
 
