@@ -208,10 +208,12 @@ public:
 
 	//스프링클러
 	UFUNCTION(BlueprintCallable)
-		void ChangeSprinklerStatus(bool status);
+		void ChangeSprinklerStatus(bool status, int obj_id);
 	UFUNCTION(BlueprintCallable)
 		bool GetSprinklerStatus(int obj_id);
 
+	UFUNCTION(BlueprintCallable)
+		int GetObjectID();
 
 
 	void trade_change_resource(int resource_num, int amount);

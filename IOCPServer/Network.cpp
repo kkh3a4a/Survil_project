@@ -297,18 +297,12 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 
 		break;
 	}
-	case CS_PACKET_SPRINKLER_ON:
+	case CS_PACKET_SPRINKLER_STATUS:
 	{
-		cs_packet_sprinkler_on* packet = reinterpret_cast<cs_packet_sprinkler_on*>(pk);
+		cs_packet_sprinkler_status* packet = reinterpret_cast<cs_packet_sprinkler_status*>(pk);
 		Building* building = reinterpret_cast<Building*>(objects[packet->sprinkler_id]);
-		building->activated = true;
-		break;
-	}
-	case CS_PACKET_SPRINKLER_OFF:
-	{
-		cs_packet_sprinkler_off* packet = reinterpret_cast<cs_packet_sprinkler_off*>(pk);
-		Building* building = reinterpret_cast<Building*>(objects[packet->sprinkler_id]);
-		building->activated = false;
+		building->activated = packet->status;
+		std::cout << "sprinkler status : " << packet->sprinkler_id << " " << packet->status << "\n";
 		break;
 	}
 	default:

@@ -225,23 +225,53 @@ void AMyPlayerController::War_Player(int player_num)
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
-void AMyPlayerController::ChangeSprinklerStatus(bool status)
+void AMyPlayerController::ChangeSprinklerStatus(bool status, int obj_id)
 {
-
+    bool changed = false;
+    if (status) {
+        if (Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags[4] == TEXT("OFF")) {
+            Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags.Remove(FName("OFF"));
+            Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags.Add(FName("ON"));
+            changed = true;
+        }
+    }
+    else {
+        if (Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags[4] == TEXT("ON")) {
+            Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags.Remove(FName("ON"));
+            Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags.Add(FName("OFF"));
+            changed = true;
+        }
+    }
+    if (changed) {
+        cs_packet_sprinkler_status packet;
+        packet.status = status;
+        packet.sprinkler_id = obj_id;
+        WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+        WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+    }
 }
 
 bool AMyPlayerController::GetSprinklerStatus(int obj_id)
 {
-    //UE_LOG(LogTemp, Log, TEXT("%s"), *Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags[3].ToString());
-    if (Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags[3] == TEXT("ON"))
-    {
-        //UE_LOG(LogTemp, Log, TEXT("ON"));
+    if (Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags[4] == TEXT("ON"))
         return true;
-    }
     else
-    {
-        //UE_LOG(LogTemp, Log, TEXT("OFF"));
         return false;
+}
+
+int AMyPlayerController::GetObjectID()
+{
+    FHitResult Hit;
+    GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+    if (Hit.bBlockingHit)
+    {
+        AActor* Actor = Hit.GetActor();
+        //UE_LOG(LogTemp, Log, TEXT("%s"), *hitActor->GetName());
+        int ObjectID = FCString::Atoi(*hitActor->Tags[2].ToString());
+        return ObjectID;
+    }
+    else {
+        return -1;
     }
 }
 

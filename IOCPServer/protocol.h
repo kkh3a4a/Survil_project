@@ -81,8 +81,7 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_DECLARATION_WAR	110
 
-#define CS_PACKET_SPRINKLER_OFF		120
-#define CS_PACKET_SPRINKLER_ON		121
+#define CS_PACKET_SPRINKLER_STATUS		120
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -328,19 +327,12 @@ struct cs_packet_declaration_war
 	int player_num;
 };
 
-struct cs_packet_sprinkler_off
+struct cs_packet_sprinkler_status
 {
-	unsigned char size = sizeof(cs_packet_sprinkler_off);
-	unsigned char type = CS_PACKET_SPRINKLER_OFF;
+	unsigned char size = sizeof(cs_packet_sprinkler_status);
+	unsigned char type = CS_PACKET_SPRINKLER_STATUS;
 
-	int sprinkler_id;
-};
-
-struct cs_packet_sprinkler_on
-{
-	unsigned char size = sizeof(cs_packet_sprinkler_on);
-	unsigned char type = CS_PACKET_SPRINKLER_ON;
-
+	bool status;
 	int sprinkler_id;
 };
 

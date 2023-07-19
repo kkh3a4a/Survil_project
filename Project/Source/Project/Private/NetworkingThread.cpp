@@ -430,7 +430,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_SPRINKLER_OFF:	//스프링클러 다 끄기
 		{
 			sc_packet_sprinkler_off* packet = reinterpret_cast<sc_packet_sprinkler_off*>(buf);
-			 //_MainClass->BuildManager->BuiltBuildings[packet->sprinkler_id];
+			for (int i = 0; i < MAXBUILDING; i++) {
+				if (_MainClass->BuildManager->BuiltBuildings[i]->Tags[4] == TEXT("ON")) {
+					_MainClass->BuildManager->BuiltBuildings[i]->Tags.Remove(FName("ON"));
+					_MainClass->BuildManager->BuiltBuildings[i]->Tags.Add(FName("OFF"));
+				}
+			}
 			break;
 		}
 		default:
