@@ -693,12 +693,10 @@ struct sc_packet_declaration_war
 	int is_war;
 };
 
-struct sc_packet_sprinkler_off
+struct sc_packet_sprinkler_off	//스프링클러 다 꺼버리라는 거
 {
 	unsigned char size = sizeof(sc_packet_sprinkler_off);
 	unsigned char type = SC_PACKET_SPRINKLER_OFF;
-
-	int sprinkler_id;
 };
 
 #pragma pack (pop)

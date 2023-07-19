@@ -49,7 +49,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building09_MEDICAL_CENTER;		//type : 9 / medical center
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		TSubclassOf<AActor>Building10_ARMY_CAMP;			//type : 10 / army camp
+		TSubclassOf<AActor>Building21_ARMY_CAMP;			//type : 21 / army camp
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TSubclassOf<AActor>Building11_HUNTERHOUSE;			//type : 11 / hunterhouose->guard post
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -206,6 +206,13 @@ public:
 		void War_Player(int player_num);
 
 
+	//스프링클러
+	UFUNCTION(BlueprintCallable)
+		void ChangeSprinklerStatus(bool status);
+	UFUNCTION(BlueprintCallable)
+		bool GetSprinklerStatus(int obj_id);
+
+
 
 	void trade_change_resource(int resource_num, int amount);
 protected:

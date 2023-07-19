@@ -427,10 +427,10 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MyController->set_war_player(packet->player_num, packet->is_war);
 			break;
 		}
-		case SC_PACKET_SPRINKLER_OFF:
+		case SC_PACKET_SPRINKLER_OFF:	//스프링클러 다 끄기
 		{
 			sc_packet_sprinkler_off* packet = reinterpret_cast<sc_packet_sprinkler_off*>(buf);
-			_MainClass->BuildManager->BuiltBuildings[packet->sprinkler_id];
+			 //_MainClass->BuildManager->BuiltBuildings[packet->sprinkler_id];
 			break;
 		}
 		default:

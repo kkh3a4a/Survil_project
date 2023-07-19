@@ -225,6 +225,26 @@ void AMyPlayerController::War_Player(int player_num)
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
+void AMyPlayerController::ChangeSprinklerStatus(bool status)
+{
+
+}
+
+bool AMyPlayerController::GetSprinklerStatus(int obj_id)
+{
+    //UE_LOG(LogTemp, Log, TEXT("%s"), *Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags[3].ToString());
+    if (Main_Class->BuildManager->BuiltBuildings[obj_id]->Tags[3] == TEXT("ON"))
+    {
+        //UE_LOG(LogTemp, Log, TEXT("ON"));
+        return true;
+    }
+    else
+    {
+        //UE_LOG(LogTemp, Log, TEXT("OFF"));
+        return false;
+    }
+}
+
 void AMyPlayerController::trade_change_resource(int resource_num, int amount)
 {
     switch (resource_num)
@@ -379,7 +399,6 @@ void AMyPlayerController::MoveToMouseCursor()
                 BuildingUI = true;
                 SprinklerUI = false;
             }
-
         }
         else if (hitActor->ActorHasTag("Army"))
         {

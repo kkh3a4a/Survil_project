@@ -13,7 +13,7 @@ public:
 	class Citizen* _citizens[5]{};
 	int _citizencount;
 	int _client_id;
-	bool activated = true;
+	bool activated = false;
 	
 	bool training_finish = true;
 	int training_army_id = -1;

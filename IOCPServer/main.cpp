@@ -229,9 +229,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 							}
 							else {	//물 없으면
 								building->activated = false;
-								//플레이어에게 스프링클러 끄기 보내기
+								//플레이어에게 스프링클러 다 끄기 보내기
 								sc_packet_sprinkler_off packet;
-								packet.sprinkler_id = building_id;
 							}
 						}
 					}

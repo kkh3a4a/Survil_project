@@ -44,7 +44,7 @@ void ABuildManager::BeginPlay()
 	BuildingArray.Add(7, Building07_WAREHOUSE);
 	BuildingArray.Add(8, Building08_SPRINKLER);
 	BuildingArray.Add(9, Building09_MEDICAL_CENTER);
-	BuildingArray.Add(21, Building10_ARMY_CAMP);
+	BuildingArray.Add(21, Building21_ARMY_CAMP);
 	BuildingArray.Add(11, Building11_HUNTERHOUSE);
 	BuildingArray.Add(12, Building12_EXCHANGE_STATION);
 	BuildingArray.Add(13, Building13_GREEN_HOUSE);
@@ -123,6 +123,14 @@ void ABuildManager::BuildSuccess(int obj_id, float x, float y, int building_type
 		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(building_type));
 		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id));
 		BuiltBuildings[obj_id]->Tags.Add(*FString::FromInt(obj_id / PLAYERBUILDINGCOUNT));
+		if (building_type == 8) {
+			BuiltBuildings[obj_id]->Tags.Add(TEXT("OFF"));
+		}
+		const TArray<FName>& ObjectTags = BuiltBuildings[obj_id]->Tags;
+		for (const FName& Tag : ObjectTags)
+		{
+			UE_LOG(LogTemp, Log, TEXT("%s"), *Tag.ToString());
+		}
 	}
 }
 
