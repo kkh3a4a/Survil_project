@@ -38,6 +38,15 @@ void Army::SpawnArmy(float x, float y, float z)
 
 void Army::set_army_move()
 {
+	if (Is_sand_storm)
+	{
+		if (!object_find_check(_playerID, _id, 7500))
+		{
+			set_army_dead();
+			return;
+		}
+		
+	}
 
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_attack).count() > 5000)
 	{
@@ -55,15 +64,14 @@ void Army::set_army_move()
 			if (object_find_check(a_id, _id, 5000))
 			{
 				last_attack = std::chrono::system_clock::now();
-
+				if (object_find_check(_playerID, _id, 7500))
+				{
+					_arrival_x = _x;
+					_arrival_y = _y;
+				}
 				enemy_army->_hp -= 5 + _army_type * 10;
 				if (enemy_army->_hp < 0)
 				{
-					sc_packet_armydead packet;
-					packet.size = sizeof(packet);
-					packet.type = SC_PACKET_ARMYDEAD;
-					packet.army_id = enemy_army->_id;
-					all_player_sendpacket(&packet);
 					enemy_army->set_army_dead();
 					return;
 				}
@@ -100,7 +108,7 @@ void Army::set_army_move()
 		{
 			char state = 1;
 			float distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
-			int testspeed = 5;
+			int testspeed = 1;
 			_rx = (_arrival_x - _x) / distance;
 			_ry = (_arrival_y - _y) / distance;
 			_rz = 0;
@@ -218,15 +226,13 @@ void Army::set_army_move()
 						player->enemy_army_list.erase(a);
 					}
 				}
-				if (near_enemy != -1)
+				if (near_enemy != -1 && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_attack).count() > 5500)
 				{
 					float ar_x = _x;
 					float ar_y = _y;
-					if (abs(objects[near_enemy]->_x - _x) > 5000)
-						ar_x = objects[near_enemy]->_x - ((objects[near_enemy]->_x - _x) / min_distance) * 1500;
-					if (abs(objects[near_enemy]->_y - _y) > 5000)
-						ar_y = objects[near_enemy]->_y - ((objects[near_enemy]->_y - _y) / min_distance) * 1500;
-
+					float distance = sqrt(pow(_x - objects[near_enemy]->_x, 2) + pow(_y - objects[near_enemy]->_y, 2));
+					ar_x = objects[near_enemy]->_x;
+					ar_y = objects[near_enemy]->_y;
 					set_army_arrival_location(ar_x, ar_y);
 				}
 			}
@@ -296,7 +302,7 @@ void Army::set_army_plunder(int p_id)
 {
 	if(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_plunder).count() > 5000)
 	{
-		if (object_find_check(p_id, _id, 10000))
+		if (object_find_check(p_id, _id, 7500))
 		{
 			last_plunder = std::chrono::system_clock::now();
 			Player* enemy_player = reinterpret_cast<Player*>(objects[p_id]);
@@ -332,6 +338,12 @@ void Army::set_army_dead()
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[a]);
 		citizen->citizen_dead();
 	}
+
+	sc_packet_armydead packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_PACKET_ARMYDEAD;
+	packet.army_id = _id;
+	all_player_sendpacket(&packet);
 }
 
 

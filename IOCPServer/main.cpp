@@ -131,7 +131,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		int random_day = 0;
 		for (int i = 0; i < 5; ++i)
 		{
-			random_day += map_uid(dre) % 4 + 6;
+			random_day += map_uid(dre) % 3 + 6;
 			sand_storm_day.insert(random_day);
 		}
 	}
@@ -166,7 +166,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 					}
 				}
-				if (sand_storm_day.count(survil_day) != 0)
+				if (*sand_storm_day.begin() == survil_day)
 				{
 					for(int i =0;i<MAXPLAYER;++i)
 					{
@@ -181,6 +181,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						player->send_packet(&sc_packet_move);
 						is_terrain_changed = true;
 						Is_sand_storm = true;
+					}
+					if (Is_sand_storm)
+					{
+						sand_storm_day.erase(survil_day);
 					}
 				}
 
