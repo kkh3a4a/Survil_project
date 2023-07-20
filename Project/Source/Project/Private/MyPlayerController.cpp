@@ -266,12 +266,28 @@ int AMyPlayerController::GetObjectID()
     if (Hit.bBlockingHit)
     {
         AActor* Actor = Hit.GetActor();
-        //UE_LOG(LogTemp, Log, TEXT("%s"), *hitActor->GetName());
+        UE_LOG(LogTemp, Log, TEXT("%s"), *hitActor->GetName());
         int ObjectID = FCString::Atoi(*hitActor->Tags[2].ToString());
         return ObjectID;
     }
-    else {
+    else 
+    {
         return -1;
+    }
+}
+
+AActor* AMyPlayerController::GetObjectActor()
+{
+    FHitResult Hit;
+    GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+    if (Hit.bBlockingHit)
+    {
+        AActor* Actor = Hit.GetActor();
+        return Actor;
+    }
+    else 
+    {
+        return nullptr;
     }
 }
 
@@ -412,7 +428,6 @@ void AMyPlayerController::MoveToMouseCursor()
             }
             ObjectType = BUILDINGSTART;
 
-
             ObjectId = FCString::Atoi(*hitActor->Tags[2].ToString());
             ClickObjectType = FCString::Atoi(*hitActor->Tags[1].ToString());
             workcitizen = BuildManager->buildingWorkCount[ObjectId];
@@ -424,6 +439,8 @@ void AMyPlayerController::MoveToMouseCursor()
                 SprinklerUI = true;
                 UE_LOG(LogTemp, Log, TEXT("sprinkler\n"));
                 BuildingUI = false;
+                SelectedSprinkler = hitActor;
+                SelectedSprinklerID = ObjectId;
             }
             else {
                 BuildingUI = true;

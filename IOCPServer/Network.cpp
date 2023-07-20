@@ -296,7 +296,6 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		war_player->War_Players[client_id] = true;
 		player->send_declaration_war(packet->player_num, true);
 		war_player->send_declaration_war(client_id, true);
-
 		break;
 	}
 	case CS_PACKET_SPRINKLER_STATUS:

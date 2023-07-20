@@ -25,8 +25,6 @@ public:
 		FVector DestLocation;
 	AActor* hitActor;
 
-	bool temped;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool ResourceUI = false;
 
@@ -92,6 +90,10 @@ public:
 	int e_id = 0;
 	/// //////////////////////////////////////////
 	AActor* ResourceActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	AActor* SelectedSprinkler;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int SelectedSprinklerID = -1;
 
 	UFUNCTION(BlueprintCallable)
 	void UIClick(bool isplus);
@@ -214,7 +216,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		int GetObjectID();
-
+	UFUNCTION(BlueprintCallable)
+		AActor* GetObjectActor();
 
 	void trade_change_resource(int resource_num, int amount);
 protected:
