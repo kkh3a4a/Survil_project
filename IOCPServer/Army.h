@@ -30,5 +30,6 @@ public:
 	void set_army_return_home();
 	void set_army_disband();
 	void set_army_plunder(int p_id);
+	void set_army_dead();
 
 };

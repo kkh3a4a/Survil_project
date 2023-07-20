@@ -115,6 +115,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	char** player_terrain = terrain->get_player_sight_map();
 	char** player_temperature = terrain->get_player_temperature_map();
 	int citizen_eat = 0;
+	
 
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
@@ -124,6 +125,16 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		
 	}
 
+	{	//random sand_storm 추가
+		default_random_engine dre2;
+		dre2.seed(std::chrono::system_clock::now().time_since_epoch().count());
+		int random_day = 0;
+		for (int i = 0; i < 5; ++i)
+		{
+			random_day += map_uid(dre) % 4 + 6;
+			sand_storm_day.insert(random_day);
+		}
+	}
 	while (1)
 	{
 		auto Timer_Start = std::chrono::system_clock::now();
@@ -139,6 +150,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			//sun_angle = 45.f;
 			if (sun_angle >= 360.f)		//하루에 한번 하는거
 			{
+				survil_day++;
+				Is_sand_storm = false;
 				sun_angle -= 360.f;
 				IsNight = false;
 				IsOnceWork = true;
@@ -150,17 +163,27 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					{
 						citizen->_arrival_x = citizen->_job_x;
 						citizen->_arrival_y = citizen->_job_y;
+
+					}
+				}
+				if (sand_storm_day.count(survil_day) != 0)
+				{
+					for(int i =0;i<MAXPLAYER;++i)
+					{
+						Player* player = reinterpret_cast<Player*>(objects[i]);
+						player->set_player_location(objects[i]->_x, objects[i]->_y, objects[i]->_z);
+						sc_packet_move sc_packet_move;
+						sc_packet_move.currentX = player->_currentX;
+						sc_packet_move.currentY = player->_currentY;
+						sc_packet_move.currentZ = player->_currentZ;
+						sc_packet_move.size = sizeof(sc_packet_move);
+						sc_packet_move.type = SC_PACKET_MOVE;
+						player->send_packet(&sc_packet_move);
+						is_terrain_changed = true;
+						Is_sand_storm = true;
 					}
 				}
 
-				//정책 한번 주기
-				for (int i = 0; i < MAXPLAYER; ++i)
-				{
-					Player* player = reinterpret_cast<Player*>(objects[i]);
-					sc_packet_policy_ticket packet;
-					packet.ticket = ++player->_policy.policy_ticket;
-					player->send_packet(&packet);
-				}
 			}
 			else if (sun_angle >= 180.f)
 			{
@@ -175,8 +198,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				{
 					char** player_sight_terrain_line = terrain->copy_for_player_map_line((int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100);
 					char** player_sight_temperature_line = terrain->copy_for_player_temperature_line((int)(player->_x + player->_currentX) / 100, (int)(player->_y + player->_currentY) / 100);
-
-					player->key_input(player_sight_terrain_line, player_sight_temperature_line);
+					if(!Is_sand_storm)
+						player->key_input(player_sight_terrain_line, player_sight_temperature_line);
 					player->send_sunangle(sun_angle);
 				}
 				if (player->dissatisfaction < 0)

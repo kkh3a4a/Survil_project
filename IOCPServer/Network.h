@@ -12,10 +12,10 @@ extern std::array<class Object*, MAXOBJECT> objects;
 extern HANDLE h_iocp;
 extern bool IsNight;
 extern char** object_z;
-
-
+extern int survil_day;
+extern std::set<int> sand_storm_day;
 bool CAS(volatile int* addr, int expected, int update);
-
+extern bool Is_sand_storm;
 enum IOCPOP
 {
 	OP_RECV,

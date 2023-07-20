@@ -64,7 +64,7 @@ void Army::set_army_move()
 					packet.type = SC_PACKET_ARMYDEAD;
 					packet.army_id = enemy_army->_id;
 					all_player_sendpacket(&packet);
-					enemy_army->_a_state = ST_FREE;
+					enemy_army->set_army_dead();
 					return;
 				}
 				{
@@ -240,6 +240,7 @@ void Army::set_army_arrival_location(float x, float y)
 	int temp_y = y;
 	_arrival_x = temp_x;
 	_arrival_y = temp_y;
+	_arrival_z = 0;
 }
 
 void Army::set_army_return_home()
@@ -321,6 +322,16 @@ void Army::set_army_plunder(int p_id)
 	
 
 
+}
+
+void Army::set_army_dead()
+{
+	_a_state = ST_FREE;
+	for (auto& a : _citizens)
+	{
+		Citizen* citizen = reinterpret_cast<Citizen*>(objects[a]);
+		citizen->citizen_dead();
+	}
 }
 
 
