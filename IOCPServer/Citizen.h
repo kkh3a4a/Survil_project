@@ -33,5 +33,7 @@ public:
 	void citizen_eat_food();
 	void citizen_drink_water();
 	void modify_hp(int amount);
+	void modify_satiety(int amount);
+	void modify_thirsty(int amount);
 };
 

@@ -1113,6 +1113,8 @@ public:
 
 	void citizen_hot()
 	{
+		cout << "==================================\n";
+
 		//모든 citizen 들의 위치를 가지로 해당 위치의 terrain의 온도를 확인하고 citizen의 더위를 조정(40도를 넘으면 5도마다 더위를 증가)
 		for (int i = CITIZENSTART; i < CITIZENSTART + MAXCITIZEN; ++i) {
 			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
@@ -1130,10 +1132,10 @@ public:
 			else {
 				player->modify_dissatisfaction(-0.001);
 			}
-			//if(player_id == 0)
-				//cout << "Temperature: " << temperature / temperature_divide << endl;
+			if(player_id == 0)
+				cout << "Citizen " << i << " is hot. Temperature : " << temperature << endl;
 		}
-		//cout << "==================================\n";
+		cout << "==================================\n";
 	}
 
 	void except_city_terrain()

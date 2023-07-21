@@ -26,7 +26,7 @@ Player::Player(int id, STATE state)
 	army_select_num = ARMYSTART + _id * PLAYERARMYCOUNT;
 	for (auto& a : _resource_amount)
 	{
-		a = 100;
+		a = 1000;
 	}
 }
 
@@ -488,14 +488,16 @@ void Player::trade_clear()
 void Player::send_citizen_status()
 {
 	//더운 사람 수, 굶은 사람 수, 목마른 사람 수
+	int citizen_num = 0;
 	int hot = 0;
 	int hungry = 0;
 	int thirsty = 0;
 	
 	for (int c_id = CITIZENSTART + PLAYERCITIZENCOUNT * _id; c_id < CITIZENSTART + PLAYERCITIZENCOUNT * (_id + 1); c_id++) {
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[c_id]);
-		if (citizen->_job != -1) continue;
-		cout << (int)citizen->_satiety << " " << (int)citizen->_thirsty << " " << (int)citizen->_temperature << endl;
+		if (citizen->_job == -1) continue;
+		cout << c_id << " " << (int)citizen->_satiety << " " << (int)citizen->_thirsty << " " << (int)citizen->_temperature << endl;
+		citizen_num++;
 		if (citizen->_satiety == 0)
 			hungry++;
 		if (citizen->_thirsty == 0)
@@ -504,6 +506,7 @@ void Player::send_citizen_status()
 			hot++;
 	}
 	sc_packet_citizen_status packet;
+	packet.citizen_num = citizen_num;
 	packet.citizen_hot = hot;
 	packet.citizen_hungry = hungry;
 	packet.citizen_thirsty = thirsty;

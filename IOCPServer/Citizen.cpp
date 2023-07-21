@@ -199,16 +199,14 @@ void Citizen::citizen_eat_food()
 	char meal_alcoholic = player->_policy.get_meal_alcoholic();
 	
 	if (player->_resource_amount[3] > meal_consume) {		//음식이 있을 때
-		if (_satiety + meal_satiety <= 100) {
-			player->_resource_amount[3] -= meal_consume;
-			_satiety += meal_satiety;
-			_alcoholic += meal_alcoholic;
-		}
+		player->_resource_amount[3] -= meal_consume;
+		modify_satiety(meal_satiety);
+		_alcoholic += meal_alcoholic;
 		player->modify_dissatisfaction(-0.001);
 		modify_hp(50);
 	}
 	else {	//음식이 없을 때
-		
+		modify_satiety(-20);
 	}
 	
 	if (_satiety == 0) {
@@ -224,15 +222,14 @@ void Citizen::citizen_drink_water()
 {
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 	if (player->_resource_amount[1] > 0){	//물 있을 때
-		if (_thirsty + 20 <= 100) {		//100안넘게
-			player->_resource_amount[1] -= 1;
-			_thirsty += 20;
-		}
+		player->_resource_amount[1] -= 1;
+		_thirsty += 20;
+		modify_thirsty(20);
 		player->modify_dissatisfaction(-0.001);
 		modify_hp(50);
 	}
 	else {	//물 없을 때
-		
+		modify_thirsty(-20);
 	}
 	
 	if (_thirsty == 0) {
@@ -247,4 +244,18 @@ void Citizen::modify_hp(int amount)
 	else if (_hp + amount <= 0) citizen_dead();
 	else _hp += amount;
 	//cout << "Hp: " << (int)_hp << endl;
+}
+
+void Citizen::modify_satiety(int amount)
+{
+	if (_satiety + amount >= 100) _satiety = 100;
+	else if (_satiety + amount <= 0) _satiety = 0;
+	else _satiety += amount;
+}
+
+void Citizen::modify_thirsty(int amount)
+{
+	if (_thirsty + amount >= 100) _thirsty = 100;
+	else if (_thirsty + amount <= 0) _thirsty = 0;
+	else _thirsty += amount;
 }
