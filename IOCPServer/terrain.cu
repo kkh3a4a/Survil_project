@@ -991,7 +991,7 @@ public:
 			{
 			case 0: {	//석유
 				resource_size = 4;
-				resource_height = 4;
+				resource_height = 2;
 				break;
 			}
 			case 1: {	//물
@@ -1006,12 +1006,12 @@ public:
 			}
 			case 3: {	//식량
 				resource_size = 4;
-				resource_height = 5;
+				resource_height = 2;
 				break;
 			}
 			case 4: {	//나무
 				resource_size = 4;
-				resource_height = 4;
+				resource_height = 2;
 				break;
 			}
 			}
@@ -1028,8 +1028,8 @@ public:
 			switch (building->_type)
 			{
 			case 0: {	//건설중
-				building_size = 4;
-				building_height = 4;
+				building_size = 8;
+				building_height = 2;
 				break;
 			}
 			case 1: {	//집
@@ -1038,23 +1038,23 @@ public:
 				break;
 			}
 			case 2: {	//기름 시추기
-				building_size = 2;
-				building_height = 6;
+				building_size = 4;
+				building_height = 5;
 				break;
 			}
 			case 3: {	//우물
-				building_size = 3;
-				building_height = 3;
+				building_size = 4;
+				building_height = 4;
 				break;
 			}
 			case 4: {	//나무 제제소
-				building_size = 4;
-				building_height = 4;
+				building_size = 8;
+				building_height = 2;
 				break;
 			}
 			case 5: {	//제철소
-				building_size = 4;
-				building_height = 4;
+				building_size = 8;
+				building_height = 2;
 				break;
 			}
 			case 6: {	//실험실
@@ -1073,8 +1073,8 @@ public:
 				break;
 			}
 			case 13: {	//그린하우스
-				building_size = 4;
-				building_height = 4;
+				building_size = 8;
+				building_height = 7;
 				break;
 			}
 			case 21: {	//군인 캠프
