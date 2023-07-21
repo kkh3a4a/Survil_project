@@ -452,6 +452,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_citizen_status* packet = reinterpret_cast<sc_packet_citizen_status*>(buf);
 			UE_LOG(LogTemp, Warning, TEXT("[Citizen Status] Hot: %d, Hungry: %d, Thirsty: %d"), packet->citizen_hot, packet->citizen_hungry, packet->citizen_thirsty);
+			_MyController->CitizenNum = packet->citizen_num;
 			_MyController->CitizenHotNum = packet->citizen_hot;
 			_MyController->CitizenHungryNum = packet->citizen_hungry;
 			_MyController->CitizenThirstyNum = packet->citizen_thirsty;

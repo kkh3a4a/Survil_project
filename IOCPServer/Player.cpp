@@ -496,7 +496,7 @@ void Player::send_citizen_status()
 	for (int c_id = CITIZENSTART + PLAYERCITIZENCOUNT * _id; c_id < CITIZENSTART + PLAYERCITIZENCOUNT * (_id + 1); c_id++) {
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[c_id]);
 		if (citizen->_job == -1) continue;
-		cout << c_id << " " << (int)citizen->_satiety << " " << (int)citizen->_thirsty << " " << (int)citizen->_temperature << endl;
+		//cout << c_id << " " << (int)citizen->_satiety << " " << (int)citizen->_thirsty << " " << (int)citizen->_temperature << endl;
 		citizen_num++;
 		if (citizen->_satiety == 0)
 			hungry++;
