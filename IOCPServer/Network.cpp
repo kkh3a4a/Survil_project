@@ -307,6 +307,12 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		std::cout << "sprinkler status : " << packet->sprinkler_id << " " << packet->status << "\n";
 		break;
 	}
+	case CS_PACKET_ARMYSELECT:
+	{
+		cs_packet_armyselect* packet = reinterpret_cast <cs_packet_armyselect*> (pk);
+		player->set_army_select(packet->select_type);
+		break;
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

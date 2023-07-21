@@ -61,7 +61,7 @@ constexpr int city_size = 100;
 #define CS_PACKET_ARMYMOVE			61
 #define CS_PACKET_ARMYRETURN		62
 #define CS_PACKET_ARMYDISBAND		63
-
+#define CS_PACKET_ARMYSELECT		67
 
 #define CS_PACKET_VIEWEVENT			70
 #define CS_PACKET_REMOVEEVENT		71
@@ -115,6 +115,7 @@ constexpr int city_size = 100;
 #define SC_PACKET_ARMYCHANGEHP		64
 #define SC_PACKET_ARMYDEAD			65
 #define SC_PACKET_ARMYATTACK		66
+#define SC_PACKET_ARMYSELECT		67
 
 
 #define SC_PACKET_VIEWEVENT			70
@@ -336,6 +337,15 @@ struct cs_packet_sprinkler_status
 	bool status;
 	int sprinkler_id;
 };
+
+struct cs_packet_armyselect
+{
+	unsigned char size = sizeof(cs_packet_armyselect);
+	unsigned char type = CS_PACKET_ARMYSELECT;
+	int select_type = 0;
+};
+
+//////////////////////////////////////////// 서버
 
 struct sc_packet_login
 {

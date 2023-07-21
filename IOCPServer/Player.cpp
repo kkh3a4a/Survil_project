@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include"Army.h"
 #include"Citizen.h"
 #include <iostream>
 #include <string>
@@ -24,7 +24,7 @@ Player::Player(int id, STATE state)
 	_adventure_speed = 1.0;
 	_oil_efficiency = 1.0;
 	_building_insulation = 1.0;
-	
+	army_select_num = ARMYSTART + _id * PLAYERARMYCOUNT;
 	for (auto& a : _resource_amount)
 	{
 		a = 5000;
@@ -489,6 +489,97 @@ void Player::trade_clear()
 
 	trade_success = false;
 	send_resource_amount();
+}
+
+void Player::set_army_select(int select_type)
+{
+	if (Is_sand_storm)
+		return;
+	
+	
+	
+	bool select_fail = true;
+	if (select_type == 0)
+	{
+		army_select_num++;
+		if (army_select_num >= ARMYSTART + (_id + 1) * PLAYERARMYCOUNT)
+		{
+			army_select_num = ARMYSTART + _id * PLAYERARMYCOUNT;
+		}
+		for (int a_id = army_select_num; a_id < ARMYSTART + (_id + 1) * PLAYERARMYCOUNT; ++a_id)
+		{
+			army_select_num = a_id;
+			Army* army = reinterpret_cast<Army*>(objects[a_id]);
+			if (army->_a_state == Army::ST_CONPLETE)
+			{
+				select_fail = false;
+				army_select_num = a_id;
+				set_location_input(army->_x, army->_y);
+				sc_packet_move sc_packet_move;
+				sc_packet_move.currentX = _currentX;
+				sc_packet_move.currentY = _currentY;
+				sc_packet_move.currentZ = _currentZ;
+				sc_packet_move.size = sizeof(sc_packet_move);
+				sc_packet_move.type = SC_PACKET_MOVE;
+				send_packet(&sc_packet_move);
+				break;
+			}
+
+		}
+	}
+	else if (select_type == 1)
+	{
+		army_select_num--;
+		if (army_select_num < ARMYSTART + (_id) * PLAYERARMYCOUNT - 1)
+		{
+			army_select_num = ARMYSTART + (_id + 1) * PLAYERARMYCOUNT - 1;
+		}
+		for (int a_id = army_select_num; a_id >= ARMYSTART + (_id)  *PLAYERARMYCOUNT; a_id--)
+		{
+			army_select_num = a_id;
+			Army* army = reinterpret_cast<Army*>(objects[a_id]);
+			if (army->_a_state == Army::ST_CONPLETE)
+			{
+				select_fail = false;
+				army_select_num = a_id;
+				set_location_input(army->_x, army->_y);
+				sc_packet_move sc_packet_move;
+				sc_packet_move.currentX = _currentX;
+				sc_packet_move.currentY = _currentY;
+				sc_packet_move.currentZ = _currentZ;
+				sc_packet_move.size = sizeof(sc_packet_move);
+				sc_packet_move.type = SC_PACKET_MOVE;
+				send_packet(&sc_packet_move);
+				break;
+			}
+
+		}
+	}
+	if (select_fail)
+	{
+		set_location_input(_x, _y);
+	}
+}
+
+void Player::set_location_input(float set_x, float set_y)
+{
+	_currentX = (set_x - _x) - (SIGHT_X * 100 / 2);
+	_currentY = (set_y - _y) - (SIGHT_Y * 100 / 2);
+
+retry:
+	int cas_bool = _Minimap_terrainsend;
+	if (cas_bool != 0)
+		goto retry;
+	while (CAS(&_Minimap_terrainsend, cas_bool, 1)) {}
+	while (_Minimap_terrainsend == 0) {};
+
+	sc_packet_move sc_packet_move;
+	sc_packet_move.currentX = _currentX;
+	sc_packet_move.currentY = _currentY;
+	sc_packet_move.currentZ = _currentZ;
+	sc_packet_move.size = sizeof(sc_packet_move);
+	sc_packet_move.type = SC_PACKET_MOVE;
+	send_packet(&sc_packet_move);
 }
 
 

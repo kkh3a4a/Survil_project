@@ -238,6 +238,10 @@ protected:
 	void InputDownReleased();
 	void InputLeftReleased();
 	void InputRightReleased();
+
+	void InputQ();
+	void InputE();
+
 	void MoveToMouseCursor();
 	void MoveToActor();
 	void VisibilityTemperature();

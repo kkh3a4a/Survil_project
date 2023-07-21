@@ -18,6 +18,7 @@ public:
 	Policy _policy;
 	Research* _research;
 	std::set<int> view_list;
+	int army_select_num = -1;
 
 	//0 : 석유,		1 : 물,		2 : 철,		3 : 식량,	4 : 나무
 	float _resource_amount[5] = {};
@@ -66,4 +67,6 @@ public:
 	void send_change_trade_resource(int trade_resource_num, int amount);
 	void send_declaration_war(int p_num, bool is_war);
 	void trade_clear();
+	void set_army_select(int select_type);
+	void set_location_input(float mini_x, float mini_y);
 };

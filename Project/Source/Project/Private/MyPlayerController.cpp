@@ -76,7 +76,8 @@ void AMyPlayerController::SetupInputComponent()
     InputComponent->BindAction("Right", IE_Released, this, &AMyPlayerController::InputRightReleased);
 
 	InputComponent->BindAction("Thermal", IE_Pressed, this, &AMyPlayerController::VisibilityTemperature);
-
+    InputComponent->BindAction("army_select_key1", IE_Pressed, this, &AMyPlayerController::InputQ);
+    InputComponent->BindAction("army_select_key2", IE_Pressed, this, &AMyPlayerController::InputE);
     /*InputComponent->BindAction("Build", IE_Pressed, this, &AMyPlayerController::BuildMode);
     InputComponent->BindAction("1", IE_Pressed, this, &AMyPlayerController::SelectBuildingHouse);
     InputComponent->BindAction("2", IE_Pressed, this, &AMyPlayerController::SelectBuildingWaterDrill);
@@ -615,6 +616,30 @@ void AMyPlayerController::SelectBuildingLaboratory()
         BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
 
     }
+}
+
+//void AMyPlayerController::SelectBuildingNursery(bool status, int obj_id)
+//{
+//}
+
+void AMyPlayerController::InputQ()
+{
+    cs_packet_armyselect packet;
+    packet.size = sizeof(packet);
+    packet.type = CS_PACKET_ARMYSELECT;
+    packet.select_type = 0;
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+
+void AMyPlayerController::InputE()
+{
+    cs_packet_armyselect packet;
+    packet.size = sizeof(packet);
+    packet.type = CS_PACKET_ARMYSELECT;
+    packet.select_type = 1;
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
 
 void AMyPlayerController::SelectBuildingSprinkler()
