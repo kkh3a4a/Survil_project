@@ -72,25 +72,6 @@ bool Building::_create_building(float x, float y, char type,int id)
 		{
 			player->_resource_amount[4] -= 20; player->_resource_amount[2] -= 10;
 			player->send_resource_amount();
-			for (auto& a : _citizens)
-			{
-				// 생성될 때 시민을 배치해준다.
-				if (a == nullptr)
-				{
-					for (int citizen_id = CITIZENSTART + player->_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player->_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
-					{
-						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-						if (citizen->_job == -1)
-							continue;
-						if (citizen->_house_id == -1)
-						{
-							citizen->_house_id = _id;
-							a = citizen;
-							break;
-						}
-					}
-				}
-			}
 			is_Success_Create = true;
 		}
 		break;
@@ -105,25 +86,6 @@ bool Building::_create_building(float x, float y, char type,int id)
 		{
 			player->_resource_amount[4] -= 30; player->_resource_amount[2] -= 20;
 			player->send_resource_amount();
-			for (auto& a : _citizens)
-			{
-				// 생성될 때 시민을 배치해준다.
-				if (a == nullptr)
-				{
-					for (int citizen_id = CITIZENSTART + player->_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player->_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
-					{
-						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-						if (citizen->_job == -1)
-							continue;
-						if (citizen->_house_id == -1)
-						{
-							citizen->_house_id = _id;
-							a = citizen;
-							break;
-						}
-					}
-				}
-			}
 			is_Success_Create = true;
 		}
 		

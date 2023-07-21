@@ -69,6 +69,7 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 			Building* building = reinterpret_cast<Building*>(objects[packet->objectid]);
 			building->set_building_citizen_placement(packet->isplus, packet->army_type);
 		}
+
 		break;
 	}
 	case CS_PACKET_BUILDABLE:

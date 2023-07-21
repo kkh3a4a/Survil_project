@@ -142,6 +142,7 @@ void AMyPlayerController::UIClick(bool isplus)
     UE_LOG(LogTemp, Log, TEXT("UIClick"));
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+    UE_LOG(LogTemp, Log, TEXT("UIClick sent"));
 }
 
 void AMyPlayerController::UIClick_army(bool isplus, int armyType)
@@ -152,7 +153,7 @@ void AMyPlayerController::UIClick_army(bool isplus, int armyType)
     packet.objectid = ObjectId + ObjectType;
     packet.isplus = isplus;
     packet.army_type = armyType;
-    UE_LOG(LogTemp, Log, TEXT("UIClick"));
+    UE_LOG(LogTemp, Log, TEXT("UIClick_army"));
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 }
