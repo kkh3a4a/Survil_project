@@ -244,6 +244,8 @@ protected:
 
 	void MoveToMouseCursor();
 	void MoveToActor();
+
+	UFUNCTION(BlueprintCallable)
 	void VisibilityTemperature();
 
 	UFUNCTION(BlueprintCallable)
