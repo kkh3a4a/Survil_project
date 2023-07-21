@@ -204,7 +204,8 @@ void Citizen::citizen_eat_food()
 			_alcoholic += meal_alcoholic;
 		}
 		player->dissatisfaction -= 0.001;
-		_hp += 50;
+		if (_hp > 50) _hp = 100;
+		else _hp += 50;
 	}
 	else {	//음식이 없을 때
 		
@@ -231,7 +232,8 @@ void Citizen::citizen_eat_water()
 			_thirsty += 20;
 		}
 		player->dissatisfaction -= 0.001;
-		_hp += 50;
+		if (_hp > 50) _hp = 100;
+		else _hp += 50;
 	}
 	else {	//물 없을 때
 		
