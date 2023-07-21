@@ -51,6 +51,7 @@ void Citizen::set_citizen_move()
 		{
 			_x = _arrival_x;
 			_y = _arrival_y;
+
 			if (_job == 2)
 			{
 				_job = 0;
@@ -76,6 +77,7 @@ void Citizen::set_citizen_move()
 					Player* this_player = reinterpret_cast<Player*>(objects[player_num]);
 					this_player->send_packet(&packet);
 				}
+				
 			}
 			else if (_job == 21)
 			{
@@ -87,9 +89,14 @@ void Citizen::set_citizen_move()
 				}
 			}
 			if(!IsNight)
+			{
 				_citizenstate = 0;
+				if(_job > 0)
+					_citizenstate = 3;
+			}
 			else
 				_citizenstate = 2;
+			
 		}
 		bool _isOverlap = false;
 		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i)
