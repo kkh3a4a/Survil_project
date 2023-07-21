@@ -496,6 +496,7 @@ void Player::modify_dissatisfaction(int amount)
 	if (dissatisfaction + amount >= 1) dissatisfaction = 1;
 	else if (dissatisfaction + amount <= 0) dissatisfaction = 0;
 	else dissatisfaction += amount;
+	//cout << "dissatisfaction : " << dissatisfaction << endl;
 }
 
 

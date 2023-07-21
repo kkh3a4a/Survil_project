@@ -205,7 +205,6 @@ void Citizen::citizen_eat_food()
 			_alcoholic += meal_alcoholic;
 		}
 		player->modify_dissatisfaction(-0.001);
-
 		modify_hp(50);
 	}
 	else {	//음식이 없을 때
@@ -214,7 +213,6 @@ void Citizen::citizen_eat_food()
 	
 	if (_satiety == 0) {
 		player->modify_dissatisfaction(0.005);
-
 		modify_hp(-20);
 	}
 	if (_alcoholic >= 100) {			//알콜중독이면 hp 깎기
@@ -248,5 +246,5 @@ void Citizen::modify_hp(int amount)
 	if (_hp + amount >= 100) _hp = 100;
 	else if (_hp + amount <= 0) citizen_dead();
 	else _hp += amount;
-	cout << (int)_hp << endl;
+	//cout << "Hp: " << (int)_hp << endl;
 }

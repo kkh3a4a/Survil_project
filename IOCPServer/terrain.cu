@@ -1122,14 +1122,17 @@ public:
 			int player_id = (i - CITIZENSTART) / 200;
 			Player* player = reinterpret_cast<Player*>(objects[player_id]);
 			
-			if (temperature > 40) {
-				citizen->modify_hp(-(temperature - 40) / 5);
+			if (temperature / temperature_divide > 40) {
+				citizen->modify_hp(-(temperature / temperature_divide - 40) / 5);
 				player->modify_dissatisfaction(0.001);
 			}
 			else {
 				player->modify_dissatisfaction(-0.001);
 			}
+			if(player_id == 0)
+				cout << "Temperature: " << temperature / temperature_divide << endl;
 		}
+		cout << "==================================\n";
 	}
 
 	void except_city_terrain()
