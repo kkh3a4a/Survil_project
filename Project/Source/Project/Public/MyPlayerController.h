@@ -222,11 +222,25 @@ public:
 		AActor* GetObjectActor();
 
 	void trade_change_resource(int resource_num, int amount);
+
+
+	//½Ã¹Î hot, hungry, thirsty ¼ýÀÚ
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int CitizenHotNum{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int CitizenHungryNum{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int CitizenThirstyNum{};
+
+
 protected:
 	long long int mouse_cnt = 0;
 
 	bool bRightClickMouse;
 	bool bLeftClickMouse;
+
+	void InputQ();
+	void InputE();
 
 	void InputLeftMoustButtonPressed();
 	void InputRightMoustButtonPressed();
@@ -238,10 +252,6 @@ protected:
 	void InputDownReleased();
 	void InputLeftReleased();
 	void InputRightReleased();
-
-	void InputQ();
-	void InputE();
-
 	void MoveToMouseCursor();
 	void MoveToActor();
 	void VisibilityTemperature();
@@ -289,5 +299,5 @@ protected:
 	char Key_w, Key_a, Key_s, Key_d;
 
 	void SendMovePacket();
-	
+
 };
