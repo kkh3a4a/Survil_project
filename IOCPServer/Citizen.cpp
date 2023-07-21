@@ -186,7 +186,8 @@ void Citizen::citizen_dead()
 	_disabled = false;
 	_dissatisfaction = 0;
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-	player->dissatisfaction += 0.01;
+	player->modify_dissatisfaction(0.01);
+
 }
 
 void Citizen::citizen_eat_food()
@@ -203,27 +204,25 @@ void Citizen::citizen_eat_food()
 			_satiety += meal_satiety;
 			_alcoholic += meal_alcoholic;
 		}
-		player->dissatisfaction -= 0.001;
-		if (_hp > 50) _hp = 100;
-		else _hp += 50;
+		player->modify_dissatisfaction(-0.001);
+
+		modify_hp(50);
 	}
 	else {	//음식이 없을 때
 		
 	}
 	
 	if (_satiety == 0) {
-		player->dissatisfaction += 0.005;
-		_hp -= 20;
+		player->modify_dissatisfaction(0.005);
+
+		modify_hp(-20);
 	}
 	if (_alcoholic >= 100) {			//알콜중독이면 hp 깎기
-		_hp -= 10;
-	}
-	if (_hp <= 0) {						//죽기
-		citizen_dead();
+		modify_hp(-10);
 	}
 }
 
-void Citizen::citizen_eat_water()
+void Citizen::citizen_drink_water()
 {
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 	if (player->_resource_amount[1] > 0){	//물 있을 때
@@ -231,19 +230,23 @@ void Citizen::citizen_eat_water()
 			player->_resource_amount[1] -= 1;
 			_thirsty += 20;
 		}
-		player->dissatisfaction -= 0.001;
-		if (_hp > 50) _hp = 100;
-		else _hp += 50;
+		player->modify_dissatisfaction(-0.001);
+		modify_hp(50);
 	}
 	else {	//물 없을 때
 		
 	}
 	
 	if (_thirsty == 0) {
-		player->dissatisfaction += 0.005;
-		_hp -= 25;
+		player->modify_dissatisfaction(0.005);
+		modify_hp(-25);
 	}
-	if (_hp <= 0) {						//죽기
-		citizen_dead();
-	}
+}
+
+void Citizen::modify_hp(int amount)
+{
+	if (_hp + amount >= 100) _hp = 100;
+	else if (_hp + amount <= 0) citizen_dead();
+	else _hp += amount;
+	cout << (int)_hp << endl;
 }

@@ -66,4 +66,5 @@ public:
 	void send_change_trade_resource(int trade_resource_num, int amount);
 	void send_declaration_war(int p_num, bool is_war);
 	void trade_clear();
+	void modify_dissatisfaction(int amount);
 };

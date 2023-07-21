@@ -254,7 +254,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 							citizen->_thirsty = 0;
 						}
 						citizen->citizen_eat_food();	//먹기
-						citizen->citizen_eat_water();	//마시기
+						citizen->citizen_drink_water();	//마시기
 					}
 
 					//10도 차이마다 스프링클러 개당 물 소비
