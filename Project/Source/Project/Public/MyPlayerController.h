@@ -145,6 +145,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void send_trade_resource_amount(int resource_num, int amount);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int sand_storm_day = 10;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int trade_my_oil{};

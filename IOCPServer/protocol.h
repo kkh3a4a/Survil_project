@@ -91,6 +91,7 @@ constexpr int city_size = 100;
 #define SC_PACKET_SUNANGLE			6
 #define SC_PACKET_CITIZENREMOVE		7
 #define SC_PACKET_MINIMAP			8
+#define SC_PACKET_SANDSTORMDAY		9
 
 #define SC_PACKET_CITIZENPLACEMENT	10
 #define SC_PACKET_RESOURCEAMOUNT	20
@@ -689,6 +690,14 @@ struct sc_packet_sprinkler_off	//스프링클러 다 꺼버리라는 거
 {
 	unsigned char size = sizeof(sc_packet_sprinkler_off);
 	unsigned char type = SC_PACKET_SPRINKLER_OFF;
+};
+
+struct sc_packet_sandstormday
+{
+	unsigned char size = sizeof(sc_packet_sandstormday);
+	unsigned char type = SC_PACKET_SANDSTORMDAY;
+
+	int sand_day = 0;
 };
 
 #pragma pack (pop)

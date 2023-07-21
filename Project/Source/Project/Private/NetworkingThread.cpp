@@ -438,6 +438,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 			}
 			break;
 		}
+		case SC_PACKET_SANDSTORMDAY:
+		{
+			sc_packet_sandstormday* packet = reinterpret_cast<sc_packet_sandstormday*>(buf);
+			_MyController->sand_storm_day = packet->sand_day;
+			break;
+		}
 		default:
 		{
 			//DebugBreak();

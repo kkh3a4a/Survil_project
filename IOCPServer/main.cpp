@@ -146,12 +146,22 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			//rotate sunangle
 			//태양각도 1초에 2도 돌아서 180초에 360도 (3분에 한바퀴)
 			
-			sun_angle += 2.f * cycle_time / 1000.f;
+			sun_angle += 2.f * cycle_time / 10.f;
 			//sun_angle = 45.f;
 			if (sun_angle >= 360.f)		//하루에 한번 하는거
 			{
 				survil_day++;
 				Is_sand_storm = false;
+				
+				{
+					sc_packet_sandstormday packet;  // 모든 플레이어에게 sandstorm 일어나는 날 알려줌
+					packet.sand_day = *sand_storm_day.begin() - survil_day;
+					packet.size = sizeof(packet);
+					packet.type = SC_PACKET_SANDSTORMDAY;
+					all_player_sendpacket(&packet);
+				}
+
+
 				sun_angle -= 360.f;
 				IsNight = false;
 				IsOnceWork = true;
