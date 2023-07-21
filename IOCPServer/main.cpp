@@ -129,7 +129,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		default_random_engine dre2;
 		dre2.seed(std::chrono::system_clock::now().time_since_epoch().count());
 		int random_day = 0;
-		for (int i = 0; i < 5; ++i)
+		for (int i = 0; i < 4; ++i)
 		{
 			random_day += map_uid(dre) % 3 + 6;
 			sand_storm_day.insert(random_day);
