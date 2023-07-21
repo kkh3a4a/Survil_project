@@ -491,9 +491,11 @@ void Player::send_citizen_status()
 	int hot = 0;
 	int hungry = 0;
 	int thirsty = 0;
+	
 	for (int c_id = CITIZENSTART + PLAYERCITIZENCOUNT * _id; c_id < CITIZENSTART + PLAYERCITIZENCOUNT * (_id + 1); c_id++) {
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[c_id]);
 		if (citizen->_job != -1) continue;
+		cout << (int)citizen->_satiety << " " << (int)citizen->_thirsty << " " << (int)citizen->_temperature << endl;
 		if (citizen->_satiety == 0)
 			hungry++;
 		if (citizen->_thirsty == 0)
