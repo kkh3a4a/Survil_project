@@ -1117,22 +1117,23 @@ public:
 		for (int i = CITIZENSTART; i < CITIZENSTART + MAXCITIZEN; ++i) {
 			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
 			if (citizen->_job == -1) continue;
-			int temperature = temperature_map_host[(int)citizen->_x / 100][(int)citizen->_y / 100];
+			int temperature = temperature_map_host[(int)citizen->_x / 100][(int)citizen->_y / 100] / temperature_divide;
 			
 			int player_id = (i - CITIZENSTART) / 200;
 			Player* player = reinterpret_cast<Player*>(objects[player_id]);
 			
-			if (temperature / temperature_divide > 40) {
-				citizen->modify_hp(-(temperature / temperature_divide - 40) / 5);
+			citizen->_temperature = temperature;
+			if (temperature > 40) {
+				citizen->modify_hp(-(temperature - 40) / 5);
 				player->modify_dissatisfaction(0.001);
 			}
 			else {
 				player->modify_dissatisfaction(-0.001);
 			}
-			if(player_id == 0)
-				cout << "Temperature: " << temperature / temperature_divide << endl;
+			//if(player_id == 0)
+				//cout << "Temperature: " << temperature / temperature_divide << endl;
 		}
-		cout << "==================================\n";
+		//cout << "==================================\n";
 	}
 
 	void except_city_terrain()

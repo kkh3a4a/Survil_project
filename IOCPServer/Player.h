@@ -70,4 +70,6 @@ public:
 	void set_army_select(int select_type);
 	void set_location_input(float mini_x, float mini_y);
 	void modify_dissatisfaction(int amount);
+	void send_citizen_status();
+	void send_sprinkler_off();
 };

@@ -140,6 +140,8 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_SPRINKLER_OFF		120
 
+#define SC_PACKET_CITIZEN_STATUS	130
+
 #pragma pack (push, 1)
 struct cs_packet_login
 {
@@ -708,6 +710,17 @@ struct sc_packet_sandstormday
 	unsigned char type = SC_PACKET_SANDSTORMDAY;
 
 	int sand_day = 0;
+};
+
+struct sc_packet_citizen_status
+{
+	unsigned char size = sizeof(sc_packet_citizen_status);
+	unsigned char type = SC_PACKET_CITIZEN_STATUS;
+
+	int citizen_num;
+	int citizen_hot;
+	int citizen_hungry;
+	int citizen_thirsty;
 };
 
 #pragma pack (pop)

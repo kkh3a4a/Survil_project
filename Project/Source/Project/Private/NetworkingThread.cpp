@@ -431,9 +431,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_sprinkler_off* packet = reinterpret_cast<sc_packet_sprinkler_off*>(buf);
 			for (int i = 0; i < MAXBUILDING; i++) {
-				if (_MainClass->BuildManager->BuiltBuildings[i]->Tags[4] == TEXT("ON")) {
-					_MainClass->BuildManager->BuiltBuildings[i]->Tags.Remove(FName("ON"));
-					_MainClass->BuildManager->BuiltBuildings[i]->Tags.Add(FName("OFF"));
+				if (_MainClass->BuildManager->BuiltBuildings[i] != nullptr) {
+					if (FCString::Atoi(*_MainClass->BuildManager->BuiltBuildings[i]->Tags[1].ToString()) == 8) {
+						if (_MainClass->BuildManager->BuiltBuildings[i]->Tags[4] == TEXT("ON")) {
+							_MainClass->BuildManager->BuiltBuildings[i]->Tags.Remove(FName("ON"));
+							_MainClass->BuildManager->BuiltBuildings[i]->Tags.Add(FName("OFF"));
+						}
+					}
 				}
 			}
 			break;
@@ -442,6 +446,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_sandstormday* packet = reinterpret_cast<sc_packet_sandstormday*>(buf);
 			_MyController->sand_storm_day = packet->sand_day;
+			break;
+		}
+		case SC_PACKET_CITIZEN_STATUS:
+		{
+			sc_packet_citizen_status* packet = reinterpret_cast<sc_packet_citizen_status*>(buf);
+			UE_LOG(LogTemp, Warning, TEXT("[Citizen Status] Hot: %d, Hungry: %d, Thirsty: %d"), packet->citizen_hot, packet->citizen_hungry, packet->citizen_thirsty);
 			break;
 		}
 		default:

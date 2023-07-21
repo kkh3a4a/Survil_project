@@ -17,6 +17,7 @@ public:
 	
 	char _satiety;	//0~100
 	char _thirsty;	//0~100
+	char _temperature;
 	
 	char _hp;			//0~100
 	char _alcoholic;	//0~100

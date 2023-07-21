@@ -18,7 +18,6 @@ Player::Player(int id, STATE state)
 	_id = id;
 	_socket={0};
 	_research = new Research(id);
-	//ï¿½Ê±ï¿½ ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½
 	_adventure_efficiency = 1.0;
 	_work_efficiency = 1.0;
 	_adventure_speed = 1.0;
@@ -27,7 +26,7 @@ Player::Player(int id, STATE state)
 	army_select_num = ARMYSTART + _id * PLAYERARMYCOUNT;
 	for (auto& a : _resource_amount)
 	{
-		a = 5000;
+		a = 100;
 	}
 }
 
@@ -54,7 +53,6 @@ void Player::set_player_location(float x, float y, float z)
 	_currentX = - (SIGHT_X * 100 / 2);
 	_currentY = - (SIGHT_Y * 100 / 2);
 	_currentZ = 0;
-	//_xï¿½ï¿½ ï¿½ï¿½ï¿½îµ¥ ï¿½ï¿½Ä¡, _x +_currentX ï¿½ð¼­¸ï¿½ ï¿½ï¿½Ä¡
 }
 
 void Player::key_input(char** player_sight_terrain_line, char** player_sight_temperature_line)
@@ -105,7 +103,6 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 		send_packet(&sc_packet_move);
 	}
 
-	//terrainï¿½ï¿½Ç¥ï¿½ï¿½ currentï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ 100ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ï¿½ terrainï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 	bool ischangeTerrainX = false;
 	bool ischangeTerrainY = false;
 
@@ -277,7 +274,6 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 	s = false;
 	d = false;
 
-	//ï¿½Ö¿ì¼± ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ ï¿½ï¿½ï¿½
 	
 	/*delete[] player_sight_terrain_line[0];
 	delete[] player_sight_terrain_line[1];
@@ -422,8 +418,6 @@ void Player::create_citizen(int num)
 			}
 			count++;
 		}
-		
-
 
 		if (num == count)
 			break;
@@ -490,6 +484,36 @@ void Player::trade_clear()
 	trade_success = false;
 	send_resource_amount();
 }
+
+void Player::send_citizen_status()
+{
+	//´õ¿î »ç¶÷ ¼ö, ±¾Àº »ç¶÷ ¼ö, ¸ñ¸¶¸¥ »ç¶÷ ¼ö
+	int hot = 0;
+	int hungry = 0;
+	int thirsty = 0;
+	for (int c_id = CITIZENSTART + PLAYERCITIZENCOUNT * _id; c_id < CITIZENSTART + PLAYERCITIZENCOUNT * (_id + 1); c_id++) {
+		Citizen* citizen = reinterpret_cast<Citizen*>(objects[c_id]);
+		if (citizen->_job != -1) continue;
+		if (citizen->_satiety == 0)
+			hungry++;
+		if (citizen->_thirsty == 0)
+			thirsty++;
+		if (citizen->_temperature > 40)
+			hot++;
+	}
+	sc_packet_citizen_status packet;
+	packet.citizen_hot = hot;
+	packet.citizen_hungry = hungry;
+	packet.citizen_thirsty = thirsty;
+	send_packet(&packet);
+}
+
+void Player::send_sprinkler_off()
+{
+	sc_packet_sprinkler_off packet;
+	send_packet(&packet);
+}
+
 void Player::modify_dissatisfaction(int amount)
 {
 	if (dissatisfaction + amount >= 1) dissatisfaction = 1;
@@ -501,8 +525,6 @@ void Player::set_army_select(int select_type)
 {
 	if (Is_sand_storm)
 		return;
-	
-	
 	
 	bool select_fail = true;
 	if (select_type == 0)

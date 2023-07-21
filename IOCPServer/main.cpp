@@ -223,10 +223,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				else if (player->dissatisfaction > 1)
 					player->dissatisfaction = 1;
 			}
-			// 건물 온도 업데이트
-			/*for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
-				objects[i]
-			}*/
+			
 
 			if (sun_angle - citizen_eat > 10)	//각도 10도에 한번씩 배고픔이 생김
 			{
@@ -269,10 +266,12 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 							else {	//물 없으면
 								building->activated = false;
 								//플레이어에게 스프링클러 다 끄기 보내기
-								sc_packet_sprinkler_off packet;
+								player->send_sprinkler_off();
 							}
 						}
 					}
+					//시민 상태 보내기
+					player->send_citizen_status();
 					
 					player->send_resource_amount();
 				}
