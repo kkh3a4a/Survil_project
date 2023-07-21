@@ -193,15 +193,11 @@ void Citizen::citizen_dead()
 void Citizen::citizen_eat_food()
 {
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-	
-	char meal_consume = player->_policy.get_meal_resource_consume();
-	char meal_satiety = player->_policy.get_meal_satiety();
-	char meal_alcoholic = player->_policy.get_meal_alcoholic();
-	
-	if (player->_resource_amount[3] > meal_consume) {		//음식이 있을 때
-		player->_resource_amount[3] -= meal_consume;
-		modify_satiety(meal_satiety);
-		_alcoholic += meal_alcoholic;
+	if (_satiety > 70) return;
+
+	if (player->_resource_amount[3] > 1) {		//음식이 있을 때
+		player->_resource_amount[3] -= 1;
+		modify_satiety(30);
 		player->modify_dissatisfaction(-0.001);
 		modify_hp(50);
 	}
@@ -221,10 +217,11 @@ void Citizen::citizen_eat_food()
 void Citizen::citizen_drink_water()
 {
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+	if (_thirsty > 70) return;
+
 	if (player->_resource_amount[1] > 0){	//물 있을 때
 		player->_resource_amount[1] -= 1;
-		_thirsty += 20;
-		modify_thirsty(20);
+		modify_thirsty(30);
 		player->modify_dissatisfaction(-0.001);
 		modify_hp(50);
 	}
