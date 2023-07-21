@@ -18,7 +18,7 @@ Player::Player(int id, STATE state)
 	_id = id;
 	_socket={0};
 	_research = new Research(id);
-	//ÃÊ±â ÀÚ¿ø ÁöÁ¤
+	//ï¿½Ê±ï¿½ ï¿½Ú¿ï¿½ ï¿½ï¿½ï¿½ï¿½
 	_adventure_efficiency = 1.0;
 	_work_efficiency = 1.0;
 	_adventure_speed = 1.0;
@@ -54,7 +54,7 @@ void Player::set_player_location(float x, float y, float z)
 	_currentX = - (SIGHT_X * 100 / 2);
 	_currentY = - (SIGHT_Y * 100 / 2);
 	_currentZ = 0;
-	//_x´Â °¡¿îµ¥ À§Ä¡, _x +_currentX ¸ð¼­¸® À§Ä¡
+	//_xï¿½ï¿½ ï¿½ï¿½ï¿½îµ¥ ï¿½ï¿½Ä¡, _x +_currentX ï¿½ð¼­¸ï¿½ ï¿½ï¿½Ä¡
 }
 
 void Player::key_input(char** player_sight_terrain_line, char** player_sight_temperature_line)
@@ -105,7 +105,7 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 		send_packet(&sc_packet_move);
 	}
 
-	//terrainÁÂÇ¥¿Í currentÁÂÇ¥¸¦ ºñ±³ÇÏ¿© 100Â÷ÀÌ°¡ ³ª´Â°æ¿ì terrainÁÂÇ¥ ¾÷µ¥ÀÌÆ®
+	//terrainï¿½ï¿½Ç¥ï¿½ï¿½ currentï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¿ï¿½ 100ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ï¿½ terrainï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 	bool ischangeTerrainX = false;
 	bool ischangeTerrainY = false;
 
@@ -277,7 +277,7 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 	s = false;
 	d = false;
 
-	//ÃÖ¿ì¼± ¿À·ù ÇØ°á ¿ä¸Á
+	//ï¿½Ö¿ì¼± ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ ï¿½ï¿½ï¿½
 	
 	/*delete[] player_sight_terrain_line[0];
 	delete[] player_sight_terrain_line[1];
@@ -490,7 +490,13 @@ void Player::trade_clear()
 	trade_success = false;
 	send_resource_amount();
 }
-
+void Player::modify_dissatisfaction(int amount)
+{
+	if (dissatisfaction + amount >= 1) dissatisfaction = 1;
+	else if (dissatisfaction + amount <= 0) dissatisfaction = 0;
+	else dissatisfaction += amount;
+	//cout << "dissatisfaction : " << dissatis
+}
 void Player::set_army_select(int select_type)
 {
 	if (Is_sand_storm)

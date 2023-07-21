@@ -20,7 +20,7 @@ public:
 	std::set<int> view_list;
 	int army_select_num = -1;
 
-	//0 : ¼®À¯,		1 : ¹°,		2 : Ã¶,		3 : ½Ä·®,	4 : ³ª¹«
+	//0 : ï¿½ï¿½ï¿½ï¿½,		1 : ï¿½ï¿½,		2 : Ã¶,		3 : ï¿½Ä·ï¿½,	4 : ï¿½ï¿½ï¿½ï¿½
 	float _resource_amount[5] = {};
 	float _adventure_efficiency = {1.0};
 	float _work_efficiency = {1.0};
@@ -40,7 +40,7 @@ public:
 	int trade_resource[5]{};			//0,1,2,3,4
 	bool trade_success = false;
 	std::set<int> enemy_army_list;
-	//ºÒ¸¸ Èñ¸Á
+	//ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½
 	float dissatisfaction = 0.0;
 
 
@@ -69,4 +69,5 @@ public:
 	void trade_clear();
 	void set_army_select(int select_type);
 	void set_location_input(float mini_x, float mini_y);
+	void modify_dissatisfaction(int amount);
 };

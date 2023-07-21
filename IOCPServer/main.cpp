@@ -71,6 +71,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 			terrain->make_shadow_map(sun_angle);
 			terrain->make_tempertature_map(sun_angle);
 			terrain->springkler_cool();
+			terrain->citizen_hot();
 			CC retval = terrain->get_highest_lowest(temperature_map);
 			
 			//cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
@@ -254,7 +255,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 							citizen->_thirsty = 0;
 						}
 						citizen->citizen_eat_food();	//먹기
-						citizen->citizen_eat_water();	//마시기
+						citizen->citizen_drink_water();	//마시기
 					}
 
 					//10도 차이마다 스프링클러 개당 물 소비
@@ -436,7 +437,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					
 					if (citizen->_house_id == -1)
 					{
-						player->dissatisfaction += 0.01;
+						player->modify_dissatisfaction(0.01);
 						bool isHouseStaff = false;
 						//만약 빈 HOUSE가 생겼을때 시민을 배치해준다.
 						for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; building_id++)
@@ -475,7 +476,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					}
 					else
 					{
-						player->dissatisfaction -= 0.002;
+						player->modify_dissatisfaction(-0.002);
 						citizen->_arrival_x = objects[citizen->_house_id]->_x;
 						citizen->_arrival_y = objects[citizen->_house_id]->_y;
 					}
@@ -483,8 +484,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				IsOnceWork = false;
 			}
 		}
-		///////////////////////
-
 	}
 	return 0;
 }

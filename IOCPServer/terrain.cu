@@ -487,15 +487,9 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 __global__
 void add_object_height_cuda(char** terrain_array_device, II building_pos, int building_height)
 {
-	II coo;
-	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
-	coo.y = blockIdx.x * blockDim.x + threadIdx.x;
-	/*printf("%d %d %d\n", blockIdx.y, blockDim.y, threadIdx.y);
-	printf("%d %d %d\n", blockIdx.x, blockDim.x, threadIdx.x);*/
-	// 100 + 9 - 5 = 104
-	// 100 + 0 - 5 = 95
-	
 	terrain_array_device[building_pos.x + threadIdx.x - blockDim.x / 2][building_pos.y + threadIdx.y - blockDim.y / 2] += building_height;
+	//printf("%d %d\n", building_pos.y, building_pos.x);
+	//printf("%d %d %d\n", building_pos.y + threadIdx.y - blockDim.y / 2, building_pos.x + threadIdx.x - blockDim.x / 2, building_height);
 }
 
 __global__
@@ -990,27 +984,27 @@ public:
 			switch (resource->_type)
 			{
 			case 0: {	//석유
-				resource_size = 4;
+				resource_size = 3;
 				resource_height = 2;
 				break;
 			}
 			case 1: {	//물
-				resource_size = 4;
+				resource_size = 3;
 				resource_height = 2;
 				break;
 			}
 			case 2: {	//철
-				resource_size = 4;
+				resource_size = 3;
 				resource_height = 1;
 				break;
 			}
 			case 3: {	//식량
-				resource_size = 4;
+				resource_size = 3;
 				resource_height = 2;
 				break;
 			}
 			case 4: {	//나무
-				resource_size = 4;
+				resource_size = 3;
 				resource_height = 2;
 				break;
 			}
@@ -1023,68 +1017,78 @@ public:
 			Building* building = reinterpret_cast<Building*>(objects[i]);
 			if (building->_type == -1) 
 				continue;
-			int building_size;
+			II building_size;
 			int building_height;
 			switch (building->_type)
 			{
 			case 0: {	//건설중
-				building_size = 8;
+				building_size.x = 7;
+				building_size.y = 7;
 				building_height = 2;
 				break;
 			}
 			case 1: {	//집
-				building_size = 6;
+				building_size.x = 7;
+				building_size.y = 7;
 				building_height = 3;
 				break;
 			}
 			case 2: {	//기름 시추기
-				building_size = 4;
+				building_size.x = 9;
+				building_size.y = 3;
 				building_height = 5;
 				break;
 			}
 			case 3: {	//우물
-				building_size = 4;
+				building_size.x = 9;
+				building_size.y = 3;
 				building_height = 4;
 				break;
 			}
 			case 4: {	//나무 제제소
-				building_size = 8;
+				building_size.x = 11;
+				building_size.y = 9;
 				building_height = 2;
 				break;
 			}
 			case 5: {	//제철소
-				building_size = 8;
+				building_size.x = 11;
+				building_size.y = 9;
 				building_height = 2;
 				break;
 			}
 			case 6: {	//실험실
-				building_size = 4;
+				building_size.x = 11;
+				building_size.y = 3;
 				building_height = 4;
 				break;
 			}
 			case 8: {	//스프링클러
-				building_size = 1;
+				building_size.x = 1;
+				building_size.y = 1;
 				building_height = 1;
 				break;
 			}
 			case 11: {	//헌터하우스
-				building_size = 4;
-				building_height = 4;
+				building_size.x = 7;
+				building_size.y = 5;
+				building_height = 7;
 				break;
 			}
 			case 13: {	//그린하우스
-				building_size = 8;
+				building_size.x = 7;
+				building_size.y = 9;
 				building_height = 7;
 				break;
 			}
 			case 21: {	//군인 캠프
-				building_size = 6;
+				building_size.x = 5;
+				building_size.y = 7;
 				building_height = 3;
 				break;
 			}
 			}
-			
-			dim3 block(building_size, building_size, 1);
+			dim3 block(building_size.x, building_size.y, 1);
 			add_object_height_cuda << <1, block >> > (terrain_array_device, { (int)building->_x / 100, (int)building->_y / 100 }, building_height);
 			cudaDeviceSynchronize();
 		}
@@ -1113,9 +1117,22 @@ public:
 		for (int i = CITIZENSTART; i < CITIZENSTART + MAXCITIZEN; ++i) {
 			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
 			if (citizen->_job == -1) continue;
+			int temperature = temperature_map_host[(int)citizen->_x / 100][(int)citizen->_y / 100];
 			
+			int player_id = (i - CITIZENSTART) / 200;
+			Player* player = reinterpret_cast<Player*>(objects[player_id]);
 			
+			if (temperature / temperature_divide > 40) {
+				citizen->modify_hp(-(temperature / temperature_divide - 40) / 5);
+				player->modify_dissatisfaction(0.001);
+			}
+			else {
+				player->modify_dissatisfaction(-0.001);
+			}
+			if(player_id == 0)
+				cout << "Temperature: " << temperature / temperature_divide << endl;
 		}
+		cout << "==================================\n";
 	}
 
 	void except_city_terrain()
