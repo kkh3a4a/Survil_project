@@ -187,7 +187,6 @@ void Citizen::citizen_dead()
 	_dissatisfaction = 0;
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 	player->modify_dissatisfaction(0.01);
-
 }
 
 void Citizen::citizen_eat_food()

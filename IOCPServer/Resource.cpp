@@ -165,9 +165,10 @@ void Resource::collect_resource()
 				_workcitizens[i]->_job = 0;
 				_workcitizens[i] = nullptr;
 			}
-			_x = -1;
-			_y = -1;
 		}
+		_x = -1;
+		_y = -1;
+		_type = -1;
 	}
 
 	if (change_Resource_amount)

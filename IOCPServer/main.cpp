@@ -64,15 +64,14 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		{
 			clock_t start = clock();
 			terrain_start = std::chrono::system_clock::now();
-			//cout << endl << i << "번째" << endl;
+			cout << endl << i << "번째" << endl;
 
 			terrain->wind_blow({ 1, 0 }, 1);
 			terrain->add_object_height();
 			terrain->make_shadow_map(sun_angle);
 			terrain->make_tempertature_map(sun_angle);
 			terrain->springkler_cool();
-			terrain->citizen_hot();
-			CC retval = terrain->get_highest_lowest(temperature_map);
+			//CC retval = terrain->get_highest_lowest(temperature_map);
 			
 			//cout << "Temperature Highest: " << (float)retval.x / 4 << ", Lowest" << (float)retval.y / 4 << endl;
 			//terrain->show_array(total_terrain, 320);
@@ -227,6 +226,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 			if (sun_angle - citizen_eat > 10)	//각도 10도에 한번씩 배고픔이 생김
 			{
+				//시민 더위
+				terrain->citizen_hot();
+				
 				citizen_eat = sun_angle;
 				for (int player_id = 0; player_id < MAXPLAYER; ++player_id)
 				{
@@ -273,6 +275,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					//시민 상태 보내기
 					player->send_citizen_status();
 					
+					//리소스 양 보내기
 					player->send_resource_amount();
 				}
 			}
@@ -378,6 +381,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 		if (is_terrain_changed)
 		{
+			cout << "Send Terrain & Temperature" << endl;
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);

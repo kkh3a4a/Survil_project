@@ -485,14 +485,6 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 }
 
 __global__
-void add_object_height_cuda(char** terrain_array_device, II building_pos, int building_height)
-{
-	terrain_array_device[building_pos.x + threadIdx.x - blockDim.x / 2][building_pos.y + threadIdx.y - blockDim.y / 2] += building_height;
-	//printf("%d %d\n", building_pos.y, building_pos.x);
-	//printf("%d %d %d\n", building_pos.y + threadIdx.y - blockDim.y / 2, building_pos.x + threadIdx.x - blockDim.x / 2, building_height);
-}
-
-__global__
 void springkler_cool_cuda(unsigned char** temperature_map_device, II springkler_pos)
 {
 	II coo;
@@ -503,7 +495,19 @@ void springkler_cool_cuda(unsigned char** temperature_map_device, II springkler_
 	if (distance <= blockDim.x / 2) {
 		//회당 1도씩 낮춤
 		temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] -= 1 * temperature_divide;
+		//최고 최저 온도 설정
+		//temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] = max(temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2], 20 * temperature_divide);
+		//temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] = min(temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2], 60 * temperature_divide);
+		//printf("%d\n", temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2]);
 	}
+}
+
+__global__
+void add_object_height_cuda(char** terrain_array_device, II building_pos, int building_height)
+{
+	terrain_array_device[building_pos.x + threadIdx.x - blockDim.x / 2][building_pos.y + threadIdx.y - blockDim.y / 2] += building_height;
+	//printf("%d %d\n", building_pos.y, building_pos.x);
+	//printf("%d %d %d\n", building_pos.y + threadIdx.y - blockDim.y / 2, building_pos.x + threadIdx.x - blockDim.x / 2, building_height);
 }
 
 __global__
@@ -806,6 +810,23 @@ public:
 			cout << "Make Temperature Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
+	void springkler_cool()
+	{
+		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
+			Building* building = reinterpret_cast<Building*>(objects[i]);
+			if (building->_type != 8) continue;	//스프링클러일 때만
+			if (building->activated == false) continue;	//작동중일 때만
+			//cout << "Sprinkler Cool " << i << endl;
+			int springkler_size = 21;	//사이즈 홀수로 해야 함
+			dim3 block(springkler_size, springkler_size, 1);
+			springkler_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
+			cudaDeviceSynchronize();
+		}
+		for (int i = 0; i < one_side_number; i++) {
+			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(unsigned char), cudaMemcpyDeviceToHost);
+		}
+	}
+
 	void terrain_corrosion()
 	{
 		clock_t t_0 = clock();
@@ -1094,23 +1115,6 @@ public:
 		}
 	}
 	
-	void springkler_cool()
-	{
-		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
-			Building* building = reinterpret_cast<Building*>(objects[i]);
-			if (building->_type != 8) continue;	//스프링클러일 때만
-			if (building->activated == false) continue;	//작동중일 때만
-			//cout << "Sprinkler Cool " << i << endl;
-			int springkler_size = 21;	//사이즈 홀수로 해야 함
-			dim3 block(springkler_size, springkler_size, 1);
-			springkler_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
-			cudaDeviceSynchronize();
-		}
-		for (int i = 0; i < one_side_number; i++) {
-			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(unsigned char), cudaMemcpyDeviceToHost);
-		}
-	}
-
 	void citizen_hot()
 	{
 		//모든 citizen 들의 위치를 가지로 해당 위치의 terrain의 온도를 확인하고 citizen의 더위를 조정(40도를 넘으면 5도마다 더위를 증가)

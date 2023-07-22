@@ -504,7 +504,10 @@ void Player::send_citizen_status()
 			thirsty++;
 		if (citizen->_temperature > 40)
 			hot++;
+		//if (_id == 0)
+			//cout << c_id << "] HP: " << (int)citizen->_hp << " [ X: " << (int)citizen->_x << ", Y: " << (int)citizen->_y << " ]" << endl;
 	}
+	//cout << "=============================\n";
 	sc_packet_citizen_status packet;
 	packet.citizen_num = citizen_num;
 	packet.citizen_hot = hot;
