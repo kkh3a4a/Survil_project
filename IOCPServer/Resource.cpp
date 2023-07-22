@@ -140,6 +140,11 @@ void Resource::collect_resource()
 	{
 		if (_workcitizens[i] != nullptr)
 		{
+			if (_workcitizens[i]->_job == -1)
+			{
+				_workcitizens[i] = nullptr;
+				continue;
+			}
 			if (_workcitizens[i]->_x == _x && _workcitizens[i]->_y == _y && _amount > 0 )
 			{
 				_amount--;
