@@ -64,7 +64,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 		{
 			clock_t start = clock();
 			terrain_start = std::chrono::system_clock::now();
-			cout << endl << i << "번째" << endl;
+			//cout << endl << i << "번째" << endl;
 
 			terrain->wind_blow({ 1, 0 }, 1);
 			terrain->add_object_height();
@@ -381,7 +381,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 
 		if (is_terrain_changed)
 		{
-			cout << "Send Terrain & Temperature" << endl;
+			//cout << "Send Terrain & Temperature" << endl;
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);

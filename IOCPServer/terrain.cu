@@ -496,8 +496,8 @@ void springkler_cool_cuda(unsigned char** temperature_map_device, II springkler_
 		//회당 1도씩 낮춤
 		temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] -= 1 * temperature_divide;
 		//최고 최저 온도 설정
-		//temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] = max(temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2], 20 * temperature_divide);
-		//temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] = min(temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2], 60 * temperature_divide);
+		temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] = max(temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2], 20 * temperature_divide);
+		temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] = min(temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2], 60 * temperature_divide);
 		//printf("%d\n", temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2]);
 	}
 }
