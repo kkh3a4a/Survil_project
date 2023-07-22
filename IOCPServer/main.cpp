@@ -197,7 +197,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						sand_storm_day.erase(survil_day);
 					}
 				}
-
 			}
 			else if (sun_angle >= 180.f)
 			{
@@ -222,10 +221,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				else if (player->dissatisfaction > 1)
 					player->dissatisfaction = 1;
 			}
-			
-
-			if (sun_angle - citizen_eat > 10)	//각도 10도에 한번씩 배고픔이 생김
+			if (sun_angle - citizen_eat > 10 || sun_angle == 2.f * cycle_time / (1000.f / sunSpeed))	//각도 10도에 한번씩 배고픔이 생김
 			{
+				//맨처음 한번도 실행
+				
 				//시민 더위
 				terrain->citizen_hot();
 				
@@ -310,8 +309,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					}
 				}
 			}
-			
-				
 		}
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)	//5000
 		{	
