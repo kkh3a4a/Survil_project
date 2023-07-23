@@ -150,7 +150,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_CITIZENMOVE:
 		{
 			sc_packet_citizenmove* packet = reinterpret_cast<sc_packet_citizenmove*>(buf);
-			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
+			FRotator Rotation = (FVector(packet->rx, packet->ry + 90, packet->rz)).GetSafeNormal().Rotation();
 			//UE_LOG(LogTemp, Warning, TEXT("%d"), (int)packet->citizenstate);
 			_CitizenManager->Set_Citizen_Location(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->citizenstate);
 			break;
