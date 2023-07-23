@@ -35,5 +35,6 @@ public:
 	void modify_hp(int amount);
 	void modify_satiety(int amount);
 	void modify_thirsty(int amount);
+	void make_random_round_position(float& x, float& y, float distance, int max_citizen, int iter);
 };
 

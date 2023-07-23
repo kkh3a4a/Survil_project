@@ -20,6 +20,8 @@ public:
 	std::set<int> view_list;
 	int army_select_num = -1;
 
+	int total_citizen_num;
+
 	//0 : ����,		1 : ��,		2 : ö,		3 : �ķ�,	4 : ����
 	float _resource_amount[5] = {};
 	float _adventure_efficiency = {1.0};

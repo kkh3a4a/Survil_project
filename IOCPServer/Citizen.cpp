@@ -1,5 +1,6 @@
 #include "Citizen.h"
 #include"Building.h"
+#include<random>
 
 //추후 지울것
 #include<iostream>
@@ -254,4 +255,12 @@ void Citizen::modify_thirsty(int amount)
 	if (_thirsty + amount >= 100) _thirsty = 100;
 	else if (_thirsty + amount <= 0) _thirsty = 0;
 	else _thirsty += amount;
+}
+
+void Citizen::make_random_round_position(float& x, float& y, float distance, int max_citizen, int iter)
+{
+	float angle = 3.141592 * 2 / max_citizen * iter;
+
+	x += distance * std::cos(angle);
+	y += distance * std::sin(angle);
 }

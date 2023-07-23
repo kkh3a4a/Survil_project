@@ -418,7 +418,6 @@ void Player::create_citizen(int num)
 			}
 			count++;
 		}
-
 		if (num == count)
 			break;
 	}
@@ -508,6 +507,8 @@ void Player::send_citizen_status()
 			//cout << c_id << "] HP: " << (int)citizen->_hp << " [ X: " << (int)citizen->_x << ", Y: " << (int)citizen->_y << " ]" << endl;
 	}
 	//cout << "=============================\n";
+	total_citizen_num = citizen_num;
+	
 	sc_packet_citizen_status packet;
 	packet.citizen_num = citizen_num;
 	packet.citizen_hot = hot;

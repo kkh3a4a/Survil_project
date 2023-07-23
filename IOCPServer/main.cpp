@@ -117,16 +117,25 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	int citizen_eat = 0;
 	float sunSpeed = 1.0f;
 
+	for (int player_id = 0; player_id < MAXPLAYER; ++player_id)
+	{
+		Player* player = reinterpret_cast<Player*>(objects[player_id]);
+		//시민 상태 보내기
+		player->send_citizen_status();
+		//리소스 양 보내기
+		player->send_resource_amount();
+	}
+	
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{
 		Player* player = reinterpret_cast<Player*>(objects[i]);
 		TF player_city{ player->_x, player->_y };
 		terrain->set_city_location(TF{player->_x, player->_y}, i); 
-		
 	}
 
 	{	//random sand_storm 추가
-		default_random_engine dre2;
+		random_device rd;
+		default_random_engine dre2(rd());
 		dre2.seed(std::chrono::system_clock::now().time_since_epoch().count());
 		int random_day = 0;
 		for (int i = 0; i < 4; ++i)
@@ -221,10 +230,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				else if (player->dissatisfaction > 1)
 					player->dissatisfaction = 1;
 			}
-			if (sun_angle - citizen_eat > 10 || sun_angle == 2.f * cycle_time / (1000.f / sunSpeed))	//각도 10도에 한번씩 배고픔이 생김
+			if (sun_angle - citizen_eat > 10)	//각도 10도에 한번씩 배고픔이 생김
 			{
-				//맨처음 한번도 실행
-				
 				//시민 더위
 				terrain->citizen_hot();
 				
@@ -427,6 +434,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		{
 			if(IsOnceWork)
 			{
+				int homeless_iter{};
 				for (int citizen_id = CITIZENSTART; citizen_id < MAXCITIZEN + CITIZENSTART; ++citizen_id)
 				{
 					int player_id = (citizen_id - 5) / 200;
@@ -465,13 +473,21 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						}
 						if(!isHouseStaff)
 						{
-							int rocate = 1;
+							
+							/*int rocate = 1;
 							if (rand() % 2 == 0)
 								rocate *= -1;
 							citizen->_arrival_x = player->_x + (rand() % 500) * rocate + 500 * rocate;
 							if (rand() % 2 == 0)
 								rocate *= -1;
-							citizen->_arrival_y = player->_y + rand() % 500 * rocate + 500 * rocate;
+							citizen->_arrival_y = player->_y + rand() % 500 * rocate + 500 * rocate;*/
+
+							float round_pos_x = player->_x;
+							float round_pos_y = player->_y;
+							citizen->make_random_round_position(round_pos_x, round_pos_y, 500, player->total_citizen_num, homeless_iter);
+							citizen->_arrival_x = round_pos_x;
+							citizen->_arrival_y = round_pos_y;
+							homeless_iter++;
 						}
 					}
 					else

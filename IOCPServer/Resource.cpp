@@ -3,9 +3,6 @@
 #include<iostream>
 #include<random>
 
-
-std::uniform_int_distribution <int>resource_uid{ -100, 100 };
-
 Resource::Resource(int id, char type)
 {
 	_id = id;
@@ -22,7 +19,9 @@ Resource::~Resource()
 
 void Resource::set_resource_spwan_location(float player_x, float player_y, float player_z)
 {
-	std::default_random_engine dre;
+	std::random_device rd;
+	std::default_random_engine dre(rd());
+	std::uniform_int_distribution <int>resource_uid{ -100, 100 };
 	do
 	{
 		retry:
@@ -65,12 +64,16 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 			{
 				if (placement_citizen != nullptr)
 				{
+					float citizen_around_resource_x = _x;
+					float citizen_around_resource_y = _y;
+					placement_citizen->make_random_round_position(citizen_around_resource_x, citizen_around_resource_y, 300, 10, i);
+					
 					placement_citizen->_job = 1;
-					placement_citizen->_job_x = _x;
-					placement_citizen->_job_y = _y;
+					placement_citizen->_job_x = citizen_around_resource_x;
+					placement_citizen->_job_y = citizen_around_resource_y;
 					placement_citizen->_job_z = _z;
 					if(!IsNight)
-						placement_citizen->set_citizen_arrival_location(_x, _y, _z);
+						placement_citizen->set_citizen_arrival_location(citizen_around_resource_x, citizen_around_resource_y, _z);
 					_workcitizens[i] = placement_citizen;
 					_citizencount++;
 					break;
@@ -98,7 +101,7 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 			{
 				if (placement_citizen != nullptr)
 				{
-					if(_workcitizens[i]->_x == _x && _workcitizens[i]->_y && !IsNight)
+					/*if(_workcitizens[i]->_x == _x && _workcitizens[i]->_y && !IsNight)
 					{
 						_workcitizens[i]->_arrival_x = _x + i * 100 - 500;
 						_workcitizens[i]->_arrival_y = _y + 500;
@@ -107,7 +110,10 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 					{
 						_workcitizens[i]->_arrival_x = _workcitizens[i]->_x;
 						_workcitizens[i]->_arrival_y = _workcitizens[i]->_y;
-					}
+					}*/
+					_workcitizens[i]->_arrival_x = _x + i * 100 - 500;
+					_workcitizens[i]->_arrival_y = _y + 500;
+					
 					_workcitizens[i]->_job = 0;
 					_workcitizens[i] = nullptr;
 					_citizencount--;
@@ -145,7 +151,8 @@ void Resource::collect_resource()
 				_workcitizens[i] = nullptr;
 				continue;
 			}
-			if (_workcitizens[i]->_x == _x && _workcitizens[i]->_y == _y && _amount > 0 )
+			//if (_workcitizens[i]->_x == _x && _workcitizens[i]->_y == _y && _amount > 0 )
+			if(_amount > 0)
 			{
 				_amount--;
 				Player* player = reinterpret_cast<Player*>(objects[_workcitizens[i]->_playerID]);
@@ -154,7 +161,7 @@ void Resource::collect_resource()
 			}
 		}
 	}
-	if (_amount == 0)
+	if (_amount <= 0)
 	{
 		for (int i = 0; i < 10; ++i)
 		{
