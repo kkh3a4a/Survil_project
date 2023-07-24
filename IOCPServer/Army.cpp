@@ -45,7 +45,6 @@ void Army::set_army_move()
 			set_army_dead();
 			return;
 		}
-		
 	}
 
 	if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_attack).count() > 5000)
@@ -325,9 +324,6 @@ void Army::set_army_plunder(int p_id)
 			enemy_player->modify_dissatisfaction(0.01);
 		}
 	}
-	
-
-
 }
 
 void Army::set_army_dead()
@@ -345,5 +341,3 @@ void Army::set_army_dead()
 	packet.army_id = _id;
 	all_player_sendpacket(&packet);
 }
-
-

@@ -320,21 +320,25 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)	//5000
 		{	
 			Resource_Collect_Timer_End = std::chrono::system_clock::now();
-			for (int i = RESOURCESTART; i < RESOURCESTART + MAXRESOURCE; ++i)
+			if (!IsNight)
 			{
-				Resource* resource = reinterpret_cast<Resource*>(objects[i]);
-				resource->collect_resource();
+				for (int i = RESOURCESTART; i < RESOURCESTART + MAXRESOURCE; ++i)
+				{
+					Resource* resource = reinterpret_cast<Resource*>(objects[i]);
+					resource->collect_resource();
+				}
+				for (int i = BUILDINGSTART; i < MAXBUILDING + BUILDINGSTART; ++i)
+				{
+					Building* building = reinterpret_cast<Building*>(objects[i]);
+					building->WorkBuilding();
+				}
+				for (int i = 0; i < MAXPLAYER; ++i)
+				{
+					Player* player = reinterpret_cast<Player*>(objects[i]);
+					player->send_resource_amount();
+				}
 			}
-			for (int i = BUILDINGSTART; i < MAXBUILDING + BUILDINGSTART; ++i)
-			{
-				Building* building = reinterpret_cast<Building*>(objects[i]);
-				building->WorkBuilding();
-			}
-			for (int i = 0; i < MAXPLAYER; ++i)
-			{
-				Player* player = reinterpret_cast<Player*>(objects[i]);
-				player->send_resource_amount();
-			}
+
 		}
 		for (int i = 0; i < MAXPLAYER; ++i)
 		{

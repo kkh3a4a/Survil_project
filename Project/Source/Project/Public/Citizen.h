@@ -21,7 +21,16 @@ protected:
 
 public:
 	int _id;
-	float _x, _y, _z;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float _rx;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float _ry;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float _rz;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FRotator CitizenRotation;
+
 	char job;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
