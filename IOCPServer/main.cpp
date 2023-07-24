@@ -17,7 +17,7 @@
 using namespace std;
 using namespace chrono;
 
-uniform_int_distribution <int>map_uid{ 100, one_side_number - 100 };
+uniform_int_distribution <int>map_uid{ 500 / 100, (one_side_number - 500) / 100 };
 //함수정의 
 DWORD WINAPI ProcessClient(LPVOID arg);
 DWORD WINAPI ingame_thread(LPVOID arg);
@@ -622,7 +622,9 @@ int main(int argc, char* argv[])
 		default_random_engine dre2;
 		dre2.seed(std::chrono::system_clock::now().time_since_epoch().count());
 	retry:		
-		float x = map_uid(dre) * UNIT, float y = map_uid(dre) * UNIT, float z = 0;
+		float x = map_uid(dre) * UNIT * 100;
+		float y = map_uid(dre) * UNIT * 100;
+		float z = 0;
 		
 		for (int j = 0; j < i; ++j)
 		{
@@ -631,16 +633,17 @@ int main(int argc, char* argv[])
 				goto retry;
 			}
 		}
-		reinterpret_cast<Player*>(objects[i])->set_player_location(x, y, z);
-		//reinterpret_cast<Player*>(objects[i])->player_sight_terrain = total_terrain;
+		Player* player = reinterpret_cast<Player*>(objects[i]);
+		player->set_player_location(x, y, z);
 		
-		for (int line = 0; line != FIRSTCITIZENCREATE / 10; ++line)
-		{
-			for (int j = 0; j < 10; ++j)
-			{
-				reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * PLAYERCITIZENCOUNT + j + (line * 10)])->set_citizen_spwan_location(x + 2000 + (line * 500), y + (j * 500) - 2250, z);
-			}
+		for (int j = 0; j < 20; ++j) {
+			Citizen* citizen = reinterpret_cast<Citizen*>(objects[MAXPLAYER + i * PLAYERCITIZENCOUNT + j]);
+			citizen->_job = 0;
+			player->move_citizen_to_tower(citizen->_id);
+			citizen->_x = citizen->_arrival_x;
+			citizen->_y = citizen->_arrival_y;
 		}
+
 		for (int j = 0; j < 10; ++j)
 		{
 			reinterpret_cast<Resource*>(objects[RESOURCESTART + i * 10 + j])->set_resource_spwan_location(x, y, z);

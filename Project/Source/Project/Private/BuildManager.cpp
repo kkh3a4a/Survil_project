@@ -110,7 +110,6 @@ void ABuildManager::BuildSuccess(int obj_id, float x, float y, int building_type
 		return;
 	else {
 		FActorSpawnParameters SpawnInfo;
-		
 		BuiltBuildings[obj_id]->Destroy();
 		BuiltBuildings[obj_id] = nullptr;
 
