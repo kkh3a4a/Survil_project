@@ -46,8 +46,12 @@ void Citizen::set_citizen_move()
 {
 	if (_x != _arrival_x || _y != _arrival_y)
 	{
+		
 		_citizenstate = 1;
 		float distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
+		_rx = (_arrival_x - _x) / distance;
+		_ry = (_arrival_y - _y) / distance;
+		_rz = (_arrival_z - _z) / distance;
 		if (distance < 20)
 		{
 			_x = _arrival_x;
@@ -150,9 +154,9 @@ void Citizen::set_citizen_move()
 		packet.x = _x;
 		packet.y = _y;
 		packet.z = _z;
-		packet.rx = (_arrival_x - _x) / distance;
-		packet.ry = (_arrival_y - _y) / distance;
-		packet.rz = (_arrival_z - _z) / distance;
+		packet.rx = _rx;
+		packet.ry = _ry;
+		packet.rz = _rz;
 		packet.citizenid = _id;
 		packet.citizenstate = _citizenstate;
 		packet.size = sizeof(sc_packet_citizenmove);
