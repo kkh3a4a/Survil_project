@@ -78,5 +78,5 @@ public:
 	void send_citizen_status();
 	void send_sprinkler_off();
 	void player_gameover();
-	void player_ending();
+	void player_ending(int rank, int score);
 };

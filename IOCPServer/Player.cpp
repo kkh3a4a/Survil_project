@@ -531,8 +531,39 @@ void Player::player_gameover()
 	send_packet(&packet);
 }
 
-void Player::player_ending()
+void Player::player_ending(int rank, int score)
 {
+	string ending_title;
+	int total_resource = 0;
+	for (int i = 0; i < 5; ++i)
+	{
+		total_resource = _resource_amount[i];
+	}
+
+	if (kill_citizen > total_citizen_num)
+	{
+		ending_title = "무자비한 지배자";
+	}
+	else if (dead_citizen_num == 0 && total_citizen_num > 190 && total_resource > 10000)
+	{
+		ending_title = "완벽한 지배자";
+	}
+	else if (kill_citizen == 0)
+	{
+		ending_title = "평화주의자";
+	}
+	else if (dead_citizen_num > total_citizen_num)
+	{
+		ending_title = "무능한 지배자";
+	}
+	else if (total_resource > 20000)
+	{
+		ending_title = "철강왕 지배자";
+	}
+	else
+	{
+		ending_title = "평범한 지배자";
+	}
 	
 }
 
