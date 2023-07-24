@@ -485,7 +485,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 }
 
 __global__
-void springkler_cool_cuda(unsigned char** temperature_map_device, II springkler_pos)
+void round_shaped_cool_cuda(unsigned char** temperature_map_device, II springkler_pos)
 {
 	II coo;
 	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
@@ -810,16 +810,21 @@ public:
 			cout << "Make Temperature Map : " << (double)(t_1 - t_0) / CLOCKS_PER_SEC << " sec" << endl;
 	}
 
-	void springkler_cool()
+	void cooling_system()
 	{
+		for (int i = 0; i < MAXPLAYER; i++) {
+			int size = 21;	//사이즈 홀수로 해야 함
+			dim3 block(size, size, 1);
+			round_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)objects[i]->_x / 100, (int)objects[i]->_y / 100 });
+			cudaDeviceSynchronize();
+		}
 		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
 			Building* building = reinterpret_cast<Building*>(objects[i]);
 			if (building->_type != 8) continue;	//스프링클러일 때만
 			if (building->activated == false) continue;	//작동중일 때만
-			//cout << "Sprinkler Cool " << i << endl;
 			int springkler_size = 21;	//사이즈 홀수로 해야 함
 			dim3 block(springkler_size, springkler_size, 1);
-			springkler_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
+			round_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
 			cudaDeviceSynchronize();
 		}
 		for (int i = 0; i < one_side_number; i++) {
