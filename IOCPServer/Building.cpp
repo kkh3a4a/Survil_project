@@ -421,13 +421,15 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 						{
 							if (a->_x == _x && a->_y && !IsNight)
 							{
-								a->_arrival_x = _x + i * 100 - 500;
-								a->_arrival_y = _y + 500;
+								/*a->_arrival_x = _x + i * 100 - 500;
+								a->_arrival_y = _y + 500;*/
+								a->set_citizen_arrival_location(_x + i * 100 - 500, _y + 500, _z);
 							}
 							else
 							{
-								a->_arrival_x = a->_x;
-								a->_arrival_y = a->_y;
+								/*a->_arrival_x = a->_x;
+								a->_arrival_y = a->_y;*/
+								a->set_citizen_arrival_location(a->_x, a->_y, a->_z);
 							}
 							a->_job = 0;
 							a = nullptr;

@@ -14,6 +14,8 @@ public:
 	int _Job_id;
 	int _house_id;	// -1 : 집없음, 나머지 : 집 object id
 	char _citizenstate;		// 0 : idle, 1 : walk, 2 : sleep
+
+	bool stay_tower;
 	
 	char _satiety;	//0~100
 	char _thirsty;	//0~100

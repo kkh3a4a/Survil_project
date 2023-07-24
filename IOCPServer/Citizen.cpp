@@ -37,6 +37,7 @@ void Citizen::set_citizen_spwan_location(float x, float y, float z)
 
 void Citizen::set_citizen_arrival_location(float ax, float ay, float az)
 {
+	stay_tower = false;
 	_arrival_x = ax;
 	_arrival_y = ay;
 	_arrival_z = az;
@@ -75,8 +76,10 @@ void Citizen::set_citizen_move()
 				Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 				player->_research->change_lab_count(player->_research->lab_count + 1);
 
-				_arrival_x = _x;
-				_arrival_y = _y + 500;
+				/*_arrival_x = _x;
+				_arrival_y = _y + 500;*/
+				//set_citizen_arrival_location(_x, _y + 500, _z);
+				player->move_citizen_to_tower(_id);
 
 				for (int player_num = 0; player_num < MAXPLAYER; player_num++) {	//모든 플레이어들에게 전송
 					Player* this_player = reinterpret_cast<Player*>(objects[player_num]);

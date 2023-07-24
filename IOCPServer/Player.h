@@ -21,6 +21,7 @@ public:
 	int army_select_num = -1;
 
 	int total_citizen_num;
+	int around_tower_citizen_num{};
 
 	//ending시 사용
 	int dead_citizen_num = 0;
@@ -83,4 +84,7 @@ public:
 	void player_gameover();
 	void player_ending();
 	void set_score();
+	void player_ending(int rank, int score);
+
+	void move_citizen_to_tower( int citizen_id);
 };

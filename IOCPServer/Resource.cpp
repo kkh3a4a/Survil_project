@@ -111,8 +111,11 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 						_workcitizens[i]->_arrival_x = _workcitizens[i]->_x;
 						_workcitizens[i]->_arrival_y = _workcitizens[i]->_y;
 					}*/
-					_workcitizens[i]->_arrival_x = _x + i * 100 - 500;
-					_workcitizens[i]->_arrival_y = _y + 500;
+					
+					/*_workcitizens[i]->_arrival_x = _x + i * 100 - 500;
+					_workcitizens[i]->_arrival_y = _y + 500;*/
+					Player* player = reinterpret_cast<Player*>(objects[client_id]);
+					player->move_citizen_to_tower(_workcitizens[i]->_id);
 					
 					_workcitizens[i]->_job = 0;
 					_workcitizens[i] = nullptr;
@@ -140,6 +143,9 @@ void Resource::set_resource_citizen_placement(int client_id, char isplus)
 
 void Resource::collect_resource()
 {
+	if (_type == -1)
+		return;
+	
 	bool change_Resource_amount = false;
 	int  _WorkcitizenNum = 0;
 	for (int i = 0; i < 10; ++i)
@@ -167,8 +173,10 @@ void Resource::collect_resource()
 		{
 			if (_workcitizens[i] != nullptr)
 			{
-				_workcitizens[i]->_arrival_x = _x + i * 100 - 500;
-				_workcitizens[i]->_arrival_y = _y + 200;
+				/*_workcitizens[i]->_arrival_x = _x + i * 100 - 500;
+				_workcitizens[i]->_arrival_y = _y + 200;*/
+				Player* player = reinterpret_cast<Player*>(objects[_workcitizens[i]->_playerID]);
+				player->move_citizen_to_tower(_workcitizens[i]->_id);
 				_workcitizens[i]->_job = 0;
 				_workcitizens[i] = nullptr;
 			}

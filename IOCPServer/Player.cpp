@@ -494,7 +494,7 @@ void Player::send_citizen_status()
 	
 	for (int c_id = CITIZENSTART + PLAYERCITIZENCOUNT * _id; c_id < CITIZENSTART + PLAYERCITIZENCOUNT * (_id + 1); c_id++) {
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[c_id]);
-		if (citizen->_job == -1) continue;
+		if (citizen->_job == -1 && citizen->_job != 22) continue;
 		//cout << c_id << " " << (int)citizen->_satiety << " " << (int)citizen->_thirsty << " " << (int)citizen->_temperature << endl;
 		citizen_num++;
 		if (citizen->_satiety == 0)
@@ -587,6 +587,37 @@ void Player::set_score()
 	score += total_citizen_num * 100;
 	if (score < 0)
 		score = 0;
+}
+
+void Player::move_citizen_to_tower(int citizen_id)
+{
+	Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
+	citizen->stay_tower = true;
+	
+	int near_town_citizen_num{};
+	
+	for (int i = CITIZENSTART + _id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
+	{
+		Citizen* this_citizen = reinterpret_cast<Citizen*>(objects[i]);
+		if (this_citizen->stay_tower) {
+			near_town_citizen_num++;
+		}
+	}
+	
+	int iter{};
+	
+	for (int i = CITIZENSTART + _id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
+	{
+		Citizen* this_citizen = reinterpret_cast<Citizen*>(objects[i]);
+		if (this_citizen->stay_tower) {
+			float angle = 3.141592 * 2 / near_town_citizen_num * iter;
+			iter++;
+			int distance = 500;
+
+			this_citizen->_arrival_x = _x + distance * std::cos(angle);
+			this_citizen->_arrival_y = _y + distance * std::sin(angle);
+		}
+	}
 }
 
 void Player::modify_dissatisfaction(int amount)

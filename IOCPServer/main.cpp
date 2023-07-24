@@ -182,9 +182,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
 					if (citizen->_job == 1)
 					{
-						citizen->_arrival_x = citizen->_job_x;
-						citizen->_arrival_y = citizen->_job_y;
-
+						/*citizen->_arrival_x = citizen->_job_x;
+						citizen->_arrival_y = citizen->_job_y;*/
+						citizen->set_citizen_arrival_location(citizen->_job_x, citizen->_job_y, citizen->_job_z);
 					}
 				}
 				if (*sand_storm_day.begin() == survil_day)
@@ -468,8 +468,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 									{
 										citizen->_house_id = building->_id;
 										a = citizen;
-										citizen->_arrival_x = objects[citizen->_house_id]->_x;
-										citizen->_arrival_y = objects[citizen->_house_id]->_y;
+										/*citizen->_arrival_x = objects[citizen->_house_id]->_x;
+										citizen->_arrival_y = objects[citizen->_house_id]->_y;*/
+										citizen->set_citizen_arrival_location(objects[citizen->_house_id]->_x, objects[citizen->_house_id]->_y, objects[citizen->_house_id]->_z);
 										isHouseStaff = true;
 										break;
 									}
@@ -490,19 +491,22 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 								rocate *= -1;
 							citizen->_arrival_y = player->_y + rand() % 500 * rocate + 500 * rocate;*/
 
-							float round_pos_x = player->_x;
+							/*float round_pos_x = player->_x;
 							float round_pos_y = player->_y;
 							citizen->make_random_round_position(round_pos_x, round_pos_y, 500, player->total_citizen_num, homeless_iter);
 							citizen->_arrival_x = round_pos_x;
 							citizen->_arrival_y = round_pos_y;
-							homeless_iter++;
+							homeless_iter++;*/
+							
+							player->move_citizen_to_tower(citizen->_id);
 						}
 					}
 					else
 					{
 						player->modify_dissatisfaction(-0.002);
-						citizen->_arrival_x = objects[citizen->_house_id]->_x;
-						citizen->_arrival_y = objects[citizen->_house_id]->_y;
+						/*citizen->_arrival_x = objects[citizen->_house_id]->_x;
+						citizen->_arrival_y = objects[citizen->_house_id]->_y;*/
+						citizen->set_citizen_arrival_location(objects[citizen->_house_id]->_x, objects[citizen->_house_id]->_y, objects[citizen->_house_id]->_z);
 					}
 				}
 				IsOnceWork = false;
