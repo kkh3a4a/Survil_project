@@ -531,6 +531,11 @@ void Player::player_gameover()
 	send_packet(&packet);
 }
 
+void Player::player_ending()
+{
+	
+}
+
 void Player::modify_dissatisfaction(int amount)
 {
 	if (dissatisfaction + amount >= 1) dissatisfaction = 1;

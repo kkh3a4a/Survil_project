@@ -22,7 +22,10 @@ public:
 
 	int total_citizen_num;
 
-	//0 : ����,		1 : ��,		2 : ö,		3 : �ķ�,	4 : ����
+	//ending시 사용
+	int dead_citizen_num = 0;
+	int kill_citizen = 0;
+
 	float _resource_amount[5] = {};
 	float _adventure_efficiency = {1.0};
 	float _work_efficiency = {1.0};
@@ -75,4 +78,5 @@ public:
 	void send_citizen_status();
 	void send_sprinkler_off();
 	void player_gameover();
+	void player_ending();
 };

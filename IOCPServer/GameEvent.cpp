@@ -92,6 +92,7 @@ void GameEvent::check_event(int player_id, int army_id)
 		resource_count[1] = (rand() % 50 + 25) * player->_adventure_efficiency;
 		swprintf(packet.first, L"시민 %d명을 마을까지 호위합니다.", citizen_count);
 		swprintf(packet.second, L"식량 %d 물 %d 를 약탈합니다", resource_count[3], resource_count[1]);
+		player->kill_citizen += citizen_count;
 		s_option = 2;
 		break;
 	}

@@ -191,6 +191,8 @@ void Citizen::citizen_dead()
 	_disabled = false;
 	_dissatisfaction = 0;
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+	player->dead_citizen_num += 1;
+
 	player->modify_dissatisfaction(0.01);
 }
 

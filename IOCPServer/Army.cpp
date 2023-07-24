@@ -71,6 +71,7 @@ void Army::set_army_move()
 				enemy_army->_hp -= 5 + _army_type * 10;
 				if (enemy_army->_hp < 0)
 				{
+					player->kill_citizen += 5;
 					enemy_army->set_army_dead();
 					return;
 				}
@@ -334,7 +335,8 @@ void Army::set_army_dead()
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[a]);
 		citizen->citizen_dead();
 	}
-
+	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
+	player->dead_citizen_num += 5;
 	sc_packet_armydead packet;
 	packet.size = sizeof(packet);
 	packet.type = SC_PACKET_ARMYDEAD;
