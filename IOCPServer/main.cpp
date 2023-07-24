@@ -323,9 +323,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		}
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)	//5000
 		{	
-			Resource_Collect_Timer_End = std::chrono::system_clock::now();
 			if (!IsNight)
 			{
+				Resource_Collect_Timer_End = std::chrono::system_clock::now();
 				for (int i = RESOURCESTART; i < RESOURCESTART + MAXRESOURCE; ++i)
 				{
 					Resource* resource = reinterpret_cast<Resource*>(objects[i]);

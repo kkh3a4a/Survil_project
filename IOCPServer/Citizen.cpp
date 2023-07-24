@@ -84,6 +84,7 @@ void Citizen::set_citizen_move()
 				for (int player_num = 0; player_num < MAXPLAYER; player_num++) {	//모든 플레이어들에게 전송
 					Player* this_player = reinterpret_cast<Player*>(objects[player_num]);
 					this_player->send_packet(&packet);
+					//cout << "Type: " << (int)packet.building_type << " " << packet.id << endl;
 				}
 				
 			}

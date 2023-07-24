@@ -376,19 +376,23 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 					}
 				}
 			}
-			for (auto& a : _citizens)
+			for(int i = 0; i < 5; i++)
 			{
-				if (a == nullptr)
+				if (_citizens[i] == nullptr)
 				{
 					if (placement_citizen != nullptr)
 					{
+						float citizen_around_work_building_x = _x;
+						float citizen_around_work_building_y = _y;
+						placement_citizen->make_random_round_position(citizen_around_work_building_x, citizen_around_work_building_y, 500, 5, i);
+						
 						placement_citizen->_job = _type;
-						placement_citizen->_job_x = _x;
-						placement_citizen->_job_y = _y;
+						placement_citizen->_job_x = citizen_around_work_building_x;
+						placement_citizen->_job_y = citizen_around_work_building_y;
 						placement_citizen->_job_z = _z;
 						if (!IsNight)
-							placement_citizen->set_citizen_arrival_location(_x, _y, _z);
-						a = placement_citizen;
+							placement_citizen->set_citizen_arrival_location(citizen_around_work_building_x, citizen_around_work_building_y, _z);
+						_citizens[i] = placement_citizen;
 						_citizencount++;
 						break;
 					}
@@ -419,18 +423,22 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 					{
 						if (placement_citizen != nullptr)
 						{
-							if (a->_x == _x && a->_y && !IsNight)
-							{
-								/*a->_arrival_x = _x + i * 100 - 500;
-								a->_arrival_y = _y + 500;*/
-								a->set_citizen_arrival_location(_x + i * 100 - 500, _y + 500, _z);
-							}
-							else
-							{
-								/*a->_arrival_x = a->_x;
-								a->_arrival_y = a->_y;*/
-								a->set_citizen_arrival_location(a->_x, a->_y, a->_z);
-							}
+							//if (a->_x == _x && a->_y && !IsNight)
+							//{
+							//	/*a->_arrival_x = _x + i * 100 - 500;
+							//	a->_arrival_y = _y + 500;*/
+							//	a->set_citizen_arrival_location(_x + i * 100 - 500, _y + 500, _z);
+							//}
+							//else
+							//{
+							//	/*a->_arrival_x = a->_x;
+							//	a->_arrival_y = a->_y;*/
+							//	a->set_citizen_arrival_location(a->_x, a->_y, a->_z);
+							//}
+
+							Player* player = reinterpret_cast<Player*>(objects[a->_playerID]);
+							player->move_citizen_to_tower(a->_id);
+							
 							a->_job = 0;
 							a = nullptr;
 							_citizencount--;
