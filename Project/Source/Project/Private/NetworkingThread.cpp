@@ -458,6 +458,11 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MyController->CitizenThirstyNum = packet->citizen_thirsty;
 			break;
 		}
+		case SC_PACKET_GAMEOVER:
+		{
+			_MyController->IsGameOver = true;
+			break;
+		}
 		default:
 		{
 			//DebugBreak();

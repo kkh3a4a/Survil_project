@@ -74,4 +74,5 @@ public:
 	void modify_dissatisfaction(int amount);
 	void send_citizen_status();
 	void send_sprinkler_off();
+	void player_gameover();
 };

@@ -44,7 +44,7 @@ constexpr int city_size = 100;
 #define CS_PACKET_MINIMAP			8
 
 #define CS_PACKET_CITIZENPLACEMENT	10
-
+#define CS_PACKET_GAMEOVER			11
 #define CS_PACKET_RESOURCEAMOUNT	20
 #define CS_PACKET_PLAYERRESOURCE	21
 
@@ -93,7 +93,10 @@ constexpr int city_size = 100;
 #define SC_PACKET_MINIMAP			8
 #define SC_PACKET_SANDSTORMDAY		9
 
+
 #define SC_PACKET_CITIZENPLACEMENT	10
+#define SC_PACKET_GAMEOVER			11
+
 #define SC_PACKET_RESOURCEAMOUNT	20
 #define SC_PACKET_PLAYERRESOURCE	21
 
@@ -723,4 +726,9 @@ struct sc_packet_citizen_status
 	int citizen_thirsty;
 };
 
+struct sc_packet_gameover
+{
+	unsigned char size = sizeof(sc_packet_gameover);
+	unsigned char type = SC_PACKET_GAMEOVER;
+};
 #pragma pack (pop)

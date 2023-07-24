@@ -61,6 +61,8 @@ public:
 	WSA_OVER_EX _recv_over_ex;
 	SOCKET s_socket;
 
+	
+
 	int _prev_size = 0;
 	char playerjobless = { FIRSTCITIZENCREATE };
 

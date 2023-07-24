@@ -223,6 +223,8 @@ public:
 
 	void trade_change_resource(int resource_num, int amount);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool IsGameOver = false;
 
 	//½Ã¹Î hot, hungry, thirsty ¼ýÀÚ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

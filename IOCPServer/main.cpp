@@ -169,7 +169,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					packet.type = SC_PACKET_SANDSTORMDAY;
 					all_player_sendpacket(&packet);
 				}
-
+				
 
 				sun_angle -= 360.f;
 				IsNight = false;
@@ -198,6 +198,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						sc_packet_move.size = sizeof(sc_packet_move);
 						sc_packet_move.type = SC_PACKET_MOVE;
 						player->send_packet(&sc_packet_move);
+						
 						is_terrain_changed = true;
 						Is_sand_storm = true;
 					}
@@ -262,7 +263,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						citizen->citizen_eat_food();	//먹기
 						citizen->citizen_drink_water();	//마시기
 					}
-
+					
 					//10도 차이마다 스프링클러 개당 물 소비
 					for (int building_id = BUILDINGSTART + player_id * PLAYERBUILDINGCOUNT; building_id < BUILDINGSTART + (player_id + 1) * PLAYERBUILDINGCOUNT; ++building_id) {
 						Building* building = reinterpret_cast<Building*>(objects[building_id]);
@@ -316,6 +317,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					}
 				}
 			}
+
 		}
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(Timer_Start - Resource_Collect_Timer_End).count() > 5000)	//5000
 		{	
@@ -503,6 +505,21 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				}
 				IsOnceWork = false;
 			}
+		}
+		for (int p_id = 0; p_id < MAXPLAYER; ++p_id)
+		{
+			bool gameover = true;
+			Player* player = reinterpret_cast<Player*>(objects[p_id]);
+			for (int citizen_id = CITIZENSTART + p_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (p_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
+			{
+				Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
+				if (citizen->_job == -1)
+					continue;
+
+				gameover = false;
+			}
+			if(gameover)
+				player->player_gameover();
 		}
 	}
 	return 0;

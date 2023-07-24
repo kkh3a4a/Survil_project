@@ -523,6 +523,14 @@ void Player::send_sprinkler_off()
 	send_packet(&packet);
 }
 
+void Player::player_gameover()
+{
+	sc_packet_gameover packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_PACKET_GAMEOVER;
+	send_packet(&packet);
+}
+
 void Player::modify_dissatisfaction(int amount)
 {
 	if (dissatisfaction + amount >= 1) dissatisfaction = 1;
