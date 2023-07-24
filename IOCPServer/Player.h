@@ -48,6 +48,9 @@ public:
 	//�Ҹ� ���
 	float dissatisfaction = 0.0;
 
+	int score = 0;
+	int rank = 0;
+	wchar_t ending_title[30];
 
 	bool War_Players[5] = {};			//false = Peace, true = War
 
@@ -78,5 +81,6 @@ public:
 	void send_citizen_status();
 	void send_sprinkler_off();
 	void player_gameover();
-	void player_ending(int rank, int score);
+	void player_ending();
+	void set_score();
 };

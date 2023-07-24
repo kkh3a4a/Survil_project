@@ -531,9 +531,9 @@ void Player::player_gameover()
 	send_packet(&packet);
 }
 
-void Player::player_ending(int rank, int score)
+void Player::player_ending()
 {
-	string ending_title;
+	
 	int total_resource = 0;
 	for (int i = 0; i < 5; ++i)
 	{
@@ -542,29 +542,51 @@ void Player::player_ending(int rank, int score)
 
 	if (kill_citizen > total_citizen_num)
 	{
-		ending_title = "무자비한 지배자";
+		swprintf(ending_title, L"무자비한 지배자");
+		score += 20000;
 	}
 	else if (dead_citizen_num == 0 && total_citizen_num > 190 && total_resource > 10000)
 	{
-		ending_title = "완벽한 지배자";
+		swprintf(ending_title, L"완벽한 지배자");
+		score += 50000;
 	}
 	else if (kill_citizen == 0)
 	{
-		ending_title = "평화주의자";
+		swprintf(ending_title, L"평화주의자");
+		score += 20000;
 	}
 	else if (dead_citizen_num > total_citizen_num)
 	{
-		ending_title = "무능한 지배자";
+		swprintf(ending_title, L"무능한 지배자");
+		score += 10000;
 	}
 	else if (total_resource > 20000)
 	{
-		ending_title = "철강왕 지배자";
+		swprintf(ending_title, L"철강왕 지배자");
+		score += 20000;
 	}
 	else
 	{
-		ending_title = "평범한 지배자";
+		swprintf(ending_title, L"평범한 지배자");
+		score += 10000;
 	}
 	
+}
+
+void Player::set_score()
+{
+	int total_resource = 0;
+	for (int i = 0; i < 5; ++i)
+	{
+		total_resource = _resource_amount[i];
+	}
+
+	score += total_resource;
+	score -= kill_citizen * 100;
+	score -= dead_citizen_num * 100;
+	score += total_citizen_num * 100;
+	if (score < 0)
+		score = 0;
 }
 
 void Player::modify_dissatisfaction(int amount)

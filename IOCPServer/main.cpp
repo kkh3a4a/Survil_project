@@ -48,6 +48,7 @@ DWORD WINAPI matching_thread(LPVOID arg)
 			hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
 			room_player_cnt = 0;
 			isoncecreate = 0;
+			break;
 		}
 	}
 	return 0;
@@ -116,6 +117,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 	char** player_temperature = terrain->get_player_temperature_map();
 	int citizen_eat = 0;
 	float sunSpeed = 1.0f;
+	int game_end = 0;
 
 	for (int player_id = 0; player_id < MAXPLAYER; ++player_id)
 	{
@@ -521,7 +523,30 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			if(gameover)
 				player->player_gameover();
 		}
+		if (game_end)
+		{
+			vector<std::pair<int, int>> player_rank;
+			for (int i = 0; i < MAXPLAYER; ++i)
+			{
+				Player* player = reinterpret_cast<Player*>(objects[i]);
+				player->set_score();
+				player->player_ending();
+				player_rank.push_back(make_pair(i, player->score));
+			}
+			sort(player_rank.begin(), player_rank.end(), [](pair<int, int> a, pair<int, int>b) {
+				return a.second > b.second;
+				});
+			int temp_rank = 1;
+			for (auto& a : player_rank)
+			{
+				Player* player = reinterpret_cast<Player*>(objects[a.first]);
+				player->rank = temp_rank;
+				temp_rank++;
+			}
+			break;
+		}
 	}
+	cout << "game_end" << endl;
 	return 0;
 }
 
