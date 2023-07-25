@@ -253,7 +253,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					for (int citizen_id = CITIZENSTART + player_id * PLAYERCITIZENCOUNT; citizen_id < CITIZENSTART + (player_id + 1) * PLAYERCITIZENCOUNT; ++citizen_id)
 					{
 						Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
-						if (citizen->_job == -1)
+						if (citizen->_job == -1 || citizen->_job == 22)	//군인은 배고파지지않음
 							continue;
 
 						if (citizen->_satiety - 2 >= 0) {	//배고파지기

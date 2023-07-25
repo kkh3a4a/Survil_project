@@ -1125,7 +1125,7 @@ public:
 		//모든 citizen 들의 위치를 가지로 해당 위치의 terrain의 온도를 확인하고 citizen의 더위를 조정(40도를 넘으면 5도마다 더위를 증가)
 		for (int i = CITIZENSTART; i < CITIZENSTART + MAXCITIZEN; ++i) {
 			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-			if (citizen->_job == -1) continue;
+			if (citizen->_job == -1 || citizen->_job == 22) continue;
 			int temperature = temperature_map_host[(int)citizen->_x / 100][(int)citizen->_y / 100] / temperature_divide;
 			
 			int player_id = (i - CITIZENSTART) / 200;

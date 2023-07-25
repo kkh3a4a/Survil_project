@@ -21,12 +21,12 @@ void Resource::set_resource_spwan_location(float player_x, float player_y, float
 {
 	std::random_device rd;
 	std::default_random_engine dre(rd());
-	std::uniform_int_distribution <int>resource_uid{ -100, 100 };
+	std::uniform_int_distribution <int>resource_uid{ -5, 5 };
 	do
 	{
 		retry:
-		_x = player_x + resource_uid(dre) * 50;
-		_y = player_y + resource_uid(dre) * 50;
+		_x = player_x + resource_uid(dre) * 1000;
+		_y = player_y + resource_uid(dre) * 1000;
 		for (int i = RESOURCESTART; i < _id; ++i)
 		{
 			if (sqrt(pow(_x - objects[i]->_x, 2) + pow(_y - objects[i]->_y, 2)) < 10)
@@ -35,7 +35,6 @@ void Resource::set_resource_spwan_location(float player_x, float player_y, float
 			}
 		}
 	} while (sqrt(pow(_x - player_x, 2) + pow(_y - player_y, 2)) < 2000);
-
 }
 
 void Resource::set_resource_citizen_placement(int client_id, char isplus)

@@ -26,7 +26,7 @@ Player::Player(int id, STATE state)
 	army_select_num = ARMYSTART + _id * PLAYERARMYCOUNT;
 	for (auto& a : _resource_amount)
 	{
-		a = 1000;
+		a = 200;
 	}
 }
 
@@ -624,7 +624,6 @@ void Player::move_citizen_to_tower(int citizen_id)
 	citizen->stay_tower = true;
 	
 	int near_town_citizen_num{};
-	
 	for (int i = CITIZENSTART + _id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
 	{
 		Citizen* this_citizen = reinterpret_cast<Citizen*>(objects[i]);
@@ -634,7 +633,6 @@ void Player::move_citizen_to_tower(int citizen_id)
 	}
 	
 	int iter{};
-	
 	for (int i = CITIZENSTART + _id * PLAYERCITIZENCOUNT; i < CITIZENSTART + _id * PLAYERCITIZENCOUNT + PLAYERCITIZENCOUNT; ++i)
 	{
 		Citizen* this_citizen = reinterpret_cast<Citizen*>(objects[i]);
@@ -645,7 +643,6 @@ void Player::move_citizen_to_tower(int citizen_id)
 
 			this_citizen->_arrival_x = _x + distance * std::cos(angle);
 			this_citizen->_arrival_y = _y + distance * std::sin(angle);
-			//cout << near_town_citizen_num << " " << iter << endl;
 		}
 	}
 }

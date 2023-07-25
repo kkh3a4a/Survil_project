@@ -274,7 +274,6 @@ void Army::set_army_disband()
 	else
 	{
 		_a_state = ST_FREE;
-
 		for (int i = 0; i < MAXPLAYER; ++i)
 		{
 			int x_count = 0;
@@ -298,6 +297,7 @@ void Army::set_army_disband()
 			}
 			reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
 		}
+		std::cout << "disband" << std::endl;
 	}
 }
 

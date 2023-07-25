@@ -179,11 +179,18 @@ void ABuildManager::SetBuildingPlacement(int Building_id, char work_citizen)
 
 void ABuildManager::UpdateDecalPosition(FVector MouseHitPoint, float CityX, float CityY)
 {
+	int OffsetX = 500;
+	int OffsetY = 500;
+	if (SelectedBuilding == 8) {
+		OffsetX = 1000;
+		OffsetY = 1000;
+	}
+
 	FVector CalculatedLocation;
-	CalculatedLocation.X = min((int64)CityX + (int64)(CITYSIZE * 100 / 2), (int64)MouseHitPoint.X);
+	CalculatedLocation.X = min((int64)CityX + (int64)(CITYSIZE * 100 / 2), (int64)MouseHitPoint.X + OffsetX);
 	CalculatedLocation.X = max((int64)CityX - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.X);
 	CalculatedLocation.Y = min((int64)CityY + (int64)(CITYSIZE * 100 / 2), (int64)MouseHitPoint.Y);
-	CalculatedLocation.Y = max((int64)CityY - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.Y);
-	CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000 + 500, (uint64)CalculatedLocation.Y / 1000 * 1000 + 500, 0);
+	CalculatedLocation.Y = max((int64)CityY - (int64)(CITYSIZE * 100 / 2), (int64)CalculatedLocation.Y + OffsetY);
+	CalculatedLocation = FVector((uint64)CalculatedLocation.X / 1000 * 1000, (uint64)CalculatedLocation.Y / 1000 * 1000, 0);
 	DecalLocation = CalculatedLocation;
 }

@@ -47,12 +47,12 @@ void Citizen::set_citizen_move()
 {
 	if (_x != _arrival_x || _y != _arrival_y)
 	{
-		
 		_citizenstate = 1;
 		float distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
 		_rx = (_arrival_x - _x) / distance;
 		_ry = (_arrival_y - _y) / distance;
 		_rz = (_arrival_z - _z) / distance;
+		
 		if (distance < 20)
 		{
 			_x = _arrival_x;
@@ -80,13 +80,13 @@ void Citizen::set_citizen_move()
 				_arrival_y = _y + 500;*/
 				//set_citizen_arrival_location(_x, _y + 500, _z);
 				player->move_citizen_to_tower(_id);
+				distance = sqrt(pow(_x - _arrival_x, 2) + pow(_y - _arrival_y, 2));
 
 				for (int player_num = 0; player_num < MAXPLAYER; player_num++) {	//모든 플레이어들에게 전송
 					Player* this_player = reinterpret_cast<Player*>(objects[player_num]);
 					this_player->send_packet(&packet);
 					//cout << "Type: " << (int)packet.building_type << " " << packet.id << endl;
 				}
-				
 			}
 			else if (_job == 21)
 			{
@@ -202,6 +202,8 @@ void Citizen::citizen_dead()
 
 void Citizen::citizen_eat_food()
 {
+	if (_job == 22) return;	//군인은 밥도 안먹는다
+	
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 	if (_satiety > 70) return;
 
@@ -226,6 +228,8 @@ void Citizen::citizen_eat_food()
 
 void Citizen::citizen_drink_water()
 {
+	if (_job == 22) return;	//군인은 물도 안마신다
+
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
 	if (_thirsty > 70) return;
 
