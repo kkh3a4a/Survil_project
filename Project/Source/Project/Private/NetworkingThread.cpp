@@ -464,6 +464,11 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MyController->IsGameOver = true;
 			break;
 		}
+		case SC_PACKET_GAMEEND:
+		{
+			_MyController->set_ending(buf);
+			break;
+		}
 		default:
 		{
 			//DebugBreak();

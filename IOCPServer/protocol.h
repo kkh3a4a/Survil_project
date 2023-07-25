@@ -45,6 +45,8 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_CITIZENPLACEMENT	10
 #define CS_PACKET_GAMEOVER			11
+#define CS_PACKET_GAMEEND			12
+
 #define CS_PACKET_RESOURCEAMOUNT	20
 #define CS_PACKET_PLAYERRESOURCE	21
 
@@ -96,6 +98,7 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_CITIZENPLACEMENT	10
 #define SC_PACKET_GAMEOVER			11
+#define SC_PACKET_GAMEEND			12
 
 #define SC_PACKET_RESOURCEAMOUNT	20
 #define SC_PACKET_PLAYERRESOURCE	21
@@ -731,5 +734,20 @@ struct sc_packet_gameover
 {
 	unsigned char size = sizeof(sc_packet_gameover);
 	unsigned char type = SC_PACKET_GAMEOVER;
+};
+
+struct sc_packet_gameend
+{
+	unsigned char size = sizeof(sc_packet_gameend);
+	unsigned char type = SC_PACKET_GAMEEND;
+
+	wchar_t ending_title[20]{};
+	int dead_citizen;
+	int alive_citizen;
+	int kill_citizen;
+	int resource;
+	int score;
+	int rank;
+
 };
 #pragma pack (pop)

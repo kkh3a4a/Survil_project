@@ -238,6 +238,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int CitizenThirstyNum{};
 
+	//GameEnding_UI
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FText ending_title {};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int dead_citizen = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int alive_citizen = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int kill_citizen = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int all_resource_count = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int score = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int rank = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool GameEnd = false;
+
+	void set_ending(void* pk);
 
 protected:
 	long long int mouse_cnt = 0;

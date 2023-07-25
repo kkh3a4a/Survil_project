@@ -564,16 +564,16 @@ void Player::player_ending()
 		swprintf(ending_title, L"완벽한 지배자");
 		score += 50000;
 	}
-	else if (kill_citizen == 0)
-	{
-		swprintf(ending_title, L"평화주의자");
-		score += 20000;
-	}
 	else if (dead_citizen_num > total_citizen_num)
 	{
 		swprintf(ending_title, L"무능한 지배자");
 		score += 10000;
 	}
+	else if (kill_citizen == 0)
+	{
+		swprintf(ending_title, L"평화주의자");
+		score += 20000;
+	}	
 	else if (total_resource > 20000)
 	{
 		swprintf(ending_title, L"철강왕 지배자");
@@ -594,13 +594,28 @@ void Player::set_score()
 	{
 		total_resource = _resource_amount[i];
 	}
-
+	all_resource_count = total_resource;
 	score += total_resource;
 	score -= kill_citizen * 100;
 	score -= dead_citizen_num * 100;
 	score += total_citizen_num * 100;
 	if (score < 0)
 		score = 0;
+}
+
+void Player::send_ending()
+{
+	sc_packet_gameend packet;
+	packet.size = sizeof(packet);
+	packet.type = SC_PACKET_GAMEEND;
+	packet.alive_citizen = total_citizen_num;
+	packet.dead_citizen = dead_citizen_num;
+	swprintf(packet.ending_title, ending_title);
+	packet.kill_citizen = kill_citizen;
+	packet.resource = all_resource_count;
+	packet.rank = rank;
+	packet.score = score;
+	send_packet(&packet);
 }
 
 void Player::move_citizen_to_tower(int citizen_id)

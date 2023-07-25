@@ -563,6 +563,19 @@ void AMyPlayerController::OnBuildMode()
     }
 }
 
+void AMyPlayerController::set_ending(void* pk)
+{
+    sc_packet_gameend* packet = reinterpret_cast<sc_packet_gameend*>(pk);
+    ending_title = FText::FromString(packet->ending_title);
+    dead_citizen = packet->dead_citizen;
+    alive_citizen = packet->alive_citizen;
+    kill_citizen = packet->kill_citizen;
+    all_resource_count = packet->resource;
+    score = packet->score;
+    rank = packet->rank;
+    GameEnd = true;
+}
+
 void AMyPlayerController::SelectBuildingHouse()
 {
     if (BuildManager->BuildMode) {

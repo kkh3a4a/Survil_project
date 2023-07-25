@@ -161,52 +161,58 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			//sun_angle = 45.f;
 			if (sun_angle >= 360.f)		//하루에 한번 하는거
 			{
-				survil_day++;
-				Is_sand_storm = false;
-				sunSpeed = 1.0f;
+				if (sand_storm_day.size() == 0)
 				{
-					sc_packet_sandstormday packet;  // 모든 플레이어에게 sandstorm 일어나는 날 알려줌
-					packet.sand_day = *sand_storm_day.begin() - survil_day;
-					packet.size = sizeof(packet);
-					packet.type = SC_PACKET_SANDSTORMDAY;
-					all_player_sendpacket(&packet);
+					game_end = 1;
 				}
-				
-
-				sun_angle -= 360.f;
-				IsNight = false;
-				IsOnceWork = true;
-				citizen_eat = 0;
-				for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
+				else
 				{
-					Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-					if (citizen->_job == 1)
+					survil_day++;
+					Is_sand_storm = false;
+					sunSpeed = 1.0f;
 					{
-						/*citizen->_arrival_x = citizen->_job_x;
-						citizen->_arrival_y = citizen->_job_y;*/
-						citizen->set_citizen_arrival_location(citizen->_job_x, citizen->_job_y, citizen->_job_z);
+						sc_packet_sandstormday packet;  // 모든 플레이어에게 sandstorm 일어나는 날 알려줌
+						packet.sand_day = *sand_storm_day.begin() - survil_day;
+						packet.size = sizeof(packet);
+						packet.type = SC_PACKET_SANDSTORMDAY;
+						all_player_sendpacket(&packet);
 					}
-				}
-				if (*sand_storm_day.begin() == survil_day)
-				{
-					for(int i =0;i<MAXPLAYER;++i)
+							
+					sun_angle -= 360.f;
+					IsNight = false;
+					IsOnceWork = true;
+					citizen_eat = 0;
+					for (int i = CITIZENSTART; i < MAXCITIZEN + CITIZENSTART; ++i)
 					{
-						Player* player = reinterpret_cast<Player*>(objects[i]);
-						player->set_player_location(objects[i]->_x, objects[i]->_y, objects[i]->_z);
-						sc_packet_move sc_packet_move;
-						sc_packet_move.currentX = player->_currentX;
-						sc_packet_move.currentY = player->_currentY;
-						sc_packet_move.currentZ = player->_currentZ;
-						sc_packet_move.size = sizeof(sc_packet_move);
-						sc_packet_move.type = SC_PACKET_MOVE;
-						player->send_packet(&sc_packet_move);
+						Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+						if (citizen->_job == 1)
+						{
+							/*citizen->_arrival_x = citizen->_job_x;
+							citizen->_arrival_y = citizen->_job_y;*/
+							citizen->set_citizen_arrival_location(citizen->_job_x, citizen->_job_y, citizen->_job_z);
+						}
+					}
+					if (*sand_storm_day.begin() == survil_day)
+					{
+						for(int i =0;i<MAXPLAYER;++i)
+						{
+							Player* player = reinterpret_cast<Player*>(objects[i]);
+							player->set_player_location(objects[i]->_x, objects[i]->_y, objects[i]->_z);
+							sc_packet_move sc_packet_move;
+							sc_packet_move.currentX = player->_currentX;
+							sc_packet_move.currentY = player->_currentY;
+							sc_packet_move.currentZ = player->_currentZ;
+							sc_packet_move.size = sizeof(sc_packet_move);
+							sc_packet_move.type = SC_PACKET_MOVE;
+							player->send_packet(&sc_packet_move);
 						
-						is_terrain_changed = true;
-						Is_sand_storm = true;
-					}
-					if (Is_sand_storm)
-					{
-						sand_storm_day.erase(survil_day);
+							is_terrain_changed = true;
+							Is_sand_storm = true;
+						}
+						if (Is_sand_storm)
+						{
+							sand_storm_day.erase(survil_day);
+						}
 					}
 				}
 			}
@@ -527,8 +533,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			if(gameover)
 				player->player_gameover();
 		}
+		// ending 확인
 		if (game_end)
 		{
+			cout << "game end" << endl;
 			vector<std::pair<int, int>> player_rank;
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
@@ -547,10 +555,14 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				player->rank = temp_rank;
 				temp_rank++;
 			}
+			for (int i = 0; i < MAXPLAYER; ++i)
+			{
+				Player* player = reinterpret_cast<Player*>(objects[i]);
+				player->send_ending();
+			}
 			break;
 		}
 	}
-	cout << "game_end" << endl;
 	return 0;
 }
 

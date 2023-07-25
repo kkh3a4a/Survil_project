@@ -339,7 +339,6 @@ void Army::set_army_dead()
 		citizen->citizen_dead();
 	}
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-	player->dead_citizen_num += 5;
 	sc_packet_armydead packet;
 	packet.size = sizeof(packet);
 	packet.type = SC_PACKET_ARMYDEAD;

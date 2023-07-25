@@ -52,6 +52,7 @@ public:
 	int score = 0;
 	int rank = 0;
 	wchar_t ending_title[30];
+	int all_resource_count = 0;
 
 	bool War_Players[5] = {};			//false = Peace, true = War
 
@@ -85,6 +86,6 @@ public:
 	void player_ending();
 	void set_score();
 	void player_ending(int rank, int score);
-
+	void send_ending();
 	void move_citizen_to_tower( int citizen_id);
 };
