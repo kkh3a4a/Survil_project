@@ -228,6 +228,8 @@ public:
 
 	//½Ã¹Î hot, hungry, thirsty ¼ýÀÚ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int SoldierNum{};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int CitizenNum{};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int CitizenHotNum{};

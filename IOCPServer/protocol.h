@@ -720,6 +720,7 @@ struct sc_packet_citizen_status
 	unsigned char size = sizeof(sc_packet_citizen_status);
 	unsigned char type = SC_PACKET_CITIZEN_STATUS;
 
+	int soldier_num;
 	int citizen_num;
 	int citizen_hot;
 	int citizen_hungry;

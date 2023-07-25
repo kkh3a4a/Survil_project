@@ -280,15 +280,18 @@ void Army::set_army_disband()
 			int x_count = 0;
 			for (auto& a : _citizens)
 			{
+				Player* player = reinterpret_cast<Player*>(objects[i]);
 				sc_packet_citizencreate c_packet;
 				c_packet.citizenid = a;
 				c_packet.size = sizeof(c_packet);
 				c_packet.type = SC_PACKET_CITIZENCREATE;
-				objects[a]->_x = c_packet.x = _x + 200 * (x_count - 2);
-				objects[a]->_y = c_packet.y = _y;
-				objects[a]->_z = c_packet.z = 0;
+				
 				Citizen* citizen = reinterpret_cast<Citizen*>(objects[a]);
-				citizen->set_citizen_arrival_location(c_packet.x, c_packet.y, 0);
+				//citizen->set_citizen_arrival_location(c_packet.x, c_packet.y, 0);
+				player->move_citizen_to_tower(a);
+				c_packet.x = citizen->_x;
+				c_packet.y = citizen->_y;
+				c_packet.z = 0;
 				citizen->_job = 0;
 				x_count++;
 				reinterpret_cast<Player*>(objects[i])->send_packet(&c_packet);

@@ -97,6 +97,7 @@ void Player::key_input(char** player_sight_terrain_line, char** player_sight_tem
 		sc_packet_move sc_packet_move; 
 		sc_packet_move.currentX = _currentX;
 		sc_packet_move.currentY = _currentY;
+		//cout << "X : " << _currentX + _x << " Y : " << _currentY + _y << endl;
 		sc_packet_move.currentZ = _currentZ;
 		sc_packet_move.size = sizeof(sc_packet_move);
 		sc_packet_move.type = SC_PACKET_MOVE;
@@ -400,21 +401,16 @@ void Player::find_event(int e_id)
 void Player::create_citizen(int num)
 {
 	int count = 0;
-	int line = 0;
 	for (int c_id = CITIZENSTART + PLAYERCITIZENCOUNT * _id; c_id < CITIZENSTART + PLAYERCITIZENCOUNT * (_id + 1); c_id++)
 	{
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[c_id]);
 		if (citizen->_job == -1)
 		{
-			if ((count + 1) % 10 != 0)
-			{
-				citizen->set_citizen_spwan_location(_x + (count - 5 - (line * 10)) * 200 , _y + 500 +line * 200, _z);
-			}
-			else
-			{
-				line++;
-				citizen->set_citizen_spwan_location(_x + (count - 5 - (line * 10)) * 200, _y + 500 + line * 200, _z);
-			}
+			citizen->_job = 0;
+			move_citizen_to_tower(citizen->_id);
+			citizen->_x = citizen->_arrival_x;
+			citizen->_y = citizen->_arrival_y;
+			
 			for (int i = 0; i < MAXPLAYER; ++i)
 			{
 				sc_packet_citizencreate packet;
@@ -499,6 +495,7 @@ void Player::trade_clear()
 void Player::send_citizen_status()
 {
 	//더운 사람 수, 굶은 사람 수, 목마른 사람 수
+	int soldier_num = 0;
 	int citizen_num = 0;
 	int hot = 0;
 	int hungry = 0;
@@ -506,15 +503,19 @@ void Player::send_citizen_status()
 	
 	for (int c_id = CITIZENSTART + PLAYERCITIZENCOUNT * _id; c_id < CITIZENSTART + PLAYERCITIZENCOUNT * (_id + 1); c_id++) {
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[c_id]);
-		if (citizen->_job == -1 && citizen->_job != 22) continue;
+		if (citizen->_job == -1 ) continue;
+		if (citizen->_job == 22) {
+			soldier_num++;
+			continue;
+		}
 		//cout << c_id << " " << (int)citizen->_satiety << " " << (int)citizen->_thirsty << " " << (int)citizen->_temperature << endl;
-		citizen_num++;
 		if (citizen->_satiety == 0)
 			hungry++;
 		if (citizen->_thirsty == 0)
 			thirsty++;
 		if (citizen->_temperature > 40)
 			hot++;
+		citizen_num++;
 		//if (_id == 0)
 			//cout << c_id << "] HP: " << (int)citizen->_hp << " [ X: " << (int)citizen->_x << ", Y: " << (int)citizen->_y << " ]" << endl;
 	}
@@ -522,6 +523,7 @@ void Player::send_citizen_status()
 	total_citizen_num = citizen_num;
 	
 	sc_packet_citizen_status packet;
+	packet.soldier_num = soldier_num / 5;
 	packet.citizen_num = citizen_num;
 	packet.citizen_hot = hot;
 	packet.citizen_hungry = hungry;
@@ -624,7 +626,7 @@ void Player::move_citizen_to_tower(int citizen_id)
 		if (this_citizen->stay_tower) {
 			float angle = 3.141592 * 2 / near_town_citizen_num * iter;
 			iter++;
-			int distance = 500;
+			int distance = 600;
 
 			this_citizen->_arrival_x = _x + distance * std::cos(angle);
 			this_citizen->_arrival_y = _y + distance * std::sin(angle);

@@ -82,7 +82,6 @@ void AMain::BeginPlay()
 	HeatHazeMaterialInstance = UMaterialInstanceDynamic::Create(HeatHazeMaterial, this);
 	MyCameraComponent->PostProcessSettings.WeightedBlendables.Array[0].Object = HeatHazeMaterialInstance;
 
-
 	//Get Sun
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), Actors);
