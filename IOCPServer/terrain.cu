@@ -1020,7 +1020,7 @@ public:
 				break;
 			}
 			case 2: {	//ö
-				resource_size = 3;
+				resource_size = 5;
 				resource_height = 1;
 				break;
 			}

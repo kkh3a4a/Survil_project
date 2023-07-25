@@ -616,7 +616,7 @@ void Player::move_citizen_to_tower(int citizen_id)
 
 			this_citizen->_arrival_x = _x + distance * std::cos(angle);
 			this_citizen->_arrival_y = _y + distance * std::sin(angle);
-			cout << near_town_citizen_num << " " << iter << endl;
+			//cout << near_town_citizen_num << " " << iter << endl;
 		}
 	}
 }
