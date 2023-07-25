@@ -346,8 +346,9 @@ int Player::joblesscitizen()
 void Player::playerMinimapLocation(float mini_x, float mini_y)
 {
 
-	_currentX = (mini_x - _x) ;
-	_currentY = (mini_y - _y) ;
+	_currentX = (mini_x - _x - SIGHT_X / 2 * 100);
+	_currentY = (mini_y - _y - SIGHT_Y / 2 * 100);
+	cout << "playerMinimapLocation: " << _currentX << " " << _currentY << " mini: " << mini_x << " " << mini_y << endl;
 	
 retry:
 	int cas_bool = _Minimap_terrainsend;
