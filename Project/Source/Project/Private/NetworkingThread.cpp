@@ -446,6 +446,10 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_sandstormday* packet = reinterpret_cast<sc_packet_sandstormday*>(buf);
 			_MyController->sand_storm_day = packet->sand_day;
+
+			Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/event/SandStorm_Cue.SandStorm_Cue"));
+			UGameplayStatics::PlaySound2D(_MyController->GetWorld(), Sound);
+			UE_LOG(LogTemp, Log, TEXT("PlaySoundSandStorm\n"));
 			break;
 		}
 		case SC_PACKET_CITIZEN_STATUS:

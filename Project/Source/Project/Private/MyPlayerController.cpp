@@ -448,6 +448,62 @@ void AMyPlayerController::MoveToMouseCursor()
                 BuildingUI = true;
                 SprinklerUI = false;
             }
+
+            // play sound
+            if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 1)
+            {
+                Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/building/house_Cue.house_Cue"));
+                UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+                UE_LOG(LogTemp, Log, TEXT("PlaySoundHouse\n"));
+            }
+            else if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 2)
+            {
+                Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/building/OilDrill_Cue.OilDrill_Cue"));
+                UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+                UE_LOG(LogTemp, Log, TEXT("PlaySoundOilDrill\n"));
+            }
+            else if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 3)
+            {
+                Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/building/WaterDrill_Cue.WaterDrill_Cue"));
+                UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+                UE_LOG(LogTemp, Log, TEXT("PlaySoundWaterDrill\n"));
+            }
+            else if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 4)
+            {
+                Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/building/SawMill_Cue.SawMill_Cue"));
+                UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+                UE_LOG(LogTemp, Log, TEXT("PlaySoundSawMill\n"));
+            }
+            else if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 5)
+            {
+                Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/building/SteelMill_Cue.SteelMill_Cue"));
+                UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+                UE_LOG(LogTemp, Log, TEXT("PlaySoundSteelMill\n"));
+            }
+            else if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 6)
+            {
+                Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/building/Laboratory_Cue.Laboratory_Cue"));
+                UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+                UE_LOG(LogTemp, Log, TEXT("PlaySoundLaboratory\n"));
+            }
+            else if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 8)
+            {
+                Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/building/Sprinkler_Cue.Sprinkler_Cue"));
+                UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+                UE_LOG(LogTemp, Log, TEXT("PlaySoundSprinkler\n"));
+            }
+            else if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 21)
+            {
+                Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/building/ArmyCamp_Cue.ArmyCamp_Cue"));
+                UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+                UE_LOG(LogTemp, Log, TEXT("PlaySoundArmyCamp\n"));
+            }
+            else if (FCString::Atoi(*hitActor->Tags[1].ToString()) == 13)
+            {
+                Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/building/GreenHouse_Cue.GreenHouse_Cue"));
+                UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+                UE_LOG(LogTemp, Log, TEXT("PlaySoundGreenHouse\n"));
+            }
         }
         else if (hitActor->ActorHasTag("Army"))
         {
@@ -481,6 +537,10 @@ void AMyPlayerController::MoveToMouseCursor()
             SprinklerUI = false;
             ArmyUI = false;
             hitActor = NULL;
+
+            Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/GroundClick_Cue.GroundClick_Cue"));
+            UGameplayStatics::PlaySound2D(GetWorld(), Sound);
+            UE_LOG(LogTemp, Log, TEXT("PlaySoundGroundClick\n"));
         }
     }
 }
@@ -631,6 +691,42 @@ void AMyPlayerController::SelectBuildingLaboratory()
     }
 }
 
+void AMyPlayerController::SelectBuildingSprinkler()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 8;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 0.4f, 0.4f));
+    }
+}
+
+void AMyPlayerController::SelectBuildingArmyCamp()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 21;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
+    }
+}
+
+void AMyPlayerController::SelectBuildingGuardPost()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 11;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
+    }
+}
+
+void AMyPlayerController::SelectBuildingGreenHouse()
+{
+    if (BuildManager->BuildMode) {
+        BuildManager->SelectedBuilding = 13;
+
+        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
+    }
+}
+
 //void AMyPlayerController::SelectBuildingNursery(bool status, int obj_id)
 //{
 //}
@@ -653,42 +749,6 @@ void AMyPlayerController::InputE()
     packet.select_type = 1;
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
-}
-
-void AMyPlayerController::SelectBuildingSprinkler()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 8;
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 0.4f, 0.4f));
-    }
-}
-
-void AMyPlayerController::SelectBuildingArmyCamp()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 21;
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
-    }
-}
-
-void AMyPlayerController::SelectBuildingGuardPost()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 11;       
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
-    }
-}
-
-void AMyPlayerController::SelectBuildingGreenHouse()
-{
-    if (BuildManager->BuildMode) {
-        BuildManager->SelectedBuilding = 13;
-
-        BuildManager->DecalActor->SetActorScale3D(FVector(10.f, 1.6f, 1.6f));
-    }
 }
 
 

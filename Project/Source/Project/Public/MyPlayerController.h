@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Temperature.h"
 #include "BuildManager.h"
+#include "Sound/SoundBase.h"
 #include "MyPlayerController.generated.h"
 
 /**
@@ -257,6 +258,9 @@ public:
 		bool GameEnd = false;
 
 	void set_ending(void* pk);
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sound")
+	TObjectPtr<USoundBase> Sound;
 
 protected:
 	long long int mouse_cnt = 0;

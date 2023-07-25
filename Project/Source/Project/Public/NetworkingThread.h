@@ -8,6 +8,7 @@
 #include"../../../../IOCPServer/protocol.h"
 #include "HAL/Runnable.h"
 #include "MeshTerrain.h"
+#include "Sound/SoundBase.h"
 #include "CoreMinimal.h"
 
 #pragma comment (lib,"MSWSock.lib")
@@ -69,6 +70,9 @@ public:
 	char my_id;
 	void processpacket(unsigned char* buf);
 	void error_display(const char* msg, int err_no);
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sound")
+	TObjectPtr<USoundBase> Sound;
 
 private: 
 	//char IPAddress[20] = "192.168.0.8";
