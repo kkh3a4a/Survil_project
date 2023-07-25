@@ -337,7 +337,6 @@ int Player::joblesscitizen()
 		Citizen* citizen = reinterpret_cast<Citizen*>(objects[citizen_id]);
 		if (citizen->_job == 0)
 			_citizencount++;
-
 	}
 	return _citizencount;
 	return 0;
@@ -348,7 +347,19 @@ void Player::playerMinimapLocation(float mini_x, float mini_y)
 
 	_currentX = (mini_x - _x - SIGHT_X / 2 * 100);
 	_currentY = (mini_y - _y - SIGHT_Y / 2 * 100);
-	cout << "playerMinimapLocation: " << _currentX << " " << _currentY << " mini: " << mini_x << " " << mini_y << endl;
+	//cout << "=====================================\n";
+	//cout << "B playerMinimapLocation: " << _currentX + _x << " " << _currentY + _y << " mini: " << mini_x << " " << mini_y << endl;
+
+	if (_x + _currentX < SIGHT_X / 2 + 100)
+		_currentX = SIGHT_X / 2 -_x + 100;
+	else if (_x + _currentX >= one_side_number * 100 - SIGHT_X * 100 - 100)
+		_currentX = one_side_number * 100 - _x - SIGHT_X * 100 - 100;
+	if (_y + _currentY < SIGHT_Y / 2 + 100)
+		_currentY = SIGHT_Y / 2 -_y + 100;
+	else if (_y + _currentY >= one_side_number * 100 - SIGHT_Y * 100 - 100)
+		_currentY = one_side_number * 100 - _y - SIGHT_Y * 100 - 100;
+
+	//cout << "playerMinimapLocation: " << _currentX + _x << " " << _currentY + _y << " mini: " << mini_x << " " << mini_y << endl;
 	
 retry:
 	int cas_bool = _Minimap_terrainsend;
