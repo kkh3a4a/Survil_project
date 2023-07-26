@@ -259,45 +259,48 @@ void Army::set_army_return_home()
 
 void Army::set_army_disband()
 {
-	sc_packet_armydisband packet;
-	packet.size = sizeof(packet);
-	packet.type = SC_PACKET_ARMYDISBAND;
-
-	packet.issuccess = object_find_check(_id, _playerID, 6500);
-	packet.a_id = _id;
-
-	_Gypsy_citizen = 0;
-	if (packet.issuccess == false)
+	if(!is_escort)
 	{
-		reinterpret_cast<Player*>(objects[_playerID])->send_packet(&packet);
-	}
-	else
-	{
-		_a_state = ST_FREE;
-		for (int i = 0; i < MAXPLAYER; ++i)
+		sc_packet_armydisband packet;
+		packet.size = sizeof(packet);
+		packet.type = SC_PACKET_ARMYDISBAND;
+
+		packet.issuccess = object_find_check(_id, _playerID, 6500);
+		packet.a_id = _id;
+
+		_Gypsy_citizen = 0;
+		if (packet.issuccess == false)
 		{
-			int x_count = 0;
-			for (auto& a : _citizens)
-			{
-				Player* player = reinterpret_cast<Player*>(objects[i]);
-				sc_packet_citizencreate c_packet;
-				c_packet.citizenid = a;
-				c_packet.size = sizeof(c_packet);
-				c_packet.type = SC_PACKET_CITIZENCREATE;
-				
-				Citizen* citizen = reinterpret_cast<Citizen*>(objects[a]);
-				//citizen->set_citizen_arrival_location(c_packet.x, c_packet.y, 0);
-				player->move_citizen_to_tower(a);
-				c_packet.x = citizen->_x;
-				c_packet.y = citizen->_y;
-				c_packet.z = 0;
-				citizen->_job = 0;
-				x_count++;
-				reinterpret_cast<Player*>(objects[i])->send_packet(&c_packet);
-			}
-			reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
+			reinterpret_cast<Player*>(objects[_playerID])->send_packet(&packet);
 		}
-		std::cout << "disband" << std::endl;
+		else
+		{
+			_a_state = ST_FREE;
+			for (int i = 0; i < MAXPLAYER; ++i)
+			{
+				int x_count = 0;
+				for (auto& a : _citizens)
+				{
+					Player* player = reinterpret_cast<Player*>(objects[i]);
+					sc_packet_citizencreate c_packet;
+					c_packet.citizenid = a;
+					c_packet.size = sizeof(c_packet);
+					c_packet.type = SC_PACKET_CITIZENCREATE;
+
+					Citizen* citizen = reinterpret_cast<Citizen*>(objects[a]);
+					//citizen->set_citizen_arrival_location(c_packet.x, c_packet.y, 0);
+					player->move_citizen_to_tower(a);
+					c_packet.x = citizen->_x;
+					c_packet.y = citizen->_y;
+					c_packet.z = 0;
+					citizen->_job = 0;
+					x_count++;
+					reinterpret_cast<Player*>(objects[i])->send_packet(&c_packet);
+				}
+				reinterpret_cast<Player*>(objects[i])->send_packet(&packet);
+			}
+			std::cout << "disband" << std::endl;
+		}
 	}
 }
 

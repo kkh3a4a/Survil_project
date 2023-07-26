@@ -339,10 +339,10 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 						{
 							multi_citizens[i]->_job = 0;
 							multi_citizens[i] = nullptr;
-							Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
-							army->_a_state = Army::ST_FREE;
-							training_army_id = -1;
 						}
+						Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
+						army->_a_state = Army::ST_FREE;
+						training_army_id = -1;
 					}
 				}
 				// army 생성 실패
@@ -352,10 +352,10 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 					{
 						multi_citizens[i]->_job = 0;
 						multi_citizens[i] = nullptr;
-						Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
-						army->_a_state = Army::ST_FREE;
-						training_army_id = -1;
 					}
+					Army* army = reinterpret_cast<Army*>(objects[training_army_id]);
+					army->_a_state = Army::ST_FREE;
+					training_army_id = -1;
 				}
 			}
 		}
