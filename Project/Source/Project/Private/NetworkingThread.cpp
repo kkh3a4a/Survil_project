@@ -458,7 +458,9 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_CITIZEN_STATUS:
 		{
 			sc_packet_citizen_status* packet = reinterpret_cast<sc_packet_citizen_status*>(buf);
-			UE_LOG(LogTemp, Warning, TEXT("[Citizen Status] Soldier: %d, Citizen: %d, Hot: %d, Hungry: %d, Thirsty: %d"), packet->soldier_num, packet->citizen_num, packet->citizen_hot, packet->citizen_hungry, packet->citizen_thirsty);
+			if (packet->soldier_num < 0 || packet->citizen_num < 0 || packet->citizen_hot < 0 || packet->citizen_hungry < 0 || packet->citizen_thirsty < 0)
+				break;
+			//UE_LOG(LogTemp, Warning, TEXT("[Citizen Status] Soldier: %d, Citizen: %d, Hot: %d, Hungry: %d, Thirsty: %d"), packet->soldier_num, packet->citizen_num, packet->citizen_hot, packet->citizen_hungry, packet->citizen_thirsty);
 			_MyController->SoldierNum = packet->soldier_num;
 			_MyController->CitizenNum = packet->citizen_num;
 			_MyController->CitizenHotNum = packet->citizen_hot;

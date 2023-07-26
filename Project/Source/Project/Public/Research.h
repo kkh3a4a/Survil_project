@@ -41,7 +41,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int tech5 = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float tech_timer = 0;
+		float tech_timer = 0.f;
 	class FSocketThread* _NetWork;
 
 

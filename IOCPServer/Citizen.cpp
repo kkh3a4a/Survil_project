@@ -205,13 +205,13 @@ void Citizen::citizen_eat_food()
 	if (_job == 22) return;	//군인은 밥도 안먹는다
 	
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-	if (_satiety > 70) return;
+	if (_satiety > 70 && _hp > 70) return;
 
 	if (player->_resource_amount[3] > 1) {		//음식이 있을 때
 		player->_resource_amount[3] -= 1;
 		modify_satiety(30);
 		player->modify_dissatisfaction(-0.001);
-		modify_hp(50);
+		modify_hp(30);
 	}
 	else {	//음식이 없을 때
 		modify_satiety(-20);
@@ -231,13 +231,13 @@ void Citizen::citizen_drink_water()
 	if (_job == 22) return;	//군인은 물도 안마신다
 
 	Player* player = reinterpret_cast<Player*>(objects[_playerID]);
-	if (_thirsty > 70) return;
+	if (_thirsty > 70 && _hp > 70) return;
 
 	if (player->_resource_amount[1] > 0){	//물 있을 때
 		player->_resource_amount[1] -= 1;
 		modify_thirsty(30);
 		player->modify_dissatisfaction(-0.001);
-		modify_hp(50);
+		modify_hp(30);
 	}
 	else {	//물 없을 때
 		modify_thirsty(-20);

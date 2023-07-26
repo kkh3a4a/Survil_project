@@ -114,9 +114,13 @@ void AMain::Tick(float DeltaTime)
 		Research->tech_timer -= DeltaTime;
 	}
 	MyCameraComponent->PostProcessSettings.VignetteIntensity = abs(0.5 * cos((SunAngle - 90)* PI / 180.0) - 0.5);
+
 	if(SunAngle < 180)
 		HeatHazeMaterialInstance->SetScalarParameterValue(FName("Strength"), abs(cos((SunAngle + 90) * PI / 180.0)) / 100);
-
+	else
+		HeatHazeMaterialInstance->SetScalarParameterValue(FName("Strength"), 0);
+	if(Temperature->GetIsHidden())
+		HeatHazeMaterialInstance->SetScalarParameterValue(FName("Strength"), 0);
 
 	FVector CurrentLocation = GetActorLocation();
 	float DistanceToDest = FVector::Dist(CurrentLocation, DestLocation);
@@ -131,7 +135,6 @@ void AMain::Tick(float DeltaTime)
 
 	//UE_LOG(LogTemp, Warning, TEXT("%lf, %lf"), DeltaTime, MoveSpeed);
 	//UE_LOG(LogTemp, Warning, TEXT("%lf, %lf, %lf    %lf, %lf, %lf    %lf, %lf, %lf"), CurrentLocation.X, CurrentLocation.Y, CurrentLocation.Z, NewLocation.X, NewLocation.Y, NewLocation.Z, DestLocation.X, DestLocation.Y, DestLocation.Z);
-
 }
 
 void AMain::SetPlayerLocation(float x, float y, float z)

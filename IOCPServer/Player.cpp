@@ -508,7 +508,7 @@ void Player::send_citizen_status()
 			soldier_num++;
 			continue;
 		}
-		//cout << c_id << " " << (int)citizen->_satiety << " " << (int)citizen->_thirsty << " " << (int)citizen->_temperature << endl;
+		
 		if (citizen->_satiety == 0)
 			hungry++;
 		if (citizen->_thirsty == 0)
@@ -517,13 +517,14 @@ void Player::send_citizen_status()
 			hot++;
 		citizen_num++;
 		//if (_id == 0)
-			//cout << c_id << "] HP: " << (int)citizen->_hp << " [ X: " << (int)citizen->_x << ", Y: " << (int)citizen->_y << " ]" << endl;
+			//cout << c_id << " " << (int)citizen->_satiety << " " << (int)citizen->_thirsty << " " << (int)citizen->_temperature << endl;
 	}
 	//cout << "=============================\n";
 	total_citizen_num = citizen_num;
 	
+	//cout << "soldier: " << (int)(soldier_num / 5) << " citizen: " << citizen_num << " hot : " << hot << " hungry : " << hungry << " thirsty : " << thirsty << endl;
 	sc_packet_citizen_status packet;
-	packet.soldier_num = soldier_num / 5;
+	packet.soldier_num = (int)(soldier_num / 5);
 	packet.citizen_num = citizen_num;
 	packet.citizen_hot = hot;
 	packet.citizen_hungry = hungry;

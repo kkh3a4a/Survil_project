@@ -399,7 +399,7 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 					{
 						float citizen_around_work_building_x = _x;
 						float citizen_around_work_building_y = _y;
-						placement_citizen->make_random_round_position(citizen_around_work_building_x, citizen_around_work_building_y, 400, 5, i);
+						placement_citizen->make_random_round_position(citizen_around_work_building_x, citizen_around_work_building_y, 200, 5, i);
 						placement_citizen->_Job_id = _id;
 						placement_citizen->_job = 1;
 						placement_citizen->_job_x = citizen_around_work_building_x;

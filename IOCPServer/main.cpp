@@ -225,6 +225,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			{
 				Player* player = reinterpret_cast<Player*>(objects[i]);
 				player->send_sunangle(sun_angle);		//태양 각도 전송
+				
+				//시민 상태 보내기
+				player->send_citizen_status();
 
 				if (player->is_connected && (player->w || player->a || player->s || player->d))
 				{
@@ -287,9 +290,6 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 							}
 						}
 					}
-					//시민 상태 보내기
-					player->send_citizen_status();
-					
 					//리소스 양 보내기
 					player->send_resource_amount();
 				}
