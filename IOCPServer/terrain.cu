@@ -485,7 +485,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 }
 
 __global__
-void round_shaped_cool_cuda(unsigned char** temperature_map_device, II springkler_pos)
+void round_shaped_cool_cuda(unsigned char** temperature_map_device, II object_pos)
 {
 	II coo;
 	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
@@ -494,12 +494,23 @@ void round_shaped_cool_cuda(unsigned char** temperature_map_device, II springkle
 	int distance = sqrt(pow(coo.x - (int)blockDim.x / 2, 2) + pow(coo.y - (int)blockDim.y / 2, 2));
 	if (distance <= blockDim.x / 2) {
 		//회당 1도씩 낮춤
-		temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] -= 1 * temperature_divide;
+		temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2] -= 1 * temperature_divide;
 		//최고 최저 온도 설정
-		temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] = max(temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2], 20 * temperature_divide);
-		temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2] = min(temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2], 60 * temperature_divide);
+		temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2] = max(temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2], 20 * temperature_divide);
+		temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2] = min(temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2], 60 * temperature_divide);
 		//printf("%d\n", temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2]);
 	}
+}
+
+__global__
+void rectangle_shaped_cool_cuda(unsigned char** temperature_map_device, II object_pos, float efficiency)
+{
+	//회당 1도씩 낮춤
+	temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2] -= (int)(efficiency * temperature_divide);
+	//최고 최저 온도 설정
+	temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2] = max(temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2], 20 * temperature_divide);
+	temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2] = min(temperature_map_device[object_pos.x + threadIdx.x - blockDim.x / 2][object_pos.y + threadIdx.y - blockDim.y / 2], 60 * temperature_divide);
+	//printf("%d\n", temperature_map_device[springkler_pos.x + threadIdx.x - blockDim.x / 2][springkler_pos.y + threadIdx.y - blockDim.y / 2]);
 }
 
 __global__
@@ -812,21 +823,29 @@ public:
 
 	void cooling_system()
 	{
-		for (int i = 0; i < MAXPLAYER; i++) {
+		for (int i = 0; i < MAXPLAYER; i++) {	//타워 원모양으로 쿨링
 			int size = 21;	//사이즈 홀수로 해야 함
 			dim3 block(size, size, 1);
 			round_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)objects[i]->_x / 100, (int)objects[i]->_y / 100 });
 			cudaDeviceSynchronize();
 		}
-		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {
+		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {		
 			Building* building = reinterpret_cast<Building*>(objects[i]);
-			if (building->_type != 8) continue;	//스프링클러일 때만
-			if (building->activated == false) continue;	//작동중일 때만
-			int springkler_size = 21;	//사이즈 홀수로 해야 함
-			dim3 block(springkler_size, springkler_size, 1);
-			round_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
+			
+			if (building->_type == 8) {							//스프링클러 cooling
+				if (building->activated == false) continue;	//작동중일 때만
+				int springkler_size = 21;	//사이즈 홀수로 해야 함
+				dim3 block(springkler_size, springkler_size, 1);
+				round_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
+			}
+			else {												//건물 단열화
+				Player* player = reinterpret_cast<Player*>(objects[building->_client_id]);
+				dim3 block(building->size_x, building->size_y, 1);
+				rectangle_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 }, player->_building_insulation);
+			}
 			cudaDeviceSynchronize();
 		}
+		
 		for (int i = 0; i < one_side_number; i++) {
 			cudaMemcpy(temperature_map_host[i], temperature_map_temp[i], one_side_number * sizeof(unsigned char), cudaMemcpyDeviceToHost);
 		}
@@ -880,7 +899,7 @@ public:
 
 	void adjust_num_blocks()
 	{
-		__int64 curr_total = add_all();
+		unsigned __int64 curr_total = add_all();
 		__int64 scarce_blocks = init_total_hill_height - curr_total;
 		
 		if (scarce_blocks <= 0) {	//부족하거나 많은게 없다면
@@ -1043,79 +1062,8 @@ public:
 			Building* building = reinterpret_cast<Building*>(objects[i]);
 			if (building->_type == -1) 
 				continue;
-			II building_size;
-			int building_height;
-			switch (building->_type)
-			{
-			case 0: {	//건설중
-				building_size.x = 7;
-				building_size.y = 7;
-				building_height = 2;
-				break;
-			}
-			case 1: {	//집
-				building_size.x = 7;
-				building_size.y = 7;
-				building_height = 3;
-				break;
-			}
-			case 2: {	//기름 시추기
-				building_size.x = 9;
-				building_size.y = 3;
-				building_height = 5;
-				break;
-			}
-			case 3: {	//우물
-				building_size.x = 9;
-				building_size.y = 3;
-				building_height = 4;
-				break;
-			}
-			case 4: {	//나무 제제소
-				building_size.x = 11;
-				building_size.y = 9;
-				building_height = 2;
-				break;
-			}
-			case 5: {	//제철소
-				building_size.x = 11;
-				building_size.y = 9;
-				building_height = 2;
-				break;
-			}
-			case 6: {	//실험실
-				building_size.x = 11;
-				building_size.y = 3;
-				building_height = 4;
-				break;
-			}
-			case 8: {	//스프링클러
-				building_size.x = 1;
-				building_size.y = 1;
-				building_height = 1;
-				break;
-			}
-			case 11: {	//헌터하우스
-				building_size.x = 7;
-				building_size.y = 5;
-				building_height = 7;
-				break;
-			}
-			case 13: {	//그린하우스
-				building_size.x = 7;
-				building_size.y = 9;
-				building_height = 7;
-				break;
-			}
-			case 21: {	//군인 캠프
-				building_size.x = 5;
-				building_size.y = 7;
-				building_height = 3;
-				break;
-			}
-			}
-			dim3 block(building_size.x, building_size.y, 1);
-			add_object_height_cuda << <1, block >> > (terrain_array_device, { (int)building->_x / 100, (int)building->_y / 100 }, building_height);
+			dim3 block(building->size_x, building->size_y, 1);
+			add_object_height_cuda << <1, block >> > (terrain_array_device, { (int)building->_x / 100, (int)building->_y / 100 }, building->height);
 			cudaDeviceSynchronize();
 		}
 	}

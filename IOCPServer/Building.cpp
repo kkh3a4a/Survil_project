@@ -59,6 +59,9 @@ bool Building::_create_building(float x, float y, char type,int id)
 				}
 			}
 			is_Success_Create = true;
+			size_x = 7;
+			size_y = 7;
+			height = 3;
 		}
 		break;
 	}
@@ -73,6 +76,9 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -= 20; player->_resource_amount[2] -= 10;
 			player->send_resource_amount();
 			is_Success_Create = true;
+			size_x = 9;
+			size_y = 3;
+			height = 5;
 		}
 		break;
 	}
@@ -87,8 +93,10 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -= 30; player->_resource_amount[2] -= 20;
 			player->send_resource_amount();
 			is_Success_Create = true;
+			size_x = 9;
+			size_y = 3;
+			height = 4;
 		}
-		
 		break;
 	}
 	case 4:	// saw mill
@@ -102,6 +110,9 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -= 10;
 			player->send_resource_amount();
 			is_Success_Create = true;
+			size_x = 9;
+			size_y = 9;
+			height = 2;
 		}
 		break;
 	}
@@ -116,6 +127,9 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -= 30;
 			player->send_resource_amount();
 			is_Success_Create = true;
+			size_x = 9;
+			size_y = 9;
+			height = 2;
 		}
 		break;
 	}
@@ -130,20 +144,9 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -=15; player->_resource_amount[2] -= 5;
 			player->send_resource_amount();
 			is_Success_Create = true;
-		}
-		break;
-	}
-	case 7: // warehouse
-	{
-		if (player->_resource_amount[4] < 20 || player->_resource_amount[2] < 5)
-		{
-			is_Success_Create = false;
-		}
-		else
-		{
-			player->_resource_amount[4] -= 20; player->_resource_amount[2] -= 5;
-			player->send_resource_amount();
-			is_Success_Create = true;
+			size_x = 11;
+			size_y = 5;
+			height = 4;
 		}
 		break;
 	}
@@ -158,6 +161,9 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -= 20; player->_resource_amount[2] -= 10;
 			player->send_resource_amount();
 			is_Success_Create = true;
+			size_x = 1;
+			size_y = 1;
+			height = 1;
 		}
 		break;
 	}
@@ -172,6 +178,9 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -= 20;
 			player->send_resource_amount();
 			is_Success_Create = true;
+			size_x = 5;
+			size_y = 7;
+			height = 3;
 		}
 		break;
 	}
@@ -186,8 +195,10 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -= 20;
 			player->send_resource_amount();
 			is_Success_Create = true;
+			size_x = 7;
+			size_y = 5;
+			height = 7;
 		}
-		
 		break;
 	}
 	case 13: // green house
@@ -201,6 +212,9 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -= 20;
 			player->send_resource_amount();
 			is_Success_Create = true;
+			size_x = 7;
+			size_y = 9;
+			height = 7;
 		}
 		break;
 	}

@@ -123,13 +123,13 @@ void Research::set_tech_upgrade(int type, int level)
 				case 4: // 건물 단열화
 				{
 					if (level == 1)
-						player->_building_insulation = 0.9;
-					else if (level == 2)
-						player->_building_insulation = 0.8;
-					else if (level == 3)
 						player->_building_insulation = 0.75;
+					else if (level == 2)
+						player->_building_insulation = 1.0;
+					else if (level == 3)
+						player->_building_insulation = 1.25;
 					else if (level == 4)
-						player->_building_insulation = 0.6;
+						player->_building_insulation = 1.5;
 					break;
 				}
 

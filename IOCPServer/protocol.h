@@ -5,7 +5,7 @@ constexpr int random_array_size = 10000000;
 constexpr int city_size = 100;
 
 #define BUFSIZE						512
-#define SERVERPORT					9000
+#define SERVERPORT					1234
 
 #define MAXNAMESIZE					20
 #define MAXOBJECT					5000
@@ -723,11 +723,11 @@ struct sc_packet_citizen_status
 	unsigned char size = sizeof(sc_packet_citizen_status);
 	unsigned char type = SC_PACKET_CITIZEN_STATUS;
 
-	int soldier_num;
-	int citizen_num;
-	int citizen_hot;
-	int citizen_hungry;
-	int citizen_thirsty;
+	int soldier_num{};
+	int citizen_num{};
+	int citizen_hot{};
+	int citizen_hungry{};
+	int citizen_thirsty{};
 };
 
 struct sc_packet_gameover

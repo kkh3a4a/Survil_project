@@ -32,7 +32,7 @@ public:
 	float _work_efficiency = {1.0};
 	float _adventure_speed = { 1.0 };
 	float _oil_efficiency = { 1.0 };
-	float _building_insulation = { 1.0 };
+	float _building_insulation = { 0.5 };
 
 	float _currentX, _currentY, _currentZ;
 

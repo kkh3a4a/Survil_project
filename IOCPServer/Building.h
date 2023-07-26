@@ -15,6 +15,10 @@ public:
 	int _client_id;
 	bool activated = false;
 	
+	int size_x{};
+	int size_y{};
+	int height{};
+	
 	bool training_finish = true;
 	int training_army_id = -1;
 	int _army_type = {};

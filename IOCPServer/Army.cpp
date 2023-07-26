@@ -346,4 +346,5 @@ void Army::set_army_dead()
 	packet.type = SC_PACKET_ARMYDEAD;
 	packet.army_id = _id;
 	all_player_sendpacket(&packet);
+	std::cout << "army dead" << std::endl;
 }
