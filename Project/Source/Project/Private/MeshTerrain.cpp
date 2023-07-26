@@ -44,7 +44,8 @@ void AMeshTerrain::BeginPlay()
 	MeshTerrain = NewObject<UProceduralMeshComponent>(this);
 	MeshTerrain->CreateMeshSection_LinearColor(0, Vertices, Triangles, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>(), true);
 
-	MeshTerrain->SetMaterial(0, TerrainMaterialInstance);
+	TerrainMaterialInstanceDynamic = UMaterialInstanceDynamic::Create(TerrainMaterialInstance, this);
+	MeshTerrain->SetMaterial(0, TerrainMaterialInstanceDynamic);
 	MeshTerrain->RegisterComponent();
 
 	SetRootComponent(RootComponent);
@@ -68,6 +69,12 @@ void AMeshTerrain::Tick(float DeltaTime)
 	}
 	MeshTerrain->UpdateMeshSection_LinearColor(0, Vertices, TArray<FVector>(), TArray<FVector2D>(), TArray<FLinearColor>(), TArray<FProcMeshTangent>());
 	ReadyToUpdate = false;
+}
+
+void AMeshTerrain::ChangeWindDirection(int x, int y)
+{
+	TerrainMaterialInstanceDynamic->SetScalarParameterValue(TEXT("Wind Speed X"), x * 0.02);
+	TerrainMaterialInstanceDynamic->SetScalarParameterValue(TEXT("Wind Speed Y"), y * 0.02);
 }
 
 FTerrainThread::FTerrainThread()

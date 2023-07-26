@@ -488,6 +488,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MyController->set_ending(buf);
 			break;
 		}
+		case SC_PACKET_WIND_DIRECTION:
+		{
+			sc_packet_wind_direction* packet = reinterpret_cast<sc_packet_wind_direction*>(buf);
+			_MainClass->Terrain->ChangeWindDirection((int)packet->wind_x, (int)packet->wind_y);
+			UE_LOG(LogTemp, Log, TEXT("Wind Dir: X: %d, Y: %d"), (int)packet->wind_x, (int)packet->wind_y);
+			break;
+		}
 		default:
 		{
 			//DebugBreak();

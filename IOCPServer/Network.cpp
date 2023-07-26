@@ -260,7 +260,6 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		cs_packet_tradesuccess* packet = reinterpret_cast<cs_packet_tradesuccess*>(pk);
 		Player* request_player = reinterpret_cast<Player*>(objects[player->trade_player_id]);
 
-		
 		sc_packet_tradesuccess s_packet;
 		s_packet.success_boolean = packet->success_boolean;
 		s_packet.size = sizeof(s_packet);
@@ -277,7 +276,6 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	case CS_PACKET_TECHNOLOGY:
 	{
 		cs_packet_technology* packet = reinterpret_cast<cs_packet_technology*>(pk);
-	
 		player->_research->set_tech_upgrade(packet->tech_type, packet->tech_level);
 		sc_packet_technology s_packet;
 		s_packet.size = sizeof(s_packet);

@@ -57,9 +57,7 @@ uniform_int_distribution <int>terrain_distance(0, one_side_number - 1);
 uniform_int_distribution <int>number_of_hills_uid(one_side_number / 10, one_side_number / 10);
 uniform_int_distribution <int>hill_size_uid(one_side_number / 20, one_side_number / 10);
 uniform_int_distribution <int>height_uid(min_height, init_max_height);
-
-uniform_int_distribution <int>wind_speed_uid(0, 50);
-uniform_int_distribution <int>wind_angle_uid(0, 360);
+uniform_int_distribution <int>wind_direction_uid(0, 3);
 
 void make_random_array(II* random_array, bool& random_array_used)
 {
@@ -641,6 +639,9 @@ private:
 	
 	bool log = false;
 	bool can_make_big_hill = false;
+
+	II wind_direction{};
+	int wind_speed = 1;
 	
 public:
 	Terrain()  
@@ -957,7 +958,7 @@ public:
 		}
 	}
 
-	void wind_blow(II wind_direction, int wind_speed)
+	void wind_blow()
 	{
 		clock_t t_0, t_1, t_2, t_3, t_4, t_5;
 		
@@ -1534,14 +1535,31 @@ public:
 		}
 	}
 
-	void wind_decide(int& wind_speed, int& wind_angle)
+	void wind_direction_decide()
 	{
-		//wind speed 0-50
-		//wind angle 0-360
-		wind_speed = 50;// wind_speed_uid(dre);
-		//wind_angle = 90; // wind_angle_uid(dre);
-		wind_angle += 10;
-		cout << wind_speed << " " << wind_angle << endl;
-		//풍향을 언제마다 한번 업데이트 할 것인지, 풍속은 언제마다 한번 업데이트 할 것인지 회의를 통해 결정하자
+		switch (wind_direction_uid(dre)) {
+		case 0:
+			wind_direction.x = 0;
+			wind_direction.y = 1;
+			break;
+		case 1:
+			wind_direction.x = 0;
+			wind_direction.y = -1;
+			break;
+		case 2:
+			wind_direction.x = 1;
+			wind_direction.y = 0;
+			break;
+		case 3:
+			wind_direction.x = -1;
+			wind_direction.y = 0;
+			break;
+		}
+		cout << "Wind Direcyion Decide: " << "X: " << wind_direction.x << " " << "Y: " << wind_direction.y << endl;
+		for (int i = 0; i < MAXPLAYER; i++)
+		{
+			Player* player = reinterpret_cast<Player*>(objects[i]);
+			player->send_wind_direction(wind_direction.x, wind_direction.y);
+		}
 	}
 };

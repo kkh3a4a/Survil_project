@@ -58,6 +58,10 @@ DWORD WINAPI terrain_change(LPVOID arg)
 {
 	//terrain->log_on();
 	int i{};
+	int wind_dir_x;
+	int wind_dir_y;
+	terrain->wind_direction_decide();
+
 	auto terrain_start = std::chrono::system_clock::now();
 	while (1){
 		auto terrain_end = std::chrono::system_clock::now();
@@ -66,8 +70,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 			clock_t start = clock();
 			terrain_start = std::chrono::system_clock::now();
 			//cout << endl << i << "번째" << endl;
-
-			terrain->wind_blow({ 1, 0 }, 1);
+			terrain->wind_blow();
 			terrain->add_object_height();
 			terrain->make_shadow_map(sun_angle);
 			terrain->make_tempertature_map(sun_angle);
@@ -194,6 +197,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 					}
 					if (*sand_storm_day.begin() == survil_day)
 					{
+						//바람 방향 바꾸기
+						terrain->wind_direction_decide();
+
 						for(int i =0;i<MAXPLAYER;++i)
 						{
 							Player* player = reinterpret_cast<Player*>(objects[i]);

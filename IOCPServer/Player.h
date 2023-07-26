@@ -88,4 +88,5 @@ public:
 	void player_ending(int rank, int score);
 	void send_ending();
 	void move_citizen_to_tower( int citizen_id);
+	void send_wind_direction(int wind_x, int wind_y);
 };

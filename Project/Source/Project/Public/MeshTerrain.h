@@ -51,6 +51,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
 		UMaterialInstance* TerrainMaterialInstance;
 
+	UMaterialInstanceDynamic* TerrainMaterialInstanceDynamic;
+
 	int8 Terrain2DArray[SIGHT_X][SIGHT_Y];
 
 	TArray<FVector> Vertices;
@@ -61,4 +63,6 @@ public:
 	FRunnableThread* WorkThread;
 	FTerrainThread* Work;
 	bool ReadyToUpdate = false;
+
+	void ChangeWindDirection(int x, int y);
 };

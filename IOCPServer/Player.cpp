@@ -648,6 +648,14 @@ void Player::move_citizen_to_tower(int citizen_id)
 	}
 }
 
+void Player::send_wind_direction(int wind_x, int wind_y)
+{
+	sc_packet_wind_direction packet;
+	packet.wind_x = wind_x;
+	packet.wind_y = wind_y;
+	send_packet(&packet);
+}
+
 void Player::modify_dissatisfaction(int amount)
 {
 	if (dissatisfaction + amount >= 1) dissatisfaction = 1;

@@ -148,6 +148,8 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_CITIZEN_STATUS	130
 
+#define SC_PACKET_WIND_DIRECTION	140
+
 #pragma pack (push, 1)
 struct cs_packet_login
 {
@@ -748,6 +750,15 @@ struct sc_packet_gameend
 	int resource;
 	int score;
 	int rank;
-
 };
+
+struct sc_packet_wind_direction
+{
+	unsigned char size = sizeof(sc_packet_wind_direction);
+	unsigned char type = SC_PACKET_WIND_DIRECTION;
+
+	char wind_x;
+	char wind_y;
+};
+
 #pragma pack (pop)
