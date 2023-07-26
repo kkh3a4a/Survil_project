@@ -76,7 +76,8 @@ public:
 
 private: 
 	//char IPAddress[20] = "192.168.0.8";
-	char IPAddress[20] = "127.0.0.1";
+	char IPAddress[20] = "218.101.137.172";
+	//char IPAddress[20] = "127.0.0.1";
 	//char IPAddress[20] = "172.20.10.2";
     int32 BytesReceived;
     int32 BytesSent;
