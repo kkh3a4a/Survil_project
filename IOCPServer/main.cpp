@@ -60,8 +60,7 @@ DWORD WINAPI terrain_change(LPVOID arg)
 	int i{};
 	int wind_dir_x;
 	int wind_dir_y;
-	terrain->wind_direction_decide();
-
+	double spend_time{};
 	auto terrain_start = std::chrono::system_clock::now();
 	while (1){
 		auto terrain_end = std::chrono::system_clock::now();
@@ -87,9 +86,17 @@ DWORD WINAPI terrain_change(LPVOID arg)
 				cout << "SAVED!!!" << endl;
 			}
 			i++;
+			
 			clock_t end = clock();
-			//cout << "걸린시간: " << (double)(end - start) / CLOCKS_PER_SEC << endl;
+			spend_time = (double)(end - start) / CLOCKS_PER_SEC;
+			if (spend_time > 1)
+				terrain->modify_wind_speed(-1);
+			else if (spend_time < 0.6)
+				terrain->modify_wind_speed(1);
+
 			is_terrain_changed = true;
+			cout << "걸린시간: " << spend_time << endl;
+
 		}
 		else
 			Sleep(10);
@@ -149,6 +156,10 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 			sand_storm_day.insert(random_day);
 		}
 	}
+
+	//바람 방향 초기화
+	terrain->wind_direction_decide();
+
 	while (1)
 	{
 		auto Timer_Start = std::chrono::system_clock::now();

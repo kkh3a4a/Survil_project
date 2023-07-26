@@ -641,7 +641,7 @@ private:
 	bool can_make_big_hill = false;
 
 	II wind_direction{};
-	int wind_speed = 1;
+	int wind_speed = 2;
 	
 public:
 	Terrain()  
@@ -1561,5 +1561,12 @@ public:
 			Player* player = reinterpret_cast<Player*>(objects[i]);
 			player->send_wind_direction(wind_direction.x, wind_direction.y);
 		}
+	}
+
+	void modify_wind_speed(int additional_speed)
+	{
+		if (wind_speed + additional_speed > 0)
+			wind_speed += additional_speed;
+		cout << "Wind Speed Modified: " << wind_speed << " Additional Speed: " << additional_speed << endl;
 	}
 };
