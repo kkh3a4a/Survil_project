@@ -447,10 +447,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 			sc_packet_sandstormday* packet = reinterpret_cast<sc_packet_sandstormday*>(buf);
 			_MyController->sand_storm_day = packet->sand_day;
 
-			Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/event/SandStorm_Cue.SandStorm_Cue"));
-			UGameplayStatics::PlaySound2D(_MyController->GetWorld(), Sound);
-			UE_LOG(LogTemp, Log, TEXT("PlaySoundSandStorm\n"));
-			break;
+			if (_MyController->sand_storm_day == 0)
+			{
+				Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/event/SandStorm_Cue.SandStorm_Cue"));
+				UGameplayStatics::PlaySound2D(_MyController->GetWorld(), Sound);
+				UE_LOG(LogTemp, Log, TEXT("PlaySoundSandStorm\n"));
+				break;
+			}
 		}
 		case SC_PACKET_CITIZEN_STATUS:
 		{
@@ -465,11 +468,21 @@ void FSocketThread::processpacket(unsigned char* buf)
 		}
 		case SC_PACKET_GAMEOVER:
 		{
+			if (_MyController->IsGameOver == false)
+			{
+				Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/bgm/Lose_bgm_Cue.Lose_bgm_Cue"));
+				UGameplayStatics::PlaySound2D(_MyController->GetWorld(), Sound);
+			}
 			_MyController->IsGameOver = true;
 			break;
 		}
 		case SC_PACKET_GAMEEND:
 		{
+			if (_MyController->GameEnd == false)
+			{
+				Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/bgm/Win_bgm_Cue.Win_bgm_Cue"));
+				UGameplayStatics::PlaySound2D(_MyController->GetWorld(), Sound);
+			}
 			_MyController->set_ending(buf);
 			break;
 		}
