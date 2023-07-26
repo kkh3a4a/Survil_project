@@ -43,8 +43,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float tech_timer = 0.f;
 	class FSocketThread* _NetWork;
-
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int64 TechTime = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int LeftTechTime = 0;
 public:
 
 	void set_NetWork(void* NetWork);
@@ -58,6 +60,5 @@ public:
 
 	void set_technology(int type, int level);
 	void set_tech_phase(int phase);
-	// Called every frame
-	
+	void set_tech_timer();
 };

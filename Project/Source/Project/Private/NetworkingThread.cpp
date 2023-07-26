@@ -419,6 +419,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_techtimer* packet = reinterpret_cast<sc_packet_techtimer*>(buf);
 			_MainClass->Research->tech_timer = packet->tech_timer_second;
+			_MainClass->Research->set_tech_timer();
 			break;
 		}
 		case SC_PACKET_DECLARATION_WAR:

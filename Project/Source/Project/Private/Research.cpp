@@ -84,13 +84,8 @@ void AResearch::set_tech_phase(int phase)
 	tech_phase = phase;
 }
 
-
-
-
-
-
-
-
-
-//
-// Called every frame
+void AResearch::set_tech_timer()
+{
+	FDateTime CurrentTime = FDateTime::UtcNow();
+	TechTime = CurrentTime.ToUnixTimestamp();
+}
