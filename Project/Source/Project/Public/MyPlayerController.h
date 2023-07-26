@@ -262,6 +262,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sound")
 	TObjectPtr<USoundBase> Sound;
 
+	// sand storm anim
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
+	bool PlaySandStormAnim = false;
+
 protected:
 	long long int mouse_cnt = 0;
 

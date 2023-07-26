@@ -453,6 +453,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 				Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/event/SandStorm_Cue.SandStorm_Cue"));
 				UGameplayStatics::PlaySound2D(_MyController->GetWorld(), Sound);
 				UE_LOG(LogTemp, Log, TEXT("PlaySoundSandStorm\n"));
+				
+				_MyController->PlaySandStormAnim = true;
 				break;
 			}
 		}
