@@ -310,6 +310,7 @@ void Building::set_building_citizen_placement(char isplus, int armytype)
 				// army 생성 성공
 				if (count == 5)
 				{
+					_army_type = armytype;
 					if (player->_resource_amount[0] >= _army_type * 50 && player->_resource_amount[2] >= _army_type * 50 && player->_resource_amount[4] >= _army_type * 50)
 					{
 						int citizen_cnt = 0;

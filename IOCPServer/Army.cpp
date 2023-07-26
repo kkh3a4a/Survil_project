@@ -318,7 +318,6 @@ void Army::set_army_plunder(int p_id)
 			{
 				if (enemy_player->_resource_amount[i] > 10)
 				{
-					
 					enemy_player->_resource_amount[i] -= 10;
 					player->_resource_amount[i] += 10;
 					enemy_player->send_resource_amount();
