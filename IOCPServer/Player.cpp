@@ -656,12 +656,19 @@ void Player::send_wind_direction(int wind_x, int wind_y)
 	send_packet(&packet);
 }
 
-void Player::modify_dissatisfaction(int amount)
+void Player::send_dissatisfaction()
+{
+	sc_packet_dissatisfaction packet;
+	packet.dissatisfaction = dissatisfaction;
+	send_packet(&packet);
+}
+
+void Player::modify_dissatisfaction(float amount)
 {
 	if (dissatisfaction + amount >= 1) dissatisfaction = 1;
 	else if (dissatisfaction + amount <= 0) dissatisfaction = 0;
 	else dissatisfaction += amount;
-	//cout << "dissatisfaction : " << dissatis
+	//cout << "dissatisfaction : " << dissatisfaction << endl;
 }
 void Player::set_army_select(int select_type)
 {

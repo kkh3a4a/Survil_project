@@ -79,7 +79,7 @@ public:
 	void trade_clear();
 	void set_army_select(int select_type);
 	void set_location_input(float mini_x, float mini_y);
-	void modify_dissatisfaction(int amount);
+	void modify_dissatisfaction(float amount);
 	void send_citizen_status();
 	void send_sprinkler_off();
 	void player_gameover();
@@ -89,4 +89,5 @@ public:
 	void send_ending();
 	void move_citizen_to_tower( int citizen_id);
 	void send_wind_direction(int wind_x, int wind_y);
+	void send_dissatisfaction();
 };

@@ -108,4 +108,7 @@ public:
 		TArray <bool> applied_policy;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UWidgetBlueprint* PolicyUI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float Dissatisfaction = 0;
 };

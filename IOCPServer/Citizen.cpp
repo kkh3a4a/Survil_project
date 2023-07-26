@@ -244,7 +244,7 @@ void Citizen::citizen_drink_water()
 	}
 	
 	if (_thirsty == 0) {
-		player->modify_dissatisfaction(0.005);
+		player->modify_dissatisfaction(0.05);
 		modify_hp(-25);
 	}
 }

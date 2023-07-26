@@ -1081,11 +1081,11 @@ public:
 			Player* player = reinterpret_cast<Player*>(objects[player_id]);
 			
 			citizen->_temperature = temperature;
-			if (temperature > 40) {
-				citizen->modify_hp(-(temperature - 40) / 5);
-				player->modify_dissatisfaction(0.001);
+			if (temperature > 45) {
+				citizen->modify_hp(-(int)((temperature - 40) / 2));
+				player->modify_dissatisfaction(0.002);
 			}
-			else {
+			else if (temperature < 35) {
 				player->modify_dissatisfaction(-0.001);
 			}
 			//if(player_id == 0)

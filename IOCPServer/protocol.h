@@ -150,6 +150,8 @@ constexpr int city_size = 100;
 
 #define SC_PACKET_WIND_DIRECTION	140
 
+#define SC_PACKET_DISSATISFACTION	150
+
 #pragma pack (push, 1)
 struct cs_packet_login
 {
@@ -759,6 +761,14 @@ struct sc_packet_wind_direction
 
 	char wind_x;
 	char wind_y;
+};
+
+struct sc_packet_dissatisfaction
+{
+	unsigned char size = sizeof(sc_packet_dissatisfaction);
+	unsigned char type = SC_PACKET_DISSATISFACTION;
+
+	float dissatisfaction{};
 };
 
 #pragma pack (pop)

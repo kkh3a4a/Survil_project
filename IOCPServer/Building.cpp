@@ -77,8 +77,8 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->send_resource_amount();
 			is_Success_Create = true;
 			size_x = 9;
-			size_y = 3;
-			height = 5;
+			size_y = 9;
+			height = 6;
 		}
 		break;
 	}
@@ -93,8 +93,8 @@ bool Building::_create_building(float x, float y, char type,int id)
 			player->_resource_amount[4] -= 30; player->_resource_amount[2] -= 20;
 			player->send_resource_amount();
 			is_Success_Create = true;
-			size_x = 9;
-			size_y = 3;
+			size_x = 7;
+			size_y = 7;
 			height = 4;
 		}
 		break;

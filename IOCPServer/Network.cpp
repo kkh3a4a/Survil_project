@@ -78,27 +78,29 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		//std::cout << "buildable" << std::endl;
 		bool location_buildable = true;
 		bool worker_builable = false;
-		for (auto& obj : objects) {
-			if (obj == nullptr)
-				continue;
-			if (obj->_x == 0) {
-				continue;
+		if (!IsNight) {
+			for (auto& obj : objects) {
+				if (obj == nullptr)
+					continue;
+				if (obj->_x == 0) {
+					continue;
+				}
+				if (obj->_id >= BUILDINGSTART && obj->_id < BUILDINGSTART + MAXBUILDING || obj->_id >= RESOURCESTART && obj->_id < RESOURCESTART + MAXRESOURCE || obj->_id >= 0 && obj->_id < MAXPLAYER) {
+					if (obj->_x < cs_packet->x + 500 && obj->_x > cs_packet->x - 500 && obj->_y < cs_packet->y + 500 && obj->_y > cs_packet->y - 500) {		// test 원래는 800
+						location_buildable = false;
+						break;
+					}
+				}
 			}
-			if (obj->_id >= BUILDINGSTART && obj->_id < BUILDINGSTART + MAXBUILDING || obj->_id >= RESOURCESTART && obj->_id < RESOURCESTART + MAXRESOURCE || obj->_id >= 0 && obj->_id < MAXPLAYER) {
-				if (obj->_x < cs_packet->x + 500 && obj->_x > cs_packet->x - 500 && obj->_y < cs_packet->y + 500 && obj->_y > cs_packet->y - 500) {		// test 원래는 800
-					location_buildable = false;
-					break;
+			for (int i = CITIZENSTART + PLAYERCITIZENCOUNT * player->_id; i < CITIZENSTART + PLAYERCITIZENCOUNT * player->_id + PLAYERCITIZENCOUNT; ++i) {
+				Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
+				if (citizen->_job == 0) {
+					worker_builable = true;
 				}
 			}
 		}
-		for (int i = CITIZENSTART + PLAYERCITIZENCOUNT * player->_id; i < CITIZENSTART + PLAYERCITIZENCOUNT * player->_id + PLAYERCITIZENCOUNT; ++i) {
-			Citizen* citizen = reinterpret_cast<Citizen*>(objects[i]);
-			if (citizen->_job == 0) {
-				worker_builable = true;
-			}
-		}
 		sc_packet_buildable sc_packet;
-		if (location_buildable && worker_builable)
+		if (location_buildable && worker_builable && !IsNight)
 			sc_packet.buildable = true;
 		else
 			sc_packet.buildable = false;

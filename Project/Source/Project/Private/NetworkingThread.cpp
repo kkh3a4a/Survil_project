@@ -495,6 +495,12 @@ void FSocketThread::processpacket(unsigned char* buf)
 			UE_LOG(LogTemp, Log, TEXT("Wind Dir: X: %d, Y: %d"), (int)packet->wind_x, (int)packet->wind_y);
 			break;
 		}
+		case SC_PACKET_DISSATISFACTION:
+		{
+			sc_packet_dissatisfaction* packet = reinterpret_cast<sc_packet_dissatisfaction*>(buf);
+			_MainClass->Dissatisfaction = packet->dissatisfaction;
+			break;
+		}
 		default:
 		{
 			//DebugBreak();

@@ -20,6 +20,7 @@ void Research::change_tech_timer(std::chrono::system_clock::time_point t)
 	packet.tech_timer_second = (std::chrono::duration_cast<std::chrono::seconds>(Timer_Start - std::chrono::system_clock::now())).count();
 	player = reinterpret_cast<Player*>(objects[player_id]);
 	player->send_packet(&packet);
+	std::cout << "change_tech_timer " << packet.tech_timer_second << std::endl;
 }
 
 void Research::change_lab_count(int i)

@@ -109,11 +109,19 @@ void AMain::BeginPlay()
 void AMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (Research->tech_timer >= 0)
+	if (Research->tech_timer > 0)
 	{
 		Research->tech_timer -= DeltaTime;
+		if (Research->tech_timer < 0)
+			Research->tech_timer = 0;
 	}
 	MyCameraComponent->PostProcessSettings.VignetteIntensity = abs(0.5 * cos((SunAngle - 90)* PI / 180.0) - 0.5);
+
+
+	FDateTime CurrentTime = FDateTime::UtcNow();
+	int64 CurrentTimeUnixTimestamp = CurrentTime.ToUnixTimestamp();
+	UE_LOG(LogTemp, Warning, TEXT("Current Time (Unix Timestamp): %lld"), CurrentTimeUnixTimestamp);
+
 
 	if(SunAngle < 180)
 		HeatHazeMaterialInstance->SetScalarParameterValue(FName("Strength"), abs(cos((SunAngle + 90) * PI / 180.0)) / 100);

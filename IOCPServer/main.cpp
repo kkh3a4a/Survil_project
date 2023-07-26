@@ -89,14 +89,16 @@ DWORD WINAPI terrain_change(LPVOID arg)
 			
 			clock_t end = clock();
 			spend_time = (double)(end - start) / CLOCKS_PER_SEC;
-			if (spend_time > 1)
+			if (spend_time > 0.9) {
 				terrain->modify_wind_speed(-1);
-			else if (spend_time < 0.6)
+				cout << "걸린시간: " << spend_time << endl;
+			}
+			else if (spend_time < 0.5) {
 				terrain->modify_wind_speed(1);
+				cout << "걸린시간: " << spend_time << endl;
+			}
 
 			is_terrain_changed = true;
-			cout << "걸린시간: " << spend_time << endl;
-
 		}
 		else
 			Sleep(10);
@@ -245,6 +247,9 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				
 				//시민 상태 보내기
 				player->send_citizen_status();
+
+				//불만족 보내기
+				player->send_dissatisfaction();
 
 				if (player->is_connected && (player->w || player->a || player->s || player->d))
 				{
