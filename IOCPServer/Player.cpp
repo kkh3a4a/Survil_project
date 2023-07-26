@@ -22,11 +22,11 @@ Player::Player(int id, STATE state)
 	_work_efficiency = 1.0;
 	_adventure_speed = 1.0;
 	_oil_efficiency = 1.0;
-	_building_insulation = 1.0;
+	_building_insulation = 0.5;
 	army_select_num = ARMYSTART + _id * PLAYERARMYCOUNT;
 	for (auto& a : _resource_amount)
 	{
-		a = 200;
+		a = 10000;
 	}
 }
 

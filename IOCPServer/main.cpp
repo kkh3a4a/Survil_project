@@ -466,7 +466,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						{
 							Building* building = reinterpret_cast<Building*>(objects[building_id]);
 							
-							if (building->_type == 1 || building->_type == 2 || building->_type == 3)
+							if (building->_type == 1)
 							{
 								for (auto& a : building->_citizens)
 								{
