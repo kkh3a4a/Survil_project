@@ -346,8 +346,8 @@ void except_city_terrain_cuda(char** terrain_array_device, II* city_location_dev
 {
 	int x = blockIdx.x * blockDim.x + threadIdx.x;
 	int y = blockIdx.y * blockDim.y + threadIdx.y;
-	int inner_radius = city_size / 2;
-	int outer_radius = inner_radius + 20;
+	int inner_radius = (city_size + 20) / 2;
+	int outer_radius = inner_radius + 30;
 	II distance;
 
 	for (int i = 0; i < num_of_city; i++) {
@@ -364,12 +364,18 @@ void except_city_terrain_cuda(char** terrain_array_device, II* city_location_dev
 		if (distance.x > outer_radius || distance.y > outer_radius)
 			continue;
 		
-		if (distance.x == distance.y && distance.x == 0) 
+		/*if (distance.x == distance.y && distance.x == 0) 
 			terrain_array_device[x][y] -= outer_radius;
-		else if (distance.x >= distance.y) 
-			terrain_array_device[x][y] += distance.x - outer_radius;
-		else if (distance.x < distance.y) 
-			terrain_array_device[x][y] += distance.y - outer_radius;
+		else*/ 
+		if (distance.x >= distance.y) {
+			if (terrain_array_device[x][y] > distance.x - inner_radius)
+				terrain_array_device[x][y] = distance.x - inner_radius;
+		}
+		else {
+			if (terrain_array_device[x][y] > distance.y - inner_radius)
+				terrain_array_device[x][y] = distance.y - inner_radius;
+		}
+			
 		
 		if (terrain_array_device[x][y] < base_floor)
 			terrain_array_device[x][y] = base_floor;
