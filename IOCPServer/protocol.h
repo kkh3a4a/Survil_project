@@ -84,7 +84,9 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_DECLARATION_WAR	110
 
-#define CS_PACKET_SPRINKLER_STATUS		120
+#define CS_PACKET_SPRINKLER_STATUS	120
+
+#define CS_PACKET_CALL_CHEAT_KEY	255
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -357,6 +359,13 @@ struct cs_packet_armyselect
 	unsigned char size = sizeof(cs_packet_armyselect);
 	unsigned char type = CS_PACKET_ARMYSELECT;
 	int select_type = 0;
+};
+
+struct cs_packet_cheatkey
+{
+	unsigned char size = sizeof(cs_packet_cheatkey);
+	unsigned char type = CS_PACKET_CALL_CHEAT_KEY;
+	int cheat_type;
 };
 
 //////////////////////////////////////////// 서버

@@ -270,6 +270,10 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
 	bool PlaySandStormAnim = false;
 
+	// 치트키용
+	UFUNCTION(BlueprintCallable)
+		void CallCheat(int cheat_key);
+
 protected:
 	long long int mouse_cnt = 0;
 

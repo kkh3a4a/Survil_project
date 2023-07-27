@@ -324,6 +324,22 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		player->set_army_select(packet->select_type);
 		break;
 	}
+	case CS_PACKET_CALL_CHEAT_KEY:
+	{
+		cs_packet_cheatkey* packet = reinterpret_cast <cs_packet_cheatkey*> (pk);
+		if (packet->cheat_type == 9) // win, GameEnd
+		{
+			player->set_score();
+			player->player_ending();
+			player->rank = 1;
+			player->send_ending();
+		}
+		else if (packet->cheat_type == 8)	// lose, GameOver
+		{
+			player->player_gameover();
+		}
+		break;
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

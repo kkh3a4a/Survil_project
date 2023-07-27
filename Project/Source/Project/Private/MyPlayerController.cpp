@@ -731,6 +731,14 @@ void AMyPlayerController::SelectBuildingGreenHouse()
 //{
 //}
 
+void AMyPlayerController::CallCheat(int cheat_key)
+{
+    cs_packet_cheatkey packet;
+    packet.cheat_type = cheat_key;      // win, GameEnd
+    WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
+    WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+
 void AMyPlayerController::InputQ()
 {
     cs_packet_armyselect packet;
