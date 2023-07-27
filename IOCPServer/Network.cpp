@@ -344,7 +344,8 @@ void WSA_OVER_EX::send_login_ok_packet(int client_id)
 	packet.player_id = player->_id;
 	packet.size = sizeof(packet);
 	packet.type = SC_PACKET_LOGIN;
-
+	packet.maxplayer = ROOMPLAYER;
+	packet.connectplayer = 0;
 	int pl = 0;
 	for (int i = 0; i < MAXPLAYER; ++i)
 	{

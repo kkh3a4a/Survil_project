@@ -46,9 +46,25 @@ DWORD WINAPI matching_thread(LPVOID arg)
 		if (room_player_cnt == ROOMPLAYER && isoncecreate)
 		{
 			hThread = CreateThread(NULL, 0, ingame_thread, 0, 0, NULL);
-			room_player_cnt = 0;
 			isoncecreate = 0;
+			{
+				sc_packet_matching packet;
+				packet.size = sizeof(packet);
+				packet.type = SC_PACKET_MATCHING;
+				packet.connectplayer = room_player_cnt;
+				packet.maxplayer = ROOMPLAYER;
+				all_player_sendpacket(&packet);
+			}
+			//room_player_cnt = 0;
 			break;
+		}
+		{
+			sc_packet_matching packet;
+			packet.size = sizeof(packet);
+			packet.type = SC_PACKET_MATCHING;
+			packet.connectplayer = room_player_cnt;
+			packet.maxplayer = ROOMPLAYER;
+			all_player_sendpacket(&packet);
 		}
 	}
 	return 0;

@@ -122,7 +122,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MainClass->SetOtherPlayerLocation(packet->p3_x, packet->p3_y, packet->p3_z);
 			_MainClass->SetOtherPlayerLocation(packet->p4_x, packet->p4_y, packet->p4_z);
 			_MainClass->DestLocation = FVector(packet->x, packet->y, packet->z) + FVector(-SIGHT_X * 100 / 2, -SIGHT_Y * 100 / 2, packet->z);
-
+			_MyController->maxplayercount = packet->maxplayer;
+			_MyController->connectplayercount = packet->connectplayer;
 
 			_MyController->my_id = my_id = packet->player_id;
 			break;
@@ -502,6 +503,13 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_dissatisfaction* packet = reinterpret_cast<sc_packet_dissatisfaction*>(buf);
 			_MainClass->Dissatisfaction = packet->dissatisfaction;
+			break;
+		}
+		case SC_PACKET_MATCHING:
+		{
+			sc_packet_matching* packet = reinterpret_cast<sc_packet_matching*>(buf);
+			_MyController->maxplayercount = packet->maxplayer;
+			_MyController->connectplayercount = packet->connectplayer;
 			break;
 		}
 		default:

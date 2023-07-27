@@ -195,6 +195,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		TArray<uint8> War_players;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int maxplayercount = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int connectplayercount = 0;
 	void set_war_player(int p_num, int is_war);
 
 	UFUNCTION(BlueprintCallable)

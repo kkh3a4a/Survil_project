@@ -11,7 +11,7 @@ constexpr int city_size = 100;
 #define MAXOBJECT					5000
 
 #define MAXPLAYER					5
-#define ROOMPLAYER					1
+#define ROOMPLAYER					2
 
 #define CITIZENSTART				MAXPLAYER
 #define FIRSTCITIZENCREATE			20
@@ -46,6 +46,7 @@ constexpr int city_size = 100;
 #define CS_PACKET_CITIZENPLACEMENT	10
 #define CS_PACKET_GAMEOVER			11
 #define CS_PACKET_GAMEEND			12
+#define CS_PACKET_MATCHING			13
 
 #define CS_PACKET_RESOURCEAMOUNT	20
 #define CS_PACKET_PLAYERRESOURCE	21
@@ -99,6 +100,7 @@ constexpr int city_size = 100;
 #define SC_PACKET_CITIZENPLACEMENT	10
 #define SC_PACKET_GAMEOVER			11
 #define SC_PACKET_GAMEEND			12
+#define SC_PACKET_MATCHING			13
 
 #define SC_PACKET_RESOURCEAMOUNT	20
 #define SC_PACKET_PLAYERRESOURCE	21
@@ -369,6 +371,8 @@ struct sc_packet_login
 	float p2_x, p2_y, p2_z;
 	float p3_x, p3_y, p3_z;
 	float p4_x, p4_y, p4_z;
+	int connectplayer = 0;
+	int maxplayer = 0;
 	char player_id;
 };
 
@@ -769,6 +773,15 @@ struct sc_packet_dissatisfaction
 	unsigned char type = SC_PACKET_DISSATISFACTION;
 
 	float dissatisfaction{};
+};
+
+struct sc_packet_matching
+{
+	unsigned char size = sizeof(sc_packet_matching);
+	unsigned char type = SC_PACKET_MATCHING;
+
+	int connectplayer = 0;
+	int maxplayer = 0;
 };
 
 #pragma pack (pop)
