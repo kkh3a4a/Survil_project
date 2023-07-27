@@ -243,6 +243,8 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 						{
 							sand_storm_day.erase(survil_day);
 						}
+						for (int e_id = EVENTSTART; e_id < EVENTMAX + EVENTSTART; ++e_id)
+							reinterpret_cast<GameEvent*>(objects[e_id])->random_create();
 					}
 				}
 			}
