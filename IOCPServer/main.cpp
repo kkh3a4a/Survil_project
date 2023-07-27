@@ -716,17 +716,20 @@ int main(int argc, char* argv[])
 		WSAOVERLAPPED* over;
 		ret = GetQueuedCompletionStatus(h_iocp, &io_byte, &key, &over, INFINITE);
 		WSA_OVER_EX* wsa_over_ex = reinterpret_cast<WSA_OVER_EX*>(over);
+		user_id = static_cast<int>(key);
 		if (ret == FALSE)
 		{
 			if (wsa_over_ex->_iocpop == OP_ACCEPT) cout << "Accept Error";
 			else {
 				cout << "GQCS Error on client [" << key << "]\n";
+				Player* player = reinterpret_cast<Player*>(objects[user_id]);
+				player->_state = STATE::ST_FREE;
 				room_player_cnt--;
 				continue;
 			}
 		}
 
-		user_id = static_cast<int>(key);
+		
 		Player* player;
 
 		if (user_id < MAXPLAYER)
