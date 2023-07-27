@@ -117,7 +117,7 @@ void AMain::Tick(float DeltaTime)
 		int64 CurrentTimeUnixTimestamp = CurrentTime.ToUnixTimestamp();
 		int PastTime = CurrentTimeUnixTimestamp - Research->TechTime;
 		Research->LeftTechTime = Research->tech_timer - PastTime;
-		UE_LOG(LogTemp, Warning, TEXT("Research->TechTime: %lld, CurrentTimeUnixTimestamp: %lld, PastTime: %d, LeftTechTime: %d"), Research->TechTime, CurrentTimeUnixTimestamp, PastTime, Research->LeftTechTime);
+		//UE_LOG(LogTemp, Warning, TEXT("Research->TechTime: %lld, CurrentTimeUnixTimestamp: %lld, PastTime: %d, LeftTechTime: %d"), Research->TechTime, CurrentTimeUnixTimestamp, PastTime, Research->LeftTechTime);
 
 		if (PastTime >= Research->tech_timer) {
 			Research->TechTime = 0;
