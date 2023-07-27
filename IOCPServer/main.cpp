@@ -275,7 +275,11 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 				if (player->dissatisfaction < 0)
 					player->dissatisfaction = 0;
 				else if (player->dissatisfaction > 1)
+				{
+					player->player_gameover();
 					player->dissatisfaction = 1;
+
+				}
 			}
 			if (sun_angle - citizen_eat > 10)	//각도 10도에 한번씩 배고픔이 생김
 			{
