@@ -483,7 +483,7 @@ void make_temperature_map_cuda(char** terrain_array_device, char** shadow_map_de
 }
 
 __global__
-void round_shaped_cool_cuda(unsigned char** temperature_map_device, II object_pos)
+void round_shaped_cool_cuda(unsigned char** temperature_map_device, II object_pos, float efficiency)
 {
 	II coo;
 	coo.x = blockIdx.y * blockDim.y + threadIdx.y;
@@ -827,7 +827,7 @@ public:
 		for (int i = 0; i < MAXPLAYER; i++) {	//타워 원모양으로 쿨링
 			int size = 21;	//사이즈 홀수로 해야 함
 			dim3 block(size, size, 1);
-			round_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)objects[i]->_x / 100, (int)objects[i]->_y / 100 });
+			round_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)objects[i]->_x / 100, (int)objects[i]->_y / 100 }, 0.5f);
 			cudaDeviceSynchronize();
 		}
 		for (int i = BUILDINGSTART; i < BUILDINGSTART + MAXBUILDING; ++i) {		
@@ -837,7 +837,7 @@ public:
 				if (building->activated == false) continue;	//작동중일 때만
 				int springkler_size = 21;	//사이즈 홀수로 해야 함
 				dim3 block(springkler_size, springkler_size, 1);
-				round_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 });
+				round_shaped_cool_cuda << <1, block >> > (temperature_map_device, { (int)building->_x / 100, (int)building->_y / 100 }, 1.f);
 			}
 			else {												//건물 단열화
 				Player* player = reinterpret_cast<Player*>(objects[building->_client_id]);
