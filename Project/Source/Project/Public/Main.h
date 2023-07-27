@@ -111,4 +111,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float Dissatisfaction = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int CurrentDate = 1;
+	float PrevSunAngle = 0.f;
+	
 };

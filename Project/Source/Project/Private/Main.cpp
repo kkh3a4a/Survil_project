@@ -125,6 +125,10 @@ void AMain::Tick(float DeltaTime)
 			Research->tech_timer = 0;
 		}
 	}
+
+	if (SunAngle < PrevSunAngle)
+		CurrentDate++;
+	PrevSunAngle = SunAngle;
 	
 	MyCameraComponent->PostProcessSettings.VignetteIntensity = abs(0.5 * cos((SunAngle - 90)* PI / 180.0) - 0.5);
 
