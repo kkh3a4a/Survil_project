@@ -29,7 +29,7 @@ std::mutex player_cnt_lock;
 shared_mutex player_list_lock;
 float sun_angle;
 volatile int player_cnt = 0;
-volatile int room_player_cnt = 0;
+
 
 Terrain* terrain = new Terrain();
 char** total_terrain = terrain->get_map();
@@ -59,12 +59,7 @@ DWORD WINAPI matching_thread(LPVOID arg)
 			break;
 		}
 		{
-			sc_packet_matching packet;
-			packet.size = sizeof(packet);
-			packet.type = SC_PACKET_MATCHING;
-			packet.connectplayer = room_player_cnt;
-			packet.maxplayer = ROOMPLAYER;
-			all_player_sendpacket(&packet);
+			
 		}
 	}
 	return 0;

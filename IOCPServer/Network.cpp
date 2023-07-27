@@ -15,6 +15,7 @@ char** object_z;
 int survil_day = 1;
 std::set<int> sand_storm_day;
 bool Is_sand_storm = false;
+volatile int room_player_cnt = 0;
 
 WSA_OVER_EX::WSA_OVER_EX()
 {
@@ -38,11 +39,22 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 	{
 	case CS_PACKET_LOGIN:
 	{
-		cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(pk);
-		send_login_ok_packet(client_id);
-		send_citizen_First_create_packet(client_id);
-		send_resource_First_create_packet(client_id);
-		player->send_terrain_All();
+		{
+			cs_packet_login* packet = reinterpret_cast<cs_packet_login*>(pk);
+			send_login_ok_packet(client_id);
+			send_citizen_First_create_packet(client_id);
+			send_resource_First_create_packet(client_id);
+			player->send_terrain_All();
+		}
+		{
+			sc_packet_matching packet;
+			packet.size = sizeof(packet);
+			packet.type = SC_PACKET_MATCHING;
+			packet.connectplayer = room_player_cnt;
+			packet.maxplayer = ROOMPLAYER;
+			all_player_sendpacket(&packet);
+		}
+
 		break;
 	}
 	case CS_PACKET_MOVE:

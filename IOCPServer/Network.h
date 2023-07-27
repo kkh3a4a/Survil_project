@@ -16,6 +16,7 @@ extern int survil_day;
 extern std::set<int> sand_storm_day;
 bool CAS(volatile int* addr, int expected, int update);
 extern bool Is_sand_storm;
+extern volatile int room_player_cnt;
 enum IOCPOP
 {
 	OP_RECV,
