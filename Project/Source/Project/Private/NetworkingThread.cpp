@@ -6,8 +6,8 @@
 #include "MyPlayerController.h"
 #include "CitizenManager.h"
 #include "ResourceManager.h"
-#include "UMGEditor/Public/WidgetBlueprint.h"
-#include "Kismet/GameplayStatics.h"
+//#include "UMGEditor/Public/WidgetBlueprint.h"
+//#include "Kismet/GameplayStatics.h"
 using namespace std;
 
 
@@ -340,28 +340,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 			sc_packet_armydisband* packet = reinterpret_cast<sc_packet_armydisband*>(buf);
 			if (packet->issuccess)
 				_CitizenManager->Set_Army_Disband(packet->a_id - ARMYSTART);
-			break;
-		}
-		case SC_PACKET_POLICY_TICKET:
-		{
-			sc_packet_policy_ticket* packet = reinterpret_cast<sc_packet_policy_ticket*>(buf);
-			UE_LOG(LogTemp, Warning, TEXT("%dpolicy tickets left"), packet->ticket);
-			_MainClass->policy_ticket = packet->ticket;
-			break;
-		}
-		case SC_PACKET_POLICY_ACCEPT:
-		{
-			sc_packet_policy_accept* packet = reinterpret_cast<sc_packet_policy_accept*>(buf);
-			UE_LOG(LogTemp, Warning, TEXT("%d policy tickets left"), packet->ticket);
-			_MainClass->policy_ticket = packet->ticket;
-
-			if (packet->accept) {
-				UE_LOG(LogTemp, Warning, TEXT("policy allowed"));
-				_MainClass->applied_policy[packet->policy_id] = true;
-			}
-			else {
-				UE_LOG(LogTemp, Warning, TEXT("policy not allowed"));
-			}
 			break;
 		}
 		case SC_PACKET_TRADEREQUEST:
