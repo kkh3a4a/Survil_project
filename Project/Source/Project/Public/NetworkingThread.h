@@ -74,6 +74,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sound")
 	TObjectPtr<USoundBase> Sound;
 
+	UAudioComponent* SoundComponent = nullptr;
 
 private: 
 	//char IPAddress[20] = "192.168.0.8";

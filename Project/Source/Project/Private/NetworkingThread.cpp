@@ -6,8 +6,8 @@
 #include "MyPlayerController.h"
 #include "CitizenManager.h"
 #include "ResourceManager.h"
-//#include "UMGEditor/Public/WidgetBlueprint.h"
-//#include "Kismet/GameplayStatics.h"
+
+#include "Components/AudioComponent.h"
 using namespace std;
 
 
@@ -427,14 +427,20 @@ void FSocketThread::processpacket(unsigned char* buf)
 			sc_packet_sandstormday* packet = reinterpret_cast<sc_packet_sandstormday*>(buf);
 			_MyController->sand_storm_day = packet->sand_day;
 
+
 			if (_MyController->sand_storm_day == 0)
 			{
 				Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/event/SandStorm_Cue.SandStorm_Cue"));
-				UGameplayStatics::PlaySound2D(_MyController->GetWorld(), Sound);
+				SoundComponent = UGameplayStatics::SpawnSound2D(_MyController->GetWorld(), Sound);
 				UE_LOG(LogTemp, Log, TEXT("PlaySoundSandStorm\n"));
 				
 				_MyController->PlaySandStormAnim = true;
 				break;
+			}
+			else if (_MyController->sand_storm_day != 0 && SoundComponent && SoundComponent->IsPlaying())
+			{
+				SoundComponent->Stop();
+				_MyController->PlaySandStormAnim = false;
 			}
 		}
 		case SC_PACKET_CITIZEN_STATUS:
