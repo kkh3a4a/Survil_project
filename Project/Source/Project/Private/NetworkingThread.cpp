@@ -39,7 +39,7 @@ WSA_OVER_EX::WSA_OVER_EX(IOCPOP iocpop, char byte, void* buf)
 
 FSocketThread::FSocketThread()
 {
-	IsRunning = true;
+	
 	fsocket_thread = this;
 	WSADATA WSAData;
 	int ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
@@ -79,6 +79,7 @@ FSocketThread::FSocketThread()
 	{
 		//exit(-1);
 	}
+	IsRunning = true;
 }
 
 uint32_t FSocketThread::Run()
@@ -124,7 +125,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 			_MainClass->DestLocation = FVector(packet->x, packet->y, packet->z) + FVector(-SIGHT_X * 100 / 2, -SIGHT_Y * 100 / 2, packet->z);
 			_MyController->maxplayercount = packet->maxplayer;
 			_MyController->connectplayercount = packet->connectplayer;
-
 			_MyController->my_id = my_id = packet->player_id;
 			break;
 		}

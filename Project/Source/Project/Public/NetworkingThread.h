@@ -56,7 +56,7 @@ public:
 	class ACitizenManager* _CitizenManager;
 	class AResourceManager* _ResourceManager;
 	class ABuildManager* _BuildManager;
-    bool IsRunning = true;
+    bool IsRunning = false;
 	bool IsConnected = false;
     double CycleTime{};
 	WSA_OVER_EX _recv_over_ex;
