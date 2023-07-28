@@ -165,7 +165,7 @@ DWORD WINAPI ingame_thread(LPVOID arg)
 		int random_day = 0;
 		for (int i = 0; i < 4; ++i)
 		{
-			random_day += map_uid(dre) % 3 + 6;
+			random_day += 2;  // map_uid(dre) % 3 + 6;
 			sand_storm_day.insert(random_day);
 		}
 	}
