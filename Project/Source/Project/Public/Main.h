@@ -110,5 +110,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int CurrentDate = 1;
 	float PrevSunAngle = 0.f;
+
+
+	bool PlayersLocationReady = false;
+	float PlayersLocation_X[5];
+	float PlayersLocation_Y[5];
 	
 };

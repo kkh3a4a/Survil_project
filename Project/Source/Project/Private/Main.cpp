@@ -110,6 +110,13 @@ void AMain::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (PlayersLocationReady) {
+		SetPlayerLocation(PlayersLocation_X[0], PlayersLocation_Y[0], 0);
+		for (int i = 1; i < 5; i++)
+			SetOtherPlayerLocation(PlayersLocation_X[i], PlayersLocation_Y[i], 0);
+		PlayersLocationReady = false;
+	}
+
 
 	if (Research->TechTime > 0)
 	{
@@ -167,10 +174,6 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 	if (IsValid(uworld) && IsValid(WellPump)) {
 		uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
 	}
-	//Terrain->SetActorLocation(FVector(Player_x, Player_y, 0.0));
-	//Temperature->SetActorLocation(FVector(Player_x - SIGHT_X * 100 / 2, Player_y - SIGHT_Y * 100 / 2, 0.0));
-	//Terrain->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	//Temperature->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	SetActorLocation(FVector(x, y, z));
 }
 
