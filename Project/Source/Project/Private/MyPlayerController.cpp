@@ -865,10 +865,12 @@ void AMyPlayerController::PlayEventSound()
     if (Win && !WinSoundPlay) {
         UGameplayStatics::PlaySound2D(GetWorld(), WinSound);
         WinSoundPlay = true;
+        GameEnd = true;
     }
     else if (Lose && !LoseSoundPlay) {
         UGameplayStatics::PlaySound2D(GetWorld(), LoseSound);
         LoseSoundPlay = true;
+		IsGameOver = true;
     }
 }
 
