@@ -99,7 +99,8 @@ void ACitizenManager::Tick(float DeltaTime)
 	{
 		if (Army_Attack_Queue.try_pop(attack_army))
 		{
-            Set_Army_Attack(attack_army.army_id - ARMYSTART, FRotator(attack_army.rx, attack_army.ry, attack_army.rz), attack_army.a_state);
+            FRotator Rotation = (FVector(attack_army.rx, attack_army.ry, attack_army.rz)).GetSafeNormal().Rotation();
+            Set_Army_Attack(attack_army.army_id - ARMYSTART, Rotation, attack_army.a_state);
 		}
 	}
 

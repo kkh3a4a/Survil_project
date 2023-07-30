@@ -313,7 +313,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_ARMYMOVE:
 		{
 			sc_packet_armymove* packet = reinterpret_cast<sc_packet_armymove*>(buf);
-			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
+			//FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
 			//=====================================================================================================================================================
 			//수정완료
 			_CitizenManager->Set_Army_Move_Queue(packet);
@@ -334,7 +334,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_ARMYATTACK:
 		{
 			sc_packet_armyattack* packet = reinterpret_cast<sc_packet_armyattack*>(buf);
-			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
+			//FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
 			//_CitizenManager->Set_Army_Attack(packet->army_id - ARMYSTART, Rotation, packet->a_state);
 			_CitizenManager->Set_Army_Attack_Queue(packet);
 			break;
