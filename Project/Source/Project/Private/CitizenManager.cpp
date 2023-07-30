@@ -90,7 +90,7 @@ void ACitizenManager::Tick(float DeltaTime)
     {
         if (Citizen_Remove_Queue.try_pop(remove_citizen))
         {
-            Remove_Citizen(remove_citizen.citizenid);
+            Remove_Citizen(remove_citizen.citizenid - CITIZENSTART);
         }
     }
 
