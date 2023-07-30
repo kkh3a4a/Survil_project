@@ -70,6 +70,7 @@ public:
 	concurrency::concurrent_queue<s_event> EventCreateQueue;
 	concurrency::concurrent_queue<int> EventRemoveQueue;
 
+	bool eventreset;
 	class FSocketThread* Network;
 	void Spawn_Resource(int Resource_id, FVector Location, int amount, char resourcetype);
 	void SetResourceAmount(int Resource_id, int amount);

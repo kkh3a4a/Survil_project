@@ -65,6 +65,15 @@ void AResourceManager::Tick(float DeltaTime)
             remove_Event(remove_id);
         }
     }
+    if (eventreset)
+    {
+        eventreset = false;
+        for(auto a: GameEvent)
+        if (a != nullptr)
+        {
+            a->Destroy();
+        }
+    }
 }
 
 void AResourceManager::Spawn_Resource(int Resource_id, FVector Location, int amount , char resourcetype)

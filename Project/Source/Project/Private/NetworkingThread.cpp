@@ -448,6 +448,10 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_sandstormday* packet = reinterpret_cast<sc_packet_sandstormday*>(buf);
 			_MyController->sand_storm_day = packet->sand_day;
+			if (_MyController->sand_storm_day == 0)
+			{
+				_ResourceManager->eventreset = true;
+			}
 			//=====================================================================================================================================================
 			//수정완료
 			/*if (_MyController->sand_storm_day == 0)
