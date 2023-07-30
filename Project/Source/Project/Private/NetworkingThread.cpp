@@ -186,7 +186,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_resourcecreate* packet = reinterpret_cast<sc_packet_resourcecreate*>(buf);
 			//=====================================================================================================================================================
-			
+			//수정 필요
 			//_ResourceManager->Spawn_Resource(packet->resource_id - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->amount, packet->resource_type);
 			break;
 		}
