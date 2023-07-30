@@ -57,6 +57,14 @@ void AResourceManager::Tick(float DeltaTime)
         }
     }
 
+    int remove_id;
+    while (!EventRemoveQueue.empty())
+    {
+        if (EventRemoveQueue.try_pop(remove_id))
+        {
+            remove_Event(remove_id);
+        }
+    }
 }
 
 void AResourceManager::Spawn_Resource(int Resource_id, FVector Location, int amount , char resourcetype)
@@ -125,5 +133,10 @@ void AResourceManager::Set_Event_Queue(int e_id, FVector Location)
     s_insert.e_id = e_id;
     s_insert.Location = Location;
     EventCreateQueue.push(s_insert);
+}
+
+void AResourceManager::Set_Remove_Event_Queue(int e_id)
+{
+    EventRemoveQueue.push(e_id);
 }
 
