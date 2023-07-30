@@ -5,7 +5,7 @@ constexpr int random_array_size = 10000000;
 constexpr int city_size = 100;
 
 #define BUFSIZE						512
-#define SERVERPORT					9000
+#define SERVERPORT					1234
 
 #define MAXNAMESIZE					20
 #define MAXOBJECT					5000
