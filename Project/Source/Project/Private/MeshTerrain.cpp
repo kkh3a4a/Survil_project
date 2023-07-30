@@ -64,6 +64,10 @@ void AMeshTerrain::Tick(float DeltaTime)
 		return;
 	}
 
+	if (WindDirectionChanged) {
+		ChangeWindDirection();
+	}
+
 	for (int32 i = 0; i < Vertices.Num(); i++) {
 		Vertices[i].Z = Terrain2DArray[i % SIGHT_X][i / SIGHT_X] * 50;
 	}
@@ -71,10 +75,11 @@ void AMeshTerrain::Tick(float DeltaTime)
 	ReadyToUpdate = false;
 }
 
-void AMeshTerrain::ChangeWindDirection(int x, int y)
+void AMeshTerrain::ChangeWindDirection()
 {
-	TerrainMaterialInstanceDynamic->SetScalarParameterValue(TEXT("Wind Speed X"), x * 0.02);
-	TerrainMaterialInstanceDynamic->SetScalarParameterValue(TEXT("Wind Speed Y"), y * 0.02);
+	TerrainMaterialInstanceDynamic->SetScalarParameterValue(TEXT("Wind Speed X"), WindDirection_X * 0.02);
+	TerrainMaterialInstanceDynamic->SetScalarParameterValue(TEXT("Wind Speed Y"), WindDirection_Y * 0.02);
+	WindDirectionChanged = false;
 }
 
 FTerrainThread::FTerrainThread()

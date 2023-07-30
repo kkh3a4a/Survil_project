@@ -95,7 +95,7 @@ public:
 	void SetOtherPlayerLocation(float x, float y, float z);
 	void SetPlayerResource(int oilcount, int watercount, int ironcount, int foodcount, int woodcount);
 
-	void SetSunAngle(float s_sunangle);
+	void SetSunAngle();
 	int testterrain = 0;
 
 	FVector DestLocation;
@@ -115,5 +115,5 @@ public:
 	bool PlayersLocationReady = false;
 	float PlayersLocation_X[5];
 	float PlayersLocation_Y[5];
-	
+
 };

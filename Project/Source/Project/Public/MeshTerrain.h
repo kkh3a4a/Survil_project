@@ -64,5 +64,9 @@ public:
 	FTerrainThread* Work;
 	bool ReadyToUpdate = false;
 
-	void ChangeWindDirection(int x, int y);
+	bool WindDirectionChanged = false;
+	int WindDirection_X = 0;
+	int WindDirection_Y = 0;
+
+	void ChangeWindDirection();
 };

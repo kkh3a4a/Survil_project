@@ -126,6 +126,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_LOGIN:
 		{
 			sc_packet_login* packet = reinterpret_cast<sc_packet_login*>(buf);
+			//=====================================================================================================================================================
+			//수정완료
 			/*_MainClass->SetPlayerLocation(packet->x, packet->y, packet->z);
 			_MainClass->SetOtherPlayerLocation(packet->p1_x, packet->p1_y, packet->p1_z);
 			_MainClass->SetOtherPlayerLocation(packet->p2_x, packet->p2_y, packet->p2_z);
@@ -165,20 +167,26 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_citizencreate* packet = reinterpret_cast<sc_packet_citizencreate*>(buf);
 			//=====================================================================================================================================================
+			// //수정완료
 			//_CitizenManager->Spawn_Citizen(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z));
+			_CitizenManager->PutCitizenForSpawn(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z));
 			break;
 		}
 		case SC_PACKET_CITIZENMOVE:
 		{
 			sc_packet_citizenmove* packet = reinterpret_cast<sc_packet_citizenmove*>(buf);
+			//=====================================================================================================================================================
+			//수정 필요
 			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
-			_CitizenManager->Set_Citizen_Location(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->citizenstate);
+			//_CitizenManager->Set_Citizen_Location(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->citizenstate);
+			
 			break;
 		}
 		case SC_PACKET_RESOURCECREATE:
 		{
 			sc_packet_resourcecreate* packet = reinterpret_cast<sc_packet_resourcecreate*>(buf);
 			//=====================================================================================================================================================
+			
 			//_ResourceManager->Spawn_Resource(packet->resource_id - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->amount, packet->resource_type);
 			break;
 		}
@@ -241,7 +249,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_sunangle* packet = reinterpret_cast<sc_packet_sunangle*>(buf);
 			//=====================================================================================================================================================
-			//_MainClass->SetSunAngle(packet->sunangle);
+			//수정완료
+			_MainClass->SunAngle = packet->sunangle;
 			break;
 		}
 		case SC_PACKET_BUILDABLE:
@@ -278,8 +287,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TEMPERATUREX:
 		{
 			sc_packet_temperatureX* packet = reinterpret_cast<sc_packet_temperatureX*>(buf);
-			//=====================================================================================================================================================
-			//_MainClass->Temperature->SetActorLocation(_MainClass->GetActorLocation());
 			_MainClass->Temperature->Work->LineX = true;
 			_MainClass->Temperature->Work->x = packet->terrainX;
 			memcpy(&_MainClass->Temperature->Work->TerrainLineY, packet->terrainline_Y, SIGHT_Y);
@@ -288,8 +295,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_TEMPERATUREY:
 		{
 			sc_packet_temperatureY* packet = reinterpret_cast<sc_packet_temperatureY*>(buf);
-			//_MainClass->Temperature->SetActorLocation(_MainClass->GetActorLocation());
-
 			_MainClass->Temperature->Work->LineY = true;
 			_MainClass->Temperature->Work->y = packet->terrainY;
 			memcpy(&_MainClass->Temperature->Work->TerrainLineX, packet->terrainline_X, SIGHT_X);
@@ -298,14 +303,18 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_ARMYTRAINING:
 		{
 			sc_packet_armytraining* packet = reinterpret_cast<sc_packet_armytraining*>(buf);
-			_CitizenManager->Spawn_Army(packet);
+			//=====================================================================================================================================================
+			//수정 필요
+			//_CitizenManager->Spawn_Army(packet);
 			break;
 		}
 		case SC_PACKET_ARMYMOVE:
 		{
 			sc_packet_armymove* packet = reinterpret_cast<sc_packet_armymove*>(buf);
 			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
-			_CitizenManager->Set_Army_Location(packet->a_id -ARMYSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->a_state);
+			//=====================================================================================================================================================
+			//수정 필요
+			//_CitizenManager->Set_Army_Location(packet->a_id -ARMYSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->a_state);
 			break;
 		}
 		case SC_PACKET_ARMYCHANGEHP:
@@ -490,7 +499,9 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_wind_direction* packet = reinterpret_cast<sc_packet_wind_direction*>(buf);
 			//=====================================================================================================================================================
-			//_MainClass->Terrain->ChangeWindDirection((int)packet->wind_x, (int)packet->wind_y);
+			_MainClass->Terrain->WindDirectionChanged = true;
+			_MainClass->Terrain->WindDirection_X = (int)packet->wind_x;
+			_MainClass->Terrain->WindDirection_Y = (int)packet->wind_y;
 			UE_LOG(LogTemp, Log, TEXT("Wind Dir: X: %d, Y: %d"), (int)packet->wind_x, (int)packet->wind_y);
 			break;
 		}

@@ -117,6 +117,8 @@ void AMain::Tick(float DeltaTime)
 		PlayersLocationReady = false;
 	}
 
+	SetSunAngle();
+
 
 	if (Research->TechTime > 0)
 	{
@@ -197,9 +199,8 @@ void AMain::SetPlayerResource(int oilcount, int watercount, int ironcount, int f
 	wood_count = woodcount;
 }
 
-void AMain::SetSunAngle(float s_sunangle)
+void AMain::SetSunAngle()
 {
-	SunAngle = s_sunangle;
 	if (SunManager != nullptr)
 	{
 		SunManager->SetActorRotation(FRotator(SunAngle, 0.f, 0.f));
