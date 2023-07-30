@@ -60,8 +60,14 @@ public:
 		int amount; 
 		char resourcetype;
 	}s_resource;
+	typedef struct s_event {
+		int e_id;
+		FVector Location;
+	};
+
 
 	concurrency::concurrent_queue<s_resource> resourceCreateQueue;
+	concurrency::concurrent_queue<s_event> EventCreateQueue;
 
 	class FSocketThread* Network;
 	void Spawn_Resource(int Resource_id, FVector Location, int amount, char resourcetype);
@@ -70,4 +76,5 @@ public:
 	void Spawn_Event(int e_id, FVector Location);
 	void remove_Event(int e_id);
 	void Set_Resource_Queue(int Resource_id, FVector Location, int amount, char resourcetype);
+	void Set_Event_Queue(int e_id, FVector Location);
 };

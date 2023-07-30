@@ -48,6 +48,14 @@ void AResourceManager::Tick(float DeltaTime)
             Spawn_Resource(create_resource.Resource_id, create_resource.Location, create_resource.amount, create_resource.resourcetype);
         }
     }
+    s_event create_event;
+    while (!EventCreateQueue.empty())
+    {
+        if (EventCreateQueue.try_pop(create_event))
+        {
+            Spawn_Event(create_event.e_id, create_event.Location);
+        }
+    }
 
 }
 
@@ -109,5 +117,13 @@ void AResourceManager::Set_Resource_Queue(int Resource_id, FVector Location, int
     save_resource.resourcetype = resourcetype;
 
     resourceCreateQueue.push(save_resource);
+}
+
+void AResourceManager::Set_Event_Queue(int e_id, FVector Location)
+{
+    s_event s_insert;
+    s_insert.e_id = e_id;
+    s_insert.Location = Location;
+    EventCreateQueue.push(s_insert);
 }
 

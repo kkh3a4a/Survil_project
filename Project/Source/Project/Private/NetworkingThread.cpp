@@ -341,7 +341,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_VIEWEVENT:
 		{
 			sc_packet_viewevnet* packet = reinterpret_cast<sc_packet_viewevnet*>(buf);
-			_ResourceManager->Spawn_Event(packet->e_id - EVENTSTART, FVector(packet->x, packet->y, packet->z));
+			_ResourceManager->Set_Event_Queue(packet->e_id - EVENTSTART, FVector(packet->x, packet->y, packet->z));
 			break;
 		}
 		case SC_PACKET_REMOVEEVENT:
