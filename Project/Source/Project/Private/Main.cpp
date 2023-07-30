@@ -6,6 +6,7 @@
 #include <future>
 #include <thread>
 #include <mutex>
+#include "MyGameInstance.h"
 #include "NetworkingThread.h"
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
@@ -34,7 +35,9 @@ AMain::~AMain()
 void AMain::BeginPlay()
 {
 	Super::BeginPlay();
+
 	
+
 	FActorSpawnParameters SpawnInfo;
 	
 	//Get BuildManager
@@ -94,9 +97,26 @@ void AMain::BeginPlay()
 		}
 	}
 
-
+	UMyGameInstance* GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetLevel()));
+	
 	//Newtwork
 	Network = new FSocketThread();
+	if (GameInstance)
+	{
+		const TCHAR* TCHARString = *GameInstance->input_IPAddress;
+
+		// TCHAR 문자열 길이 계산
+		int32 TCHARLength = FCString::Strlen(TCHARString);
+
+		// 필요한 버퍼 크기 계산
+		int32 BufferSize = WideCharToMultiByte(CP_UTF8, 0, TCHARString, TCHARLength, nullptr, 0, nullptr, nullptr);
+
+		// BufferSize가 OutCharArray 크기보다 큰 경우, 적절한 크기의 버퍼를 할당하지 않고 함수를 종료합니다.
+		ZeroMemory(&Network->IPAddress, 20);
+		// TCHAR 배열을 멀티바이트 문자열로 변환
+		WideCharToMultiByte(CP_UTF8, 0, TCHARString, TCHARLength, Network->IPAddress, BufferSize, nullptr, nullptr);
+
+	}
 	Network->_MainClass = this;
 	Network->_BuildManager = BuildManager;
 	NetworkThread = FRunnableThread::Create(Network, TEXT("MyThread"), 0, TPri_BelowNormal);
