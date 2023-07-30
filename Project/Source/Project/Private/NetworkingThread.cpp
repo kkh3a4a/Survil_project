@@ -199,7 +199,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_CITIZENREMOVE:
 		{
 			sc_packet_citizenremove* packet = reinterpret_cast<sc_packet_citizenremove*>(buf);
-			_CitizenManager->Remove_Citizen(packet->citizenid - CITIZENSTART);
+			_CitizenManager->Set_Citizen_Remove_Queue(packet);
 			break;
 		}
 		case SC_PACKET_PLAYERRESOURCE:

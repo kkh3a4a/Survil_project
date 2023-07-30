@@ -85,7 +85,16 @@ void ACitizenManager::Tick(float DeltaTime)
             Set_Army_Location(move_army.a_id - ARMYSTART, FVector(move_army.x, move_army.y, move_army.z), Rotation, move_army.a_state);
         }
     }
-       
+    sc_packet_citizenremove remove_citizen;
+    while (!Citizen_Remove_Queue.empty())
+    {
+        if (Citizen_Remove_Queue.try_pop(remove_citizen))
+        {
+            Remove_Citizen(remove_citizen.citizenid);
+        }
+    }
+
+    
 
 }
 
@@ -251,4 +260,9 @@ void ACitizenManager::Set_Army_Move_Queue(sc_packet_armymove* packet)
 void ACitizenManager::SetCitizenQueue(sc_packet_citizencreate* packet)
 {
 	CitizenQueue.push(*packet);
+}
+
+void ACitizenManager::Set_Citizen_Remove_Queue(sc_packet_citizenremove* packet)
+{
+    Citizen_Remove_Queue.push(*packet);
 }
