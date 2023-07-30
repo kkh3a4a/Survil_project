@@ -178,7 +178,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			//=====================================================================================================================================================
 			//수정 필요
 			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
-			//_CitizenManager->Set_Citizen_Location(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->citizenstate);
+			_CitizenManager->Set_Citizen_Move_Queue(packet);
 			
 			break;
 		}
@@ -186,8 +186,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_resourcecreate* packet = reinterpret_cast<sc_packet_resourcecreate*>(buf);
 			//=====================================================================================================================================================
-			//수정 필요
-			//_ResourceManager->Spawn_Resource(packet->resource_id - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->amount, packet->resource_type);
+			//수정 완료
+			_ResourceManager->Set_Resource_Queue(packet->resource_id - RESOURCESTART, FVector(packet->x, packet->y, packet->z), packet->amount, packet->resource_type);
 			break;
 		}
 		case SC_PACKET_RESOURCEAMOUNT:
@@ -263,14 +263,14 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_build* packet = reinterpret_cast<sc_packet_build*>(buf);
 			if (packet->do_build) {
-				_MainClass->BuildManager->Build(packet->id - BUILDINGSTART, packet->x, packet->y, packet->building_type);
+				_MainClass->BuildManager->SetBuildQueue(packet);
 			}
 			break;
 		}
 		case SC_PACKET_BUILDSUCCESS:
 		{
 			sc_packet_buildsuccess* packet = reinterpret_cast<sc_packet_buildsuccess*>(buf);
-			_MainClass->BuildManager->BuildSuccess(packet->id - BUILDINGSTART, packet->x, packet->y, packet->building_type);
+			_MainClass->BuildManager->SetBuildSuccessQueue(packet);
 			if (packet->building_type == 6) //연구소일시 연구소 수량 증가, 연구 버튼 활성화
 			{
 				_MainClass->Research->count_lab++;
@@ -305,7 +305,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			sc_packet_armytraining* packet = reinterpret_cast<sc_packet_armytraining*>(buf);
 			//=====================================================================================================================================================
 			//수정 필요
-			//_CitizenManager->Spawn_Army(packet);
+			_CitizenManager->Set_Army_Queue(packet);
 			break;
 		}
 		case SC_PACKET_ARMYMOVE:

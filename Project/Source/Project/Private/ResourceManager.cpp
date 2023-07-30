@@ -40,6 +40,15 @@ void AResourceManager::Tick(float DeltaTime)
             }
         }
     }
+    s_resource create_resource;
+    while(!resourceCreateQueue.empty())
+    {
+        if (resourceCreateQueue.try_pop(create_resource))
+        {
+            Spawn_Resource(create_resource.Resource_id, create_resource.Location, create_resource.amount, create_resource.resourcetype);
+        }
+    }
+
 }
 
 void AResourceManager::Spawn_Resource(int Resource_id, FVector Location, int amount , char resourcetype)
@@ -89,5 +98,16 @@ void AResourceManager::remove_Event(int e_id)
         GameEvent[e_id]->Destroy();
     }
     GameEvent[e_id] = nullptr;
+}
+
+void AResourceManager::Set_Resource_Queue(int Resource_id, FVector Location, int amount, char resourcetype)
+{
+    s_resource save_resource;
+    save_resource.amount = amount;
+    save_resource.Resource_id = Resource_id;
+    save_resource.Location = Location;
+    save_resource.resourcetype = resourcetype;
+
+    resourceCreateQueue.push(save_resource);
 }
 

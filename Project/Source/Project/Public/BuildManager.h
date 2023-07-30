@@ -5,6 +5,7 @@
 #include "GameFramework/Actor.h"
 #include "Building.h"
 #include "NetworkingThread.h"
+#include<concurrent_queue.h>
 #include "BuildManager.generated.h"
 
 UCLASS()
@@ -71,4 +72,9 @@ public:
 	TMap<int,TSubclassOf<AActor>> BuildingArray;
 	AActor* BuiltBuildings[MAXBUILDING];
 	int buildingWorkCount[MAXBUILDING] = {};
+	void SetBuildQueue(sc_packet_build* packet);
+	void SetBuildSuccessQueue(sc_packet_buildsuccess* packet);
+
+	concurrency::concurrent_queue <sc_packet_build> Build_Queue;
+	concurrency::concurrent_queue <sc_packet_buildsuccess> Buildsuccess_Queue;
 };

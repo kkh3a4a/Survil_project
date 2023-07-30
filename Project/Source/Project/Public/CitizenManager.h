@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Citizen.h"
 #include "Army.h"
+#include<concurrent_queue.h>
+#include"../../../../IOCPServer/protocol.h"
 #include "CitizenManager.generated.h"
 
 UCLASS()
@@ -47,13 +49,14 @@ public:
 	void Spawn_Citizen();
 	void Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate, char citizenstate);
 	void Remove_Citizen(int citizen_id);
-	void Spawn_Army(void *packet);
+	void Spawn_Army(sc_packet_armytraining spawn_packet);
 	void Set_Army_Location(int a_id, FVector Location, FRotator Rotate, char a_state);
 	void Set_Army_Disband(int a_id);
 	void Set_Army_Hp(int Hp, int a_id);
 	void Army_Dead(int a_id);
 	void Set_Army_Attack(int a_id, FRotator Rotate, int a_state);
-
+	void Set_Army_Queue(void* packet);
+	void Set_Citizen_Move_Queue(sc_packet_citizenmove* packet);
 
 	//1000이라서 부하가 엄청 걸릴지도 모르겠다
 	int CitizensToWaitForSpawn[1000]{};
@@ -63,4 +66,8 @@ public:
 	int ArmiesToWaitForSpawn[1000]{};
 	FVector ArmiesForSpawnLocation[1000]{};
 	void PutArmyForSpawn(int id, FVector location);
+	
+	
+	concurrency::concurrent_queue<sc_packet_armytraining> Army_Queue;
+	concurrency::concurrent_queue <sc_packet_citizenmove> Citizen_Move_Queue;
 };

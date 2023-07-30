@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 
 #include "GameEvent.h"
+#include<concurrent_queue.h>
 #include "ResourceManager.generated.h"
 
 UCLASS()
@@ -53,7 +54,14 @@ public:
 
 	//resourceManager의 재활용 초기 생성후 할게 없으니 gameEvent도 같이 관리하자 어차피 gameEvent도 자원획득이 주 요인이니깐
 	AActor* GameEvent[200];
+	typedef struct s_resource {
+		int Resource_id;
+		FVector Location;
+		int amount; 
+		char resourcetype;
+	}s_resource;
 
+	concurrency::concurrent_queue<s_resource> resourceCreateQueue;
 
 	class FSocketThread* Network;
 	void Spawn_Resource(int Resource_id, FVector Location, int amount, char resourcetype);
@@ -61,4 +69,5 @@ public:
 	void SetResourcePlacement(int Resource_id, char work_citizen);
 	void Spawn_Event(int e_id, FVector Location);
 	void remove_Event(int e_id);
+	void Set_Resource_Queue(int Resource_id, FVector Location, int amount, char resourcetype);
 };

@@ -72,6 +72,25 @@ void ABuildManager::Tick(float DeltaTime)
 			MaterialInstance->SetVectorParameterValue(TEXT("Color"), FLinearColor(1, 0, 0, 1));
 		}
 	}
+
+
+	sc_packet_build _Build;
+	while (!Build_Queue.empty())
+	{
+		if (Build_Queue.try_pop(_Build))
+		{
+			Build(_Build.id, _Build.x, _Build.y, _Build.building_type);
+		}
+	}
+		
+	sc_packet_buildsuccess _BuildSuccess;
+	while (!Buildsuccess_Queue.empty())
+	{
+		if (Buildsuccess_Queue.try_pop(_BuildSuccess))
+		{
+			BuildSuccess(_BuildSuccess.id, _BuildSuccess.x, _BuildSuccess.y, _BuildSuccess.building_type);
+		}
+	}
 }
 
 void ABuildManager::DecalVisibility()
@@ -175,6 +194,16 @@ void ABuildManager::SendBuildPacket()
 void ABuildManager::SetBuildingPlacement(int Building_id, char work_citizen)
 {
 	buildingWorkCount[Building_id] = work_citizen;
+}
+
+void ABuildManager::SetBuildQueue(sc_packet_build* packet)
+{
+	Build_Queue.push(*packet);
+}
+
+void ABuildManager::SetBuildSuccessQueue(sc_packet_buildsuccess* packet)
+{
+	Buildsuccess_Queue.push(*packet);
 }
 
 void ABuildManager::UpdateDecalPosition(FVector MouseHitPoint, float CityX, float CityY)

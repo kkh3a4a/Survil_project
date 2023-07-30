@@ -25,7 +25,7 @@ ACitizenManager::ACitizenManager()
     Main = Cast<AMain>(actor);
     Network = nullptr;
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1000; i++) {
         CitizensToWaitForSpawn[i] = -1;
     }
 }
@@ -52,11 +52,33 @@ void ACitizenManager::Tick(float DeltaTime)
     }
 
     Spawn_Citizen();
+
+
+    sc_packet_armytraining create_army;
+    while (!Army_Queue.empty())
+    {
+        if (Army_Queue.try_pop(create_army))
+        {
+            Spawn_Army(create_army);
+        }
+    }
+
+    sc_packet_citizenmove move_citizen;
+    while (!Citizen_Move_Queue.empty())
+    {
+        if (Citizen_Move_Queue.try_pop(move_citizen))
+        {
+            FRotator Rotation = (FVector(move_citizen.rx, move_citizen.ry, move_citizen.rz)).GetSafeNormal().Rotation();
+            Set_Citizen_Location(move_citizen.citizenid - CITIZENSTART, FVector(move_citizen.x, move_citizen.y, move_citizen.z),Rotation ,move_citizen.citizenstate);
+        }
+    }
+
 }
 
 void ACitizenManager::Spawn_Citizen()
 {
-    for (int i = 0; i < 100; i++) {
+
+    for (int i = 0; i < 1000; i++) {
         if (CitizensToWaitForSpawn[i] != -1) {
             int citizen_id = CitizensToWaitForSpawn[i];
             CitizensToWaitForSpawn[i] = -1;                 //²À -1·Î ¹Ù²ãÁà¾ß ºó °ø°£ Ã£À½
@@ -110,9 +132,9 @@ void ACitizenManager::Remove_Citizen(int citizen_id)
     }
 }
 
-void ACitizenManager::Spawn_Army(void* buf)
+void ACitizenManager::Spawn_Army(sc_packet_armytraining spawn_packet)
 {
-    sc_packet_armytraining* packet = reinterpret_cast<sc_packet_armytraining*>(buf);
+    sc_packet_armytraining* packet = reinterpret_cast<sc_packet_armytraining*>(&spawn_packet);
     citizen[packet->c_id1 - CITIZENSTART]->SetActorHiddenInGame(true);
     citizen[packet->c_id2 - CITIZENSTART]->SetActorHiddenInGame(true);
     citizen[packet->c_id3 - CITIZENSTART]->SetActorHiddenInGame(true);
@@ -201,6 +223,17 @@ void ACitizenManager::Set_Army_Attack(int a_id, FRotator Rotate, int a_state)
         AArmy* a = reinterpret_cast<AArmy*>(army[a_id]);
         a->state = a_state;
     }
+}
+
+void ACitizenManager::Set_Army_Queue(void* packet)
+{
+    sc_packet_armytraining* p_army_packet = reinterpret_cast<sc_packet_armytraining*>(packet);
+    Army_Queue.push(*p_army_packet);
+}
+
+void ACitizenManager::Set_Citizen_Move_Queue(sc_packet_citizenmove* packet)
+{
+    Citizen_Move_Queue.push(*packet);
 }
 
 void ACitizenManager::PutCitizenForSpawn(int id, FVector location)
