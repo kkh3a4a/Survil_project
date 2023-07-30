@@ -347,7 +347,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		case SC_PACKET_REMOVEEVENT:
 		{
 			sc_packet_removeevent* packet = reinterpret_cast<sc_packet_removeevent*>(buf);
-			_ResourceManager->remove_Event(packet->e_id - EVENTSTART);
+			_ResourceManager->Set_Remove_Event_Queue(packet->e_id - EVENTSTART);
 			break;
 		}
 		case SC_PACKET_EVENTSELECT:
