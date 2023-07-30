@@ -858,7 +858,10 @@ void AMyPlayerController::PlayEventSound()
         StormSoundPlay = true;
     }
     else if(sand_storm_day != 0 && StormSoundPlay) {
-        SoundComponent->Stop();
+        if (SoundComponent != nullptr) {
+            SoundComponent->Stop();
+        }
+        StormSoundPlay = false;
         PlaySandStormAnim = false;
     }
 
