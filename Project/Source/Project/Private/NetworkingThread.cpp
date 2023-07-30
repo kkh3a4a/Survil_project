@@ -176,7 +176,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_citizenmove* packet = reinterpret_cast<sc_packet_citizenmove*>(buf);
 			//=====================================================================================================================================================
-			//수정 필요
+			//수정 완
 			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
 			_CitizenManager->Set_Citizen_Move_Queue(packet);
 			
@@ -261,6 +261,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		}
 		case SC_PACKET_BUILD:
 		{
+			// 수정 완
 			sc_packet_build* packet = reinterpret_cast<sc_packet_build*>(buf);
 			if (packet->do_build) {
 				_MainClass->BuildManager->SetBuildQueue(packet);
@@ -269,6 +270,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		}
 		case SC_PACKET_BUILDSUCCESS:
 		{
+			// 수정 완
 			sc_packet_buildsuccess* packet = reinterpret_cast<sc_packet_buildsuccess*>(buf);
 			_MainClass->BuildManager->SetBuildSuccessQueue(packet);
 			if (packet->building_type == 6) //연구소일시 연구소 수량 증가, 연구 버튼 활성화

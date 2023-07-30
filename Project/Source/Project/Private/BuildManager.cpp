@@ -79,7 +79,7 @@ void ABuildManager::Tick(float DeltaTime)
 	{
 		if (Build_Queue.try_pop(_Build))
 		{
-			Build(_Build.id, _Build.x, _Build.y, _Build.building_type);
+			Build(_Build.id - BUILDINGSTART, _Build.x, _Build.y, _Build.building_type);
 		}
 	}
 		
@@ -88,7 +88,7 @@ void ABuildManager::Tick(float DeltaTime)
 	{
 		if (Buildsuccess_Queue.try_pop(_BuildSuccess))
 		{
-			BuildSuccess(_BuildSuccess.id, _BuildSuccess.x, _BuildSuccess.y, _BuildSuccess.building_type);
+			BuildSuccess(_BuildSuccess.id - BUILDINGSTART, _BuildSuccess.x, _BuildSuccess.y, _BuildSuccess.building_type);
 		}
 	}
 }
