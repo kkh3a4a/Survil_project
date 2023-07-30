@@ -6,10 +6,8 @@
 #include "MyPlayerController.h"
 #include "CitizenManager.h"
 #include "ResourceManager.h"
-
 #include "Components/AudioComponent.h"
 using namespace std;
-
 
 FSocketThread* fsocket_thread;
 //UE_LOG(LogTemp, Warning, TEXT("%d"), (int)packet->citizenstate);
@@ -40,9 +38,15 @@ WSA_OVER_EX::WSA_OVER_EX(IOCPOP iocpop, char byte, void* buf)
 FSocketThread::FSocketThread()
 {
 	
+}
+
+uint32_t FSocketThread::Run()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Network Construct Start")));
+
 	fsocket_thread = this;
 	WSADATA WSAData;
-	int ret = WSAStartup(MAKEWORD(2, 2), &WSAData);
+	int ret = WSAStartup(MAKEWORD(2, 0), &WSAData);
 	if (ret != 0)
 	{
 		//exit(-1);
@@ -53,10 +57,10 @@ FSocketThread::FSocketThread()
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(SERVERPORT);
 	inet_pton(AF_INET, IPAddress, &server_addr.sin_addr);
-	ret = connect(s_socket, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr));
+	ret = WSAConnect(s_socket, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr), 0, 0, 0, 0);
 	if (ret != 0)
 	{
-	//	exit(-1);
+		//	exit(-1);
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Network Thread connect!!"));
 
@@ -64,29 +68,35 @@ FSocketThread::FSocketThread()
 	packet_login.size = sizeof(packet_login);
 	packet_login.type = CS_PACKET_LOGIN;
 	WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(IOCPOP::OP_SEND, sizeof(cs_packet_login), &packet_login);
-
 	ret = WSASend(s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
 	if (ret != 0)
 	{
-		//exit(-1);
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Send Error in Network Construct")));
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Successfully Send in Network Construct")));
+
+
 	DWORD r_flags = 0;
 	ZeroMemory(&_recv_over_ex, sizeof(_recv_over_ex));
 	_recv_over_ex._wsabuf.buf = reinterpret_cast<char*>(_recv_over_ex._buf);
 	_recv_over_ex._wsabuf.len = sizeof(_recv_over_ex._buf);
 	ret = WSARecv(s_socket, &_recv_over_ex._wsabuf, 1, 0, &r_flags, &_recv_over_ex._wsaover, recv_callback);
-	if (ret != 0)
-	{
-		//exit(-1);
+	if (ret == SOCKET_ERROR && WSAGetLastError() != WSA_IO_PENDING) {
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Recv Error in Network Construct")));
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Successfully Received in Network Construct")));
 	IsRunning = true;
-}
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("finished construct network")));
+	while (_MainClass == nullptr || _MyController == nullptr || _CitizenManager == nullptr || _ResourceManager == nullptr || _BuildManager == nullptr)
+	{
+		Sleep(10);
+	}
 
-uint32_t FSocketThread::Run()
-{
+	int iter = 0;
 	while (IsRunning)
 	{
-		SleepEx(10, true);
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Network Running %d"), iter++));
+		SleepEx(100, true);
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Network Thread End!!"));
 	return 0;
@@ -103,13 +113,13 @@ void FSocketThread::error_display(const char* msg, int err_no)
 		(LPTSTR)&lpMsgBuf, 0, NULL);
 
 	LocalFree(lpMsgBuf);
-
 }
 
 void FSocketThread::processpacket(unsigned char* buf)
 {
 	unsigned char packet_type = buf[1];
-	
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Packet Type: %d"), (int)packet_type));
+
 	if(IsRunning)
 	{
 		switch (packet_type)
@@ -435,13 +445,14 @@ void FSocketThread::processpacket(unsigned char* buf)
 				UE_LOG(LogTemp, Log, TEXT("PlaySoundSandStorm\n"));
 				
 				_MyController->PlaySandStormAnim = true;
-				break;
+				
 			}
 			else if (_MyController->sand_storm_day != 0 && SoundComponent && SoundComponent->IsPlaying())
 			{
 				SoundComponent->Stop();
 				_MyController->PlaySandStormAnim = false;
 			}
+			break;
 		}
 		case SC_PACKET_CITIZEN_STATUS:
 		{
@@ -499,6 +510,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 		default:
 		{
 			//DebugBreak();
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("UNKNOWN Packet Type: %d"), (int)packet_type));
+
 			break;
 		}
 		}
@@ -512,18 +525,23 @@ void FSocketThread::Stop()
 
 void CALLBACK send_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED send_over, DWORD flag)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("send callback start")));
 	if (err != 0)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("send callback ERROR")));
 		return;
 	}
 	WSA_OVER_EX* wsa_over_ex = reinterpret_cast<WSA_OVER_EX*>(send_over);
 	delete  wsa_over_ex;
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("send callback done")));
 }
 
 void CALLBACK recv_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED recv_over, DWORD flag) 
 {
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("recv callback start")));
 	if (err != 0)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("recv callback ERROR")));
 		return;
 	}
 	WSA_OVER_EX* wsa_over_ex = reinterpret_cast<WSA_OVER_EX*>(recv_over);
@@ -538,7 +556,7 @@ void CALLBACK recv_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED recv_over
 		if (0 == in_packet_size) in_packet_size = packet_start[0];
 		if (num_byte + saved_packet_size >= in_packet_size) {
 			memcpy(packet_buffer + saved_packet_size, packet_start, in_packet_size - saved_packet_size);
-
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("recv callback num bytes: %d"), in_packet_size));
 			fsocket_thread->processpacket(packet_buffer);
 			packet_start += in_packet_size - saved_packet_size;
 			num_byte -= in_packet_size - saved_packet_size;
@@ -549,10 +567,12 @@ void CALLBACK recv_callback(DWORD err, DWORD num_byte, LPWSAOVERLAPPED recv_over
 			memcpy(packet_buffer + saved_packet_size, packet_start, num_byte);
 			saved_packet_size += num_byte;
 			num_byte = 0;
+			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("Packet Àß¸²")));
 		}
 	}
 
 	ZeroMemory(&wsa_over_ex->_wsaover, sizeof(wsa_over_ex->_wsaover));
 	DWORD r_flags = 0;
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("recv callback done")));
 	WSARecv(fsocket_thread->s_socket, &fsocket_thread->_recv_over_ex._wsabuf, 1, 0, &r_flags, &fsocket_thread->_recv_over_ex._wsaover, recv_callback);
 }

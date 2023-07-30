@@ -160,11 +160,13 @@ void AMain::SetPlayerLocation(float x, float y, float z)
 	Player_y = y;
 	Player_z = z;
 	FVector Location(Player_x, Player_y, Player_z);
-	FRotator Rotation(0.0f, 0.0f, 0.0f);
+	FRotator Rotation(0.f, 0.f, 0.f);
 	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.Name = FName("Well Pump");
 	UWorld* uworld = GetWorld();
-	if(uworld != nullptr)
-	uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
+	if (IsValid(uworld) && IsValid(WellPump)) {
+		uworld->SpawnActor<AActor>(WellPump, Location, Rotation, SpawnInfo);
+	}
 	//Terrain->SetActorLocation(FVector(Player_x, Player_y, 0.0));
 	//Temperature->SetActorLocation(FVector(Player_x - SIGHT_X * 100 / 2, Player_y - SIGHT_Y * 100 / 2, 0.0));
 	//Terrain->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
@@ -176,7 +178,7 @@ void AMain::SetOtherPlayerLocation(float x, float y, float z)
 {
 	
 	FRotator Rotation(0.0f, 0.0f, 0.0f);
-	FActorSpawnParameters SpawnInfo;
+	FActorSpawnParameters SpawnInfo{};
 	UWorld* uworld = GetWorld();
 	FVector Location(x, y, z);
 	if (uworld != nullptr)

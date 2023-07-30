@@ -352,6 +352,12 @@ void WSA_OVER_EX::processpacket(int client_id, unsigned char* pk)
 		}
 		break;
 	}
+	case CS_PACKET_DEBUG:
+	{
+		cs_packet_debug* packet = reinterpret_cast <cs_packet_debug*> (pk);
+		std::cout << "{{{{debug : " << packet->debug_type << "}}}}\n";
+		break;
+	}
 	default:
 	{
 		closesocket(reinterpret_cast<Player*>(objects[client_id])->_socket);

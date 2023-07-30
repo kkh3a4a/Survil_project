@@ -5,7 +5,7 @@ constexpr int random_array_size = 10000000;
 constexpr int city_size = 100;
 
 #define BUFSIZE						512
-#define SERVERPORT					1234
+#define SERVERPORT					9000
 
 #define MAXNAMESIZE					20
 #define MAXOBJECT					5000
@@ -86,7 +86,9 @@ constexpr int city_size = 100;
 
 #define CS_PACKET_SPRINKLER_STATUS	120
 
-#define CS_PACKET_CALL_CHEAT_KEY	255
+#define CS_PACKET_CALL_CHEAT_KEY	130
+
+#define CS_PACKET_DEBUG				140
 
 #define SC_PACKET_LOGIN				1
 #define SC_PACKET_MOVE				2
@@ -366,6 +368,13 @@ struct cs_packet_cheatkey
 	unsigned char size = sizeof(cs_packet_cheatkey);
 	unsigned char type = CS_PACKET_CALL_CHEAT_KEY;
 	int cheat_type;
+};
+
+struct cs_packet_debug
+{
+	unsigned char size = sizeof(cs_packet_debug);
+	unsigned char type = CS_PACKET_DEBUG;
+	int debug_type;
 };
 
 //////////////////////////////////////////// 서버
