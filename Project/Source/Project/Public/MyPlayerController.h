@@ -263,9 +263,6 @@ public:
 
 	void set_ending(void* pk);
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sound")
-	TObjectPtr<USoundBase> Sound;
-
 	// sand storm anim
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
 	bool PlaySandStormAnim = false;
@@ -273,6 +270,11 @@ public:
 	// 치트키용
 	UFUNCTION(BlueprintCallable)
 		void CallCheat(int cheat_key);
+
+
+
+	bool Win = false;
+	bool Lose = false;
 
 protected:
 	long long int mouse_cnt = 0;
@@ -343,4 +345,21 @@ protected:
 
 	void SendMovePacket();
 
+	void PlayEventSound();
+	 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sound")
+		TObjectPtr<USoundBase> Sound;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sound")
+		TObjectPtr<USoundBase> StormSound; 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sound")
+		TObjectPtr<USoundBase> WinSound;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sound")
+		TObjectPtr<USoundBase> LoseSound;
+
+	bool StormSoundPlay = false;
+	bool WinSoundPlay = false;
+	bool LoseSoundPlay = false;
+
+
+	UAudioComponent* SoundComponent = nullptr;
 };

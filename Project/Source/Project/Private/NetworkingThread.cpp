@@ -306,7 +306,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_armytraining* packet = reinterpret_cast<sc_packet_armytraining*>(buf);
 			//=====================================================================================================================================================
-			//수정 필요
+			//수정완료
 			_CitizenManager->Set_Army_Queue(packet);
 			break;
 		}
@@ -315,7 +315,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			sc_packet_armymove* packet = reinterpret_cast<sc_packet_armymove*>(buf);
 			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
 			//=====================================================================================================================================================
-			//수정 필요
+			//수정완료
 			_CitizenManager->Set_Army_Move_Queue(packet);
 			break;
 		}
@@ -447,8 +447,9 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_sandstormday* packet = reinterpret_cast<sc_packet_sandstormday*>(buf);
 			_MyController->sand_storm_day = packet->sand_day;
-
-			if (_MyController->sand_storm_day == 0)
+			//=====================================================================================================================================================
+			//수정완료
+			/*if (_MyController->sand_storm_day == 0)
 			{
 				Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/event/SandStorm_Cue.SandStorm_Cue"));
 				SoundComponent = UGameplayStatics::SpawnSound2D(_MyController->GetWorld(), Sound);
@@ -461,7 +462,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			{
 				SoundComponent->Stop();
 				_MyController->PlaySandStormAnim = false;
-			}
+			}*/
 			break;
 		}
 		case SC_PACKET_CITIZEN_STATUS:
@@ -479,21 +480,26 @@ void FSocketThread::processpacket(unsigned char* buf)
 		}
 		case SC_PACKET_GAMEOVER:
 		{
-			if (_MyController->IsGameOver == false)
+			//=====================================================================================================================================================
+			/*if (_MyController->IsGameOver == false)
 			{
 				Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/bgm/Lose_bgm_Cue.Lose_bgm_Cue"));
 				UGameplayStatics::PlaySound2D(_MyController->GetWorld(), Sound);
-			}
-			_MyController->IsGameOver = true;
+			}*/
+			if(!_MyController->Lose)
+				_MyController->Lose = true;
 			break;
 		}
 		case SC_PACKET_GAMEEND:
 		{
-			if (_MyController->GameEnd == false)
+			//=====================================================================================================================================================
+			/*if (_MyController->GameEnd == false)
 			{
 				Sound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/bgm/Win_bgm_Cue.Win_bgm_Cue"));
 				UGameplayStatics::PlaySound2D(_MyController->GetWorld(), Sound);
-			}
+			}*/
+			if(!_MyController->Win)
+				_MyController->Win = true;
 			_MyController->set_ending(buf);
 			break;
 		}
@@ -501,6 +507,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_wind_direction* packet = reinterpret_cast<sc_packet_wind_direction*>(buf);
 			//=====================================================================================================================================================
+			//수정완료
 			_MainClass->Terrain->WindDirectionChanged = true;
 			_MainClass->Terrain->WindDirection_X = (int)packet->wind_x;
 			_MainClass->Terrain->WindDirection_Y = (int)packet->wind_y;
@@ -524,7 +531,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			//DebugBreak();
 			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, FString::Printf(TEXT("UNKNOWN Packet Type: %d"), (int)packet_type));
-
 			break;
 		}
 		}

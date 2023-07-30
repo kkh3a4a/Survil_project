@@ -3,6 +3,7 @@
 #include "MyPlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Main.h"
+#include "Components/AudioComponent.h"
 #include "NetworkingThread.h"
 #include "ResourceManager.h"
 //#include "Army.h"
@@ -54,6 +55,11 @@ AMyPlayerController::AMyPlayerController()
     Key_s = false;
     Key_d = false;
     War_players.Init(false, 5);
+
+
+    StormSound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/event/SandStorm_Cue.SandStorm_Cue"));
+    LoseSound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/bgm/Lose_bgm_Cue.Lose_bgm_Cue"));
+    WinSound = LoadObject<USoundBase>(nullptr, TEXT("/Game/Music/bgm/Win_bgm_Cue.Win_bgm_Cue"));
 }
 
 void AMyPlayerController::SetupInputComponent()
@@ -823,6 +829,7 @@ void AMyPlayerController::PlayerTick(float DeltaTime)
     if (Key_w || Key_a || Key_s || Key_d)
         SendMovePacket();
 
+    PlayEventSound ();
 }
 
 void AMyPlayerController::SendMovePacket()
@@ -839,6 +846,30 @@ void AMyPlayerController::SendMovePacket()
     //UE_LOG(LogTemp, Log, TEXT("send Move"));
     WSA_OVER_EX* wsa_over_ex = new WSA_OVER_EX(OP_SEND, packet.size, &packet);
     WSASend(Network->s_socket, &wsa_over_ex->_wsabuf, 1, 0, 0, &wsa_over_ex->_wsaover, send_callback);
+}
+
+void AMyPlayerController::PlayEventSound()
+{
+    if (sand_storm_day == 0 && !StormSoundPlay) {
+        SoundComponent = UGameplayStatics::SpawnSound2D(GetWorld(), StormSound);
+        UE_LOG(LogTemp, Log, TEXT("PlaySoundSandStorm\n"));
+
+        PlaySandStormAnim = true;
+        StormSoundPlay = true;
+    }
+    else if(sand_storm_day != 0 && StormSoundPlay) {
+        SoundComponent->Stop();
+        PlaySandStormAnim = false;
+    }
+
+    if (Win && !WinSoundPlay) {
+        UGameplayStatics::PlaySound2D(GetWorld(), WinSound);
+        WinSoundPlay = true;
+    }
+    else if (Lose && !LoseSoundPlay) {
+        UGameplayStatics::PlaySound2D(GetWorld(), LoseSound);
+        LoseSoundPlay = true;
+    }
 }
 
 void AMyPlayerController::SendMinimapPacket(float x, float y)
