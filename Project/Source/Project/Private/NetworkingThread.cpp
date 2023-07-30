@@ -316,7 +316,7 @@ void FSocketThread::processpacket(unsigned char* buf)
 			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
 			//=====================================================================================================================================================
 			//수정 필요
-			//_CitizenManager->Set_Army_Location(packet->a_id -ARMYSTART, FVector(packet->x, packet->y, packet->z), Rotation, packet->a_state);
+			_CitizenManager->Set_Army_Move_Queue(packet);
 			break;
 		}
 		case SC_PACKET_ARMYCHANGEHP:

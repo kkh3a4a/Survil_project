@@ -73,6 +73,18 @@ void ACitizenManager::Tick(float DeltaTime)
         }
     }
 
+    sc_packet_armymove move_army;
+       
+    while (!Army_Move_Queue.empty())
+    {
+        if (Army_Move_Queue.try_pop(move_army))
+        {
+            FRotator Rotation = (FVector(move_army.rx, move_army.ry, move_army.rz)).GetSafeNormal().Rotation();
+            Set_Army_Location(move_army.a_id - ARMYSTART, FVector(move_army.x, move_army.y, move_army.z), Rotation, move_army.a_state);
+        }
+    }
+       
+
 }
 
 void ACitizenManager::Spawn_Citizen()
@@ -234,6 +246,11 @@ void ACitizenManager::Set_Army_Queue(void* packet)
 void ACitizenManager::Set_Citizen_Move_Queue(sc_packet_citizenmove* packet)
 {
     Citizen_Move_Queue.push(*packet);
+}
+
+void ACitizenManager::Set_Army_Move_Queue(sc_packet_armymove* packet)
+{
+    Army_Move_Queue.push(*packet);
 }
 
 void ACitizenManager::PutCitizenForSpawn(int id, FVector location)

@@ -57,7 +57,7 @@ public:
 	void Set_Army_Attack(int a_id, FRotator Rotate, int a_state);
 	void Set_Army_Queue(void* packet);
 	void Set_Citizen_Move_Queue(sc_packet_citizenmove* packet);
-
+	void Set_Army_Move_Queue(sc_packet_armymove* packet);
 	//1000이라서 부하가 엄청 걸릴지도 모르겠다
 	int CitizensToWaitForSpawn[1000]{};
 	FVector CitizensForSpawnLocation[1000]{};
@@ -70,4 +70,5 @@ public:
 	
 	concurrency::concurrent_queue<sc_packet_armytraining> Army_Queue;
 	concurrency::concurrent_queue <sc_packet_citizenmove> Citizen_Move_Queue;
+	concurrency::concurrent_queue<sc_packet_armymove> Army_Move_Queue;
 };
