@@ -335,7 +335,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 		{
 			sc_packet_armyattack* packet = reinterpret_cast<sc_packet_armyattack*>(buf);
 			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
-			_CitizenManager->Set_Army_Attack(packet->army_id - ARMYSTART, Rotation, packet->a_state);
+			//_CitizenManager->Set_Army_Attack(packet->army_id - ARMYSTART, Rotation, packet->a_state);
+			_CitizenManager->Set_Army_Attack_Queue(packet);
 			break;
 		}
 		case SC_PACKET_VIEWEVENT:

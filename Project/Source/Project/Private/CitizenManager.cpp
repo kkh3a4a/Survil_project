@@ -94,7 +94,15 @@ void ACitizenManager::Tick(float DeltaTime)
         }
     }
 
-    
+	sc_packet_armyattack attack_army;
+	while (!Army_Attack_Queue.empty())
+	{
+		if (Army_Attack_Queue.try_pop(attack_army))
+		{
+            Set_Army_Attack(attack_army.army_id, FRotator(attack_army.rx, attack_army.ry, attack_army.rz), attack_army.a_state);
+		}
+	}
+
 
 }
 
@@ -265,4 +273,9 @@ void ACitizenManager::SetCitizenQueue(sc_packet_citizencreate* packet)
 void ACitizenManager::Set_Citizen_Remove_Queue(sc_packet_citizenremove* packet)
 {
     Citizen_Remove_Queue.push(*packet);
+}
+
+void ACitizenManager::Set_Army_Attack_Queue(sc_packet_armyattack* packet)
+{
+    Army_Attack_Queue.push(*packet);
 }

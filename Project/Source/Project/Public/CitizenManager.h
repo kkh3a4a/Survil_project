@@ -60,11 +60,14 @@ public:
 	void Set_Army_Move_Queue(sc_packet_armymove* packet);
 	void SetCitizenQueue(sc_packet_citizencreate* packet);
 	void Set_Citizen_Remove_Queue(sc_packet_citizenremove* packet);
+	void Set_Army_Attack_Queue(sc_packet_armyattack* packet);
+
 
 	
 	concurrency::concurrent_queue<sc_packet_citizencreate> CitizenQueue;
 	concurrency::concurrent_queue<sc_packet_armytraining> Army_Queue;
 	concurrency::concurrent_queue <sc_packet_citizenmove> Citizen_Move_Queue;
 	concurrency::concurrent_queue<sc_packet_armymove> Army_Move_Queue;
+	concurrency::concurrent_queue<sc_packet_armyattack> Army_Attack_Queue;
 	concurrency::concurrent_queue<sc_packet_citizenremove> Citizen_Remove_Queue;
 };
