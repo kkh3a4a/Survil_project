@@ -175,6 +175,7 @@ void Citizen::set_citizen_move()
 
 void Citizen::citizen_dead()
 {
+	cout << "ав╢б ╫ц╧н: " << _id << " HP: " << _hp << " Satiety: " << _satiety << " Thirst: " << _thirsty << " Temperature: " << _temperature << endl;
 	sc_packet_citizenremove packet;
 	packet.citizenid = _id;
 	packet.size = sizeof(sc_packet_citizenremove);
