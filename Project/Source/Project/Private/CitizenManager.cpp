@@ -24,10 +24,6 @@ ACitizenManager::ACitizenManager()
     actor->GetWorld();
     Main = Cast<AMain>(actor);
     Network = nullptr;
-
-    for (int i = 0; i < 1000; i++) {
-        CitizensToWaitForSpawn[i] = -1;
-    }
 }
 
 // Called when the game starts or when spawned
@@ -51,7 +47,13 @@ void ACitizenManager::Tick(float DeltaTime)
         UE_LOG(LogTemp, Log, TEXT("Manager connect"));
     }
 
-    Spawn_Citizen();
+    sc_packet_citizencreate CreateCItizen;
+    while (!CitizenQueue.empty()) {
+        if (CitizenQueue.try_pop(CreateCItizen))
+        {
+            Spawn_Citizen(CreateCItizen);
+        }
+    }
 
 
     sc_packet_armytraining create_army;
@@ -87,37 +89,30 @@ void ACitizenManager::Tick(float DeltaTime)
 
 }
 
-void ACitizenManager::Spawn_Citizen()
+void ACitizenManager::Spawn_Citizen(sc_packet_citizencreate CreateCItizen)
 {
-
-    for (int i = 0; i < 1000; i++) {
-        if (CitizensToWaitForSpawn[i] != -1) {
-            int citizen_id = CitizensToWaitForSpawn[i];
-            CitizensToWaitForSpawn[i] = -1;                 //²À -1·Î ¹Ù²ãÁà¾ß ºó °ø°£ Ã£À½
-            FVector Location = CitizensForSpawnLocation[i];
-
-            
-            FActorSpawnParameters SpawnInfo;
-            UWorld* uworld = GetWorld();
-            if (uworld == nullptr)
-                return;
-            if (citizen[citizen_id] == nullptr)
-            {
-                if (Network->my_id == (citizen_id / 200))
-                    citizen[citizen_id] = uworld->SpawnActor<ACitizen>(MyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-                else  if (Network->my_id != (citizen_id / 200))
-                    citizen[citizen_id] = uworld->SpawnActor<ACitizen>(EnemyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
-            }
-            else
-            {
-                citizen[citizen_id]->SetActorHiddenInGame(false);
-                citizen[citizen_id]->SetActorLocation(Location);
-            }
-
-            ACitizen* citi = reinterpret_cast<ACitizen*>(citizen[citizen_id]);
-            citi->_id = citizen_id;
-        }
+	int citizen_id = CreateCItizen.citizenid - CITIZENSTART;
+	FVector Location = FVector(CreateCItizen.x, CreateCItizen.y, CreateCItizen.z);
+        
+    FActorSpawnParameters SpawnInfo;
+    UWorld* uworld = GetWorld();
+    if (uworld == nullptr)
+        return;
+    if (citizen[citizen_id] == nullptr)
+    {
+        if (Network->my_id == (citizen_id / 200))
+            citizen[citizen_id] = uworld->SpawnActor<ACitizen>(MyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
+        else  if (Network->my_id != (citizen_id / 200))
+            citizen[citizen_id] = uworld->SpawnActor<ACitizen>(EnemyCitizen_MODEL, Location, FRotator(0.0f, 0.0f, 0.0f), SpawnInfo);
     }
+    else
+    {
+        citizen[citizen_id]->SetActorHiddenInGame(false);
+        citizen[citizen_id]->SetActorLocation(Location);
+    }
+
+    ACitizen* citi = reinterpret_cast<ACitizen*>(citizen[citizen_id]);
+    citi->_id = citizen_id;
 }
 
 void ACitizenManager::Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate, char citizenstate)
@@ -253,27 +248,7 @@ void ACitizenManager::Set_Army_Move_Queue(sc_packet_armymove* packet)
     Army_Move_Queue.push(*packet);
 }
 
-void ACitizenManager::PutCitizenForSpawn(int id, FVector location)
+void ACitizenManager::SetCitizenQueue(sc_packet_citizencreate* packet)
 {
-    for (int i = 0; i < 100; i++) {
-        if (CitizensToWaitForSpawn[i] == -1) {
-            CitizensToWaitForSpawn[i] = id;
-            CitizensForSpawnLocation[i] = location;
-            return;
-       }
-    }
-}
-
-void ACitizenManager::PutArmyForSpawn(int id, FVector location)
-{
-
-	for (int i = 0; i < 100; i++)
-	{
-		if (ArmiesToWaitForSpawn[i] == -1)
-		{
-            ArmiesToWaitForSpawn[i] = id;
-            ArmiesForSpawnLocation[i] = location;
-			return;
-		}
-	}
+	CitizenQueue.push(*packet);
 }

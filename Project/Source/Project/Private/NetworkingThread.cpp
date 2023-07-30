@@ -169,7 +169,8 @@ void FSocketThread::processpacket(unsigned char* buf)
 			//=====================================================================================================================================================
 			// //수정완료
 			//_CitizenManager->Spawn_Citizen(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z));
-			_CitizenManager->PutCitizenForSpawn(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z));
+			//_CitizenManager->PutCitizenForSpawn(packet->citizenid - CITIZENSTART, FVector(packet->x, packet->y, packet->z));
+			_CitizenManager->SetCitizenQueue(packet);
 			break;
 		}
 		case SC_PACKET_CITIZENMOVE:
@@ -179,7 +180,6 @@ void FSocketThread::processpacket(unsigned char* buf)
 			//수정 완
 			FRotator Rotation = (FVector(packet->rx, packet->ry, packet->rz)).GetSafeNormal().Rotation();
 			_CitizenManager->Set_Citizen_Move_Queue(packet);
-			
 			break;
 		}
 		case SC_PACKET_RESOURCECREATE:

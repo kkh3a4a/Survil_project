@@ -46,7 +46,7 @@ public:
 	AActor* citizen[1000];
 	AActor* army[100];
 	class FSocketThread* Network;
-	void Spawn_Citizen();
+	void Spawn_Citizen(sc_packet_citizencreate CreateCItizen);
 	void Set_Citizen_Location(int citizen_id, FVector Location, FRotator Rotate, char citizenstate);
 	void Remove_Citizen(int citizen_id);
 	void Spawn_Army(sc_packet_armytraining spawn_packet);
@@ -58,16 +58,10 @@ public:
 	void Set_Army_Queue(void* packet);
 	void Set_Citizen_Move_Queue(sc_packet_citizenmove* packet);
 	void Set_Army_Move_Queue(sc_packet_armymove* packet);
-	//1000이라서 부하가 엄청 걸릴지도 모르겠다
-	int CitizensToWaitForSpawn[1000]{};
-	FVector CitizensForSpawnLocation[1000]{};
-	void PutCitizenForSpawn(int id, FVector location);
+	void SetCitizenQueue(sc_packet_citizencreate* packet);
 
-	int ArmiesToWaitForSpawn[1000]{};
-	FVector ArmiesForSpawnLocation[1000]{};
-	void PutArmyForSpawn(int id, FVector location);
 	
-	
+	concurrency::concurrent_queue<sc_packet_citizencreate> CitizenQueue;
 	concurrency::concurrent_queue<sc_packet_armytraining> Army_Queue;
 	concurrency::concurrent_queue <sc_packet_citizenmove> Citizen_Move_Queue;
 	concurrency::concurrent_queue<sc_packet_armymove> Army_Move_Queue;
