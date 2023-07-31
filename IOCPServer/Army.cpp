@@ -40,10 +40,13 @@ void Army::set_army_move()
 {
 	if (Is_sand_storm)
 	{
-		if (!object_find_check(_playerID, _id, 7500))
+		for (int p_id = 0; p_id < MAXPLAYER; ++p_id)
 		{
-			set_army_dead();
-			return;
+			if (!object_find_check(p_id, _id, 7500))
+			{
+				set_army_dead();
+				return;
+			}
 		}
 	}
 
